@@ -1,4 +1,64 @@
 <x-app-layout>
+    <style>
+        /*__________________Image Profile______________________*/
+        .avatar-upload {
+            position: relative;
+            max-width: 205px;
+            margin: 20px auto;
+        }
+        .avatar-upload .avatar-edit {
+            position: absolute;
+            right: 25px;
+            z-index: 1;
+            top: 10px;
+        }
+        .avatar-upload .avatar-edit input {
+            display: none;
+        }
+        .avatar-upload .avatar-edit input + label {
+            display: inline-block;
+            width: 34px;
+            height: 34px;
+            margin-bottom: 0;
+            border-radius: 100%;
+            background: #f04e23;
+            border: 1px solid transparent;
+            box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.12);
+            cursor: pointer;
+            font-weight: normal;
+            transition: all 0.2s ease-in-out;
+        }
+        .avatar-upload .avatar-edit input + label:hover {
+            background: #f1f1f1;
+            border-color: #d6d6d6;
+        }
+    
+        .avatar-edit .profile_save_btn{
+            color: #ffffff;
+            position: absolute;
+            top: 9px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            margin: auto;
+        }
+        .avatar-upload .avatar-preview {
+            width: 192px;
+            height: 192px;
+            position: relative;
+            border-radius: 100%;
+            border: 6px solid #f04e23;
+            box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.1);
+        }
+        .avatar-upload .avatar-preview > div {
+            width: 100%;
+            height: 100%;
+            border-radius: 100%;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+    </style>
     <div class="row">
         <div class="col-xl-12 col-xxl-12">
             <div class="card">
@@ -534,15 +594,30 @@
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="skip-email text-center">
-                                                <p>Or if want skip this step entirely and setup it later</p>
-                                                <a href="/">Skip step</a>
+                                                <div class="avatar-upload">
+                                                    <div class="avatar-edit">
+                                                        <input type='file' class="@error('profile_photo_path') is-invalid @enderror form-control" name="profile_photo_path" id="imageUpload" accept=".png, .jpg, .jpeg" value="{{old('profile_photo_path')}}"/>
+                                                        <label><i class="fa fa-camera profile_save_btn"></i></label>
+                                                        @error('profile_photo_path')
+                                                            <span class="invalid-feedback" role="alert" style="position: absolute;top: 178px;left: -160px;width: 300px;">
+                                                                <strong>{{ $message }}</strong>
+                                                            </span>
+                                                        @enderror
+                                                    </div>
+                                                    <label for="imageUpload" class="avatar-preview">
+                                                        <div id="imagePreview" style="background-image: url('{{asset('public')}}/images/profile/blank_man.png');"></div>
+                                                    </label>
+                                                </div>
+
                                             </div>
                                         </div>
                                     </div>
+
+
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="skip-email form-group text-center">
-                                                <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+                                                <button type="submit" class="btn btn-success">Submit</button>
                                             </div>
                                         </div>
                                     </div>
@@ -551,9 +626,33 @@
                         </div>
                     </form>
                 </div>
+
+
             </div>
         </div>
     </div>
+
+    <!--Image Profile-->
+    <script>
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#imagePreview').css('background-image', 'url('+e.target.result +')');
+                    $('#imagePreview').hide();
+                    $('#imagePreview').fadeIn(650);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        $("#imageUpload").change(function() {
+            readURL(this);
+        });
+    </script>
+
+
+
+
 
     <script>
         $(document).ready(function(){
