@@ -40,7 +40,7 @@ class InfoPersonal extends Model
         'address_permanent',
         'passport_no',
         'driving_license',
-        'marrital_status',
+        'marital_status',
         'house_phone',
         'father_name',
         'mother_name',

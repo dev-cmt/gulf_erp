@@ -51,7 +51,7 @@ return new class extends Migration
             $table->string('house_phone')->nullable();
             $table->string('father_name')->nullable();
             $table->string('mother_name')->nullable();
-            $table->integer('birth_certificate_no')->nullable();
+            $table->bigInteger('birth_certificate_no')->nullable();
             $table->string('emg_person_name')->nullable();
             $table->string('emg_phone_number')->nullable();
             $table->string('emg_relationship')->nullable();
