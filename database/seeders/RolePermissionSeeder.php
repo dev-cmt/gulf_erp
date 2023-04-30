@@ -22,13 +22,14 @@ class RolePermissionSeeder extends Seeder
     public function run()
     {
         $supper_admin = User::create([
-            'name'=>'Pune Club',
-            'email_verified_at' => '2000-01-01',
+            'name'=>'Gulf-ERP',
             'email'=>'admin@gmail.com',
+            'contact_number'=>'01909302126',
+            'password'=>bcrypt('password'),
             'status' => '1',
             'is_admin' => '1',
-            'password'=>bcrypt('password'),
             'profile_photo_path'=>'fix/admin.jpg',
+            'email_verified_at' => '2000-01-01',
         ]);
         /*__________________________________________________________ */
         /*__________________________________________________________ */

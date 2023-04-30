@@ -1,6 +1,6 @@
 <x-guest-layout>
     <header>
-        <h5 style="color: #34ad54;margin-top: 15px;">Member Login</h5>
+        <h5 style="color: #1078d0;margin-top: 15px;">Member Login</h5>
     </header>
     <x-jet-validation-errors class="mb-4" />
     @if (session('status'))
@@ -19,14 +19,17 @@
             <input type="password" name="password" id="password" class="pass-key" placeholder="Password" required autocomplete="current-password">
             <span class="show">SHOW</span>
         </div>
-        <div class="pass">
+        <div class="pass" style="display: flex;justify-content: space-between;">
             <a href="">Forgot Password?</a>
-        </div>
-        <div class="field">
-            <input type="submit" value="LOGIN">
+            <input style="padding: 10px 25px;
+                        background: #1078d0;
+                        outline: none;
+                        border: none;
+                        color: #fff;
+                        font-weight: bolder;" type="submit" value="LOGIN">
         </div>
     </form>
-    <div class="signup">Don't have account?
+    {{-- <div class="signup">Don't have account?
         <a href="{{ route('register') }}">Signup Now</a>
-    </div>
+    </div> --}}
 </x-guest-layout>

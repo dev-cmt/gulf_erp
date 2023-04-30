@@ -36,18 +36,12 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $fillable = [
         'name',
-        'batch',
         'contact_number',
         'email',
         'password',
         'status',
         'profile_photo_path',
         'is_admin',
-
-        'cm_adviser',
-        'cm_ecommittee',
-        'cm_welfare',
-        'pune_member',
     ];
 
     public function infoPersonal()

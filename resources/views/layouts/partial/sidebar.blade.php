@@ -5,12 +5,11 @@
         {{-- <div class=""> --}}
             <div class="main-profile">
                 <div class="image-bx">
-                    <img src="{{asset('public/backend')}}/images/icon-avater.jpg" alt="">
+                    <img src="{{asset('public')}}/images/profile/{{ Auth::user()->profile_photo_path }}" alt="">
                     <a href="javascript:void(0);"><i class="fa fa-cog" aria-hidden="true"></i></a>
                 </div>
-                <h5 class="name"><span class="font-w400">Hello,</span> Motiur</h5>
-                <p class="email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__"
-                        data-cfemail="2b464a595a5e4e515151516b464a424705484446">[email&#160;protected]</a></p>
+                <h5 class="name">{{ Auth::user()->name }}</h5>
+                <p class="email"><a href="mailto:<nowiki>{{ Auth::user()->email }}">[{{ Auth::user()->email }}]</a></p>
             </div>
             <ul class="metismenu" id="menu">
                 <li class="nav-label first">Main Menu</li>

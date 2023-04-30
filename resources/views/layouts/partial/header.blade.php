@@ -716,10 +716,14 @@
                             </li>
                             <li class="nav-item dropdown header-profile">
                                 <a class="nav-link" href="#" role="button" data-toggle="dropdown">
-                                    <img src="{{asset('public/backend')}}/images/icon-avater.jpg" width="20" alt="">
+                                    <img src="{{asset('public')}}/images/profile/{{ Auth::user()->profile_photo_path }}" width="20" alt="">
 									<div class="header-info">
-										<span>ICON ISL</span>
-										<small>Super Admin</small>
+										<span>{{ auth()->user()->name }}</span>
+										<small>
+											@foreach(auth()->user()->roles as $role)
+												{{ $role->name }}
+											@endforeach
+										</small>
 									</div>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right">

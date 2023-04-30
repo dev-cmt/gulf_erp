@@ -15,10 +15,10 @@
     <link rel="stylesheet" href="{{asset('public/extra-pages/login')}}/style.css">
 </head>
 <body>
-    <div class="bg-img" style="background: url('{{asset('public/extra-pages/login')}}/pune_club.jpg');background-size: cover;background-repeat: no-repeat;background-position: center;">
+    <div class="bg-img" style="background: url('{{asset('public/extra-pages/login')}}/background.jpg');background-size: cover;background-repeat: no-repeat;background-position: center;">
         <div class="content">
             <div style="background: #e8f0fe;margin-left: -20px;margin-right: -20px;padding-top: 8px;">
-                <a href="{{url('/')}}"><img src="{{asset('public/frontend')}}/images/pune_logo.png" style="width:75%" alt=""></a>
+                <a href="{{url('/')}}"><img src="{{asset('public/images')}}/logo.png" style="width:75%" alt=""></a>
             </div>
             {{ $slot }}
         </div>

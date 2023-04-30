@@ -63,8 +63,8 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6|confirmed',
             'roles' => 'required',
-            // 'student_image'         =>  'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048|dimensions:min_width=100,min_height=100,max_width=1000,max_height=1000'
             'profile_photo_path' => 'image|mimes:jpg,png,jpeg,gif,svg'
+            // 'student_image' =>  'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048|dimensions:min_width=100,min_height=100,max_width=1000,max_height=1000'
         ]);
 
         $file_name = time() . '.' . request()->student_image->getClientOriginalExtension();

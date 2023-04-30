@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Admin\InfoPersonal;
+use Illuminate\Support\Facades\File;
+use App\Models\User;
+use App\Helpers\Helper;
 
 class InfoPersonalController extends Controller
 {
@@ -18,16 +21,38 @@ class InfoPersonalController extends Controller
     }
     public function store(Request $request)
     {
-        // $validated=$request -> validate([
-        //     'first_name'=> 'required|unique:first_name|max:255',
-        // ]);
+        $request->validate([
+            'email' => 'required|email|unique:users,email',
+            // 'password' => 'required|min:6|confirmed',
+            // 'profile_photo_path' => 'image|mimes:jpg,png,jpeg,gif,svg'
+        ]);
+
+        //----------User Create
+        if($request->hasFile("profile_photo_path")){
+            $file=$request->file("profile_photo_path");
+            $imageName=time().'_'.$file->getClientOriginalName();
+            $file->move(\public_path("images/profile/"),$imageName);
+        }
+        $user= new User();
+        $user->name= $request->first_name.' '.$request->last_name;
+        $user->email= $request->email;
+        $user->contact_number=$request->contact_number;
+        $user->password=bcrypt('12345678');
+        $user->status='1';
+        $user->is_admin='1';
+        $user->profile_photo_path= $imageName;
+        $user->email_verified_at='2023-01-01';
+        $user->save();
+
+        //----------Personal Info
+        $employee_id = Helper::IDGenerator(new InfoPersonal, 'employee_id', 5, 'GULF'); /* Generate id */
+        $user_id = User::orderBy('id', 'desc')->first()->id;
 
         $data= new InfoPersonal();
-        $data->employee_id=$request->employee_id;
-        $data->employee_number=$request->employee_number;
+        $data->employee_id= $employee_id;
+        $data->user_id= $user_id+1;
         $data->first_name=$request->first_name;
         $data->last_name=$request->last_name;
-
         
         $data->date_of_birth=$request->date_of_birth;
         $data->employee_gender=$request->employee_gender;

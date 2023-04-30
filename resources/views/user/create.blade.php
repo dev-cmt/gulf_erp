@@ -3,7 +3,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Edit Role</h4>
+                    <h4 class="card-title">Register New User</h4>
                     @can('Role access')
                         <a href="{{route('users.index')}}" class="btn btn-sm btn-primary"><i class="fa fa-reply"></i><span class="btn-icon-add"></span>Back</a>
                     @endcan
@@ -24,15 +24,6 @@
                             <label>Email</label>
                             <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" value="{{old('email')}}" placeholder="">
                             @error('email')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label>Batch</label>
-                            <input type="text" name="batch" id="batch" class="form-control @error('batch') is-invalid @enderror" value="{{old('batch')}}" placeholder="">
-                            @error('batch')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>

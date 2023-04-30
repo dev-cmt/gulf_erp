@@ -11,7 +11,6 @@ class InfoPersonal extends Model
 
     protected $fillable = [
         'employee_id',
-        'employee_number',
         'first_name',
         'last_name',
         'date_of_birth',

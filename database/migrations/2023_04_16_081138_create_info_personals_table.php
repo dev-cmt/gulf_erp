@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('info_personals', function (Blueprint $table) {
             $table->id();
-            $table->string('employee_id')->nullable();
+            $table->text('employee_id')->nullable();
             $table->string('employee_number')->nullable();
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
@@ -45,7 +45,7 @@ return new class extends Migration
             $table->string('zip_code_permanent')->nullable();
             $table->string('address_permanent')->nullable();
 
-            $table->string('passport_no')->nullable();
+            $table->bigInteger('passport_no')->nullable();
             $table->string('driving_license')->nullable();
             $table->integer('marital_status')->nullable();
             $table->string('house_phone')->nullable();
@@ -57,6 +57,9 @@ return new class extends Migration
             $table->string('emg_relationship')->nullable();
             $table->string('emg_address')->nullable();
             $table->timestamps();
+            
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

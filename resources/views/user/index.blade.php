@@ -27,7 +27,7 @@
                                 @if ($users->count() > 0)
                                 @foreach ($users as $user)
                                 <tr>
-                                    <td><img class="img-fluid" src="{{asset('public')}}/profile/{{ $user->profile_photo_path }}" width="40" height="40" alt=""></td>
+                                    <td><img class="img-fluid" src="{{asset('public/images')}}/profile/{{ $user->profile_photo_path }}" width="40" height="40" alt=""></td>
                                     <td>{{ $user->name }}<br><a href="mailto:<nowiki>{{ $user->email}}">{{ $user->email }}</a></td>
                                     <td>
                                         @foreach($user->roles as $role)

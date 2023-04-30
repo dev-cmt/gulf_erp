@@ -66,7 +66,7 @@
                     <h4 class="card-title">Personal Information</h4>
                 </div>
 
-                <div class="card-body">
+                <div class="card-body form-validation">
                     @if (session()->has('success'))
                         <strong class="text-success">{{session()->get('success')}}</strong>
                     @endif
@@ -96,9 +96,9 @@
                                     <div class="row">
                                         <div class="col-lg-6">
                                             <div class="form-group">
-                                                <label class="text-label">Employee ID*</label>
-                                                <input type="text" name="employee_id" class="form-control @error('employee_id') is-invalid @enderror" placeholder="" value="{{old('employee_id')}}"/>
-                                                @error('employee_id')
+                                                <label class="text-label" for="email">Email*</label>
+                                                <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" placeholder="" value="{{old('email')}}" required/>
+                                                @error('email')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
@@ -108,8 +108,8 @@
                                         <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label class="text-label">Mobile*</label>
-                                                <input type="number" name="employee_number" class="form-control @error('employee_number') is-invalid @enderror" placeholder="" value="{{old('employee_number')}}" />
-                                                @error('employee_number')
+                                                <input type="number" name="contact_number" class="form-control @error('contact_number') is-invalid @enderror" placeholder="" value="{{old('contact_number')}}" />
+                                                @error('contact_number')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
@@ -605,7 +605,7 @@
                                                         @enderror
                                                     </div>
                                                     <label for="imageUpload" class="avatar-preview">
-                                                        <div id="imagePreview" style="background-image: url('{{asset('public')}}/images/profile/blank_man.png');"></div>
+                                                        <div id="imagePreview" style="background-image: url('{{asset('public')}}/images/profile/fix/blank_man.png');"></div>
                                                     </label>
                                                 </div>
 
@@ -632,6 +632,41 @@
         </div>
     </div>
 
+
+    <div redirect-action="{{ route('info_related.create') }}" id="redirect"></div>
+    <script>
+        $(document).ready(function(){
+            var form = '#add-user-form';
+
+            $(form).on('submit', function(event){
+                event.preventDefault();
+
+                var url = $(this).attr('data-action');
+                var redirect = $('#redirect').attr('redirect-action');
+
+                $.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: new FormData(this),
+                    dataType: 'JSON',
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    success:function(response)
+                    {
+                        $(form).trigger("reset");
+                        alert(response.success);
+                        window.location.href = redirect;
+                    },
+                    error: function(response) {
+                    }
+                });
+            });
+
+        });
+    </script>
+
+    
     <!--Image Profile-->
     <script>
         function readURL(input) {
@@ -647,42 +682,6 @@
         }
         $("#imageUpload").change(function() {
             readURL(this);
-        });
-    </script>
-
-
-
-
-
-    <script>
-        $(document).ready(function(){
-            var form = '#add-user-form';
-
-            $(form).on('submit', function(event){
-                event.preventDefault();
-
-                var url = $(this).attr('data-action');
-                var src = $('#redirect').attr('redirect-action');
-
-                $.ajax({
-                    url: url,
-                    method: 'POST',
-                    data: new FormData(this),
-                    dataType: 'JSON',
-                    contentType: false,
-                    cache: false,
-                    processData: false,
-                    success:function(response)
-                    {
-                        $(form).trigger("reset");
-                        alert(response.success);
-                        // window.location.href = src;
-                    },
-                    error: function(response) {
-                    }
-                });
-            });
-
         });
     </script>
 </x-app-layout>
