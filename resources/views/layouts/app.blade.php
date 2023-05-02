@@ -22,7 +22,7 @@
     <!-- Gallery -->
     <link rel="stylesheet" href="{{asset('public/backend')}}/vendor/lightgallery/css/lightgallery.min.css">
     <!-- Form step -->
-    <link href="{{asset('public/backend')}}/vendor/jquery-smartwizard/dist/css/smart_wizard.min.css" rel="stylesheet">
+    {{-- <link href="{{asset('public/backend')}}/vendor/jquery-smartwizard/dist/css/smart_wizard.min.css" rel="stylesheet"> --}}
     <!-- Custom Stylesheet -->
 	<link href="{{asset('public/backend')}}/vendor/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet">
     <link href="{{asset('public/backend')}}/css/style.css" rel="stylesheet">
@@ -119,7 +119,7 @@
     <script src="{{asset('public/backend')}}/vendor/lightgallery/js/lightgallery-all.min.js"></script>
     
     <!-- Form Steps -->
-	<script src="{{asset('public/backend')}}/vendor/jquery-smartwizard/dist/js/jquery.smartWizard.js"></script>
+	{{-- <script src="{{asset('public/backend')}}/vendor/jquery-smartwizard/dist/js/jquery.smartWizard.js"></script> --}}
 
     <!-- Start Toaster & Sweetalert -->
     <script src="{{asset('public/backend')}}/vendor/toaster/js/toastr.min.js"></script>
@@ -166,6 +166,11 @@
             
     </script>
     <!-- End Toaster & Sweetalert -->
+    <script>
+        $(function () {
+            $(".dropdwon_select").select2();
+        }); 
+    </script>
 
     @stack('script')
 </body>

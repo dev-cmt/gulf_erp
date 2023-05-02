@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use App\Models\Admin\InfoPersonal;
 use Illuminate\Support\Facades\File;
 use App\Models\User;
 use App\Helpers\Helper;
+use DB;
 
 class InfoPersonalController extends Controller
 {
@@ -17,14 +19,41 @@ class InfoPersonalController extends Controller
     }
     public function create()
     {
-        return view('layouts.pages.admin.info_personal.create');
+        $data = DB::table('divisions')->get();
+        $divisions = DB::table('divisions')->count('id');
+        $districts = DB::table('districts')->count('id');
+        $upazilas = DB::table('upazilas')->count('id');
+        $unions = DB::table('unions')->count('id');
+
+        $data = [
+            'division' => $divisions,
+            'divisions' => $data,
+            'district' => $districts,
+            'upazila' => $upazilas,
+            'union' => $unions,
+        ];
+
+        return view('layouts.pages.admin.info_personal.create',compact('data'));
     }
     public function store(Request $request)
     {
         $request->validate([
             'email' => 'required|email|unique:users,email',
-            // 'password' => 'required|min:6|confirmed',
-            // 'profile_photo_path' => 'image|mimes:jpg,png,jpeg,gif,svg'
+            'contact_number' => 'required',
+            'first_name' => 'required',
+            'date_of_birth' => 'required',
+            'employee_gender' => 'required',
+            'nid_no' => 'required',
+            'joining_date' => 'required',
+            'district_present' => 'required',
+            'city_present' => 'required',
+            'thana_present' => 'required',
+            'father_name' => 'required',
+            'mother_name' => 'required',
+            'emg_person_name' => 'required',
+            'emg_phone_number' => 'required',
+            'emg_relationship' => 'required',
+            'profile_photo_path' => 'image|mimes:jpg,png,jpeg,gif,svg'
         ]);
 
         //----------User Create
@@ -94,6 +123,8 @@ class InfoPersonalController extends Controller
 
         $data->save();
         
-        return response()->json(['success'=>'Education information save is being processed.']);
+        // return response()->json(['success'=>'Education information save is being processed.']);
+        $notification=array('messege'=>'Category save successfully!','alert-type'=>'success');
+        return redirect()->route('info_personal.index')->with($notification);
     }
 }
