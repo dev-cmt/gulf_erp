@@ -165,7 +165,7 @@
                     @if (session()->has('success'))
                         <strong class="text-success">{{session()->get('success')}}</strong>
                     @endif
-                    <form class="form-valide" action="{{ route('info_personal.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('info_personal.store') }}" method="POST" enctype="multipart/form-data" name="myForm">
                         @csrf
                         <div class="row">
                             <div class="col-12">
@@ -174,7 +174,7 @@
                                     <div class="progress" id="progress"></div>
                                     <div class="progress-step progress-step-active" data-title="Introduction"></div>
                                     <div class="progress-step" data-title="Official Information"></div>
-                                    <div class="progress-step" data-title="Present Information"></div>
+                                    <div class="progress-step" data-title="Address Details"></div>
                                     <div class="progress-step" data-title="Other Information"></div>
                                     <div class="progress-step" data-title="Document"></div>
                                 </div>
@@ -198,7 +198,7 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="text-label">Mobile*</label>
-                                        <input type="number" name="contact_number" class="form-control @error('contact_number') is-invalid @enderror" placeholder="" value="{{old('contact_number')}}" />
+                                        <input type="number" name="contact_number" id="contact_number" class="form-control @error('contact_number') is-invalid @enderror" placeholder="" value="{{old('contact_number')}}" />
                                         @error('contact_number')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -287,7 +287,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-12 text-right">
-                                    <button type="button" class="btn btn-next btn btn-primary btn-sm">Next</button>
+                                    <button type="button" class="btn btn-next btn btn-primary btn-sm" onclick="return validateForm()">Next</button>
                                 </div>
                             </div>
                         </div>
@@ -422,7 +422,7 @@
                             <div class="row">
                                 <div class="col-12 text-right">
                                     <button type="button" class="btn btn-prev btn btn-primary btn-sm">Previous</button>
-                                    <button type="button" class="btn btn-next btn btn-primary btn-sm">Next</button>
+                                    <button type="button" class="btn btn-next btn btn-primary btn-sm" onclick="return validateForm()">Next</button>
                                 </div>
                             </div>
                         </div>
@@ -480,7 +480,7 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="text-label">Address Description</label>
-                                        <textarea name="address_present" class="form-control @error('address_present') is-invalid @enderror" rows="2" placeholder="Address Details">{{old('address_present')}}</textarea>
+                                        <textarea name="address_present" class="form-control @error('address_present') is-invalid @enderror" rows="2" placeholder="Write your present address details!" id="address-present">{{old('address_present')}}</textarea>
                                         @error('address_present')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -502,7 +502,7 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="text-label">Division</label>
-                                        <select name="division_permanent" class="form-control dropdwon_select @error('division_permanent') is-invalid @enderror" id="permanent-division" value="{{old('division_permanent')}}">
+                                        <select name="division_permanent" class="form-control @error('division_permanent') is-invalid @enderror" id="permanent-division" value="{{old('division_permanent')}}">
                                             <option selected disabled>Select Division</option>
                                             @foreach($data['divisions'] as $division)
                                                 <option value="{{ $division->id }}">{{ $division->name }}</option>
@@ -518,7 +518,7 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="text-label">District</label>
-                                        <select name="district_permanent" class="form-control dropdwon_select @error('district_permanent') is-invalid @enderror" id="permanent-district" value="{{old('district_permanent')}}"></select>
+                                        <select name="district_permanent" class="form-control @error('district_permanent') is-invalid @enderror" id="permanent-district" value="{{old('district_permanent')}}"></select>
                                         @error('district_permanent')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -529,7 +529,7 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="text-label">Upazila</label>
-                                        <select name="upazila_permanent" class="form-control dropdwon_select @error('upazila_permanent') is-invalid @enderror" id="permanent-upazila" value="{{old('upazila_permanent')}}"></select>
+                                        <select name="upazila_permanent" class="form-control @error('upazila_permanent') is-invalid @enderror" id="permanent-upazila" value="{{old('upazila_permanent')}}"></select>
                                         @error('upazila_permanent')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -551,7 +551,7 @@
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label class="text-label">Address Description</label>
-                                        <textarea name="address_permanent" class="form-control  @error('address_permanent') is-invalid @enderror" rows="2" placeholder="Type your address"></textarea>
+                                        <textarea name="address_permanent" class="form-control  @error('address_permanent') is-invalid @enderror" rows="2" placeholder="Write your permanent address details!" id="address-permanent"></textarea>
                                         @error('address_permanent')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -563,7 +563,7 @@
                             <div class="row">
                                 <div class="col-12 text-right">
                                     <button type="button" class="btn btn-prev btn btn-primary btn-sm">Previous</button>
-                                    <button type="button" class="btn btn-next btn btn-primary btn-sm">Next</button>
+                                    <button type="button" class="btn btn-next btn btn-primary btn-sm" onclick="return validateForm()">Next</button>
                                 </div>
                             </div>
                         </div>
@@ -702,7 +702,7 @@
                             <div class="row">
                                 <div class="col-12 text-right">
                                     <button type="button" class="btn btn-prev btn btn-primary btn-sm">Previous</button>
-                                    <button type="button" class="btn btn-next btn btn-primary btn-sm">Next</button>
+                                    <button type="button" class="btn btn-next btn btn-primary btn-sm" onclick="return validateForm()">Next</button>
                                 </div>
                             </div>
                         </div>
@@ -715,7 +715,7 @@
                                                 <input type='file' class="@error('profile_photo_path') is-invalid @enderror form-control" name="profile_photo_path" id="imageUpload" accept=".png, .jpg, .jpeg" value="{{old('profile_photo_path')}}"/>
                                                 <label><i class="fa fa-camera profile_save_btn"></i></label>
                                                 @error('profile_photo_path')
-                                                    <span class="invalid-feedback" role="alert" style="position: absolute;top: 178px;left: -160px;width: 300px;">
+                                                    <span class="invalid-feedback" role="alert" style="">
                                                         <strong>{{ $message }}</strong>
                                                     </span>
                                                 @enderror
@@ -724,6 +724,7 @@
                                                 <div id="imagePreview" style="background-image: url('{{asset('public')}}/images/profile/fix/blank_man.png');"></div>
                                             </label>
                                         </div>
+                                        <h5>Profile Image Upload (Max 2MB File)</h5>
 
                                     </div>
                                 </div>
@@ -731,12 +732,13 @@
                             <div class="row">
                                 <div class="col-12 text-right">
                                     <button type="button" class="btn btn-prev btn btn-primary btn-sm">Previous</button>
-                                    <input type="submit" class="btn btn-success btn-sm" value="Submit"/>
+                                    <input type="submit" class="btn btn-success btn-sm" onclick="return validateForm()" value="Submit"/>
                                 </div>
                             </div>
                         </div>
                     </form>
                 </div>
+
 
             </div>
         </div>
@@ -762,6 +764,10 @@
 
     <!--Form Step-->
     <script>
+        
+    </script>
+    <!--Form Step && Validation-->
+    <script>
         const prevBtns = document.querySelectorAll(".btn-prev");
         const nextBtns = document.querySelectorAll(".btn-next");
         const progress = document.getElementById("progress");
@@ -770,6 +776,25 @@
 
         let formStepsNum = 0;
 
+        function validateForm() {
+            var input  = [];
+            input = document.getElementById("email").value;
+            input = document.getElementById("contact_number").value;
+
+            // var x = document.forms["myForm"]["email"].value;
+            if (input == "" || input == null ) {
+                Swal.fire('Fill out all of the form data');
+                formStepsNum--;
+                updateFormSteps();
+                updateProgressbar();
+                return false;
+            }else{
+                
+            }
+        }
+
+
+        //---Form Step
         nextBtns.forEach((btn) => {
         btn.addEventListener("click", () => {
                 formStepsNum++;
@@ -807,6 +832,7 @@
             const progressActive = document.querySelectorAll(".progress-step-active");
             progress.style.width = ((progressActive.length - 1) / (progressSteps.length - 1)) * 100 + "%";
         }
+        
     </script>
 
     <!-- Divistion -->
@@ -882,7 +908,7 @@
                         thana_option += "<option selected disabled>Select Thana</option>";
                         for(var i = 0; i < thana.length; i++){
                             var thana_id = thana[i]['id'];
-                            var thana_name = thana[i]['bn_name'];
+                            var thana_name = thana[i]['name'];
                             thana_option += "<option value='"+thana_id+"'>"+thana_name+"</option>";
                             $('#thana').empty();
                         }
@@ -909,6 +935,9 @@
     
         const presentThanaDropdown = document.getElementById("thana");
         const permanentThanaDropdown = document.getElementById("permanent-thana");
+
+        const addressPresentDropdown = document.getElementById("address-present");
+        const addressPermanentDropdown = document.getElementById("address-permanent");
     
         const sameAddressCheckbox = document.getElementById("same-address-checkbox");
         sameAddressCheckbox.addEventListener("change", function() {
@@ -918,11 +947,13 @@
                 permanentDistrictDropdown.value = presentDistrictDropdown.value;
                 permanentUpazilaDropdown.value = presentUpazilaDropdown.value;
                 permanentThanaDropdown.value = presentThanaDropdown.value;
+                addressPermanentDropdown.value = addressPresentDropdown.value;
             } else {
                 permanentAddressDropdown.value = "";
                 permanentDistrictDropdown.value = "";
                 permanentUpazilaDropdown.value = "";
                 permanentThanaDropdown.value = "";
+                addressPermanentDropdown.value = "";
             }
         });
     </script>
