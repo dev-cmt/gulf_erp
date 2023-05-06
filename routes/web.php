@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\BackViewController;
 use App\Http\Controllers\Admin\InfoPersonalController;
 use App\Http\Controllers\Admin\InfoRelatedController;
 
+use App\Http\Controllers\ProductController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -40,10 +41,9 @@ Route::middleware([ 'auth:sanctum','verified','member', config('jetstream.auth_s
     Route::resource('roles', RoleController::class);
 });
 
+//------ Personal Info
 Route::group(['middleware' => ['auth']], function(){
     Route::resource('info_personal', InfoPersonalController::class);
     Route::resource('info_related', InfoRelatedController::class);
 });
-
-
 

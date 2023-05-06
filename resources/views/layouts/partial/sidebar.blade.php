@@ -38,7 +38,7 @@
                                 <li><a href="#">Attendance List</a></li>
                                 <li><a href="#">Manual Attendance</a></li>
                                 <li><a href="#">Attendance Approve</a></li>
-                                <li><a href="#">Upload Attendance File</a></li>
+                                <li><a href="#">Upload Attendance</a></li>
                             </ul>
                         </li>
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Salary</a>
