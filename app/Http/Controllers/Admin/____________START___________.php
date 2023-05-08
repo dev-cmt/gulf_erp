@@ -32,6 +32,13 @@ class DesignationController extends Controller
             'category_name'=> 'required|unique:categories|max:255',
         ]);
 
+        // $data = $request->validate([
+        //     'qualification' => 'required',
+        //     'institute_name' => 'required',
+        // ]);
+        // $project = InfoEducational::create($data);
+        
+
         //-------Queary Builder (1)
         // $category=new Category();
         // $category=insert(
@@ -110,12 +117,6 @@ class DesignationController extends Controller
         $notification=array('messege'=>'Category Delete successfully!','alert-type'=>'success');
         return redirect()->back()->with($notification);
     }
-
-
-
-
-
-
 
 
 

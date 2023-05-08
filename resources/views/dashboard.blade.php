@@ -29,20 +29,6 @@
                                 </div>
                             </div>
                         </div>
-<!-- /# column -->
-<div class="col-lg-4 col-md-6">
-    <div class="card">
-        <div class="card-body">
-            <h4 class="card-title">Sweet Auto Close</h4>
-            <div class="card-content">
-                <div class="sweetalert mt-5">
-                    <button class="btn btn-danger btn sweet-auto">Sweet Auto Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- /# card -->
-</div>
                         <!-- Button trigger modal -->
                         <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#exampleModalLong">Long content Modal</button>
                         <!-- Modal -->
@@ -108,6 +94,7 @@
                                 </div>
                             </div>
                         </div>
+
 
                         <!-- Button trigger modal -->
                         <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#exampleModalpopover">Modal with tooltip</button>

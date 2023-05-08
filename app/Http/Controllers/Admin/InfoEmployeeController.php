@@ -4,87 +4,52 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use App\Models\Admin\InfoPersonal;
-use Illuminate\Support\Facades\File;
 use App\Models\User;
-use App\Helpers\Helper;
-use DB;
 
-class InfoPersonalController extends Controller
+class InfoEmployeeController extends Controller
 {
     public function index()
     {
-        return view('layouts.pages.admin.info_personal.index');
-    }
-    public function create()
-    {
-        $data = DB::table('divisions')->get();
-        $divisions = DB::table('divisions')->count('id');
-        $districts = DB::table('districts')->count('id');
-        $upazilas = DB::table('upazilas')->count('id');
-        $unions = DB::table('unions')->count('id');
-
-        $data = [
-            'division' => $divisions,
-            'divisions' => $data,
-            'district' => $districts,
-            'upazila' => $upazilas,
-            'union' => $unions,
-        ];
-
-        return view('layouts.pages.admin.info_personal.create',compact('data'));
+        $user = User::get();
+        return view('layouts.pages.admin.info_employee.index',compact('user'));
     }
     public function store(Request $request)
     {
-        // $request->validate([
-        //     'email' => 'required|email|unique:users,email',
-        //     'contact_number' => 'required',
-        //     'first_name' => 'required',
-        //     'date_of_birth' => 'required',
-        //     'employee_gender' => 'required',
-        //     'nid_no' => 'required',
-        //     'joining_date' => 'required',
-        //     'district_present' => 'required',
-        //     'city_present' => 'required',
-        //     'thana_present' => 'required',
-        //     'father_name' => 'required',
-        //     'mother_name' => 'required',
-        //     'emg_person_name' => 'required',
-        //     'emg_phone_number' => 'required',
-        //     'emg_relationship' => 'required',
-        //     'profile_photo_path' => 'image|mimes:jpg,png,jpeg,gif,svg'
-        // ]);
+        $request->validate([
+            'name' => 'required|max:80',
+            'email' => 'required|email|unique:users,email',
+            // 'password' => 'required|min:6|confirmed',
+        ]);
 
+        $user= new User();
+        $user->name= $request->name;
+        $user->email= $request->email;
+        $user->contact_number=$request->contact_number;
+        $user->password=bcrypt($request->password);
+        $user->status='1';
+        $user->is_admin='0';
+        $user->email_verified_at='2023-01-01';
+        $user->save();
+
+        $notification=array('messege'=>'User created successfully!','alert-type'=>'success');
+        return back()->with($notification);
+    }
+    public function info_personal(Request $request, $id)
+    {
         //----------User Create
         if($request->hasFile("profile_photo_path")){
             $file=$request->file("profile_photo_path");
             $imageName=time().'_'.$file->getClientOriginalName();
             $file->move(\public_path("images/profile/"),$imageName);
         }
-        $user= new User();
-        $user->name= $request->first_name.' '.$request->last_name;
-        $user->email= $request->email;
-        $user->contact_number=$request->contact_number;
-        $user->password=bcrypt('12345678');
-        $user->status='1';
+        $user=User::find($id);
         $user->is_admin='1';
         $user->profile_photo_path= $imageName;
-        $user->email_verified_at='2023-01-01';
         $user->save();
-
-        //----------Personal Info
-        $employee_id = Helper::IDGenerator(new InfoPersonal, 'employee_id', 5, 'GULF'); /* Generate id */
-        $user_id = User::orderBy('id', 'desc')->first()->id + 1;
-        
-        $model = new User();
-        $gn_id = $model::orderBy('id','desc')->first();
-        // dd($gn_id);
 
         $data= new InfoPersonal();
         $data->employee_id= $employee_id;
-        // $data->user_id= $user_id;
-        $data->user_id= '1';
+        $data->user_id= $id;
         $data->first_name=$request->first_name;
         $data->last_name=$request->last_name;
         

@@ -205,7 +205,7 @@
         }
         /*--------Alert-----------*/
         .swal2-popup .swal2-title{
-            color: #f30000 !important;
+            color: #ffffff !important;
         }
         .swal2-popup .swal2-styled.swal2-confirm{
             background-color: #f04e23 !important;

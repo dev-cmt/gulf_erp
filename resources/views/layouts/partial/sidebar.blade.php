@@ -23,21 +23,22 @@
                         <span class="nav-text">HR & Admin</span>
                     </a>
                     <ul aria-expanded="false">
-                        <li><a href="{{route('info_personal.create')}}">Personal Details</a></li>
-                        <li><a href="{{route('info_related.create')}}">Related Information</a></li>
+                        <li><a href="{{route('info_employee.index')}}">Employee Registration </a></li>
+                        {{-- <li><a href="{{route('info_personal.create')}}">Personal Details</a></li> --}}
+                        {{-- <li><a href="{{route('info_related.index')}}">Related Information</a></li> --}}
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Leave</a>
                             <ul aria-expanded="false">
-                                <li><a href="#">Leave Process</a></li>
-                                <li><a href="#">Dept. Approve</a></li>
-                                <li><a href="#">HR Approve</a></li>
-                                <li><a href="#">Emargency Leave</a></li>
+                                <li><a href="{{ route('leave_process') }}">Leave Process</a></li>
+                                <li><a href="{{ route('dept_approve') }}">Dept. Approve</a></li>
+                                <li><a href="{{ route('hr_approve') }}">HR Approve</a></li>
+                                <li><a href="{{ route('emergency_leave') }}">Emergency Leave</a></li>
                             </ul>
                         </li>
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Attendance</a>
                             <ul aria-expanded="false">
-                                <li><a href="#">Attendance List</a></li>
-                                <li><a href="#">Manual Attendance</a></li>
-                                <li><a href="#">Attendance Approve</a></li>
+                                <li><a href="{{ route('manualattendances.index') }}">Attendance List</a></li>
+                                <li><a href="{{ route('manualattendances.create') }}">Manual Attendance</a></li>
+                                <li><a href="{{ route('attendance_approve') }}">Attendance Approve</a></li>
                                 <li><a href="#">Upload Attendance</a></li>
                             </ul>
                         </li>
@@ -50,10 +51,10 @@
                         </li>
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Data Setting</a>
                             <ul aria-expanded="false">
-                                <li><a href="#">Depertment</a></li>
-                                <li><a href="#">Desgination</a></li>
-                                <li><a href="#">Leave Type</a></li>
-                                <li><a href="#">Employee Category</a></li>
+                                <li><a href="{{route('mast_department.index')}}">Depertment</a></li>
+                                <li><a href="{{route('mast_designation.index')}}">Desgination</a></li>
+                                <li><a href="{{route('mast_leave.index')}}">Leave Type</a></li>
+                                <li><a href="{{route('must_employee_category.index')}}">Employee Category</a></li>
                             </ul>
                         </li>
                     </ul>

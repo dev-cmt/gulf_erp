@@ -13,12 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('info_educationals', function (Blueprint $table) {
+        Schema::create('info_work_experiences', function (Blueprint $table) {
             $table->id();
-            $table->integer('qualification')->nullable();
-            $table->string('institute_name')->nullable();
-            $table->date('passing_year')->nullable();
-            $table->integer('grade')->nullable();
+            $table->string('company_name')->nullable();
+            $table->string('designation')->nullable();
+            $table->date('start_date')->nullable();
+            $table->date('end_date')->nullable();
+            $table->text('job_description')->nullable();
             $table->tinyInteger('status')->default(false);
             $table->timestamps();
             
@@ -34,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('info_educationals');
+        Schema::dropIfExists('info_work_experiences');
     }
 };

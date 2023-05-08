@@ -16,7 +16,7 @@
 </head>
 <body>
     <div class="bg-img" style="background: url('{{asset('public/extra-pages/login')}}/background.jpg');background-size: cover;background-repeat: no-repeat;background-position: center;">
-        <div class="content">
+        <div class="content" style="border:1px solid white">
             <div style="background: #e8f0fe;margin-left: -20px;margin-right: -20px;padding-top: 8px;">
                 <a href="{{url('/')}}"><img src="{{asset('public/images')}}/logo.png" style="width:75%" alt=""></a>
             </div>

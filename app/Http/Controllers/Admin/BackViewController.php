@@ -11,7 +11,10 @@ class BackViewController extends Controller
 {
     public function dashboard()
     {
-
         return view('dashboard');
+    }
+    public function coming_soon()
+    {
+        return view('coming_soon');
     }
 }
