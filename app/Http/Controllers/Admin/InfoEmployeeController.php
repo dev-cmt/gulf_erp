@@ -4,7 +4,17 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\File;
+use App\Models\Admin\InfoPersonal;
+use App\Models\Admin\InfoEducational;
+use App\Models\Admin\InfoWorkExperience;
+use App\Models\Master\MastDepartment;
+use App\Models\Master\MastDesignation;
+use App\Models\Master\MastEmployeeCategory;
 use App\Models\User;
+use App\Helpers\Helper;
+use DB;
 
 class InfoEmployeeController extends Controller
 {
@@ -34,7 +44,28 @@ class InfoEmployeeController extends Controller
         $notification=array('messege'=>'User created successfully!','alert-type'=>'success');
         return back()->with($notification);
     }
-    public function info_personal(Request $request, $id)
+    public function personal_create($id){
+        $data = DB::table('divisions')->get();
+        $divisions = DB::table('divisions')->count('id');
+        $districts = DB::table('districts')->count('id');
+        $upazilas = DB::table('upazilas')->count('id');
+        $unions = DB::table('unions')->count('id');
+
+        $data = [
+            'division' => $divisions,
+            'divisions' => $data,
+            'district' => $districts,
+            'upazila' => $upazilas,
+            'union' => $unions,
+        ];
+        $user_id = $id;
+        $department =MastDepartment::get();
+        $designation =MastDesignation::get();
+        $employee_category =MastEmployeeCategory::get();
+
+        return view('layouts.pages.admin.info_employee.info_personal',compact('data','user_id','department','designation','employee_category'));
+    }
+    public function personal_store(Request $request, $id)
     {
         //----------User Create
         if($request->hasFile("profile_photo_path")){
@@ -42,10 +73,14 @@ class InfoEmployeeController extends Controller
             $imageName=time().'_'.$file->getClientOriginalName();
             $file->move(\public_path("images/profile/"),$imageName);
         }
-        $user=User::find($id);
-        $user->is_admin='1';
-        $user->profile_photo_path= $imageName;
-        $user->save();
+        //-------User ORM
+        $user = User::findorfail($id);
+        $user->update([
+            'is_admin' => 0,
+            'profile_photo_path' => $imageName,
+        ]);
+        //----------Personal Info
+        $employee_id = Helper::IDGenerator(new InfoPersonal, 'employee_id', 5, 'GULF'); /* Generate id */
 
         $data= new InfoPersonal();
         $data->employee_id= $employee_id;
@@ -93,6 +128,72 @@ class InfoEmployeeController extends Controller
         $data->save();
         
         $notification=array('messege'=>'Category save successfully!','alert-type'=>'success');
-        return redirect()->route('info_related.create')->with($notification);
+        return redirect()->route('info_employee_related.create', $id)->with($notification);
+    }
+
+
+    public function related_create($id)
+    {
+        $user =User::get();
+        $educational =InfoEducational::orderBy('id','DESC')->get();
+        $work_experience =InfoWorkExperience::orderBy('id','DESC')->get();
+        return view('layouts.pages.admin.info_employee.info_related',compact('educational','work_experience','user'));
+    }
+
+    public function related_store(Request $request) 
+    {  
+        if($request->institute_name != null){
+            $todo= new InfoEducational();
+            $todo->qualification=$request->qualification;
+            $todo->institute_name=$request->institute_name;
+            $todo->passing_year=$request->passing_year;
+            $todo->grade=$request->grade;
+            $todo->user_id='1';
+            $todo->save();
+            return response()->json($todo);
+        }elseif($request->company_name){
+            $todo= new InfoWorkExperience();
+            $todo->company_name=$request->company_name;
+            $todo->designation=$request->designation;
+            $todo->start_date=$request->start_date;
+            $todo->end_date=$request->end_date;
+            $todo->job_description=$request->job_description;
+            $todo->user_id='1';
+            $todo->save();
+            return response()->json($todo);
+        }elseif ($request->bank_name) {
+            $todo= new InfoBank();
+            $todo->bank_name=$request->bank_name;
+            $todo->brance_name=$request->brance_name;
+            $todo->acount_name=$request->acount_name;
+            $todo->acount_no=$request->acount_no;
+            $todo->acount_type=$request->acount_type;
+            $todo->bank_name_office=$request->bank_name_office;
+            $todo->brance_name_office=$request->brance_name_office;
+            $todo->acount_name_office=$request->acount_name_office;
+            $todo->acount_no_office=$request->acount_no_office;
+            $todo->acount_type_office=$request->acount_type_office;
+            $todo->user_id='1';
+            $todo->save();
+            return response()->json($todo);
+        }elseif($request->bank_name){
+            $todo= new InfoBank();
+            $todo->full_name=$request->full_name;
+            $todo->nid_no=$request->nid_no;
+            $todo->relation=$request->relation;
+            $todo->mobile_no=$request->mobile_no;
+            $todo->nominee_percentage=$request->nominee_percentage;
+            $todo->profile_image=$request->profile_image;
+            $todo->user_id='1';
+            $todo->save();
+            return response()->json($todo);
+        }
+        // return response()->json(['success'=>'Work Experience Information save is being processed.']);
+    }
+    public function destroy($id)
+    {
+        $data=InfoEducational::find($id);
+        $data->delete();
+        return response()->json('success');
     }
 }

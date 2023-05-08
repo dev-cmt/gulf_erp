@@ -56,7 +56,10 @@ Route::group(['middleware' => ['auth']], function(){
     Route::resource('info_personal', InfoPersonalController::class);
     Route::resource('info_related', InfoRelatedController::class);
     Route::resource('info_employee', InfoEmployeeController::class);
-    Route::get('/info_employee/info_personal/{id}', [InfoEmployeeController::class, 'info_personal'])->name('info_personal.');
+    Route::get('employee/info_prsonal/create/{id}', [InfoEmployeeController::class, 'personal_create'])->name('info_employee_prsonal.create');
+    Route::post('employee/info_prsonal/store/{id}', [InfoEmployeeController::class, 'personal_store'])->name('info_employee_prsonal.store');
+    Route::get('employee/info_related/create/{id}', [InfoEmployeeController::class, 'related_create'])->name('info_employee_related.create');
+    Route::get('employee/info_related/store/{id}', [InfoEmployeeController::class, 'related_store'])->name('info_employee_related.store');
 
     //------ Leave Process
     Route::get('/leave_process', [LeaveApplicationController::class, 'application'])->name('leave_process');

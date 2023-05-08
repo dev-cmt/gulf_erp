@@ -16,16 +16,12 @@ return new class extends Migration
         Schema::create('info_personals', function (Blueprint $table) {
             $table->id();
             $table->text('employee_id')->nullable();
-            $table->string('employee_number')->nullable();
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
             $table->date('date_of_birth')->nullable();
             $table->integer('employee_gender')->nullable();
             $table->string('nid_no')->nullable();
             $table->integer('blood_group')->nullable();
-            $table->integer('department')->nullable();
-            $table->integer('designation')->nullable();
-            $table->integer('employee_type')->nullable();
             $table->string('work_station')->nullable();
             $table->string('number_official')->nullable();
             $table->string('email_official')->nullable();
@@ -57,9 +53,15 @@ return new class extends Migration
             $table->string('emg_relationship')->nullable();
             $table->string('emg_address')->nullable();
             $table->timestamps();
-            
+
+            $table->unsignedBigInteger('department');
+            $table->foreign('department')->references('id')->on('mast_departments')->onDelete('cascade');
+            $table->unsignedBigInteger('designation');
+            $table->foreign('designation')->references('id')->on('mast_designations')->onDelete('cascade');
+            $table->unsignedBigInteger('employee_type');
+            $table->foreign('employee_type')->references('id')->on('mast_employee_categories')->onDelete('cascade');
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
