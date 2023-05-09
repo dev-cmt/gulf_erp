@@ -54,12 +54,14 @@ Route::middleware([ 'auth:sanctum','verified','member', config('jetstream.auth_s
 Route::group(['middleware' => ['auth']], function(){
     //------ Employee Information
     Route::resource('info_personal', InfoPersonalController::class);
-    Route::resource('info_related', InfoRelatedController::class);
+    // Route::resource('info_related', InfoRelatedController::class);
+
     Route::resource('info_employee', InfoEmployeeController::class);
     Route::get('employee/info_prsonal/create/{id}', [InfoEmployeeController::class, 'personal_create'])->name('info_employee_prsonal.create');
     Route::post('employee/info_prsonal/store/{id}', [InfoEmployeeController::class, 'personal_store'])->name('info_employee_prsonal.store');
     Route::get('employee/info_related/create/{id}', [InfoEmployeeController::class, 'related_create'])->name('info_employee_related.create');
-    Route::get('employee/info_related/store/{id}', [InfoEmployeeController::class, 'related_store'])->name('info_employee_related.store');
+    Route::post('employee/info_related/store/{id}', [InfoEmployeeController::class, 'related_store'])->name('info_employee_related.store');
+    Route::delete('info_related/education/destroy/{id}', [InfoEmployeeController::class, 'related_education_destroy'])->name('info_employee_education.destroy');
 
     //------ Leave Process
     Route::get('/leave_process', [LeaveApplicationController::class, 'application'])->name('leave_process');

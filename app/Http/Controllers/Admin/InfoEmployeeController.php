@@ -68,17 +68,20 @@ class InfoEmployeeController extends Controller
     public function personal_store(Request $request, $id)
     {
         //----------User Create
-        if($request->hasFile("profile_photo_path")){
-            $file=$request->file("profile_photo_path");
-            $imageName=time().'_'.$file->getClientOriginalName();
-            $file->move(\public_path("images/profile/"),$imageName);
-        }
-        //-------User ORM
         $user = User::findorfail($id);
+        if($request->hasFile("profile_photo_path")){
+            if (File::exists("images/profile/".$user->profile_photo_path)) {
+                File::delete("images/profile/".$user->profile_photo_path);
+            }
+            $file=$request->file("profile_photo_path");
+            $imageName=time()."_".$file->getClientOriginalName();
+            $file->move(\public_path("images/profile/"),$imageName);
+            $request['profile_photo_path']=$imageName;
+        }
         $user->update([
-            'is_admin' => 0,
             'profile_photo_path' => $imageName,
         ]);
+
         //----------Personal Info
         $employee_id = Helper::IDGenerator(new InfoPersonal, 'employee_id', 5, 'GULF'); /* Generate id */
 
@@ -134,21 +137,23 @@ class InfoEmployeeController extends Controller
 
     public function related_create($id)
     {
-        $user =User::get();
-        $educational =InfoEducational::orderBy('id','DESC')->get();
-        $work_experience =InfoWorkExperience::orderBy('id','DESC')->get();
-        return view('layouts.pages.admin.info_employee.info_related',compact('educational','work_experience','user'));
+        $user =User::findorfail($id);
+        $educational =InfoEducational::orderBy('id','DESC')->where('user_id', $id)->get();
+        $work_experience =InfoWorkExperience::orderBy('id','DESC')->where('user_id', $id)->get();
+        $user_id = $id;
+        return view('layouts.pages.admin.info_employee.info_related',compact('user','educational','work_experience','user_id'));
     }
 
-    public function related_store(Request $request) 
+    public function related_store(Request $request, $id) 
     {  
+
         if($request->institute_name != null){
             $todo= new InfoEducational();
             $todo->qualification=$request->qualification;
             $todo->institute_name=$request->institute_name;
             $todo->passing_year=$request->passing_year;
             $todo->grade=$request->grade;
-            $todo->user_id='1';
+            $todo->user_id= $id;
             $todo->save();
             return response()->json($todo);
         }elseif($request->company_name){
@@ -158,7 +163,7 @@ class InfoEmployeeController extends Controller
             $todo->start_date=$request->start_date;
             $todo->end_date=$request->end_date;
             $todo->job_description=$request->job_description;
-            $todo->user_id='1';
+            $todo->user_id= $id;
             $todo->save();
             return response()->json($todo);
         }elseif ($request->bank_name) {
@@ -173,7 +178,7 @@ class InfoEmployeeController extends Controller
             $todo->acount_name_office=$request->acount_name_office;
             $todo->acount_no_office=$request->acount_no_office;
             $todo->acount_type_office=$request->acount_type_office;
-            $todo->user_id='1';
+            $todo->user_id= $id;
             $todo->save();
             return response()->json($todo);
         }elseif($request->bank_name){
@@ -184,16 +189,18 @@ class InfoEmployeeController extends Controller
             $todo->mobile_no=$request->mobile_no;
             $todo->nominee_percentage=$request->nominee_percentage;
             $todo->profile_image=$request->profile_image;
-            $todo->user_id='1';
+            $todo->user_id= $id;
             $todo->save();
             return response()->json($todo);
         }
         // return response()->json(['success'=>'Work Experience Information save is being processed.']);
     }
-    public function destroy($id)
+    public function related_education_destroy($id)
     {
-        $data=InfoEducational::find($id);
-        $data->delete();
+        $data = DB::table('info_educationals')->where('id',$id)->delete();
+
+        // $data=InfoEducational::find($id);
+        // $data->delete();
         return response()->json('success');
     }
 }

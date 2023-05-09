@@ -3,7 +3,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Related Information</h4>
+                    <h4 class="card-title">Related Information ({{$user->name}})</h4>
                     <a href="{{route('info_employee.index')}}" class="btn btn-sm btn-primary"><i class="fa fa-reply"></i><span class="btn-icon-add"></span>Skip</a>
                 </div>
 
@@ -90,24 +90,33 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-xl-12">
+                                        <div class="col-xl-12" id="educational">
+                                            @if (count($educational) > 0)
                                             <table class="table table-bordered mt-3">
                                                 <thead class="bg-dark text-white">
-                                                    <th>Sr.no</th>
-                                                    <th>Name</th>
+                                                    <th>Qualification</th>
+                                                    <th>Institute Name</th>
+                                                    <th>Grade</th>
+                                                    <th>Passing Year</th>
                                                     <th>Action</th>
                                                 </thead>
                                                 <tbody id="list_todo">
                                                     @foreach($educational as $row)
-                                                      <tr id="row_todo_{{ $row->id}}">
-                                                          <td width="20">{{ $row->id}}</td>
-                                                          <td>{{ $row->institute_name}}</td>
-                                                          <td width="150">
-                                                          <button type="button" id="delete_todo" data-id="{{ $row->id }}" class="btn btn-sm btn-danger ml-1">Delete</button>                        </td>
-                                                      </tr>
+                                                        <tr id="row_todo_{{ $row->id}}">
+                                                            <td>
+                                                                @if ($row->qualification == 1) SSC @else HSC  @endif
+                                                            </td>
+                                                            <td>{{ $row->institute_name}}</td>
+                                                            <td>{{ $row->grade}}</td>
+                                                            <td>{{ $row->passing_year}}</td>
+                                                            <td width="90">
+                                                                <button type="button" id="delete_todo" data-id="{{ $row->id }}" class="btn btn-sm btn-danger ml-1">Delete</button>
+                                                            </td>
+                                                        </tr>
                                                     @endforeach
                                                 </tbody>
                                             </table>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -197,25 +206,27 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-xl-12">
+                                        {{-- <div class="col-xl-12" id="work_experience">
+                                            @if (count($work_experience) > 0)
                                             <table class="table table-bordered mt-3">
                                                 <thead class="bg-dark text-white">
-                                                    <th>Sr.no</th>
-                                                    <th>Name</th>
+                                                    <th>Company Name</th>
+                                                    <th>Designation</th>
                                                     <th>Action</th>
                                                 </thead>
-                                                <tbody id="list_todo">
+                                                <tbody id="list_work">
                                                     @foreach($work_experience as $row)
-                                                      <tr id="row_todo_{{ $row->id}}">
-                                                          <td width="20">{{ $row->id}}</td>
-                                                          <td>{{ $row->institute_name}}</td>
+                                                      <tr id="row_work_experience_{{ $row->id}}">
+                                                          <td>{{ $row->company_name}}</td>
+                                                          <td>{{ $row->designation}}</td>
                                                           <td width="150">
                                                           <button type="button" id="delete_todo" data-id="{{ $row->id }}" class="btn btn-sm btn-danger ml-1">Delete</button>                        </td>
                                                       </tr>
                                                     @endforeach
                                                 </tbody>
                                             </table>
-                                        </div>
+                                            @endif
+                                        </div> --}}
                                     </div>
                                 </div>
                             </div>
@@ -293,8 +304,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-xl-6">
-                                            
+                                        <div class="col-xl-12">
+                                            <hr><p class="text-label bg-white text-primary" style="margin-top:-30px;font-style:bold;width:130px">Office Account</p>
                                         </div>
                                         <div class="col-xl-6">
                                             <div class="form-group row">
@@ -487,19 +498,6 @@
 
 <script>
     $(document).ready(function(){
-        $('#user-select').change(function(){
-            var division_id = $(this).val();
-            alert(division_id);
-            $.ajax({
-                type:'DELETE',
-                url: "getDataShow/" + id
-            }).done(function(res){
-                alert('suceess')
-            });
-        });
-    });
-
-    $(document).ready(function(){
         //---Save Data
         var form = '#add-user-form';
         $(form).on('submit', function(event){
@@ -522,21 +520,48 @@
                     swal("Success Message Title", "Well done, you pressed a button", "success")
                     // window.location.href = src;
 
-                    var row = '<tr id="row_todo_'+ response.id + '">';
-                    row += '<td width="20">' + response.id + '</td>';
-                    row += '<td>' + response.institute_name + '</td>';
-                    row += '<td width="150">' + '<button type="button" id="delete_todo" data-id="' + response.id +'" class="btn btn-danger btn-sm">Delete</button>' + '</td>';
 
-                    if($("#id").val()){
-                        $("#row_todo_" + response.id).replaceWith(row);
-                    }else{
-                        $("#list_todo").prepend(row);
+                    if(response.institute_name){
+                        var row = '<tr id="row_todo_'+ response.id + '">';
+                        row += '<td> @if('+response.qualification == 1 +') SSC @elseif ('+ response.qualification == 2+') HSC @endif' + '</td>';
+                        row += '<td>' + response.institute_name + '</td>';
+                        row += '<td>' + response.grade + '</td>';
+                        row += '<td>' + response.passing_year + '</td>';
+                        row += '<td width="90">' + '<button type="button" id="delete_todo" data-id="' + response.id +'" class="btn btn-danger btn-sm">Delete</button>' + '</td>';
+
+                        if($("#id").val()){
+                            $("#row_todo_" + response.id).replaceWith(row);
+                        }else{
+                            $("#list_todo").prepend(row);
+                        }
+                        $("#form_todo").trigger('reset');
+                        $("#educational").load(" #educational");
+                        $("#form_todo").load(" #form_todo");
                     }
+                    // if(response.company_name){
+                    //     var row = '<tr id="row_work_experience_'+ response.id + '">';
+                    //     row += '<td width="20">' + response.id + '</td>';
+                    //     row += '<td>' + response.company_name + '</td>';
+                    //     row += '<td width="150">' + '<button type="button" id="delete_todo" data-id="' + response.id +'" class="btn btn-danger btn-sm">Delete</button>'+'</td>';
 
-                    $("#form_todo").trigger('reset');
+                    //     if($("#id").val()){
+                    //         $("#row_work_experience_" + response.id).replaceWith(row);
+                    //     }else{
+                    //         $("#list_work").prepend(row);
+                    //     }
+                    //     $("#form_todo").trigger('reset');
+                    //     $("#work_experience").load(" #work_experience");
+                    // }
+
+
                 },
                 error: function(response) {
-                    alert("Fail");
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Oops...',
+                        text: 'Something went wrong!',
+                        // footer: '<a href="">Why do I have this issue?</a>'
+                    })
                 }
             });
         });
@@ -551,17 +576,36 @@
     });
 
     // Delete Todo 
-    $("body").on('click','#delete_todo',function(){
-        var id = $(this).data('id');
-        confirm('Are you sure want to delete !');
+    // $("body").on('click','#delete_todo',function(){
+    //     var id = $(this).data('id');
+    //     // confirm('Are you sure want to delete !');
+    //     alert(id);
+    //     $.ajax({
+    //         type:'DELETE',
+    //         url: "info_employee/" + id
+    //     }).done(function(res){
+    //         $("#row_todo_" + id).remove();
+    //     });
+    // });
 
-        $.ajax({
-            type:'DELETE',
-            url: "info_related/" + id
-        }).done(function(res){
+$("body").on("click","#delete_todo", function(){
+    var id = $(this).data('id');
+    //alert(user_id);
+    $.ajax({
+        url: "{{ url('info_related/education/destroy')}}" + '/' + id,
+        method: 'DELETE',
+        type: 'DELETE',
+        success: function(response) {
+            console.log(response);
             $("#row_todo_" + id).remove();
-        });
+            $("#educational").load(" #educational");
+        },
+        error: function(response) {
+            alert("Fail");
+        }
     });
+});
+
 
 
 </script>

@@ -373,7 +373,7 @@
                                             <select class="dropdwon_select" id="department" name="department">
                                                 <option selected disabled>Please select</option>
                                                 @foreach ($department as $row)
-                                                    <option value="{{$row->id}}">{{$row->name}}</option>
+                                                    <option value="{{$row->id}}">{{$row->dept_name}}</option>
                                                 @endforeach
                                             </select>                                                
                                             @error('department')
@@ -389,7 +389,7 @@
                                             <select class="dropdwon_select" id="designation" name="designation">
                                                 <option selected disabled>Please select</option>
                                                 @foreach ($designation as $row)
-                                                    <option value="{{$row->id}}">{{$row->name}}</option>
+                                                    <option value="{{$row->id}}">{{$row->desig_name}}</option>
                                                 @endforeach
                                             </select>
                                             @error('designation')
@@ -405,7 +405,7 @@
                                             <select class="dropdwon_select" id="employee_type" name="employee_type">
                                                 <option selected disabled>Please select</option>
                                                 @foreach ($employee_category as $row)
-                                                    <option value="{{$row->id}}">{{$row->name}}</option>
+                                                    <option value="{{$row->id}}">{{$row->cat_name}}</option>
                                                 @endforeach
                                             </select> 
                                             @error('employee_type')
@@ -649,6 +649,28 @@
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <div class="form-group">
+                                            <label class="text-label">Father Name*</label>
+                                            <input type="test" name="father_name" id="father_name" class="form-control @error('father_name') is-invalid @enderror" placeholder="" value="{{old('father_name')}}" />
+                                            @error('father_name')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="text-label">Mother Name*</label>
+                                            <input type="test" name="mother_name" id="mother_name" class="form-control @error('mother_name') is-invalid @enderror" placeholder="" value="{{old('mother_name')}}" />
+                                            @error('mother_name')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
                                             <label class="text-label">Passport No.</label>
                                             <input type="number" name="passport_no" class="form-control @error('passport_no') is-invalid @enderror" placeholder="" value="{{old('passport_no')}}" />
                                             @error('passport_no')
@@ -690,28 +712,6 @@
                                             <label class="text-label">Home Phone</label>
                                             <input type="test" name="house_phone" class="form-control @error('house_phone') is-invalid @enderror" placeholder="" value="{{old('house_phone')}}" />
                                             @error('house_phone')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label class="text-label">Father Name*</label>
-                                            <input type="test" name="father_name" id="father_name" class="form-control @error('father_name') is-invalid @enderror" placeholder="" value="{{old('father_name')}}" />
-                                            @error('father_name')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label class="text-label">Mother Name*</label>
-                                            <input type="test" name="mother_name" id="mother_name" class="form-control @error('mother_name') is-invalid @enderror" placeholder="" value="{{old('mother_name')}}" />
-                                            @error('mother_name')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
@@ -877,44 +877,88 @@
         document.querySelectorAll(".btn-navigate-form-step").forEach((formNavigationBtn) => {
             /*Add a click event listener to the button.*/
             formNavigationBtn.addEventListener("click", () => {
-                //------Form Validation
-                var step1  = [];
-                step1 = document.getElementById("first_name").value;
-                step1 = document.getElementById("date_of_birth").value;
-                step1 = document.getElementById("nid_no").value;
-                //--Step 2
-                var step2  = [];
-                step2 = document.getElementById("department").value;
-                step2 = document.getElementById("designation").value;
-                step2 = document.getElementById("employee_type").value;
-                step2 = document.getElementById("joining_date").value;
-                // //--Step 3
-                // var step3  = [];
-                // step3 = document.getElementById("division").value;
-                // step3 = document.getElementById("district").value;
-                // step3 = document.getElementById("upazila").value;
-                // //--Step 4
-                // var step4  = [];
-                // step4 = document.getElementById("emg_person_name").value;
-                // step4 = document.getElementById("emg_phone_number").value;
-                // //--Step 5
-                var step5  = [];
-                step5 = document.getElementById("imageUpload").value;
-
-                if (step1 == "" || step1 == null) {
-                    // Swal.fire('Fill out all of the form data');
-                    Swal.fire({
-                        title: 'Please fill out required fields!',
-                        // background: '#ffab2d',
-                    });
-                    return false;
-                }else{
-                    /*Get the value of the step.*/
-                    const stepNumber = parseInt(formNavigationBtn.getAttribute("step_number"));
-                    /*Call the function to navigate to the target form step.*/
-                    alert(stepNumber);
+                /*Get the value of the step.*/
+                const stepNumber = parseInt(formNavigationBtn.getAttribute("step_number"));
+                if(stepNumber == 1){
                     navigateToFormStep(stepNumber);
                 }
+                if(stepNumber == 2){
+                    //------Form Validation
+                    var step1  = [];
+                    step1 = document.getElementById("first_name").value;
+                    step1 = document.getElementById("date_of_birth").value;
+                    step1 = document.getElementById("nid_no").value;
+                    if (step1 == "" || step1 == null) {
+                        // Swal.fire('Fill out all of the form data');
+                        Swal.fire({
+                            title: 'Please fill out required fields!',
+                            // background: '#ffab2d',
+                        });
+                        return false;
+                    }else{
+                        /*Call the function to navigate to the target form step.*/
+                        navigateToFormStep(stepNumber);
+                    }
+                }
+                if(stepNumber == 3){
+                    //--Step 2
+                    var step2  = [];
+                    // step2 = document.getElementById("department").value;
+                    // step2 = document.getElementById("designation").value;
+                    // step2 = document.getElementById("employee_type").value;
+                    step2 = document.getElementById("joining_date").value;
+                    if (step2 == "" || step2 == null) {
+                        // Swal.fire('Fill out all of the form data');
+                        Swal.fire({
+                            title: 'Please fill out required fields!',
+                            // background: '#ffab2d',
+                        });
+                        return false;
+                    }else{
+                        /*Call the function to navigate to the target form step.*/
+                        navigateToFormStep(stepNumber);
+                    }
+                }
+                if(stepNumber == 4){
+                    //--Step 3
+                    var step3  = [];
+                    step3 = document.getElementById("division").value;
+                    // step3 = document.getElementById("district").value;
+                    // step3 = document.getElementById("upazila").value;
+                    if (step3 == "" || step3 == null) {
+                        // Swal.fire('Fill out all of the form data');
+                        Swal.fire({
+                            title: 'Please fill out required fields!',
+                            // background: '#ffab2d',
+                        });
+                        return false;
+                    }else{
+                        /*Call the function to navigate to the target form step.*/
+                        navigateToFormStep(stepNumber);
+                    }
+                }
+                if(stepNumber == 5){
+                    //--Step 4
+                    var step4  = [];
+                    step4 = document.getElementById("father_name").value;
+                    step4 = document.getElementById("mother_name").value;
+                    // step4 = document.getElementById("emg_person_name").value;
+                    // step4 = document.getElementById("emg_phone_number").value;
+                    if (step4 == "" || step4 == null) {
+                        // Swal.fire('Fill out all of the form data');
+                        Swal.fire({
+                            title: 'Please fill out required fields!',
+                            // background: '#ffab2d',
+                        });
+                        return false;
+                    }else{
+                        /*Call the function to navigate to the target form step.*/
+                        navigateToFormStep(stepNumber);
+                    }
+                }
+                // //--Step 5
+                // var step5  = [];
+                // step5 = document.getElementById("imageUpload").value;
                 
             });
         });
@@ -1043,22 +1087,5 @@
         });
     </script>
 
-    <!--Image Profile-->
-    <script type="text/javascript">
-        function readURL(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    $('#imagePreview').css('background-image', 'url('+e.target.result +')');
-                    $('#imagePreview').hide();
-                    $('#imagePreview').fadeIn(650);
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-        $("#imageUpload").change(function() {
-            readURL(this);
-        });
-    </script>
 
 </x-app-layout>

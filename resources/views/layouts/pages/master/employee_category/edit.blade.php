@@ -55,27 +55,6 @@
                                 </div>
 
                                 <div class="col-xl-6">
-
-                                    <!-- this is for category type -->
-                                    <div class="form-group col">
-
-                                        <label class="row-lg col-form-label">Category Type
-                                            <span class="text-danger">*</span>
-                                        </label>
-
-                                        <div class="row-lg">
-                                            <input type="text" id="cat_type" class="form-control @error('cat_type') is-invalid @enderror" name="cat_type" value="{{$data->cat_type}}">
-
-                                            @error('cat_type')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
-                                        </div>
-
-                                    </div>
-                                    
-
                                     <!-- this is for status -->
                                     <div class="form-group col">
 

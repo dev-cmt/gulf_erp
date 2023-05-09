@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('mast_leaves', function (Blueprint $table) {
             $table->id();
             $table->string('leave_name')->nullabale();
-            $table->integer('leave_code')->nullabale();
+            $table->string('leave_code')->nullabale();
             $table->integer('max_limit')->nullabale();
             $table->integer('yearly_limit')->nullabale();
             $table->text('description')->nullabale();

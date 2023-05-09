@@ -100,7 +100,7 @@
                                     <td>{{ $row->contact_number}}</td>
                                     <td class="text-center">
                                         <a href="{{ route('info_employee_prsonal.create', $row->id) }}" class="btn btn-success btn-xs mr-2">Personal Information</a>
-                                        <a href="{{ route('info_personal.create', $row->id) }}" class="btn btn-success btn-xs mr-2">Related Information</a>
+                                        <a href="{{ route('info_employee_related.create', $row->id) }}" class="btn btn-success btn-xs mr-2">Related Information</a>
                                     </td>
                                     <td class="d-flex justify-content-end">
                                         @can('User delete')

@@ -29,7 +29,7 @@ class RolePermissionSeeder extends Seeder
             'status' => '1',
             'is_admin' => '1',
             'profile_photo_path'=>'fix/admin.jpg',
-            'email_verified_at' => '2000-01-01',
+            'email_verified_at' => '2024-01-01',
         ]);
         /*__________________________________________________________ */
         /*__________________________________________________________ */

@@ -22,7 +22,6 @@ class MastEmployeeCategoryController extends Controller
     {
         $data = new MastEmployeeCategory();
         $data->cat_name =$request->cat_name;
-        $data->cat_type =$request->cat_type;
         $data->description =$request->description;
         $data->status =$request->status;
         $data->save();
@@ -40,7 +39,6 @@ class MastEmployeeCategoryController extends Controller
     {
         $data = MastEmployeeCategory::find($id);
         $data->cat_name =$request->cat_name;
-        $data->cat_type =$request->cat_type;
         $data->description =$request->description;
         $data->status =$request->status;
         $data->save();

@@ -16,7 +16,6 @@
                                 <tr>
                                     <th>SL No</th>
                                     <th>Category Name</th>
-                                    <th>Category Type</th>
                                     <th>Description</th>
                                     <th>status</th>
                                     <th class="text-right pr-4">Action</th>
@@ -28,7 +27,6 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>										
                                     <td>{{ $data->cat_name }}</td>										
-                                    <td>{{ $data->cat_type }}</td>										
                                     <td>{{ $data->description }}</td>										
                                     <td>{{ $data->status == 1 ? 'active' : 'inactive'  }}</td>																			
                                     <td class="float-right">                                
