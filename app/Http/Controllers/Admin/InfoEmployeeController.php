@@ -59,11 +59,12 @@ class InfoEmployeeController extends Controller
             'union' => $unions,
         ];
         $user_id = $id;
+        $user=User::find($id);
         $department =MastDepartment::get();
         $designation =MastDesignation::get();
         $employee_category =MastEmployeeCategory::get();
 
-        return view('layouts.pages.admin.info_employee.info_personal',compact('data','user_id','department','designation','employee_category'));
+        return view('layouts.pages.admin.info_employee.info_personal',compact('data','user','department','designation','employee_category'));
     }
     public function personal_store(Request $request, $id)
     {

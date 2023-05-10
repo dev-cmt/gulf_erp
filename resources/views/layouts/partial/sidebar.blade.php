@@ -24,7 +24,7 @@
                     </a>
                     <ul aria-expanded="false">
                         <li><a href="{{route('info_employee.index')}}">Employee Registration </a></li>
-                        {{-- <li><a href="{{route('info_personal.create')}}">Personal Details</a></li> --}}
+                        <li><a href="{{route('info_personal.create')}}">Personal Details</a></li>
                         {{-- <li><a href="{{route('info_related.index')}}">Related Information</a></li> --}}
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Leave</a>
                             <ul aria-expanded="false">

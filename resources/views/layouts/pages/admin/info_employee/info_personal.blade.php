@@ -205,7 +205,7 @@
         }
         /*--------Alert-----------*/
         .swal2-popup .swal2-title{
-            color: #3b3b3b !important;
+            color: #ffffff !important;
         }
         .swal2-popup .swal2-styled.swal2-confirm{
             background-color: #f04e23 !important;
@@ -216,8 +216,7 @@
         <div class="col-xl-12 col-xxl-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Personal Information</h4>                    
-                    <a href="{{route('info_employee.index')}}" class="btn btn-sm btn-primary"><i class="fa fa-reply"></i><span class="btn-icon-add"></span>Skip</a>
+                    <h4 class="card-title">Personal Information</h4>
                 </div>
 
                 <div class="card-body">
@@ -275,88 +274,111 @@
                             <strong class="text-success">{{session()->get('success')}}</strong>
                         @endif
                         <!-- Step Wise Form Content -->
-                        <form action="{{ route('info_employee_prsonal.store', $user_id) }}" method="POST" enctype="multipart/form-data" id="userAccountSetupForm" name="userAccountSetupForm">
+                        <form action="{{ route('info_employee_prsonal.store', $user->id) }}" method="POST" enctype="multipart/form-data" id="userAccountSetupForm" name="userAccountSetupForm">
                             @csrf
                             <!-- Step 1 Content -->
                             <section id="step-1" class="form-step">
                                 <!-- Step 1 input fields -->
                                 <div class="row">
                                     <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label class="text-label">First Name*</label>
-                                            <input type="text" name="first_name" id="first_name" class="form-control @error('first_name') is-invalid @enderror" placeholder="" value="{{old('first_name')}}" />
-                                            @error('first_name')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label">Employee Name
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-7">
+                                                <input type="text" name="first_name" id="first_name" class="form-control @error('first_name') is-invalid @enderror" placeholder="" value="{{$user->name}}" disabled/>
+                                                @error('first_name')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label class="text-label">Last Name</label>
-                                            <input type="text" name="last_name" class="form-control @error('last_name') is-invalid @enderror" placeholder="" value="{{old('last_name')}}" />
-                                            @error('last_name')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label">Email
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-7">
+                                                <input type="text" name="last_name" class="form-control @error('last_name') is-invalid @enderror" placeholder="" value="{{$user->email}}" disabled/>
+                                                @error('last_name')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label class="text-label">Date of Birth*</label>
-                                            <input type="date" name="date_of_birth" id="date_of_birth" class="form-control @error('date_of_birth') is-invalid @enderror" placeholder="" value="{{old('date_of_birth')}}" />
-                                            @error('date_of_birth')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label">Date of Birth
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-7">
+                                                <input type="date" name="date_of_birth" id="date_of_birth" class="form-control @error('date_of_birth') is-invalid @enderror" placeholder="" value="{{old('date_of_birth')}}" />
+                                                @error('date_of_birth')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label class="text-label">Gender</label>
-                                            <select name="employee_gender" class="form-control default-select  @error('employee_gender') is-invalid @enderror" style="height: 40px;">
-                                                <option value="0">Male</option>
-                                                <option value="1">Female</option>
-                                            </select>                                                
-                                            @error('employee_gender')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label">Gender</label>
+                                            <div class="col-lg-7">
+                                                <select name="employee_gender" class="form-control default-select  @error('employee_gender') is-invalid @enderror" style="height: 40px;">
+                                                    <option value="0">Male</option>
+                                                    <option value="1">Female</option>
+                                                </select>                                                
+                                                @error('employee_gender')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label class="text-label">NID*</label>
-                                            <input type="number" name="nid_no" id="nid_no" class="form-control @error('nid_no') is-invalid @enderror" placeholder="XXXXXXXXXX" max="10" value="{{old('nid_no')}}" />
-                                            @error('nid_no')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label">NID
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-7">
+                                                <input type="number" name="nid_no" id="nid_no" class="form-control @error('nid_no') is-invalid @enderror" placeholder="XXXXXXXXXX" max="10" value="{{old('nid_no')}}" />
+                                                @error('nid_no')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label class="text-label">Blood Group</label>
-                                            <select name="blood_group" class="form-control default-select  @error('blood_group') is-invalid @enderror" style="height: 40px;">
-                                                <option value="0">O Positive (0+)</option>
-                                                <option value="1">O Negative (0-)</option>
-                                                <option value="2">A Positive (A+)</option>
-                                                <option value="3">A Negative (A-)</option>
-                                                <option value="4">B Positive (B+)</option>
-                                                <option value="5">B Negative (B-)</option>
-                                                <option value="6">AB Positive (AB+)</option>
-                                                <option value="7">AB Negative (AB-)</option>
-                                            </select>
-                                            @error('blood_group')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label">Blood Group
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-7">
+                                                <select name="blood_group" id="blood_group" class="form-control default-select @error('blood_group') is-invalid @enderror" style="height: 40px;">
+                                                    <option value="0" selected>Select</option>
+                                                    <option value="1">O Positive (0+)</option>
+                                                    <option value="2">O Negative (0-)</option>
+                                                    <option value="3">A Positive (A+)</option>
+                                                    <option value="4">A Negative (A-)</option>
+                                                    <option value="5">B Positive (B+)</option>
+                                                    <option value="6">B Negative (B-)</option>
+                                                    <option value="7">AB Positive (AB+)</option>
+                                                    <option value="8">AB Negative (AB-)</option>
+                                                </select>
+                                                @error('blood_group')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -368,134 +390,169 @@
                             <section id="step-2" class="form-step d-none">
                                 <div class="row">
                                     <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label class="text-label">Department*</label>
-                                            <select class="dropdwon_select" id="department" name="department">
-                                                <option selected disabled>Please select</option>
-                                                @foreach ($department as $row)
-                                                    <option value="{{$row->id}}">{{$row->dept_name}}</option>
-                                                @endforeach
-                                            </select>                                                
-                                            @error('department')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label">Department
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-7">
+                                                <select class="dropdwon_select" id="department" name="department" value="{{old('department')}}">
+                                                    <option value="0" selected>Please select</option>
+                                                    @foreach ($department as $row)
+                                                        <option value="{{$row->id}}">{{$row->dept_name}}</option>
+                                                    @endforeach
+                                                </select>                                                
+                                                @error('department')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label class="text-label">Designation*</label>
-                                            <select class="dropdwon_select" id="designation" name="designation">
-                                                <option selected disabled>Please select</option>
-                                                @foreach ($designation as $row)
-                                                    <option value="{{$row->id}}">{{$row->desig_name}}</option>
-                                                @endforeach
-                                            </select>
-                                            @error('designation')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label">Designation
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-7">
+                                                <select class="dropdwon_select" id="designation" name="designation" value="{{old('designation')}}">
+                                                    <option value="0" selected>Please select</option>
+                                                    @foreach ($designation as $row)
+                                                        <option value="{{$row->id}}">{{$row->desig_name}}</option>
+                                                    @endforeach
+                                                </select>
+                                                @error('designation')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label class="text-label">Employee Type*</label>
-                                            <select class="dropdwon_select" id="employee_type" name="employee_type">
-                                                <option selected disabled>Please select</option>
-                                                @foreach ($employee_category as $row)
-                                                    <option value="{{$row->id}}">{{$row->cat_name}}</option>
-                                                @endforeach
-                                            </select> 
-                                            @error('employee_type')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label">Employee Type
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-7">
+                                                <select class="dropdwon_select" id="employee_type" name="employee_type" value="{{old('employee_type')}}">
+                                                    <option value="0" selected>Please select</option>
+                                                    @foreach ($employee_category as $row)
+                                                        <option value="{{$row->id}}">{{$row->cat_name}}</option>
+                                                    @endforeach
+                                                </select> 
+                                                @error('employee_type')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label class="text-label">Work Station*</label>
-                                            <select name="work_station" class="form-control default-select  @error('work_station') is-invalid @enderror" style="height: 40px;">
-                                                <option value="0">Gulshan</option>
-                                                <option value="1">Mirpur</option>
-                                            </select>
-                                            @error('work_station')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label">Work Station
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-7">
+                                                <select name="work_station" id="work_station" class="form-control default-select" value="{{old('work_station')}}">
+                                                    <option value="0" selected>Select</option>
+                                                    <option value="1">Gulshan</option>
+                                                    <option value="2">Maghna</option>
+                                                </select>
+                                                @error('work_station')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label class="text-label">Mobile (Official)</label>
-                                            <input type="number" name="number_official" class="form-control @error('name') is-invalid @enderror" placeholder="" value="{{old('number_official')}}" />
-                                            @error('number_official')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label">Mobile (Official)</label>
+                                            <div class="col-lg-7">
+                                                <input type="number" name="number_official" class="form-control @error('name') is-invalid @enderror" placeholder="" value="{{old('number_official')}}" />
+                                                @error('number_official')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label class="text-label">Email (Official)</label>
-                                            <input type="email" name="email_official" class="form-control @error('email_official') is-invalid @enderror" placeholder="" value="{{old('email_official')}}" />
-                                            @error('email_official')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label">Email (Official)</label>
+                                            <div class="col-lg-7">
+                                                <input type="email" name="email_official" class="form-control @error('email_official') is-invalid @enderror" placeholder="" value="{{old('email_official')}}" />
+                                                @error('email_official')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label class="text-label">Joining Data*</label>
-                                            <input type="date" name="joining_date" id="joining_date" class="form-control @error('joining_date') is-invalid @enderror" placeholder="" value="{{old('joining_date')}}" />
-                                            @error('joining_date')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label">Joining Data
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-7">
+                                                <input type="date" name="joining_date" id="joining_date" class="form-control @error('joining_date') is-invalid @enderror" placeholder="" value="{{old('joining_date')}}" />
+                                                @error('joining_date')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label class="text-label">Service Length</label>
-                                            <input type="number" name="service_length" class="form-control @error('service_length') is-invalid @enderror" placeholder="" value="1" />
-                                            @error('service_length')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label">Service Length</label>
+                                            <div class="col-lg-7">
+                                                <input type="number" name="service_length" class="form-control @error('service_length') is-invalid @enderror" placeholder="" value="1" />
+                                                @error('service_length')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label class="text-label">Gross Salary*</label>
-                                            <input type="number" name="gross_salary" id="gross_salary" class="form-control @error('gross_salary') is-invalid @enderror" placeholder="" value="{{old('gross_salary')}}" />
-                                            @error('gross_salary')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label">Gross Salary
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-7">
+                                                <input type="number" name="gross_salary" id="gross_salary" class="form-control @error('gross_salary') is-invalid @enderror" placeholder="" value="{{old('gross_salary')}}" />
+                                                @error('gross_salary')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label class="text-label">Reporting Boss</label>
-                                            <select name="reporting_boss" class="form-control default-select  @error('reporting_boss') is-invalid @enderror" style="height: 40px;">
-                                                <option value="0">Sabit</option>
-                                                <option value="1">Alam</option>
-                                            </select>
-                                            @error('reporting_boss')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label">Reporting Boss
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-7">
+                                                <select name="reporting_boss" class="form-control default-select  @error('reporting_boss') is-invalid @enderror" style="height: 40px;">
+                                                    <option value="0">Sabit</option>
+                                                    <option value="1">Alam</option>
+                                                </select>
+                                                @error('reporting_boss')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -511,7 +568,7 @@
                                         <div class="form-group">
                                             <label class="text-label">Division*</label>
                                             <select name="division_present" class="form-control dropdwon_select @error('division_present') is-invalid @enderror" id="division" value="{{old('division_present')}}">
-                                                <option selected disabled>Select Division</option>
+                                                <option value="0" selected>Select Division</option>
                                                 @foreach($data['divisions'] as $division)
                                                     <option value="{{ $division->id }}">{{ $division->name }}</option>
                                                 @endforeach
@@ -544,7 +601,7 @@
                                             </span>
                                             @enderror
                                         </div>
-                                    </div>
+                                    </div> 
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label class="text-label">Thana*</label>
@@ -808,7 +865,7 @@
                                 </div>
                                 <div class="mt-4">
                                     <button class="button btn-navigate-form-step" type="button" step_number="4">Prev</button>
-                                    <button class="button submit-btn" type="submit">Save</button>
+                                    <button class="button submit-btn" type="submit" style="background-color: #bbbbbb">Save</button>
                                 </div>
                             </section>
                         </form>
@@ -834,6 +891,8 @@
         }
         $("#imageUpload").change(function() {
             readURL(this);
+            $('.submit-btn').css('background-color', '#68cf29');
+            $(".submit-btn").removeAttr('disabled');
         });
     </script>
 
@@ -879,87 +938,95 @@
             formNavigationBtn.addEventListener("click", () => {
                 /*Get the value of the step.*/
                 const stepNumber = parseInt(formNavigationBtn.getAttribute("step_number"));
-                if(stepNumber == 1){
-                    navigateToFormStep(stepNumber);
-                }
-                if(stepNumber == 2){
-                    //------Form Validation
-                    var step1  = [];
-                    step1 = document.getElementById("first_name").value;
-                    step1 = document.getElementById("date_of_birth").value;
-                    step1 = document.getElementById("nid_no").value;
-                    if (step1 == "" || step1 == null) {
-                        // Swal.fire('Fill out all of the form data');
-                        Swal.fire({
-                            title: 'Please fill out required fields!',
-                            // background: '#ffab2d',
-                        });
-                        return false;
-                    }else{
-                        /*Call the function to navigate to the target form step.*/
-                        navigateToFormStep(stepNumber);
-                    }
-                }
-                if(stepNumber == 3){
-                    //--Step 2
-                    var step2  = [];
-                    // step2 = document.getElementById("department").value;
-                    // step2 = document.getElementById("designation").value;
-                    // step2 = document.getElementById("employee_type").value;
-                    step2 = document.getElementById("joining_date").value;
-                    if (step2 == "" || step2 == null) {
-                        // Swal.fire('Fill out all of the form data');
-                        Swal.fire({
-                            title: 'Please fill out required fields!',
-                            // background: '#ffab2d',
-                        });
-                        return false;
-                    }else{
-                        /*Call the function to navigate to the target form step.*/
-                        navigateToFormStep(stepNumber);
-                    }
-                }
-                if(stepNumber == 4){
-                    //--Step 3
-                    var step3  = [];
-                    step3 = document.getElementById("division").value;
-                    // step3 = document.getElementById("district").value;
-                    // step3 = document.getElementById("upazila").value;
-                    if (step3 == "" || step3 == null) {
-                        // Swal.fire('Fill out all of the form data');
-                        Swal.fire({
-                            title: 'Please fill out required fields!',
-                            // background: '#ffab2d',
-                        });
-                        return false;
-                    }else{
-                        /*Call the function to navigate to the target form step.*/
-                        navigateToFormStep(stepNumber);
-                    }
-                }
-                if(stepNumber == 5){
-                    //--Step 4
-                    var step4  = [];
-                    step4 = document.getElementById("father_name").value;
-                    step4 = document.getElementById("mother_name").value;
-                    // step4 = document.getElementById("emg_person_name").value;
-                    // step4 = document.getElementById("emg_phone_number").value;
-                    if (step4 == "" || step4 == null) {
-                        // Swal.fire('Fill out all of the form data');
-                        Swal.fire({
-                            title: 'Please fill out required fields!',
-                            // background: '#ffab2d',
-                        });
-                        return false;
-                    }else{
-                        /*Call the function to navigate to the target form step.*/
-                        navigateToFormStep(stepNumber);
-                    }
-                }
-                // //--Step 5
-                // var step5  = [];
-                // step5 = document.getElementById("imageUpload").value;
-                
+                // navigateToFormStep(stepNumber);
+                // if(stepNumber == 1){
+                //     navigateToFormStep(stepNumber);
+                // }
+                // if(stepNumber == 1){
+                //     navigateToFormStep(stepNumber);
+                // }
+                // if(stepNumber == 2){
+                //     //------Form Validation
+                //     var step1  = [];
+                //     step1 = document.getElementById("date_of_birth").value;
+                //     step1 = document.getElementById("nid_no").value;
+                //     var dropdwon = document.getElementById("blood_group").value;
+                //     if (step1 == "" || step1 == null || dropdwon == 0) {
+                //         // Swal.fire('Fill out all of the form data');
+                //         Swal.fire(
+                //             'Required data missing?',
+                //             'Is something wrong with your form data?',
+                //             'question'
+                //         )
+                        
+                //         return false;
+                //     }else{
+                //         /*Call the function to navigate to the target form step.*/
+                //         navigateToFormStep(stepNumber);
+                //     }
+                // }
+                // if(stepNumber == 3){
+                //     //--Step 2
+                //     var step2  = [];
+                //     step2 = document.getElementById("gross_salary").value;
+                //     step2 = document.getElementById("joining_date").value;
+                //     var dropdwon  = [];
+                //     step2 = document.getElementById("department").value;
+                //     dropdwon = document.getElementById("designation").value;
+                //     dropdwon = document.getElementById("employee_type").value;
+                //     dropdwon = document.getElementById("work_station").value;
+                //     if (step2 == "" || step2 == null || dropdwon == 0) {
+                //         // Swal.fire('Fill out all of the form data');
+                //         Swal.fire(
+                //             'Required data missing?',
+                //             'Is something wrong with your form data?',
+                //             'question'
+                //         )
+                //         return false;
+                //     }else{
+                //         /*Call the function to navigate to the target form step.*/
+                //         navigateToFormStep(stepNumber);
+                //     }
+                // }
+                // if(stepNumber == 4){
+                //     //--Step 3
+                //     var step3  = [];
+                //     step3 = document.getElementById("division").value;
+                //     step3 = document.getElementById("district").value;
+                //     step3 = document.getElementById("upazila").value;
+                //     if (step3 == "" || step3 == null) {
+                //         // Swal.fire('Fill out all of the form data');
+                //         Swal.fire(
+                //             'Required data missing?',
+                //             'Is something wrong with your form data?',
+                //             'question'
+                //         )
+                //         return false;
+                //     }else{
+                //         /*Call the function to navigate to the target form step.*/
+                //         navigateToFormStep(stepNumber);
+                //     }
+                // }
+                // if(stepNumber == 5){
+                //     //--Step 4
+                //     var step4  = [];
+                //     step4 = document.getElementById("father_name").value;
+                //     step4 = document.getElementById("mother_name").value;
+                //     step4 = document.getElementById("emg_person_name").value;
+                //     step4 = document.getElementById("emg_phone_number").value;
+                //     if (step4 == "" || step4 == null) {
+                //         // Swal.fire('Fill out all of the form data');
+                //         Swal.fire(
+                //             'Required data missing?',
+                //             'Is something wrong with your form data?',
+                //             'question'
+                //         )
+                //         return false;
+                //     }else{
+                //         /*Call the function to navigate to the target form step.*/
+                //         navigateToFormStep(stepNumber);
+                //     }
+                // }
             });
         });
     </script>
@@ -1086,6 +1153,5 @@
             }
         });
     </script>
-
 
 </x-app-layout>
