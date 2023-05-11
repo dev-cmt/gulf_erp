@@ -11,6 +11,7 @@ class MastEmployeeCategory extends Model
 
     protected $fillable = [
         'cat_name',
+        'cat_type',
         'description',
         'status',
     ];

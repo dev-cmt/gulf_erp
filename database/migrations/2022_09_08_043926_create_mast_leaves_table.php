@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('yearly_limit')->nullabale();
             $table->text('description')->nullabale();
             $table->integer('status')->default(false);
+            $table->integer('entry_by')->default(false);
             $table->timestamps();
         });
     }

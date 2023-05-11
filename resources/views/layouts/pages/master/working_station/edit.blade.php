@@ -11,6 +11,7 @@
 
                 <!-- card body -->
                 <div class="card-body">
+
                     <div class="form-validation">
                         <!-- this is for validation checking message -->
                         @if (session()->has('success'))
@@ -30,7 +31,7 @@
                                             <span class="text-danger">*</span>
                                         </label>
                                         <div class="row-lg">
-                                            <input type="text" id="desig_name" class="form-control @error('desig_name') is-invalid @enderror" name="desig_name" placeholder="" value="{{$data->desig_name}}" required>
+                                            <input type="text" id="desig_name" class="form-control @error('desig_name') is-invalid @enderror" name="desig_name" placeholder="" value="{{$data->desig_name}}">
 
                                             @error('desig_name')
                                             <span class="invalid-feedback" role="alert">
@@ -42,7 +43,9 @@
                                     
                                     <!-- this is for status -->
                                     <div class="form-group col">
-                                        <label class="row-lg col-form-label" for="status">Status</label>
+                                        <label class="row-lg col-form-label" for="status">Status
+                                            <span class="text-danger">*</span>
+                                        </label>
                                         <div class="row-lg">
                                             <select class="form-control" id="status" name="status" value="">
                                                 <option value="1" {{ $data->status == 1? 'selected': '' }}>Active</option>
@@ -51,13 +54,14 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="col-xl-6">
+
                                     <!-- this is for description -->
                                     <div class="form-group col">
                                         <label>Description:</label>
                                         <div class="row-lg">
                                             <textarea class="form-control mt-1 @error('description') is-invalid @enderror" rows="5" id="description" name="description" placeholder="" value="">{{$data->description}}</textarea>
+
                                             @error('description')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>

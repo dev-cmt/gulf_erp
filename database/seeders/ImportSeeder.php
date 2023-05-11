@@ -102,31 +102,37 @@ class ImportSeeder extends Seeder
         //____________________________________//
         MastEmployeeCategory::create([
             'cat_name'=>'Full-Time Employees',
+            'cat_type'=>'1',
             'description'=>'These are employees who work for the company on a regular basis and are typically paid a salary or an hourly wage. They may be eligible for benefits such as health insurance, retirement plans, and paid time off.',
             'status'=>'1',
         ]);
         MastEmployeeCategory::create([
             'cat_name'=>'Part-Time Employees',
+            'cat_type'=>'1',
             'description'=>'These are employees who work for the company on a part-time basis, usually less than 40 hours per week. They may be paid an hourly wage and may or may not be eligible for benefits depending on the company policies.',
             'status'=>'1',
         ]);
         MastEmployeeCategory::create([
             'cat_name'=>'Contract Employees',
+            'cat_type'=>'1',
             'description'=>'These are individuals who work for the company on a temporary basis and are usually hired to perform a specific job or task. They may be paid a flat fee or an hourly rate and are typically not eligible for benefits.',
             'status'=>'1',
         ]);
         MastEmployeeCategory::create([
             'cat_name'=>'Interns',
+            'cat_type'=>'1',
             'description'=>'These are students or recent graduates who work for the company on a temporary basis to gain work experience and develop skills. They may be paid a stipend or may work for free, and are typically not eligible for benefits.',
             'status'=>'1',
         ]);
         MastEmployeeCategory::create([
             'cat_name'=>'Consultants',
+            'cat_type'=>'1',
             'description'=>'These are individuals or firms who are hired by the company to provide specialized expertise or services on a project basis. They may be paid a flat fee or an hourly rate and are typically not eligible for benefits.',
             'status'=>'1',
         ]);
         MastEmployeeCategory::create([
             'cat_name'=>'Seasonal Employees',
+            'cat_type'=>'1',
             'description'=>'These are employees who work for the company during specific times of the year when there is a higher demand for the companys products or services. They may be paid an hourly wage and may or may not be eligible for benefits depending on the companys policies.',
             'status'=>'1',
         ]);

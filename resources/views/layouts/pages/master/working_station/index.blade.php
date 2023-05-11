@@ -3,9 +3,9 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Department List<span class="bg-blue-500 text-white rounded px-1 text-xs py-0.5"></span></h4>
+                    <h4 class="card-title">Working Station List<span class="bg-blue-500 text-white rounded px-1 text-xs py-0.5"></span></h4>
                     {{-- @can('Role create') --}}
-                    <a href="{{ route('mast_department.create') }}" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i><span class="btn-icon-add"></span>Create</a>
+                    <a href="{{ route('mast_working_station.create') }}" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i><span class="btn-icon-add"></span>Create</a>
                     {{-- @endcan --}}
                 </div>
                 <div class="card-body"> 
@@ -15,25 +15,26 @@
                             <thead>
                                 <tr>
                                     <th>SL No</th>
-                                    <th>Department name</th>
-                                    <th>Department head</th>
-                                    <th>description</th>
+                                    <th>Working Station Name</th>
+                                    <th>Contact Number</th>
+                                    <th>Location</th>
+                                    <th>Description</th>
                                     <th>status</th>
                                     <th class="text-right pr-4">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                             
-                              @foreach($department as $data)
+                                @foreach($station as $data)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>										
-                                    <td>{{ $data->dept_name }}</td>
-                                    <td>{{ $data->user->name}}</td>
+                                    <td>{{ $data->working_station_name }}</td>										
+                                    <td>{{ $data->contact_number }}</td>										
+                                    <td>{{ $data->location }}</td>										
                                     <td>{{ $data->description }}</td>										
                                     <td>{{ $data->status == 1 ? 'active' : 'inactive'  }}</td>																			
                                     <td class="float-right">                                
-                                        <a href="{{ route('mast_department.edit', $data->id) }}" class="btn btn-success btn-sm">Edit</a>
-                                        <a href="{{ route('mast_department.show', $data->id) }}" class="btn btn-info btn-sm">View</a>                                                             
+                                        <a href="{{ route('mast_working_station.edit', $data->id) }}" class="btn btn-success btn-sm">Edit</a>
+                                        <a href="{{ route('mast_working_station.show', $data->id) }}" class="btn btn-info btn-sm">View</a>                                                              
                                     </td>
                                 </tr>
                                 @endforeach

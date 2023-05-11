@@ -3,11 +3,12 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Leave List<span class="bg-blue-500 text-white rounded px-1 text-xs py-0.5"></span></h4>
+                    <h4 class="card-title">Employee Category List<span class="bg-blue-500 text-white rounded px-1 text-xs py-0.5"></span></h4>
                     {{-- @can('Role create') --}}
                     <a href="{{ route('must_employee_category.create') }}" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i><span class="btn-icon-add"></span>Create</a>
                     {{-- @endcan --}}
                 </div>
+
                 <div class="card-body"> 
                     <p class="text-center text-success">{{Session::has('message') ? Session::get('message') : ''}}</p>
                     <div class="table-responsive">
@@ -16,6 +17,7 @@
                                 <tr>
                                     <th>SL No</th>
                                     <th>Category Name</th>
+                                    <th>Category Type</th>
                                     <th>Description</th>
                                     <th>status</th>
                                     <th class="text-right pr-4">Action</th>
@@ -27,6 +29,7 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>										
                                     <td>{{ $data->cat_name }}</td>										
+                                    <td>{{ $data->cat_type == 1 ? 'In' : 'Out'  }}</td>										
                                     <td>{{ $data->description }}</td>										
                                     <td>{{ $data->status == 1 ? 'active' : 'inactive'  }}</td>																			
                                     <td class="float-right">                                

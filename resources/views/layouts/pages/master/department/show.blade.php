@@ -34,27 +34,23 @@
                                         </label>
 
                                         <div class="row-lg">
-                                            <input type="text" id="dept_name"
-                                                class="form-control @error('dep_name') is-invalid @enderror" name="dept_name" placeholder="" value="{{$data->dept_name}}" disabled>
-
+                                            <input type="text" id="dept_name" class="form-control" name="dept_name" placeholder="" value="{{$data->dept_name}}" disabled>
                                             @error('dept_name')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
                                             @enderror
+
                                         </div>
 
                                     </div>
 
                                     <!-- this is for description -->
                                     <div class="form-group col">
-
-                                        <label class="row-lg col-form-label">Description
-                                            <span class="text-danger">*</span>
-                                        </label>
+                                        <label class="row-lg col-form-label">Description</label>
 
                                         <div class="row-lg">
-                                            <input type="text" id="description" class="form-control @error('description') is-invalid @enderror" name="description" placeholder="" value="{{$data->description}}" disabled>
+                                            <input type="text" id="description" class="form-control" name="description" placeholder="" value="{{$data->description}}" disabled>
 
                                             @error('description')
                                             <span class="invalid-feedback" role="alert">
@@ -76,22 +72,21 @@
 
                                         <div class="row-lg">
                                             <input type="text" id="dept_head"
-                                                class="form-control @error('dept_head') is-invalid @enderror"
-                                                name="dept_head" placeholder="" value="{{$data->dept_head}}" disabled>
+                                                class="form-control" name="dept_head" placeholder="" value="{{ $data->user->name}}" disabled>
 
                                             @error('dept_head')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
                                             @enderror
+
                                         </div>
                                     </div>
 
                                     <!-- this is for status -->
                                     <div class="form-group col">
-                                        <label class="row-lg col-form-label" for="status">Status
-                                            <span class="text-danger">*</span>
-                                        </label>
+
+                                        <label class="row-lg col-form-label" for="status">Status</label>
 
                                         <div class="row-lg">
                                             <input type="text" id="status" class="form-control @error('status')is-invalid @enderror" name="status" placeholder="" value="{{ $data->status == 1? 'Active' : 'Inactive' }}" disabled>
@@ -101,6 +96,7 @@
                                                 <strong>{{ $message }}</strong>
                                             </span>
                                             @enderror
+
                                         </div>
                                     </div>
                                 </div>

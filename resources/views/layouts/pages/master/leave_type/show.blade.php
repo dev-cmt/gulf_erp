@@ -92,9 +92,7 @@
 
                                 <!-- this is for description -->
                                 <div class="form-group col">
-                                    <label class="row-lg col-form-label">Description
-                                        <span class="text-danger">*</span>
-                                    </label>
+                                    <label class="row-lg col-form-label">Description</label>
                                     <div class="row-lg">
                                         <input type="text" id="description" class="form-control @error('description') is-invalid @enderror" name="description" placeholder="" value="{{$data->description}}" disabled>
                                         @error('description')
@@ -107,16 +105,11 @@
                             </div>
 
                             <div class="col-xl-6">
-
                                  <!-- this is for status -->
                                  <div class="form-group col">
-                                        <label class="row-lg col-form-label" for="status">Status
-                                            <span class="text-danger">*</span>
-                                        </label>
-
+                                        <label class="row-lg col-form-label" for="status">Status</label>
                                         <div class="row-lg">
                                             <input type="text" id="status" class="form-control @error('status')is-invalid @enderror" name="status" placeholder="" value="{{ $data->status == 1? 'Active' : 'Inactive' }}" disabled>
-
                                             @error('dept_head')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>

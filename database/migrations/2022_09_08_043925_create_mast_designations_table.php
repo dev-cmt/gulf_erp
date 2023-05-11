@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('desig_name')->nullabale();
             $table->text('description')->nullabale();
             $table->integer('status')->default(false);
+            $table->integer('entry_by')->default(false);
             $table->timestamps();
         });
     }

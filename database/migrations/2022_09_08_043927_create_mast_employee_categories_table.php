@@ -16,8 +16,10 @@ return new class extends Migration
         Schema::create('mast_employee_categories', function (Blueprint $table) {
             $table->id();
             $table->string('cat_name')->nullabale();
+            $table->string('cat_type')->nullabale();
             $table->text('description')->nullabale();
             $table->integer('status')->default(false);
+            $table->integer('entry_by')->default(false);
             $table->timestamps();
         });
     }

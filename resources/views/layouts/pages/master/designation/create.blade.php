@@ -5,8 +5,8 @@
 
                 <!-- card header -->
                 <div class="card-header">
-                    <h4 class="card-title">Designation</h4>
-                    <a href="#" class="btn btn-sm btn-primary"><i class="fa fa-reply"></i><span class="btn-icon-add"></span>Back</a>
+                    <h4 class="card-title">Designation Create</h4>
+                    <a href="{{ route('mast_designation.index') }}" class="btn btn-sm btn-primary"><i class="fa fa-reply"></i><span class="btn-icon-add"></span>Back</a>
                 </div>
 
                 <!-- card body -->
@@ -30,7 +30,7 @@
                                             <span class="text-danger">*</span>
                                         </label>
                                         <div class="row-lg">
-                                            <input type="text" id="desig_name" class="form-control @error('desig_name') is-invalid @enderror" name="desig_name" placeholder="" value="{{old('desig_name')}}">
+                                            <input type="text" id="desig_name" class="form-control @error('desig_name') is-invalid @enderror" name="desig_name" placeholder="" value="{{old('desig_name')}}" required>
 
                                             @error('desig_name')
                                             <span class="invalid-feedback" role="alert">
@@ -42,9 +42,7 @@
                                     
                                     <!-- this is for status -->
                                     <div class="form-group col">
-                                        <label class="row-lg col-form-label" for="status">Status
-                                            <span class="text-danger">*</span>
-                                        </label>
+                                        <label class="row-lg col-form-label" for="status">Status</label>
                                         <div class="row-lg">
                                             <select class="form-control" id="status" name="status">
                                                 <option value="1">Active</option>
@@ -60,7 +58,6 @@
                                         <label>Description:</label>
                                         <div class="row-lg">
                                             <textarea class="form-control mt-1 @error('description') is-invalid @enderror" rows="5" id="description" name="description" placeholder="" value="{{old('description')}}"></textarea>
-
                                             @error('description')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
