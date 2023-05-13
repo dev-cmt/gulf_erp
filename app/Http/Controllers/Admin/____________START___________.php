@@ -380,3 +380,29 @@ class ImageUpload{
         return redirect()->back()->with($notification);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//----Duration Single
+$startDate = new DateTime($request->start_date);
+$endDate = new DateTime($request->end_date);
+$interval = $startDate->diff($endDate);
+$duration = $interval->format('%y years, %m months, %d days, %h hours, %i minutes, %s seconds');

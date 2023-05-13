@@ -20,17 +20,13 @@ return new class extends Migration
             $table->string('acount_name')->nullable();
             $table->integer('acount_no')->nullable();
             $table->integer('acount_type')->nullable();
-            
-            $table->string('bank_name_office')->nullable();
-            $table->string('brance_name_office')->nullable();
-            $table->string('acount_name_office')->nullable();
-            $table->integer('acount_no_office')->nullable();
-            $table->integer('acount_type_office')->nullable();
-            $table->tinyInteger('status')->default(false);
+            $table->tinyInteger('status')->default(true);
             $table->timestamps();
             
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('emp_id');
+            $table->foreign('emp_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

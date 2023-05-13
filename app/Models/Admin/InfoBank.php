@@ -14,12 +14,8 @@ class InfoBank extends Model
         'acount_name',
         'acount_no',
         'acount_type',
-        'bank_name_office',
-        'brance_name_office',
-        'acount_name_office',
-        'acount_no_office',
-        'acount_type_office',
         'status',
+        'emp_id',
         'user_id'
     ];
     

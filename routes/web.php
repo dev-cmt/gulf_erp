@@ -62,6 +62,8 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('employee/info_related/create/{id}', [InfoEmployeeController::class, 'related_create'])->name('info_employee_related.create');
     Route::post('employee/info_related/store/{id}', [InfoEmployeeController::class, 'related_store'])->name('info_employee_related.store');
     Route::delete('info_related/education/destroy/{id}', [InfoEmployeeController::class, 'related_education_destroy'])->name('info_employee_education.destroy');
+    Route::delete('info_related/experience/destroy/{id}', [InfoEmployeeController::class, 'experience_education_destroy'])->name('info_employee_experience.destroy');
+    Route::delete('info_related/info_bank/destroy/{id}', [InfoEmployeeController::class, 'dexperience_info_bank_destroy'])->name('info_employee_info_bank.destroy');
 
     //------ Leave Process
     Route::get('/leave_process', [LeaveApplicationController::class, 'application'])->name('leave_process');

@@ -17,6 +17,7 @@ class InfoNominee extends Model
         'profile_image',
         'status',
         'user_id',
+        'emp_id'
     ];
 
 

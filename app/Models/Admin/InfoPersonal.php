@@ -48,6 +48,9 @@ class InfoPersonal extends Model
         'emg_phone_number',
         'emg_relationship',
         'emg_address',
+        'status',
+        'user_id',
+        'emp_id'
     ];
 
 }

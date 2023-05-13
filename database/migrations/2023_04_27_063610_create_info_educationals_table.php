@@ -19,11 +19,13 @@ return new class extends Migration
             $table->string('institute_name')->nullable();
             $table->date('passing_year')->nullable();
             $table->integer('grade')->nullable();
-            $table->tinyInteger('status')->default(false);
+            $table->tinyInteger('status')->default(true);
             $table->timestamps();
             
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('emp_id');
+            $table->foreign('emp_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

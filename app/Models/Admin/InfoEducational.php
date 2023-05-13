@@ -13,5 +13,8 @@ class InfoEducational extends Model
         'institute_name',
         'passing_year',
         'grade',
+        'status',
+        'emp_id',
+        'user_id'
     ];
 }

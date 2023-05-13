@@ -25,38 +25,6 @@
                                     <div class="row accordion__body--text">
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label" for="qualification">Qualification
-                                                    <span class="text-danger">*</span>
-                                                </label>
-                                                <div class="col-lg-7">
-                                                    <select class="dropdwon_select" name="qualification">
-                                                        <option value="0" selected>Please select</option>
-                                                        <option value="1">SSC</option>
-                                                        <option value="2">HSC</option>
-                                                    </select>                                                    
-                                                    @error('qualification')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xl-6">
-                                            <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">Passing Year</label>
-                                                <div class="col-lg-7">
-                                                    <input type="date" class="form-control @error('passing_year') is-invalid @enderror" id="passing_year" name="passing_year" placeholder="" value="{{old('passing_year')}}"/>                         
-                                                    @error('passing_year')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xl-6">
-                                            <div class="form-group row">
                                                 <label class="col-lg-4 col-form-label">Institute Name
                                                     <span class="text-danger">*</span>
                                                 </label>
@@ -72,7 +40,43 @@
                                         </div>
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">Grade</label>
+                                                <label class="col-lg-4 col-form-label" for="qualification">Qualification
+                                                    <span class="text-danger">*</span>
+                                                </label>
+                                                <div class="col-lg-7">
+                                                    <select class="form-control default-select" name="qualification">
+                                                        <option disabled selected>Please select</option>
+                                                        <option value="1">SSC</option>
+                                                        <option value="2">HSC</option>
+                                                    </select>                                                    
+                                                    @error('qualification')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-6">
+                                            <div class="form-group row">
+                                                <label class="col-lg-4 col-form-label">Passing Year
+                                                    <span class="text-danger">*</span>
+                                                </label>
+                                                <div class="col-lg-7">
+                                                    <input type="date" class="form-control @error('passing_year') is-invalid @enderror" id="passing_year" name="passing_year" placeholder="" value="{{old('passing_year')}}"/>                         
+                                                    @error('passing_year')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-6">
+                                            <div class="form-group row">
+                                                <label class="col-lg-4 col-form-label">Grade
+                                                    <span class="text-danger">*</span>
+                                                </label>
                                                 <div class="col-lg-7">
                                                     <input type="text" class="form-control @error('grade') is-invalid @enderror" id="grade" name="grade" placeholder="" value="{{old('grade')}}">                                     
                                                     @error('grade')
@@ -132,7 +136,9 @@
                                     <div class="row accordion__body--text">
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">Company Name</label>
+                                                <label class="col-lg-4 col-form-label">Company Name
+                                                    <span class="text-danger">*</span>
+                                                </label>
                                                 <div class="col-lg-7">
                                                     <input type="text" class="form-control @error('company_name') is-invalid @enderror" id="company_name" name="company_name" placeholder="" value="{{old('company_name')}}"/>                         
                                                     @error('company_name')
@@ -145,7 +151,9 @@
                                         </div>
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">Designation</label>
+                                                <label class="col-lg-4 col-form-label">Designation
+                                                    <span class="text-danger">*</span>
+                                                </label>
                                                 <div class="col-lg-7">
                                                     <input type="text" class="form-control @error('designation') is-invalid @enderror" id="designation" name="designation" placeholder="" value="{{old('designation')}}"/>                         
                                                     @error('designation')
@@ -188,7 +196,9 @@
                                         </div>
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">Job Description</label>
+                                                <label class="col-lg-4 col-form-label">Job Description
+                                                    <span class="text-danger">*</span>
+                                                </label>
                                                 <div class="col-lg-7">
                                                     <textarea class="form-control @error('job_description') is-invalid @enderror" rows="1" id="job_description" name="job_description" placeholder="" spellcheck="false">{{old('job_description')}}</textarea>                                                    
                                                     @error('job_description')
@@ -206,27 +216,34 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        {{-- <div class="col-xl-12" id="work_experience">
+                                        <div class="col-xl-12" id="work_experience">
                                             @if (count($work_experience) > 0)
                                             <table class="table table-bordered mt-3">
                                                 <thead class="bg-dark text-white">
                                                     <th>Company Name</th>
+                                                    <th>Start Date</th>
+                                                    <th>End Date</th>
+                                                    <th>Duration</th>
                                                     <th>Designation</th>
                                                     <th>Action</th>
                                                 </thead>
                                                 <tbody id="list_work">
                                                     @foreach($work_experience as $row)
-                                                      <tr id="row_work_experience_{{ $row->id}}">
-                                                          <td>{{ $row->company_name}}</td>
-                                                          <td>{{ $row->designation}}</td>
-                                                          <td width="150">
-                                                          <button type="button" id="delete_todo" data-id="{{ $row->id }}" class="btn btn-sm btn-danger ml-1">Delete</button>                        </td>
-                                                      </tr>
+                                                        <tr id="row_work_experience_{{ $row->id}}">
+                                                            <td>{{ $row->company_name}}</td>
+                                                            <td>{{ $row->start_date}}</td>
+                                                            <td>{{ $row->end_date}}</td>
+                                                            <td>{{ $row->duration}}</td>
+                                                            <td>{{ $row->designation}}</td>
+                                                            <td width="90">
+                                                                <button type="button" id="delete_experience" data-id="{{ $row->id }}" class="btn btn-sm btn-danger ml-1">Delete</button>
+                                                            </td>
+                                                        </tr>
                                                     @endforeach
                                                 </tbody>
                                             </table>
                                             @endif
-                                        </div> --}}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -241,7 +258,9 @@
                                     <div class="row accordion__body--text">
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">Bank Name</label>
+                                                <label class="col-lg-4 col-form-label">Bank Name
+                                                    <span class="text-danger">*</span>
+                                                </label>
                                                 <div class="col-lg-7">
                                                     <input type="text" class="form-control @error('bank_name') is-invalid @enderror" id="bank_name" name="bank_name" placeholder="" value="{{old('bank_name')}}"/>                         
                                                     @error('bank_name')
@@ -254,7 +273,9 @@
                                         </div>
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">Branch Name</label>
+                                                <label class="col-lg-4 col-form-label">Branch Name
+                                                    <span class="text-danger">*</span>
+                                                </label>
                                                 <div class="col-lg-7">
                                                     <input type="text" class="form-control @error('brance_name') is-invalid @enderror" id="brance_name" name="brance_name" placeholder="" value="{{old('brance_name')}}"/>                         
                                                     @error('brance_name')
@@ -267,7 +288,9 @@
                                         </div>
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">Account Name</label>
+                                                <label class="col-lg-4 col-form-label">Account Name
+                                                    <span class="text-danger">*</span>
+                                                </label>
                                                 <div class="col-lg-7">
                                                     <input type="text" class="form-control @error('acount_name') is-invalid @enderror" id="acount_name" name="acount_name" placeholder="" value="{{old('acount_name')}}"/>                         
                                                     @error('acount_name')
@@ -280,7 +303,9 @@
                                         </div>
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">Account No.</label>
+                                                <label class="col-lg-4 col-form-label">Account No.
+                                                    <span class="text-danger">*</span>
+                                                </label>
                                                 <div class="col-lg-7">
                                                     <input type="number" class="form-control @error('acount_no') is-invalid @enderror" id="acount_no" name="acount_no" placeholder="" value="{{old('acount_no')}}"/>                         
                                                     @error('acount_no')
@@ -304,80 +329,38 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-xl-12">
-                                            <hr><p class="text-label bg-white text-primary" style="margin-top:-30px;font-style:bold;width:130px">Office Account</p>
-                                        </div>
-                                        <div class="col-xl-6">
-                                            <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">Bank Name</label>
-                                                <div class="col-lg-7">
-                                                    <input type="text" class="form-control @error('bank_name_office') is-invalid @enderror" id="bank_name_office" name="bank_name_office" placeholder="" value="{{old('bank_name_office')}}"/>                         
-                                                    @error('bank_name_office')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xl-6">
-                                            <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">Branch Name</label>
-                                                <div class="col-lg-7">
-                                                    <input type="text" class="form-control @error('brance_name_office') is-invalid @enderror" id="brance_name_office" name="brance_name_office" placeholder="" value="{{old('brance_name_office')}}"/>                         
-                                                    @error('brance_name_office')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xl-6">
-                                            <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">Account Name</label>
-                                                <div class="col-lg-7">
-                                                    <input type="text" class="form-control @error('acount_name_office') is-invalid @enderror" id="acount_name_office" name="acount_name_office" placeholder="" value="{{old('acount_name_office')}}"/>                         
-                                                    @error('acount_name_office')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xl-6">
-                                            <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">Account No.</label>
-                                                <div class="col-lg-7">
-                                                    <input type="number" class="form-control @error('acount_no_office') is-invalid @enderror" id="acount_no_office" name="acount_no_office" placeholder="" value="{{old('acount_no_office')}}"/>                         
-                                                    @error('acount_no_office')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xl-6">
-                                            <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">Account Type</label>
-                                                <div class="col-lg-7">
-                                                    <input type="text" class="form-control @error('acount_type_office') is-invalid @enderror" id="acount_type_office" name="acount_type_office" placeholder="" value="{{old('acount_type_office')}}"/>                         
-                                                    @error('acount_type_office')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        </div>
                                         <div class="col-xl-6">
                                             <div class="form-group row">
                                                 <div class="col-lg-8 ml-auto">
                                                     <button type="submit" class="btn btn-sm btn-primary">Submit</button>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="col-xl-12" id="info_bank">
+                                            @if (count($info_bank) > 0)
+                                            <table class="table table-bordered mt-3">
+                                                <thead class="bg-dark text-white">
+                                                    <th>Bank Name</th>
+                                                    <th>Brance Name</th>
+                                                    <th>Acount Name</th>
+                                                    <th>Acount No.</th>
+                                                    <th>Action</th>
+                                                </thead>
+                                                <tbody id="list_work">
+                                                    @foreach($info_bank as $row)
+                                                        <tr id="row_info_bank_{{ $row->id}}">
+                                                            <td>{{ $row->bank_name}}</td>
+                                                            <td>{{ $row->brance_name}}</td>
+                                                            <td>{{ $row->acount_name}}</td>
+                                                            <td>{{ $row->acount_no}}</td>
+                                                            <td width="90">
+                                                                <button type="button" id="delete_info_bank" data-id="{{ $row->id }}" class="btn btn-sm btn-danger ml-1">Delete</button>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -496,144 +479,220 @@
     </div>
 
 
-<script>
-    $(document).ready(function(){
-        //---Save Data
-        var form = '#add-user-form';
-        $(form).on('submit', function(event){
-            event.preventDefault();
+    <script>
+        $(document).ready(function(){
+            //---Save Data
+            var form = '#add-user-form';
+            $(form).on('submit', function(event){
+                event.preventDefault();
 
-            var url = $(this).attr('data-action');
-            var src = $('#redirect').attr('redirect-action');
-            $.ajax({
-                url: url,
-                method: 'POST',
-                data: new FormData(this),
-                dataType: 'JSON',
-                contentType: false,
-                cache: false,
-                processData: false,
-                success:function(response)
-                {
-                    $(form).trigger("reset");
-                    // alert(response.success);
-                    swal("Success Message Title", "Well done, you pressed a button", "success")
-                    // window.location.href = src;
+                var url = $(this).attr('data-action');
+                var src = $('#redirect').attr('redirect-action');
+                $.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: new FormData(this),
+                    dataType: 'JSON',
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    success:function(response)
+                    {
+                        $(form).trigger("reset");
+                        // alert(response.success);
+                        swal("Success Message Title", "Well done, you pressed a button", "success")
+                        // window.location.href = src;
 
 
-                    if(response.institute_name){
-                        var row = '<tr id="row_todo_'+ response.id + '">';
-                        row += '<td> @if('+response.qualification == 1 +') SSC @elseif ('+ response.qualification == 2+') HSC @endif' + '</td>';
-                        row += '<td>' + response.institute_name + '</td>';
-                        row += '<td>' + response.grade + '</td>';
-                        row += '<td>' + response.passing_year + '</td>';
-                        row += '<td width="90">' + '<button type="button" id="delete_todo" data-id="' + response.id +'" class="btn btn-danger btn-sm">Delete</button>' + '</td>';
+                        if(response.institute_name){
+                            var row = '<tr id="row_todo_'+ response.id + '">';
+                            row += '<td> @if('+response.qualification == 1 +') SSC @elseif ('+ response.qualification == 2+') HSC @endif' + '</td>';
+                            row += '<td>' + response.institute_name + '</td>';
+                            row += '<td>' + response.grade + '</td>';
+                            row += '<td>' + response.passing_year + '</td>';
+                            row += '<td width="90">' + '<button type="button" id="delete_todo" data-id="' + response.id +'" class="btn btn-danger btn-sm">Delete</button>' + '</td>';
 
-                        if($("#id").val()){
-                            $("#row_todo_" + response.id).replaceWith(row);
-                        }else{
-                            $("#list_todo").prepend(row);
+                            if($("#id").val()){
+                                $("#row_todo_" + response.id).replaceWith(row);
+                            }else{
+                                $("#list_todo").prepend(row);
+                            }
+                            $("#form_todo").trigger('reset');
+                            $("#educational").load(" #educational");
+                            $("#form_todo").load(" #form_todo");
                         }
-                        $("#form_todo").trigger('reset');
-                        $("#educational").load(" #educational");
-                        $("#form_todo").load(" #form_todo");
+                        if(response.company_name){
+                            var row = '<tr id="row_work_experience_'+ response.id + '">';
+                            row += '<td>' + response.company_name + '</td>';
+                            row += '<td>' + response.start_date + '</td>';
+                            row += '<td>' + response.end_date + '</td>';
+                            row += '<td>' + response.job_description + '</td>';
+                            row += '<td width="90">' + '<button type="button" id="delete_experience" data-id="' + response.id +'" class="btn btn-danger btn-sm">Delete</button>'+'</td>';
+
+                            $("#work_experience").load(" #work_experience");
+                            if($("#id").val()){
+                                $("#row_work_experience_" + response.id).replaceWith(row);
+                            }else{
+                                $("#list_work").prepend(row);
+                            }
+                            $("#form_todo").trigger('reset');
+                        }
+                        if(response.bank_name){
+                            var row = '<tr id="row_info_bank_'+ response.id + '">';
+                            row += '<td>' + response.bank_name + '</td>';
+                            row += '<td>' + response.brance_name + '</td>';
+                            row += '<td>' + response.acount_name + '</td>';
+                            row += '<td>' + response.acount_no + '</td>';
+                            row += '<td width="90">' + '<button type="button" id="delete_info_bank" data-id="' + response.id +'" class="btn btn-danger btn-sm">Delete</button>'+'</td>';
+
+                            $("#info_bank").load(" #info_bank");
+                            if($("#id").val()){
+                                $("#row_info_bank_" + response.id).replaceWith(row);
+                            }else{
+                                $("#list_work").prepend(row);
+                            }
+                            $("#form_todo").trigger('reset');
+                        }
+                    },
+                    error: function (xhr) {
+                        var errors = xhr.responseJSON.errors;
+                        var errorHtml = '';
+                        $.each(errors, function(key, value) {
+                            errorHtml += '<li style="color:red">' + value + '</li>';
+                        });
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Validation Errors',
+                            html: '<ul>' + errorHtml + '</ul>',
+                        });
                     }
-                    // if(response.company_name){
-                    //     var row = '<tr id="row_work_experience_'+ response.id + '">';
-                    //     row += '<td width="20">' + response.id + '</td>';
-                    //     row += '<td>' + response.company_name + '</td>';
-                    //     row += '<td width="150">' + '<button type="button" id="delete_todo" data-id="' + response.id +'" class="btn btn-danger btn-sm">Delete</button>'+'</td>';
+                });
+            });
+        });
 
-                    //     if($("#id").val()){
-                    //         $("#row_work_experience_" + response.id).replaceWith(row);
-                    //     }else{
-                    //         $("#list_work").prepend(row);
-                    //     }
-                    //     $("#form_todo").trigger('reset');
-                    //     $("#work_experience").load(" #work_experience");
-                    // }
+        $(document).ready(function(){
+            $.ajaxSetup({
+                headers:{
+                    'x-csrf-token' : $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $('#delete_todo').click(function () {
+                var id = $(this).data('id');
+                $.ajax({
+                    url: "{{ url('info_related/education/destroy')}}" + '/' + id,
+                    method: 'DELETE',
+                    type: 'DELETE',
+                    success: function(response) {
+                        toastr.success("Record deleted successfully!");
+                        $("#row_todo_" + id).remove();
+                        $("#educational").load(" #educational");
+                    },
+                    error: function(response) {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'An error occurred.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                });
+            });
+
+            $('#delete_experience').click(function () {
+                var id = $(this).data('id');
+                $.ajax({
+                    url: "{{ url('info_related/experience/destroy')}}" + '/' + id,
+                    method: 'DELETE',
+                    type: 'DELETE',
+                    success: function (response) {
+                        toastr.success("Record deleted successfully!");
+                        $("#row_todo_" + id).remove();
+                        $("#work_experience").load(" #work_experience");
+                    },
+                    error: function (response) {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'An error occurred.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                });
+            });
 
 
-                },
-                error: function(response) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Oops...',
-                        text: 'Something went wrong!',
-                        // footer: '<a href="">Why do I have this issue?</a>'
-                    })
+            $('#delete_info_bank').click(function () {
+                var id = $(this).data('id');
+                $.ajax({
+                    url: "{{ url('info_related/experience/destroy')}}" + '/' + id,
+                    method: 'DELETE',
+                    type: 'DELETE',
+                    success: function (response) {
+                        toastr.success("Record deleted successfully!");
+                        $("#row_todo_" + id).remove();
+                        $("#work_experience").load(" #work_experience");
+                    },
+                    error: function (response) {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'An error occurred.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                });
+            });
+            
+        });
+        
+
+        
+
+    </script>
+    {{-- <script>
+        // Delete button click event handler
+        $('#delete_experience').click(function () {
+            var id = $(this).data('id');
+            alert(id);
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Make a DELETE request to delete the record
+                    $.ajax({
+                        url: "{{ url('info_related/experience/destroy')}}" + '/' + id,
+                        type: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function (data) {
+                            // Redirect the user to the previous page and show a success message
+                            window.location.href = document.referrer;
+                            Toast.fire({
+                                icon: 'success',
+                                title: 'Record deleted successfully!'
+                            });
+                        },
+                        error: function (data) {
+                            console.log(data);
+                        }
+                    });
                 }
             });
         });
-    });
-
-    $(document).ready(function(){
-        $.ajaxSetup({
-            headers:{
-                'x-csrf-token' : $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-    });
-
-    // Delete Todo 
-    // $("body").on('click','#delete_todo',function(){
-    //     var id = $(this).data('id');
-    //     // confirm('Are you sure want to delete !');
-    //     alert(id);
-    //     $.ajax({
-    //         type:'DELETE',
-    //         url: "info_employee/" + id
-    //     }).done(function(res){
-    //         $("#row_todo_" + id).remove();
-    //     });
-    // });
-
-$("body").on("click","#delete_todo", function(){
-    var id = $(this).data('id');
-    //alert(user_id);
-
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-        if (result.isConfirmed) {
-            Swal.fire(
-            'Deleted!',
-            'Your file has been deleted.',
-            'success'
-            )
-        }
-    })
 
 
 
 
-    $.ajax({
-        url: "{{ url('info_related/education/destroy')}}" + '/' + id,
-        method: 'DELETE',
-        type: 'DELETE',
-        success: function(response) {
-            Swal.fire(
-                'The Internet?',
-                'That thing is still around?',
-                'question'
-            )
-            $("#row_todo_" + id).remove();
-            $("#educational").load(" #educational");
-        },
-        error: function(response) {
-            alert("Fail");
-        }
-    });
-});
+    </script> --}}
 
+    
 
-
-</script>
 
 </x-app-layout>

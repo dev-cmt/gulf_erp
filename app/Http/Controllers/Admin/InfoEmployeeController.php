@@ -9,11 +9,16 @@ use Illuminate\Support\Facades\File;
 use App\Models\Admin\InfoPersonal;
 use App\Models\Admin\InfoEducational;
 use App\Models\Admin\InfoWorkExperience;
+use App\Models\Admin\InfoBank;
+use App\Models\Admin\InfoNominee;
 use App\Models\Master\MastDepartment;
 use App\Models\Master\MastDesignation;
 use App\Models\Master\MastEmployeeCategory;
 use App\Models\User;
 use App\Helpers\Helper;
+use Carbon\Carbon;
+use Carbon\CarbonInterval;
+use DateTime;
 use DB;
 
 class InfoEmployeeController extends Controller
@@ -135,73 +140,122 @@ class InfoEmployeeController extends Controller
         return redirect()->route('info_employee_related.create', $id)->with($notification);
     }
 
-
     public function related_create($id)
     {
         $user =User::findorfail($id);
         $educational =InfoEducational::orderBy('id','DESC')->where('user_id', $id)->get();
         $work_experience =InfoWorkExperience::orderBy('id','DESC')->where('user_id', $id)->get();
+        $info_bank =InfoBank::orderBy('id','DESC')->where('user_id', $id)->get();
         $user_id = $id;
-        return view('layouts.pages.admin.info_employee.info_related',compact('user','educational','work_experience','user_id'));
+
+        // //----Duration
+        // $startDate = new DateTime($work_experience->start_date);
+        // $endDate = new DateTime($work_experience->end_date);
+        // $interval = $startDate->diff($endDate);
+        // // $duration = $interval->format('%y years, %m months, %d days, %h hours, %i minutes, %s seconds');
+
+        return view('layouts.pages.admin.info_employee.info_related',compact('user','educational','work_experience','info_bank','user_id'));
     }
 
     public function related_store(Request $request, $id) 
-    {  
-
+    {
         if($request->institute_name != null){
-            $todo= new InfoEducational();
-            $todo->qualification=$request->qualification;
-            $todo->institute_name=$request->institute_name;
-            $todo->passing_year=$request->passing_year;
-            $todo->grade=$request->grade;
-            $todo->user_id= $id;
-            $todo->save();
-            return response()->json($todo);
+            $validator = Validator::make($request->all(), [
+                'qualification' => 'required',
+                'institute_name' => 'required',
+                'passing_year' => 'required',
+                'grade' => 'required',
+            ]);
+            if ($validator->fails()) {
+                return response()->json(['errors' => $validator->errors()], 422);
+            }
+            $data= new InfoEducational();
+            $data->qualification=$request->qualification;
+            $data->institute_name=$request->institute_name;
+            $data->passing_year=$request->passing_year;
+            $data->grade=$request->grade;
+            $data->user_id= $id;
+            $data->save();
+            return response()->json($data);
         }elseif($request->company_name){
-            $todo= new InfoWorkExperience();
-            $todo->company_name=$request->company_name;
-            $todo->designation=$request->designation;
-            $todo->start_date=$request->start_date;
-            $todo->end_date=$request->end_date;
-            $todo->job_description=$request->job_description;
-            $todo->user_id= $id;
-            $todo->save();
-            return response()->json($todo);
+            $validator = Validator::make($request->all(), [
+                'company_name' => 'required',
+                'designation' => 'required',
+                'start_date' => 'required',
+                'end_date' => 'required',
+            ]);
+            if ($validator->fails()) {
+                return response()->json(['errors' => $validator->errors()], 422);
+            }
+            $data= new InfoWorkExperience();
+            $data->company_name=$request->company_name;
+            $data->designation=$request->designation;
+            $data->start_date=$request->start_date;
+            $data->end_date=$request->end_date;
+            $data->job_description=$request->job_description;
+            $data->user_id= $id;
+            $data->save();
+            return response()->json($data);
         }elseif ($request->bank_name) {
-            $todo= new InfoBank();
-            $todo->bank_name=$request->bank_name;
-            $todo->brance_name=$request->brance_name;
-            $todo->acount_name=$request->acount_name;
-            $todo->acount_no=$request->acount_no;
-            $todo->acount_type=$request->acount_type;
-            $todo->bank_name_office=$request->bank_name_office;
-            $todo->brance_name_office=$request->brance_name_office;
-            $todo->acount_name_office=$request->acount_name_office;
-            $todo->acount_no_office=$request->acount_no_office;
-            $todo->acount_type_office=$request->acount_type_office;
-            $todo->user_id= $id;
-            $todo->save();
-            return response()->json($todo);
-        }elseif($request->bank_name){
-            $todo= new InfoBank();
-            $todo->full_name=$request->full_name;
-            $todo->nid_no=$request->nid_no;
-            $todo->relation=$request->relation;
-            $todo->mobile_no=$request->mobile_no;
-            $todo->nominee_percentage=$request->nominee_percentage;
-            $todo->profile_image=$request->profile_image;
-            $todo->user_id= $id;
-            $todo->save();
-            return response()->json($todo);
+            $validator = Validator::make($request->all(), [
+                'bank_name' => 'required',
+                'brance_name' => 'required',
+                'acount_name' => 'required',
+                'acount_no' => 'required',
+            ]);
+            if ($validator->fails()) {
+                return response()->json(['errors' => $validator->errors()], 422);
+            }
+            $data= new InfoBank();
+            $data->bank_name=$request->bank_name;
+            $data->brance_name=$request->brance_name;
+            $data->acount_name=$request->acount_name;
+            $data->acount_no=$request->acount_no;
+            $data->acount_type=$request->acount_type;
+            $data->user_id= $id;
+            $data->save();
+            return response()->json($data);
+        }elseif($request->full_name){
+            $validator = Validator::make($request->all(), [
+                'full_name' => 'required',
+            ]);
+            if ($validator->fails()) {
+                return response()->json(['errors' => $validator->errors()], 422);
+            }
+            $data= new InfoNominee();
+            $data->full_name=$request->full_name;
+            $data->nid_no=$request->nid_no;
+            $data->relation=$request->relation;
+            $data->mobile_no=$request->mobile_no;
+            $data->nominee_percentage=$request->nominee_percentage;
+            $data->profile_image=$request->profile_image;
+            $data->user_id= $id;
+            $data->save();
+            return response()->json($data);
+        }else{
+            if ($validator->fails()) {
+                return response()->json(['errors' => $validator->errors()], 422);
+            }
         }
         // return response()->json(['success'=>'Work Experience Information save is being processed.']);
     }
     public function related_education_destroy($id)
     {
-        $data = DB::table('info_educationals')->where('id',$id)->delete();
-
-        // $data=InfoEducational::find($id);
-        // $data->delete();
+        // $data = DB::table('info_educationals')->where('id',$id)->delete();
+        $data=InfoEducational::find($id);
+        $data->delete();
+        return response()->json('success');
+    }
+    public function experience_education_destroy($id)
+    {
+        $data=InfoWorkExperience::find($id);
+        $data->delete();
+        return response()->json('success');
+    }
+    public function experience_info_bank_destroy($id)
+    {
+        $data=InfoBank::find($id);
+        $data->delete();
         return response()->json('success');
     }
 }
