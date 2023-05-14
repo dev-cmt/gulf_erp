@@ -20,6 +20,7 @@ use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use DateTime;
 use DB;
+use Auth;
 
 class InfoEmployeeController extends Controller
 {
@@ -35,8 +36,10 @@ class InfoEmployeeController extends Controller
             'email' => 'required|email|unique:users,email',
             // 'password' => 'required|min:6|confirmed',
         ]);
+        $employee_codes = Helper::IDGenerator(new User, 'employee_code', 5, 'GULF'); /* Generate id */
 
         $user= new User();
+        $user->employee_code= $employee_codes;
         $user->name= $request->name;
         $user->email= $request->email;
         $user->contact_number=$request->contact_number;
@@ -45,9 +48,9 @@ class InfoEmployeeController extends Controller
         $user->is_admin='0';
         $user->email_verified_at='2023-01-01';
         $user->save();
-
+        
         $notification=array('messege'=>'User created successfully!','alert-type'=>'success');
-        return back()->with($notification);
+        return redirect()->route('info_employee_prsonal.create', $user->id)->with($notification);
     }
     public function personal_create($id){
         $data = DB::table('divisions')->get();
@@ -63,7 +66,8 @@ class InfoEmployeeController extends Controller
             'upazila' => $upazilas,
             'union' => $unions,
         ];
-        $user_id = $id;
+        $emp_id = $id;
+        $user_id = Auth::user()->id;
         $user=User::find($id);
         $department =MastDepartment::get();
         $designation =MastDesignation::get();
@@ -89,13 +93,10 @@ class InfoEmployeeController extends Controller
         ]);
 
         //----------Personal Info
-        $employee_id = Helper::IDGenerator(new InfoPersonal, 'employee_id', 5, 'GULF'); /* Generate id */
-
+        
         $data= new InfoPersonal();
-        $data->employee_id= $employee_id;
-        $data->user_id= $id;
-        $data->first_name=$request->first_name;
-        $data->last_name=$request->last_name;
+        $data->emp_id= $id;
+        $data->user_id = Auth::user()->id;
         
         $data->date_of_birth=$request->date_of_birth;
         $data->employee_gender=$request->employee_gender;
@@ -143,9 +144,9 @@ class InfoEmployeeController extends Controller
     public function related_create($id)
     {
         $user =User::findorfail($id);
-        $educational =InfoEducational::orderBy('id','DESC')->where('user_id', $id)->get();
-        $work_experience =InfoWorkExperience::orderBy('id','DESC')->where('user_id', $id)->get();
-        $info_bank =InfoBank::orderBy('id','DESC')->where('user_id', $id)->get();
+        $educational =InfoEducational::orderBy('id','DESC')->where('emp_id', $id)->get();
+        $work_experience =InfoWorkExperience::orderBy('id','DESC')->where('emp_id', $id)->get();
+        $info_bank =InfoBank::orderBy('id','DESC')->where('emp_id', $id)->get();
         $user_id = $id;
 
         // //----Duration
@@ -174,7 +175,8 @@ class InfoEmployeeController extends Controller
             $data->institute_name=$request->institute_name;
             $data->passing_year=$request->passing_year;
             $data->grade=$request->grade;
-            $data->user_id= $id;
+            $data->emp_id= $id;
+            $data->user_id = Auth::user()->id;
             $data->save();
             return response()->json($data);
         }elseif($request->company_name){
@@ -193,7 +195,8 @@ class InfoEmployeeController extends Controller
             $data->start_date=$request->start_date;
             $data->end_date=$request->end_date;
             $data->job_description=$request->job_description;
-            $data->user_id= $id;
+            $data->emp_id= $id;
+            $data->user_id = Auth::user()->id;
             $data->save();
             return response()->json($data);
         }elseif ($request->bank_name) {
@@ -212,7 +215,8 @@ class InfoEmployeeController extends Controller
             $data->acount_name=$request->acount_name;
             $data->acount_no=$request->acount_no;
             $data->acount_type=$request->acount_type;
-            $data->user_id= $id;
+            $data->emp_id= $id;
+            $data->user_id = Auth::user()->id;
             $data->save();
             return response()->json($data);
         }elseif($request->full_name){
@@ -229,7 +233,8 @@ class InfoEmployeeController extends Controller
             $data->mobile_no=$request->mobile_no;
             $data->nominee_percentage=$request->nominee_percentage;
             $data->profile_image=$request->profile_image;
-            $data->user_id= $id;
+            $data->emp_id= $id;
+            $data->user_id = Auth::user()->id;
             $data->save();
             return response()->json($data);
         }else{

@@ -71,8 +71,7 @@
                                         </label>
 
                                         <div class="row-lg">
-                                            <input type="text" id="dept_head"
-                                                class="form-control" name="dept_head" placeholder="" value="{{ $data->user->name}}" disabled>
+                                            <input type="text" id="dept_head" class="form-control" name="dept_head" placeholder="" value="{{ $data->user->name}}" disabled>
 
                                             @error('dept_head')
                                             <span class="invalid-feedback" role="alert">

@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::create('info_personals', function (Blueprint $table) {
             $table->id();
-            $table->text('employee_id')->nullable();
             $table->date('date_of_birth')->nullable();
             $table->integer('employee_gender')->nullable();
             $table->string('nid_no')->nullable();

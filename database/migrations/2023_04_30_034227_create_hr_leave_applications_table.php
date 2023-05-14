@@ -15,20 +15,19 @@ return new class extends Migration
     {
         Schema::create('hr_leave_applications', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('designation');
-            $table->date('start_date');
-            $table->date('end_date');
-            $table->integer('leave_type');
-            $table->string('leave_contact');
-            $table->string('leave_location');
-            $table->string('purpose');
+            $table->date('start_date')->nullable();
+            $table->date('end_date')->nullable();
+            $table->integer('leave_type')->nullable();
+            $table->string('leave_contact')->nullable();
+            $table->string('leave_location')->nullable();
+            $table->text('purpose')->nullable();
             $table->integer('status')->default(false);
-            $table->integer('dept_approve')->default(false);
-            $table->integer('hr_approve')->default(false);
-//            $table->string('duration');
-//            $table->string('status');
             $table->timestamps();
+
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('emp_id');
+            $table->foreign('emp_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

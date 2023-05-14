@@ -63,19 +63,31 @@ Route::group(['middleware' => ['auth']], function(){
     Route::post('employee/info_related/store/{id}', [InfoEmployeeController::class, 'related_store'])->name('info_employee_related.store');
     Route::delete('info_related/education/destroy/{id}', [InfoEmployeeController::class, 'related_education_destroy'])->name('info_employee_education.destroy');
     Route::delete('info_related/experience/destroy/{id}', [InfoEmployeeController::class, 'experience_education_destroy'])->name('info_employee_experience.destroy');
-    Route::delete('info_related/info_bank/destroy/{id}', [InfoEmployeeController::class, 'dexperience_info_bank_destroy'])->name('info_employee_info_bank.destroy');
+    Route::delete('info_related/info_bank/destroy/{id}', [InfoEmployeeController::class, 'experience_info_bank_destroy'])->name('info_employee_info_bank.destroy');
 
-    //------ Leave Process
-    Route::get('/leave_process', [LeaveApplicationController::class, 'application'])->name('leave_process');
-    Route::get('/dept_approve', [LeaveApplicationController::class, 'dept_approve'])->name('dept_approve');
-    Route::get('/hr_approve', [LeaveApplicationController::class, 'hr_approve'])->name('hr_approve');
-    Route::get('/emergency_leave', [LeaveApplicationController::class, 'emergency_leave'])->name('emergency_leave');
-    Route::post('/leave/store', [LeaveApplicationController::class, 'store'])->name('leave.store');
-    Route::PATCH('/leave/approve/{id}', [LeaveApplicationController::class, 'approve'])->name('leave.approve');
-    Route::PATCH('/leave/decline/{id}', [LeaveApplicationController::class, 'decline'])->name('leave.decline');
+    //------ Leave
+    Route::get('/leave_self', [LeaveApplicationController::class, 'leave_application'])->name('leave_self.create');
+    Route::get('/get_employee_code', [LeaveApplicationController::class, 'getEmployeeCode'])->name('get_employee_code');
+    Route::post('leave_application/store', [LeaveApplicationController::class, 'store'])->name('leave_application.store');
+    Route::get('/emergency_leave_application', [LeaveApplicationController::class, 'emergency_leave_application'])->name('emergency_leave.create');
+    Route::post('leave_application/store', [LeaveApplicationController::class, 'store'])->name('leave_application.store');
+    //------ Leave
+    // Route::get('/self_leave', [LeaveApplicationController::class, 'self_leave'])->name('self_leave');
+    // Route::get('/leave_process', [LeaveApplicationController::class, 'application'])->name('leave_process');
+    // Route::get('/dept_approve', [LeaveApplicationController::class, 'dept_approve'])->name('dept_approve');
+    // Route::get('/hr_approve', [LeaveApplicationController::class, 'hr_approve'])->name('hr_approve');
+    // Route::get('/emergency_leave', [LeaveApplicationController::class, 'emergency_leave'])->name('emergency_leave');
+    // Route::post('/leave/store', [LeaveApplicationController::class, 'store'])->name('leave.store');
+    // Route::PATCH('/leave/approve/{id}', [LeaveApplicationController::class, 'approve'])->name('leave.approve');
+    // Route::PATCH('/leave/decline/{id}', [LeaveApplicationController::class, 'decline'])->name('leave.decline');
     //------ Attendances
     Route::resource('manualattendances',ManualAttendanceController::class);
     Route::get('/attendance_approve', [ManualAttendanceController::class, 'attendance_approve'])->name('attendance_approve');
+    Route::get('/get-employee-code',[ManualAttendanceController::class,'employeeCode'])->name('get-employee-code');
+
+    Route::PATCH('/attendance-approval/{id}', [ManualAttendanceController::class, 'approve'])->name('attendance_approval');
+    Route::PATCH('/attendance-decline/{id}', [ManualAttendanceController::class, 'decline'])->name('attendance_decline');
+    Route::get('get-employee-repot/{id}',[ManualAttendanceController::class,'getemployeereport'])->name('get-employee-report');
 
 });
 

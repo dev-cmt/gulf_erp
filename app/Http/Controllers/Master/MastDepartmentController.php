@@ -49,27 +49,27 @@ class MastDepartmentController extends Controller
         } 
     }
 
+
+
     public function edit($id)
     {
         $data = MastDepartment::find($id);
-        $users = User::orderBy('id','DESC')->get();
+        $users = User::latest()->get();
         return view('layouts.pages.master.department.edit', compact('data', 'users'));
     }
     
+
+
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'dept_head' => 'required'
-        ]);
-        
         if (empty($request->dept_name)) {
-            $notification = array('messege' => 'Department Name can not left blank', 'alert-type' => 'error');
-        
+            $notification = array('messege' => 'Department Name can not left blank', 'alert-type' => 'error');       
             return redirect()->back()->with($notification);
+            
         } else if (empty($request->dept_head)) {
             $notification = array('messege' => 'Department Head not selected', 'alert-type' => 'error');
-        
             return redirect()->back()->with($notification);
+
         } else  {
             $data = MastDepartment::find($id);
             $data->entry_by = Auth::user()->id;
@@ -81,19 +81,16 @@ class MastDepartmentController extends Controller
             }
             $data->dept_head = $request->dept_head;
             $data->status = $request->status;
-        
-            $data->save();
-        
-            $notification = array('messege' => 'Department data update successfully.', 'alert-type' => 'success');
-        
+            $data->save();        
+            $notification = array('messege' => 'Department data update successfully.', 'alert-type' => 'success');        
             return redirect()->route('mast_department.index')->with($notification);
         } 
     }
 
+
+
     public function show( $id)
     {
-
-        // $data = MastDepartment::find($id);
         $data = MastDepartment::with('user')->find($id);
         $data = MastDepartment::find($id);
         return view('layouts.pages.master.department.show', compact('data'));

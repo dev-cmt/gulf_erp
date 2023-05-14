@@ -6,10 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-use App\Models\Admin\InfoPersonal;
-use App\Models\Admin\InfoAcademic;
-use App\Models\Admin\InfoFamily;
-use App\Models\Admin\InfoOther;
+use App\Helpers\Helper;
 use App\Models\User;
 
 class RolePermissionSeeder extends Seeder
@@ -21,10 +18,12 @@ class RolePermissionSeeder extends Seeder
      */
     public function run()
     {
+        $employee_code = Helper::IDGenerator(new User, 'employee_code', 5, 'GULF'); /* Generate id */
         $supper_admin = User::create([
             'name'=>'Gulf-ERP',
             'email'=>'admin@gmail.com',
             'contact_number'=>'01909302126',
+            'employee_code'=>$employee_code,
             'password'=>bcrypt('password'),
             'status' => '1',
             'is_admin' => '1',
@@ -33,7 +32,6 @@ class RolePermissionSeeder extends Seeder
         ]);
         /*__________________________________________________________ */
         /*__________________________________________________________ */
-
         $supper_admin_role = Role::create(['name' => 'Supper-Admin']);
         $admin_role = Role::create(['name' => 'Admin']);
         $member_role = Role::create(['name' => 'Member']);

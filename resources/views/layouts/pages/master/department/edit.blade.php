@@ -26,7 +26,7 @@
                                         <label class="row-lg col-form-label">Department Name<span class="text-danger">*</span></label>
                                         <div class="row-lg">
                                             <input type="text" id="dept_name"
-                                                class="form-control" name="dept_name" placeholder="" value="{{$data->dept_name}}" required>
+                                                class="form-control text-capitalize" name="dept_name" placeholder="" value="{{$data->dept_name}}" pattern="[a-zA-Z]+.*" title="Dept. name must start with alphabets then others" autofocus required>
                                             @error('dept_name')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -59,10 +59,9 @@
                                         <select class="form-control dropdwon_select" id="dept_head" name="dept_head" >
                                             <!-- <option selected disabled>Please select</option> -->
                                             @foreach ($users as $user)
-                                                <option value="{{$user->id}}">{{$user->name}}</option>
+                                                <option value="{{$user->id}}" {{$user->id==$data->user->id?'selected':'' }}>{{ $user->name}}</option>
                                             @endforeach
                                         </select>
-                                            
                                             <!-- <select class="form-control" id="dept_head" name="dept_head" value="">
                                                 <option value="1" {{ $data->dept_head == 1? 'selected': '' }}>Kasem</option>
                                                 <option value="2" {{ $data->dept_head == 2? 'selected': '' }}>Chisty</option>

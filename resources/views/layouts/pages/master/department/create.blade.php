@@ -41,7 +41,7 @@
 
                                         <div class="row-lg">
 
-                                            <input type="text" id="dept_name" class="form-control @error('dep_name') is-invalid @enderror" name="dept_name" placeholder="" value="{{old('dept_name')}}" required> 
+                                            <input type="text" id="dept_name" class="form-control text-capitalize @error('dep_name') is-invalid @enderror" name="dept_name" placeholder="" value="{{old('dept_name')}}" pattern="[a-zA-Z]+.*" title="Dept. name must start with alphabets then others" autofocus required> 
 
                                             @error('dept_name')
                                             <span class="invalid-feedback" role="alert">

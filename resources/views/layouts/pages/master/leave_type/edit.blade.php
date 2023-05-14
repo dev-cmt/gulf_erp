@@ -28,7 +28,7 @@
                                             <span class="text-danger">*</span>
                                         </label>
                                         <div class="row-lg">
-                                            <input type="text" id="leave_name" class="form-control @error('leave_name') is-invalid @enderror" name="leave_name" value="{{$data->leave_name}}" required>                                     
+                                            <input type="text" id="leave_name" class="form-control @error('leave_name') is-invalid @enderror" name="leave_name" value="{{$data->leave_name}}" pattern="[a-zA-Z]+.*" title="Leave name must start with alphabets then others" autofocus required>                                     
                                             @error('leave_name')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -44,7 +44,7 @@
                                             <span class="text-danger">*</span>
                                         </label>
                                         <div class="row-lg">
-                                            <input type="number" id="max_limit" class="form-control @error('max_limit') is-invalid @enderror" name="max_limit" value="{{$data->max_limit}}" data-type="integer" required>
+                                            <input type="number" id="max_limit" class="form-control @error('max_limit') is-invalid @enderror" name="max_limit" value="{{$data->max_limit}}" data-type="integer" min="0" max="100" required>
                                             @error('max_limit')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -61,7 +61,7 @@
                                             <span class="text-danger">*</span>
                                         </label>
                                         <div class="row-lg">
-                                            <input type="text" id="leave_code" class="form-control @error('leave_code') is-invalid @enderror" name="leave_code" value="{{$data->leave_code}}" required>
+                                            <input type="text" id="leave_code" class="form-control text-uppercase @error('leave_code') is-invalid @enderror" name="leave_code" value="{{$data->leave_code}}" required>
                                             @error('leave_code')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -76,7 +76,7 @@
                                             <span class="text-danger">*</span>
                                         </label>
                                         <div class="row-lg">
-                                            <input type="number" id="yearly_limit" class="form-control @error('yearly_limit') is-invalid @enderror" name="yearly_limit" value="{{$data->yearly_limit}}" data-type="integer" required>
+                                            <input type="number" id="yearly_limit" class="form-control @error('yearly_limit') is-invalid @enderror" name="yearly_limit" value="{{$data->yearly_limit}}" data-type="integer" min="0" max="100" required>
                                             @error('yearly_limit')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>

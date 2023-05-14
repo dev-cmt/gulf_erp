@@ -31,7 +31,7 @@
                                     <td>{{ $data->cat_name }}</td>										
                                     <td>{{ $data->cat_type == 1 ? 'In' : 'Out'  }}</td>										
                                     <td>{{ $data->description }}</td>										
-                                    <td>{{ $data->status == 1 ? 'active' : 'inactive'  }}</td>																			
+                                    <td>{{ $data->status == 1 ? 'Active' : 'Inactive'  }}</td>																			
                                     <td class="float-right">                                
                                         <a href="{{ route('must_employee_category.edit', $data->id) }}" class="btn btn-success btn-sm">Edit</a>
                                         <a href="{{ route('must_employee_category.show', $data->id) }}" class="btn btn-info btn-sm">View</a>                                                              

@@ -587,8 +587,8 @@
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <div class="col-lg-7">
-                                                <select name="district_present" class="form-control dropdwon_select" id="district"></select>
-                                                @error('district_present')
+                                                <select name="city_present" class="form-control dropdwon_select" id="district"></select>
+                                                @error('city_present')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>

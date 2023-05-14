@@ -49,14 +49,15 @@
                                     </td>
                                     <td>{{ $data->start_date }}</td>
                                     <td>{{ $data->end_date }}</td>
-                                    <td></td>
+                                    @php
+                                    $startDate = \Carbon\Carbon::parse($data->start_date);
+                                    $endDate = \Carbon\Carbon::parse($data->end_date);
+                                    $diffInDays = $startDate->diffInDays($endDate);
+                                    @endphp
+                                    <td>{{ $diffInDays }}</td>
 
                                     <td class="d-flex justify-content-end">
-                                        @if ($data->status == '1')
-                                            <span class="badge light badge-success">Done.</span>
-                                        @elseif ($data->status == '2')
-                                            <span class="badge light badge-danger">Cancel</span>
-                                        @else
+                                    
                                             <form action="{{ route('leave.approve', $data->id) }}" method="post">
                                                 <button class="badge badge-success mr-2">Approve</button>
                                                 @csrf
@@ -67,7 +68,7 @@
                                                 @csrf
                                                 @method('PATCH')
                                             </form>
-                                        @endif
+
                                     </td>
 
                                 </tr>

@@ -13,7 +13,7 @@
             </div>
             <ul class="metismenu" id="menu">
                 <li class="nav-label first">Main Menu</li>
-                <li><a href="#" class="ai-icon" aria-expanded="false">
+                <li><a href="{{route('dashboard')}}" class="ai-icon" aria-expanded="false">
                         <i class="flaticon-144-layout"></i>
                         <span class="nav-text">Dashboard</span>
                     </a>
@@ -28,10 +28,13 @@
                         {{-- <li><a href="{{route('info_related.index')}}">Related Information</a></li> --}}
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Leave</a>
                             <ul aria-expanded="false">
-                                <li><a href="{{ route('leave_process') }}">Leave Process</a></li>
+                                <li><a href="{{ route('leave_self.create') }}">Self Leave</a></li>
+                                <li><a href="{{ route('emergency_leave.create') }}">Emergency Leave</a></li>
+                                {{-- <li><a href="{{ route('leave_process') }}">Self Leave</a></li>
+                                <li><a href="{{ route('emergency_leave') }}">Leave Application</a></li>
                                 <li><a href="{{ route('dept_approve') }}">Dept. Approve</a></li>
-                                <li><a href="{{ route('hr_approve') }}">HR Approve</a></li>
-                                <li><a href="{{ route('emergency_leave') }}">Emergency Leave</a></li>
+                                <li><a href="{{ route('hr_approve') }}">HR Approve</a></li> --}}
+                                {{-- <!-- <li><a href="{{ route('emergency_leave') }}">Emergency Leave</a></li> --> --}}
                             </ul>
                         </li>
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Attendance</a>

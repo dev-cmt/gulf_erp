@@ -196,9 +196,7 @@
                                         </div>
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">Job Description
-                                                    <span class="text-danger">*</span>
-                                                </label>
+                                                <label class="col-lg-4 col-form-label">Job Description</label>
                                                 <div class="col-lg-7">
                                                     <textarea class="form-control @error('job_description') is-invalid @enderror" rows="1" id="job_description" name="job_description" placeholder="" spellcheck="false">{{old('job_description')}}</textarea>                                                    
                                                     @error('job_description')
@@ -376,9 +374,11 @@
                                     <div class="row accordion__body--text">
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">Full Name</label>
+                                                <label class="col-lg-4 col-form-label">Nominee Name
+                                                    <span class="text-danger">*</span>
+                                                </label>
                                                 <div class="col-lg-7">
-                                                    <input type="date" class="form-control @error('full_name') is-invalid @enderror" id="full_name" name="full_name" placeholder="" value="{{old('full_name')}}"/>                         
+                                                    <input type="text" class="form-control @error('full_name') is-invalid @enderror" id="full_name" name="full_name" placeholder="" value="{{old('full_name')}}"/>                         
                                                     @error('full_name')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -389,9 +389,11 @@
                                         </div>
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">NID</label>
+                                                <label class="col-lg-4 col-form-label">NID
+                                                    <span class="text-danger">*</span>
+                                                </label>
                                                 <div class="col-lg-7">
-                                                    <input type="text" class="form-control @error('nid_no') is-invalid @enderror" id="nid_no" name="nid_no" placeholder="" value="{{old('nid_no')}}"/>                         
+                                                    <input type="number" class="form-control @error('nid_no') is-invalid @enderror" id="nid_no" name="nid_no" placeholder="" value="{{old('nid_no')}}"/>                         
                                                     @error('nid_no')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -466,6 +468,32 @@
                                                     <button type="submit" class="btn btn-sm btn-primary">Submit</button>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="col-xl-12" id="info_nominee">
+                                            @if (count($info_bank) > 0)
+                                            <table class="table table-bordered mt-3">
+                                                <thead class="bg-dark text-white">
+                                                    <th>Bank Name</th>
+                                                    <th>Brance Name</th>
+                                                    <th>Acount Name</th>
+                                                    <th>Acount No.</th>
+                                                    <th>Action</th>
+                                                </thead>
+                                                <tbody id="list_work">
+                                                    @foreach($info_bank as $row)
+                                                        <tr id="row_nominee_{{ $row->id}}">
+                                                            <td>{{ $row->bank_name}}</td>
+                                                            <td>{{ $row->brance_name}}</td>
+                                                            <td>{{ $row->acount_name}}</td>
+                                                            <td>{{ $row->acount_no}}</td>
+                                                            <td width="90">
+                                                                <button type="button" id="delete_nominee" data-id="{{ $row->id }}" class="btn btn-sm btn-danger ml-1">Delete</button>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -553,6 +581,22 @@
                             }
                             $("#form_todo").trigger('reset');
                         }
+                        if(response.bank_name){
+                            var row = '<tr id="row_nominee_'+ response.id + '">';
+                            row += '<td>' + response.bank_name + '</td>';
+                            row += '<td>' + response.brance_name + '</td>';
+                            row += '<td>' + response.acount_name + '</td>';
+                            row += '<td>' + response.acount_no + '</td>';
+                            row += '<td width="90">' + '<button type="button" id="delete_nominee" data-id="' + response.id +'" class="btn btn-danger btn-sm">Delete</button>'+'</td>';
+
+                            $("#info_nominee").load(" #info_nominee");
+                            if($("#id").val()){
+                                $("#row_nominee_" + response.id).replaceWith(row);
+                            }else{
+                                $("#list_work").prepend(row);
+                            }
+                            $("#form_todo").trigger('reset');
+                        }
                     },
                     error: function (xhr) {
                         var errors = xhr.responseJSON.errors;
@@ -576,76 +620,94 @@
                     'x-csrf-token' : $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            $('#delete_todo').click(function () {
-                var id = $(this).data('id');
-                $.ajax({
-                    url: "{{ url('info_related/education/destroy')}}" + '/' + id,
-                    method: 'DELETE',
-                    type: 'DELETE',
-                    success: function(response) {
-                        toastr.success("Record deleted successfully!");
-                        $("#row_todo_" + id).remove();
-                        $("#educational").load(" #educational");
-                    },
-                    error: function(response) {
-                        Swal.fire({
-                            title: 'Error!',
-                            text: 'An error occurred.',
-                            icon: 'error',
-                            confirmButtonText: 'OK'
-                        });
-                    }
-                });
-            });
-
-            $('#delete_experience').click(function () {
-                var id = $(this).data('id');
-                $.ajax({
-                    url: "{{ url('info_related/experience/destroy')}}" + '/' + id,
-                    method: 'DELETE',
-                    type: 'DELETE',
-                    success: function (response) {
-                        toastr.success("Record deleted successfully!");
-                        $("#row_todo_" + id).remove();
-                        $("#work_experience").load(" #work_experience");
-                    },
-                    error: function (response) {
-                        Swal.fire({
-                            title: 'Error!',
-                            text: 'An error occurred.',
-                            icon: 'error',
-                            confirmButtonText: 'OK'
-                        });
-                    }
-                });
-            });
-
-
-            $('#delete_info_bank').click(function () {
-                var id = $(this).data('id');
-                $.ajax({
-                    url: "{{ url('info_related/experience/destroy')}}" + '/' + id,
-                    method: 'DELETE',
-                    type: 'DELETE',
-                    success: function (response) {
-                        toastr.success("Record deleted successfully!");
-                        $("#row_todo_" + id).remove();
-                        $("#work_experience").load(" #work_experience");
-                    },
-                    error: function (response) {
-                        Swal.fire({
-                            title: 'Error!',
-                            text: 'An error occurred.',
-                            icon: 'error',
-                            confirmButtonText: 'OK'
-                        });
-                    }
-                });
-            });
             
         });
-        
-
+        $("body").on('click','#delete_todo',function(){
+            var id = $(this).data('id');
+            $.ajax({
+                url: "{{ url('info_related/education/destroy')}}" + '/' + id,
+                method: 'DELETE',
+                type: 'DELETE',
+                success: function(response) {
+                    toastr.success("Record deleted successfully!");
+                    $("#row_todo_" + id).remove();
+                    $("#educational").load(" #educational");
+                },
+                error: function(response) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'An error occurred.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        });
+        $("body").on('click','#delete_experience',function(){
+            var id = $(this).data('id');
+            $.ajax({
+                url: "{{ url('info_related/experience/destroy')}}" + '/' + id,
+                method: 'DELETE',
+                type: 'DELETE',
+                success: function (response) {
+                    toastr.success("Record deleted successfully!");
+                    $("#row_todo_" + id).remove();
+                    $("#work_experience").load(" #work_experience");
+                },
+                error: function (response) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'An error occurred.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        });
+        $("body").on('click','#delete_info_bank',function(){
+            var id = $(this).data('id');
+            alert(id);
+            $.ajax({
+                url: "{{ url('info_related/info_bank/destroy')}}" + '/' + id,
+                method: 'DELETE',
+                type: 'DELETE',
+                success: function (response) {
+                    toastr.success("Record deleted successfully!");
+                    $("#row_info_bank_" + id).remove();
+                    $("#info_bank").load(" #info_bank");
+                },
+                error: function (response) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'An error occurred.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        });
+        $("body").on('click','#delete_nominee',function(){
+            var id = $(this).data('id');
+            alert(id);
+            $.ajax({
+                url: "{{ url('info_related/info_bank/destroy')}}" + '/' + id,
+                method: 'DELETE',
+                type: 'DELETE',
+                success: function (response) {
+                    toastr.success("Record deleted successfully!");
+                    $("#row_nominee_" + id).remove();
+                    $("#info_nominee").load(" #info_nominee");
+                },
+                error: function (response) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'An error occurred.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        });
         
 
     </script>

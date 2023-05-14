@@ -28,7 +28,7 @@
                                             <span class="text-danger">*</span>
                                         </label>
                                         <div class="row-lg">
-                                            <input type="text" id="cat_name" class="form-control @error('cat_name') is-invalid @enderror" name="cat_name" value="{{$data->cat_name}}" required> 
+                                            <input type="text" id="cat_name" class="form-control text-capitalize @error('cat_name') is-invalid @enderror" name="cat_name" value="{{$data->cat_name}}" pattern="[a-zA-Z]+.*" title="Cat. name must start with alphabets then others" autofocus required> 
                                             @error('cat_name')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>

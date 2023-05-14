@@ -30,7 +30,7 @@
                                     <td>{{ $data->dept_name }}</td>
                                     <td>{{ $data->user->name}}</td>
                                     <td>{{ $data->description }}</td>										
-                                    <td>{{ $data->status == 1 ? 'active' : 'inactive'  }}</td>																			
+                                    <td>{{ $data->status == 1 ? 'Active' : 'Inactive'  }}</td>																			
                                     <td class="float-right">                                
                                         <a href="{{ route('mast_department.edit', $data->id) }}" class="btn btn-success btn-sm">Edit</a>
                                         <a href="{{ route('mast_department.show', $data->id) }}" class="btn btn-info btn-sm">View</a>                                                             

@@ -10,15 +10,9 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
-
-use App\Models\Admin\InfoFamily;
-use App\Models\Admin\InfoAcademic;
+//______HR & ADMIN
+use App\Models\Admin\HrLeaveApplication;
 use App\Models\Admin\InfoPersonal;
-use App\Models\Admin\InfoOther;
-use App\Models\Admin\Committee;
-use App\Models\Admin\EventPayment;
-use App\Models\Admin\EventRegister;
-use App\Models\Admin\Gallery;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -39,38 +33,24 @@ class User extends Authenticatable implements MustVerifyEmail
         'contact_number',
         'email',
         'password',
+        'employee_code',
         'status',
         'profile_photo_path',
         'is_admin',
     ];
-
     public function infoPersonal()
     {
         return $this->hasOne(InfoPersonal::class);
     }
-    public function infoFamily()
+    //____________ MINHAZ DATA
+    public function hr_leave_application()
     {
-        return $this->hasMany(InfoFamily::class);
+        return $this->hasOne(HrLeaveApplication::class);
     }
-    public function infoAcademic()
+    //____________ SABBIR DATA
+    public function employeeCode()
     {
-        return $this->hasOne(InfoAcademic::class);
-    }
-    public function infoOther()
-    {
-        return $this->hasOne(InfoOther::class);
-    }
-    public function eventPayment()
-    {
-        return $this->hasMany(EventPayment::class);
-    }
-    public function eventRegister()
-    {
-        return $this->hasMany(EventRegister::class);
-    }
-    public function gallery()
-    {
-        return $this->hasMany(Gallery::class);
+    return $this->hasOne(InfoPersonal::class,'user_id','id');
     }
     
 

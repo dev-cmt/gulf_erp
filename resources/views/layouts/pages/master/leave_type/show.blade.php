@@ -62,7 +62,7 @@
                                         <span class="text-danger">*</span>
                                     </label>
                                     <div class="row-lg">
-                                        <input type="text" id="leave_code" class="form-control @error('leave_code') is-invalid @enderror" name="leave_code" value="{{$data->leave_code}}" disabled>   
+                                        <input type="text" id="leave_code" class="form-control text-uppercase @error('leave_code') is-invalid @enderror" name="leave_code" value="{{$data->leave_code}}" disabled>   
                                  
                                         @error('leave_code')
                                         <span class="invalid-feedback" role="alert">

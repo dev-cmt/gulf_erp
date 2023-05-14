@@ -1,230 +1,184 @@
 <x-app-layout>
-
-
+    <!-- Leave Application -->
     <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Leave Application</h5>
-                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span>
-                    </button>
-                </div>
-                    <div class="modal-body">
-                        <p class="text-center text-success">{{Session::get('message')}}</p>
-                        <form class="form-valide" action="{{route('leave.store')}}" method="post" enctype="multipart/form-data" name="form">
-                            @csrf
-                            <div class="row">
-                                <div class="col-xl-6">
-                                    <div class="form-group row">
-                                        <label class="col-lg-4 col-form-label" for="val-name">Name
-                                            <span class="text-danger">*</span>
-                                        </label>
-                                        <div class="col-lg-6">
-                                            <input type="text" id="val-name" class="form-control @error('name') is-invalid @enderror" name="name" placeholder="Enter name.." value="{{old('name')}}">
-                                            @error('name')
-                                            <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-lg-4 col-form-label">Start Date
-                                            <span class="text-danger">*</span>
-                                        </label>
-                                        <div class="col-lg-6">
-                                            <input type="date" class="form-control @error('date') is-invalid @enderror" name="start_date" placeholder="Enter Date.." value="{{old('date')}}" id="inputOne">
-                                            @error('date')
-                                            <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-lg-4 col-form-label">Leave Type
-                                            <span class="text-danger">*</span>
-                                        </label>
-                                        <div class="col-lg-6">
-                                            <select name="leave_type" class="form-control default-select  @error('leave_type') is-invalid @enderror" style="height: 40px;">
-                                                <option value="1">Sick Leave</option>
-                                                <option value="2">Rest Leave</option>
-                                                <option value="3">Festival Leave</option>
-                                                <option value="4">Check Leave</option>
-                                            </select>
-                                            @error('type_number')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label class="col-lg-4 col-form-label">Leave Location</label>
-                                        <div class="col-lg-6">
-                                            <input type="text" class="form-control @error('location') is-invalid @enderror" name="leave_location" placeholder="Enter location.." value="{{old('location')}}">
-                                            @error('location')
-                                            <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <div class="col-xl-6">
-                                    <div class="form-group row">
-                                        <label class="col-lg-4 col-form-label">Designation</label>
-                                        <div class="col-lg-6">
-                                            <select name="designation" class="form-control default-select  @error('designation') is-invalid @enderror" style="height: 40px;">
-                                                <option value="1">CEO</option>
-                                                <option value="2">GM</option>
-                                                <option value="3">AGM</option>
-                                                <option value="4">HR</option>
-                                            </select>
-                                            @error('designation')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label class="col-lg-4 col-form-label">End Date
-                                            <span class="text-danger">*</span>
-                                        </label>
-                                        <div class="col-lg-6">
-                                            <input type="date" id="inputTwo" class="form-control @error('date') is-invalid @enderror" name="end_date" placeholder="Enter Date.." value="{{old('date')}}">
-                                            @error('date')
-                                            <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label class="col-lg-4 col-form-label">Leave Contact</label>
-                                        <div class="col-lg-6">
-                                            <input type="text" class="form-control @error('contact') is-invalid @enderror" name="leave_contact" placeholder="Enter Contact.." value="{{old('contact')}}">
-                                            @error('contact')
-                                            <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label class="col-lg-4 col-form-label">Purpose</label>
-                                        <div class="col-lg-6">
-                                            <input type="text" class="form-control @error('purpose') is-invalid @enderror" name="purpose" placeholder="Enter purpose.." value="{{old('purpose')}}">
-                                            @error('purpose')
-                                            <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-sm btn-danger light" data-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-sm btn-primary" id="output">Save</button>
-                            </div>
-                        </form>
+                @if (session()->has('success'))
+                    <strong class="text-success">{{session()->get('success')}}</strong>
+                @endif
+                <form class="form-valide" data-action="{{ route('leave_application.store') }}" method="POST" enctype="multipart/form-data" id="add-user-form">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title">Self Leave Application</h5>
+                        <button type="button" class="close" data-dismiss="modal"><span>&times;</span>
+                        </button>
                     </div>
+                    <div class="modal-body row">
+                        <div class="col-lg-6">
+                            <div class="form-group row">
+                                <label class="col-lg-5 col-form-label">Employee Name</label>
+                                <div class="col-lg-7">
+                                    <input type="text" class="form-control" value="{{auth()->user()->name}}" disabled>
+                                    <input type="hidden" name="employee_name" class="form-control" value="{{auth()->user()->name}}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group row">
+                                <label class="col-lg-5 col-form-label">Employee Code</label>
+                                <div class="col-lg-7">
+                                    <input type="text" class="form-control" value="{{auth()->user()->employee_code}}" disabled>
+                                    <input type="hidden" name="emp_id" class="form-control" value="{{auth()->user()->id}}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group row">
+                                <label class="col-lg-5 col-form-label">Start Date
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <div class="col-lg-7">
+                                    <input type="date" class="form-control @error('start_date') is-invalid @enderror" name="start_date" placeholder="Enter Date.." value="{{old('start_date')}}" id="start_date">
+                                    @error('start_date')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group row">
+                                <label class="col-lg-5 col-form-label">End Date
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <div class="col-lg-7">
+                                    <input type="date" class="form-control @error('end_date') is-invalid @enderror" name="end_date" value="{{old('end_date')}}" id="end_date">
+                                    @error('end_date')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group row">
+                                <label class="col-lg-5 col-form-label">Leave Type
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <div class="col-lg-7">
+                                    <select class="form-control default-select" id="leave_type" name="leave_type">
+                                        <option disabled selected>Please select</option>
+                                        @foreach ($leave_type as $row)
+                                            <option value="{{$row->id}}">{{$row->leave_name}}</option>
+                                        @endforeach
+                                    </select> 
+                                    @error('leave_type')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group row">
+                                <label class="col-lg-5 col-form-label">Contact Number
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <div class="col-lg-7">
+                                    <input type="number" class="form-control @error('leave_contact') is-invalid @enderror" name="leave_contact" value="{{old('leave_contact')}}">
+                                    @error('leave_contact')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group row">
+                                <label class="col-lg-5 col-form-label">Leave Location</label>
+                                <div class="col-lg-7">
+                                    <input type="text" class="form-control @error('leave_location') is-invalid @enderror" name="leave_location" placeholder="Enter location.." value="{{old('location')}}">
+                                    @error('start_dates')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group row">
+                                <label class="col-lg-5 col-form-label">Leave Purpose</label>
+                                <div class="col-lg-7">
+                                    <input type="text" class="form-control @error('purpose') is-invalid @enderror" name="purpose" placeholder="Enter purpose.." value="{{old('purpose')}}">
+                                    @error('start_dates')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger light" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Self Leave<span class="bg-blue-500 text-white rounded px-1 text-xs py-0.5"></span></h4>
-                    {{-- @can('Role create') --}}
+                    <h4 class="card-title">Leave Application List<span class="bg-blue-500 text-white rounded px-1 text-xs py-0.5"></span></h4>
+                    @can('Role create')
                     <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg"><i class="fa fa-plus"></i><span class="btn-icon-add" data-bs-toggle="modal"></span>Create</a>
-                    {{-- @endcan --}}
+                    @endcan
                 </div>
-
                 <div class="card-body">
                     <div class="table-responsive">
                         <table id="example3" class="display" style="min-width: 845px">
                             <thead>
-                            <tr>
-                                <th>SL NO</th>
+                                {{-- <th>SL NO</th> --}}
                                 <th>Employee Name</th>
-                                <th>Leave Type</th>
+                                <th>Leave Name</th>
                                 <th>Start Date</th>
                                 <th>End Date</th>
                                 <th>Duration</th>
                                 <th class="text-right">Status</th>
-                            </tr>
                             </thead>
-                            <tbody>
-                            @foreach($applicationData as $data)
-                            <tr>
-
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $data->name }}</td>
-                                    <td>
-{{--                                        {{ $data->leave_type }}--}}
-                                    <?php
-                                            if ($data->leave_type == 1)
-                                                {
-                                                    echo 'Sick leave';
-                                                }elseif ($data->leave_type == 2)
-                                                {
-                                                    echo 'Rest Leave';
-                                                }elseif ($data->leave_type == 3)
-                                                {
-                                                    echo 'Festival Leave';
-                                                }else{
-                                                echo 'good night';
-                                            }
-                                            ?>
-                                    </td>
-                                    <td>{{ $data->start_date }}</td>
-                                    <td>{{ $data->end_date }}</td>
-                                    <td>
-<!--                                        --><?php
-//                                        $fdate = $data_request->start_date;
-//                                        $tdate = $data_request->end_date;
-//                                        $datetime1 = new DateTime($fdate);
-//                                        $datetime2 = new DateTime($tdate);
-//                                        $interval = $datetime1->diff($datetime2);
-//                                        $days = $interval->format('%a');
-//                                        ?>
-                                    </td>
-                                    <td class="d-flex justify-content-end">
-                                        @if($data->status == 0)
-                                            <a class="btn btn-success btn-xs">Processing</a>
-                                        @elseif($data->status == 1)
-                                            <a class="btn btn-success btn-xs">Approve</a>
-                                        @elseif($data->status == 2)
-                                            <a class="btn btn-success btn-xs">Cancel</a>
-                                        @endif
-
-
-                                    </td>
-
-{{--                                <td class="d-flex justify-content-end">--}}
-{{--                                    @can('User edit')--}}
-{{--                                        <a href="{{ route('lose_member.edit', $row->id) }}" class="btn btn-success shadow btn-xs sharp mr-1"><i class="fa fa-pencil"></i></a>--}}
-{{--                                    @endcan--}}
-{{--                                    @can('User delete')--}}
-{{--                                        <form action="{{ route('lose_member.destroy', $row->id) }}" method="POST">--}}
-{{--                                            @method('DELETE')--}}
-{{--                                            @csrf--}}
-{{--                                            <button class="btn btn-danger shadow btn-xs sharp" onclick="return confirm('Are you sure?');" type="submit"><i class="fa fa-trash"></i></button>--}}
-{{--                                        </form>--}}
-{{--                                    @endcan--}}
-{{--                                </td>--}}
-                            </tr>
-                            @endforeach
+                            <tbody id="list_todo">
+                                @foreach($data as $row)
+                                    <tr id="row_todo_{{ $row->id}}">
+                                        <td>{{ $row->name}}</td>
+                                        <td>{{ $row->leave_name}}</td>
+                                        <td>{{date("j F, Y", strtotime($row->start_date))}}</td>
+                                        <td>{{date("j F, Y", strtotime($row->end_date))}}</td>
+                                        <td>{{ $row->duration}}</td>
+                                        <td class="d-flex justify-content-end">
+                                            @if($row->status == 0)
+                                            <span class="badge light badge-warning">
+                                                <i class="fa fa-circle text-warning mr-1"></i>Pending
+                                            </span>
+                                            @elseif($row->status == 1)
+                                            <span class="badge light badge-success">
+                                                <i class="fa fa-circle text-success mr-1"></i>Successful
+                                            </span>
+                                            @elseif($row->status == 2)
+                                            <span class="badge light badge-danger">
+                                                <i class="fa fa-circle text-danger mr-1"></i>Canceled
+                                            </span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -233,20 +187,93 @@
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function(){
+            //---Save Data
+            var form = '#add-user-form';
+            $(form).on('submit', function(event){
+                event.preventDefault();
 
-{{--    <script>--}}
-{{--        function calculateDays() {--}}
-{{--            var startOne = document.getElementById('inputOne').value;--}}
-{{--            var startTwo = document.getElementById('inputTwo').value;--}}
-{{--            const dateOne = new Date(startOne);--}}
-{{--            const dateTwo = new Date(startTwo);--}}
-{{--            const time = Math.abs(dateTwo - dateOne);--}}
-{{--            const days = Math.ceil(time/(1000*60*60*24));--}}
-{{--            // var x = document.getElementById("output").innerHTML = days;--}}
-{{--            alert(dateOne);--}}
+                var url = $(this).attr('data-action');
+                var src = $('#redirect').attr('redirect-action');
+                $.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: new FormData(this),
+                    dataType: 'JSON',
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    success:function(response)
+                    {
+                        $(form).trigger("reset");
+                        // alert(response.success);
+                        // window.location.href = src;
+                        // setTimeout(function() {
+                        //     window.location.reload();
+                        // }, 1000);
+                        swal("Success Message Title", "Well done, you pressed a button", "success")
+                        $('.bd-example-modal-lg').modal('hide');
 
-{{--        }--}}
-{{--    </script>--}}
+                        //---Add Table Row
+                        var row = '<tr id="row_todo_'+ response.id + '">';
+                        row += '<td>' + response.name + '</td>';
+                        row += '<td>' + response.leave_name + '</td>';
+                        row += '<td>' + response.formattedDate1 + '</td>';
+                        row += '<td>' + response.formattedDate2 + '</td>';
+                        row += '<td>' + response.duration + '</td>';
+                        row += '<td class="d-flex justify-content-end"> @if('+response.status == 0 +') <span class="badge light badge-warning"><i class="fa fa-circle text-warning mr-1"></i>Pending</span> @elseif ('+ response.qualification == 1+') <span class="badge light badge-success"><i class="fa fa-circle text-success mr-1"></i>Successful</span> @elseif ('+ response.qualification == 2+') <span class="badge light badge-danger"><i class="fa fa-circle text-danger mr-1"></i>Canceled</span> @endif' + '</td>';
+                        
+                        if($("#id").val()){
+                            $("#row_todo_" + response.id).replaceWith(row);
+                        }else{
+                            $("#list_todo").prepend(row);
+                        }
+                        $("#form_todo").trigger('reset');
+                        $("#leave_application_list").load(" #leave_application_list");
+                    },
+                    error: function (xhr) {
+                        var errors = xhr.responseJSON.errors;
+                        var errorHtml = '';
+                        $.each(errors, function(key, value) {
+                            errorHtml += '<li style="color:red">' + value + '</li>';
+                        });
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Validation Errors',
+                            html: '<ul>' + errorHtml + '</ul>',
+                        });
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function(){
+            $.ajaxSetup({
+                headers:{
+                    'x-csrf-token' : $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+        });
+    </script>
+    <script>
+        //----Current Date
+        var d = new Date()
+        var yr =d.getFullYear();
+        var month = d.getMonth()+1
+    
+        if(month<10){
+            month='0'+month
+        }
+    
+        var date =d.getDate();
+        if(date<10)
+        {
+            date='0'+date
+        }
+    
+        var c_date = yr+"-"+month+"-"+date;
+        document.getElementById('start_date').value = c_date;
+        document.getElementById('end_date').value = c_date;
+    </script>
 </x-app-layout>
-
-

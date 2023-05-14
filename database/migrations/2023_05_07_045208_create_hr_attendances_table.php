@@ -15,16 +15,19 @@ return new class extends Migration
     {
         Schema::create('hr_attendances', function (Blueprint $table) {
             $table->id();
-            $table->integer('employee_name');
-            $table->text('employee_code');
             $table->date('date');
-            $table->integer('attendance_type');
+            $table->tinyInteger('attendance_type');
             $table->time('start_time');
             $table->time('end_time');
-            $table->text('location');
-            $table->tinyInteger('status');
-            $table->text('message');
+            $table->text('location')->nullable();
+            $table->tinyInteger('status')->default(false);
+            $table->text('message')->nullable();
             $table->timestamps();
+            
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('emp_id');
+            $table->foreign('emp_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

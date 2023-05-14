@@ -27,7 +27,7 @@
                                     <td>{{ $loop->iteration }}</td>										
                                     <td>{{ $data->desig_name }}</td>										
                                     <td>{{ $data->description }}</td>										
-                                    <td>{{ $data->status == 1 ? 'active' : 'inactive'  }}</td>																			
+                                    <td>{{ $data->status == 1 ? 'Active' : 'Inactive'  }}</td>																			
                                     <td class="float-right">                                
                                         <a href="{{ route('mast_designation.edit', $data->id) }}" class="btn btn-success btn-sm">Edit</a>
                                         <a href="{{ route('mast_designation.show', $data->id) }}" class="btn btn-info btn-sm">View</a>                                                              
