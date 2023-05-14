@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 03, 2023 at 05:38 AM
+-- Generation Time: May 14, 2023 at 06:16 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `laravel`
+-- Database: `gulf_erp`
 --
 
 -- --------------------------------------------------------
@@ -4705,7 +4705,48 @@ INSERT INTO `unions` (`id`, `upazila_id`, `name`, `bn_name`, `url`, `created_at`
 (4537, 491, 'Mougati', 'মৌগাতি', 'mougatiup.netrokona.gov.bd', NULL, NULL),
 (4538, 491, 'Rouha', 'রৌহা', 'rouhaup.netrokona.gov.bd', NULL, NULL),
 (4539, 491, 'Medni', 'মেদনী', 'medniup.netrokona.gov.bd', NULL, NULL),
-(4540, 491, 'Kaliara Babragati', 'কালিয়ারা গাবরাগাতি', 'kaliaragabragatiup.netrokona.gov.bd', NULL, NULL);
+(4540, 491, 'Kaliara Babragati', 'কালিয়ারা গাবরাগাতি', 'kaliaragabragatiup.netrokona.gov.bd', NULL, NULL),
+(4541, 492, 'Ramna', 'রমনা ', NULL, NULL, NULL),
+(4542, 492, 'Motijheel', 'মতিঝিল ', NULL, NULL, NULL),
+(4543, 492, 'Kotwali ', 'কোতোয়ালী ', NULL, NULL, NULL),
+(4544, 492, 'Dhanmondi', 'ধানমন্ডি', NULL, NULL, NULL),
+(4545, 492, 'Mohammadpur', 'মোহাম্মদপুর', NULL, NULL, NULL),
+(4546, 492, 'Sutrapur', 'সুত্রাপুর', NULL, NULL, NULL),
+(4547, 492, 'Tejgaon', 'তেজগাঁও', NULL, NULL, NULL),
+(4548, 492, 'Gulshan', 'গুলশান', NULL, NULL, NULL),
+(4549, 492, 'Lalbagh', 'লালবাগ', NULL, NULL, NULL),
+(4550, 492, 'Mirpur', 'মিরপুর', NULL, NULL, NULL),
+(4551, 492, 'Pallabi', 'পল্লবী', NULL, NULL, NULL),
+(4552, 492, 'Sabujbag', 'সবুজবাগ', NULL, NULL, NULL),
+(4553, 492, 'Cantonment', 'ক্যান্টনমেন্ট', NULL, NULL, NULL),
+(4554, 492, 'Demra', 'ডেমরা', NULL, NULL, NULL),
+(4555, 492, 'Hazaribagh', 'হাজারীবাগ', NULL, NULL, NULL),
+(4556, 492, 'Shyampur', 'শ্যামপুর', NULL, NULL, NULL),
+(4557, 492, 'Badda', 'বাড্ডা', NULL, NULL, NULL),
+(4558, 492, 'Kafrul', 'কাফরুল', NULL, NULL, NULL),
+(4559, 492, 'Khilgaon', 'খিলগাঁও', NULL, NULL, NULL),
+(4560, 492, 'Uttara', 'উত্তরা', NULL, NULL, NULL),
+(4561, 492, 'Shah Ali', 'শাহ আলী', NULL, NULL, NULL),
+(4562, 492, 'Biman Bandar', 'বিমান বন্দর', NULL, NULL, NULL),
+(4563, 492, 'Paltan', 'পল্টন', NULL, NULL, NULL),
+(4564, 492, 'Adabar', 'আদাবর', NULL, NULL, NULL),
+(4565, 492, 'Darus Salam', 'দারুস সালাম', NULL, NULL, NULL),
+(4566, 492, 'Uttarkhan ', 'উত্তরখান ', NULL, NULL, NULL),
+(4567, 492, 'Kamrangirchar ', 'কামরাঙ্গীরচর ', NULL, NULL, NULL),
+(4568, 492, 'Kadamtoli ', 'কদমতলী ', NULL, NULL, NULL),
+(4569, 492, 'Gendaria ', 'গেন্ডারিয়া ', NULL, NULL, NULL),
+(4570, 492, 'Chalkbazar ', 'চকবাজার ', NULL, NULL, NULL),
+(4571, 492, 'Tejgaon Industrial', 'তেজগাঁও শিল্পাঞ্চল', NULL, NULL, NULL),
+(4572, 492, 'Turag ', 'তুরাগ ', NULL, NULL, NULL),
+(4573, 492, 'Dakhinkhan ', 'দক্ষিণখান ', NULL, NULL, NULL),
+(4574, 492, 'Bangshal ', 'বংশাল ', NULL, NULL, NULL),
+(4575, 492, 'Bhashantek ', 'ভাষানটেক ', NULL, NULL, NULL),
+(4576, 492, 'Bhatara ', 'ভাটারা ', NULL, NULL, NULL),
+(4577, 492, 'Jatrabari ', 'যাত্রাবাড়ী ', NULL, NULL, NULL),
+(4578, 492, 'Rampura ', 'রামপুরা ', NULL, NULL, NULL),
+(4579, 492, 'Rupnagar ', 'রূপনগর ', NULL, NULL, NULL),
+(4580, 492, 'Sherebangla Nagar', 'শেরেবাংলা নগর', NULL, NULL, NULL),
+(4581, 492, 'Shahjahanpur ', 'শাহজাহানপুর ', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -5218,7 +5259,8 @@ INSERT INTO `upazilas` (`id`, `district_id`, `name`, `bn_name`, `url`, `created_
 (488, 64, 'Kalmakanda', 'কলমাকান্দা', 'kalmakanda.netrokona.gov.bd', NULL, NULL),
 (489, 64, 'Mohongonj', 'মোহনগঞ্জ', 'mohongonj.netrokona.gov.bd', NULL, NULL),
 (490, 64, 'Purbadhala', 'পূর্বধলা', 'purbadhala.netrokona.gov.bd', NULL, NULL),
-(491, 64, 'Netrokona Sadar', 'নেত্রকোণা সদর', 'netrokonasadar.netrokona.gov.bd', NULL, NULL);
+(491, 64, 'Netrokona Sadar', 'নেত্রকোণা সদর', 'netrokonasadar.netrokona.gov.bd', NULL, NULL),
+(492, 47, 'Dhaka City Corporation', 'ঢাকা সিটি করপোরেশনের', NULL, NULL, NULL);
 
 --
 -- Indexes for dumped tables
@@ -5268,13 +5310,13 @@ ALTER TABLE `divisions`
 -- AUTO_INCREMENT for table `unions`
 --
 ALTER TABLE `unions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4541;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4582;
 
 --
 -- AUTO_INCREMENT for table `upazilas`
 --
 ALTER TABLE `upazilas`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=492;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=493;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
