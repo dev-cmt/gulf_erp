@@ -1,4 +1,5 @@
-<table id="" class="display table table-hover " style="min-width: 500px">
+<table class="table table-bordered table-responsive-sm" style="min-width: 500px">
+    <span class="mr-2" style="font-weight: 700;margin:20px 0px">Employee Name :</span><label class="col-form-label">{{ $user->name }}</label>
     <thead>
         <tr>
             <th>SL NO</th>
@@ -9,13 +10,13 @@
         </tr>
     </thead>
     <tbody>
-        @foreach ($attendanceList as $data)
+        @foreach ($data as $row)
             <tr>
                 <td>{{ $loop->iteration }}</td>
-                <td>{{ $data->date }}</td>
-                <td>{{ $data->start_time }}</td>
-                <td>{{ $data->start_time }}</td>
-                <td>{{ $data->end_time }}</td>
+                <td>{{ $row->date }}</td>
+                <td>{{ $row->start_time }}</td>
+                <td>{{ $row->start_time }}</td>
+                <td>{{ $row->end_time }}</td>
             </tr>
         @endforeach
     </tbody>

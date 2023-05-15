@@ -28,37 +28,11 @@ class LeaveApplicationController extends Controller
         $leave_type =MastLeave::get();
         return view('layouts.pages.admin.leave.application',compact('leave_type','data'));
     }
-    public function emergency_leave_application()
+    public function emergency_leave()
     {
         $leave_type =MastLeave::get();
         $employee =User::get();
         return view('layouts.pages.admin.leave.emergency_leave',compact('leave_type','employee'));
-    }
-    public function dept_approve()
-    {
-        $applicationData = HrLeaveApplication::latest()->where('status', 0)->get();
-        return view('layouts.pages.admin.leave.dept_approve', [
-            'applicationData'=>$applicationData,
-        ]);
-    }
-
-    public function hr_approve()
-    {
-        $applicationData = HrLeaveApplication::latest()->where('status', 1)->get();
-
-        //  $applicationData = HrLeaveApplication::latest()->get();
-        return view('layouts.pages.admin.leave.hr_approve', ['applicationData'=>$applicationData,]);
-    }
-
-    public function emergency_leave()
-    {
-        $user = User::with('employeeCode')->orderBy('id','DESC')->get();
-
-        $applicationData = HrLeaveApplication::latest()->get();
-        return view('layouts.pages.admin.leave.emergency_leave',[
-            'applicationData'=>$applicationData, 
-            'user' =>$user, 
-        ]);
     }
 
     public function store(Request $request)
@@ -100,36 +74,63 @@ class LeaveApplicationController extends Controller
         $data->duration = $interval->format('%d days');
 
         return response()->json($data);
-
-        // $notification=array('messege'=>'User created successfully!','alert-type'=>'success');
-        // return redirect()->back()->with($notification);
     }
 
-    public function approve($id){
+    public function dept_approve_list()
+    {
+        $data = HrLeaveApplication::join('users', 'users.id', 'hr_leave_applications.user_id')
+        ->join('info_personals', 'info_personals.user_id', 'users.id')
+        ->join('mast_designations', 'info_personals.designation', 'mast_designations.id')
+        ->join('mast_leaves', 'hr_leave_applications.leave_type', 'mast_leaves.id')
+        ->where('hr_leave_applications.status', 0 )
+        ->select('hr_leave_applications.*','users.name','mast_designations.desig_name','mast_leaves.leave_name')
+        ->get();
+
+        return view('layouts.pages.admin.leave.approve_dept',compact('data'));
+    }
+    public function dept_approve($id)
+    {
         $data = HrLeaveApplication::findOrFail($id);
-        $data->status =  $data->status + 1; 
+        $data->status = '1';
         $data->save();
-        return redirect()->back();
+
+        $notification=array('messege'=>'Leave approve successfully!','alert-type'=>'success');
+        return redirect()->back()->with($notification);
+    }
+    public function hr_approve_list()
+    {
+        $data = HrLeaveApplication::join('users', 'users.id', 'hr_leave_applications.user_id')
+        ->join('info_personals', 'info_personals.user_id', 'users.id')
+        ->join('mast_designations', 'info_personals.designation', 'mast_designations.id')
+        ->join('mast_leaves', 'hr_leave_applications.leave_type', 'mast_leaves.id')
+        ->where('hr_leave_applications.status', 1 )
+        ->select('hr_leave_applications.*','users.name','mast_designations.desig_name','mast_leaves.leave_name')
+        ->get();
+
+        return view('layouts.pages.admin.leave.approve_hr',compact('data'));
+    }
+    public function hr_approve($id)
+    {
+        $data = HrLeaveApplication::findOrFail($id);
+        $data->status = 2;
+        $data->save();
+
+        $notification=array('messege'=>'Leave approve successfully!','alert-type'=>'success');
+        return redirect()->back()->with($notification);
     }
 
     public function decline($id){
         $data = HrLeaveApplication::findOrFail($id);
         $data->status = 3;
         $data->save();
-        return redirect()->back();
-    }
 
-    public function self_leave()
-    {
-        return view('layouts.pages.admin.leave.self_leave');
+        $notification=array('messege'=>'Canceled successfully!','alert-type'=>'success');
+        return redirect()->back()->with($notification);
     }
-
 
     public function getEmployeeCode(Request $request)
     {
         $employeeCode = User::where('id', $request->userId)->first();
         return response()->json($employeeCode);
-
     }
-
 }

@@ -25,7 +25,7 @@
                                     <div class="row accordion__body--text">
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">Institute Name
+                                                <label class="col-lg-5 col-form-label">Institute Name
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <div class="col-lg-7">
@@ -59,7 +59,7 @@
                                         </div>
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">Passing Year
+                                                <label class="col-lg-5 col-form-label">Passing Year
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <div class="col-lg-7">
@@ -74,7 +74,7 @@
                                         </div>
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">Grade
+                                                <label class="col-lg-5 col-form-label">Grade
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <div class="col-lg-7">
@@ -136,7 +136,7 @@
                                     <div class="row accordion__body--text">
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">Company Name
+                                                <label class="col-lg-5 col-form-label">Company Name
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <div class="col-lg-7">
@@ -151,7 +151,7 @@
                                         </div>
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">Designation
+                                                <label class="col-lg-5 col-form-label">Designation
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <div class="col-lg-7">
@@ -166,7 +166,7 @@
                                         </div>
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">Start Date
+                                                <label class="col-lg-5 col-form-label">Start Date
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <div class="col-lg-7">
@@ -181,7 +181,7 @@
                                         </div>
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">End Date
+                                                <label class="col-lg-5 col-form-label">End Date
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <div class="col-lg-7">
@@ -196,7 +196,7 @@
                                         </div>
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">Job Description</label>
+                                                <label class="col-lg-5 col-form-label">Job Description</label>
                                                 <div class="col-lg-7">
                                                     <textarea class="form-control @error('job_description') is-invalid @enderror" rows="1" id="job_description" name="job_description" placeholder="" spellcheck="false">{{old('job_description')}}</textarea>                                                    
                                                     @error('job_description')
@@ -256,7 +256,7 @@
                                     <div class="row accordion__body--text">
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">Bank Name
+                                                <label class="col-lg-5 col-form-label">Bank Name
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <div class="col-lg-7">
@@ -271,7 +271,7 @@
                                         </div>
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">Branch Name
+                                                <label class="col-lg-5 col-form-label">Branch Name
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <div class="col-lg-7">
@@ -286,7 +286,7 @@
                                         </div>
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">Account Name
+                                                <label class="col-lg-5 col-form-label">Account Name
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <div class="col-lg-7">
@@ -301,7 +301,7 @@
                                         </div>
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">Account No.
+                                                <label class="col-lg-5 col-form-label">Account No.
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <div class="col-lg-7">
@@ -316,7 +316,7 @@
                                         </div>
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">Account Type</label>
+                                                <label class="col-lg-5 col-form-label">Account Type</label>
                                                 <div class="col-lg-7">
                                                     <input type="text" class="form-control @error('acount_type') is-invalid @enderror" id="acount_type" name="acount_type" placeholder="" value="{{old('acount_type')}}"/>                         
                                                     @error('acount_type')
@@ -374,7 +374,7 @@
                                     <div class="row accordion__body--text">
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">Nominee Name
+                                                <label class="col-lg-5 col-form-label">Nominee Name
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <div class="col-lg-7">
@@ -389,7 +389,7 @@
                                         </div>
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">NID
+                                                <label class="col-lg-5 col-form-label">NID
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <div class="col-lg-7">
@@ -404,7 +404,7 @@
                                         </div>
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">Relation
+                                                <label class="col-lg-5 col-form-label">Relation
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <div class="col-lg-7">
@@ -419,7 +419,7 @@
                                         </div>
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">Mobile No.
+                                                <label class="col-lg-5 col-form-label">Mobile No.
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <div class="col-lg-7">
@@ -434,7 +434,7 @@
                                         </div>
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">Nominee Percentage
+                                                <label class="col-lg-5 col-form-label">Nominee Percentage
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <div class="col-lg-7">
@@ -449,7 +449,7 @@
                                         </div>
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">Upload Picture
+                                                <label class="col-lg-5 col-form-label">Upload Picture
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <div class="col-lg-7">
@@ -470,22 +470,32 @@
                                             </div>
                                         </div>
                                         <div class="col-xl-12" id="info_nominee">
-                                            @if (count($info_bank) > 0)
+                                            @if (count($info_nominee) > 0)
                                             <table class="table table-bordered mt-3">
                                                 <thead class="bg-dark text-white">
-                                                    <th>Bank Name</th>
-                                                    <th>Brance Name</th>
-                                                    <th>Acount Name</th>
-                                                    <th>Acount No.</th>
+                                                    <th>Nominee Name</th>
+                                                    <th>NID No.</th>
+                                                    <th>Relation</th>
+                                                    {{-- <th>Mobile No</th> --}}
+                                                    <th>Percentage</th>
                                                     <th>Action</th>
                                                 </thead>
                                                 <tbody id="list_work">
-                                                    @foreach($info_bank as $row)
+                                                    @foreach($info_nominee as $row)
                                                         <tr id="row_nominee_{{ $row->id}}">
-                                                            <td>{{ $row->bank_name}}</td>
-                                                            <td>{{ $row->brance_name}}</td>
-                                                            <td>{{ $row->acount_name}}</td>
-                                                            <td>{{ $row->acount_no}}</td>
+                                                            <td>
+                                                                <div class="media style-1">
+                                                                    <img src="{{asset('public')}}/images/profile/nominee/{{ $row->profile_image }}" class="img-fluid mr-2" alt="">
+                                                                    <div class="media-body">
+                                                                        <h6>{{ $row->full_name}}</h6>
+                                                                        <span>{{ $row->mobile_no}}</span>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>{{ $row->nid_no}}</td>
+                                                            <td>{{ $row->relation}}</td>
+                                                            {{-- <td>{{ $row->mobile_no}}</td> --}}
+                                                            <td>{{ $row->nominee_percentage}}</td>
                                                             <td width="90">
                                                                 <button type="button" id="delete_nominee" data-id="{{ $row->id }}" class="btn btn-sm btn-danger ml-1">Delete</button>
                                                             </td>
@@ -581,12 +591,13 @@
                             }
                             $("#form_todo").trigger('reset');
                         }
-                        if(response.bank_name){
+                        if(response.full_name){
                             var row = '<tr id="row_nominee_'+ response.id + '">';
-                            row += '<td>' + response.bank_name + '</td>';
-                            row += '<td>' + response.brance_name + '</td>';
-                            row += '<td>' + response.acount_name + '</td>';
-                            row += '<td>' + response.acount_no + '</td>';
+                            row += '<td>' + response.full_name + '</td>';
+                            row += '<td>' + response.nid_no + '</td>';
+                            row += '<td>' + response.relation + '</td>';
+                            row += '<td>' + response.mobile_no + '</td>';
+                            row += '<td>' + response.nominee_percentage + '</td>';
                             row += '<td width="90">' + '<button type="button" id="delete_nominee" data-id="' + response.id +'" class="btn btn-danger btn-sm">Delete</button>'+'</td>';
 
                             $("#info_nominee").load(" #info_nominee");
@@ -596,6 +607,7 @@
                                 $("#list_work").prepend(row);
                             }
                             $("#form_todo").trigger('reset');
+                            
                         }
                     },
                     error: function (xhr) {
@@ -620,7 +632,6 @@
                     'x-csrf-token' : $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            
         });
         $("body").on('click','#delete_todo',function(){
             var id = $(this).data('id');
@@ -666,7 +677,6 @@
         });
         $("body").on('click','#delete_info_bank',function(){
             var id = $(this).data('id');
-            alert(id);
             $.ajax({
                 url: "{{ url('info_related/info_bank/destroy')}}" + '/' + id,
                 method: 'DELETE',
@@ -688,11 +698,11 @@
         });
         $("body").on('click','#delete_nominee',function(){
             var id = $(this).data('id');
-            alert(id);
             $.ajax({
-                url: "{{ url('info_related/info_bank/destroy')}}" + '/' + id,
+                url: "{{ url('info_related/info_nominee/destroy')}}" + '/' + id,
                 method: 'DELETE',
                 type: 'DELETE',
+                dataType: 'json',               
                 success: function (response) {
                     toastr.success("Record deleted successfully!");
                     $("#row_nominee_" + id).remove();
@@ -711,50 +721,5 @@
         
 
     </script>
-    {{-- <script>
-        // Delete button click event handler
-        $('#delete_experience').click(function () {
-            var id = $(this).data('id');
-            alert(id);
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Make a DELETE request to delete the record
-                    $.ajax({
-                        url: "{{ url('info_related/experience/destroy')}}" + '/' + id,
-                        type: 'DELETE',
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        success: function (data) {
-                            // Redirect the user to the previous page and show a success message
-                            window.location.href = document.referrer;
-                            Toast.fire({
-                                icon: 'success',
-                                title: 'Record deleted successfully!'
-                            });
-                        },
-                        error: function (data) {
-                            console.log(data);
-                        }
-                    });
-                }
-            });
-        });
-
-
-
-
-    </script> --}}
-
-    
-
 
 </x-app-layout>

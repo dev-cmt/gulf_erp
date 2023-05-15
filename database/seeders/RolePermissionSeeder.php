@@ -25,8 +25,8 @@ class RolePermissionSeeder extends Seeder
             'contact_number'=>'01909302126',
             'employee_code'=>$employee_code,
             'password'=>bcrypt('password'),
-            'status' => '1',
-            'is_admin' => '1',
+            'status' => '0',
+            'is_admin' => '0',
             'profile_photo_path'=>'fix/admin.jpg',
             'email_verified_at' => '2024-01-01',
         ]);

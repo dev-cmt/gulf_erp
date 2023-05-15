@@ -146,7 +146,6 @@
                     <div class="table-responsive">
                         <table id="example3" class="display" style="min-width: 845px">
                             <thead>
-                                {{-- <th>SL NO</th> --}}
                                 <th>Employee Name</th>
                                 <th>Leave Name</th>
                                 <th>Start Date</th>
@@ -167,11 +166,11 @@
                                             <span class="badge light badge-warning">
                                                 <i class="fa fa-circle text-warning mr-1"></i>Pending
                                             </span>
-                                            @elseif($row->status == 1)
+                                            @elseif($row->status == 2)
                                             <span class="badge light badge-success">
                                                 <i class="fa fa-circle text-success mr-1"></i>Successful
                                             </span>
-                                            @elseif($row->status == 2)
+                                            @elseif($row->status == 3)
                                             <span class="badge light badge-danger">
                                                 <i class="fa fa-circle text-danger mr-1"></i>Canceled
                                             </span>
@@ -271,7 +270,6 @@
         {
             date='0'+date
         }
-    
         var c_date = yr+"-"+month+"-"+date;
         document.getElementById('start_date').value = c_date;
         document.getElementById('end_date').value = c_date;

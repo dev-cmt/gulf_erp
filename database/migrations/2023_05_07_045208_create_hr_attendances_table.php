@@ -15,13 +15,13 @@ return new class extends Migration
     {
         Schema::create('hr_attendances', function (Blueprint $table) {
             $table->id();
-            $table->date('date');
-            $table->tinyInteger('attendance_type');
-            $table->time('start_time');
-            $table->time('end_time');
+            $table->date('date')->nullable();
+            $table->tinyInteger('attendance_type')->default(false);
+            $table->time('start_time')->nullable();
+            $table->time('end_time')->nullable();
             $table->text('location')->nullable();
+            $table->text('description')->nullable();
             $table->tinyInteger('status')->default(false);
-            $table->text('message')->nullable();
             $table->timestamps();
             
             $table->unsignedBigInteger('user_id');

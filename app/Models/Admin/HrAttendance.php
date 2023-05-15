@@ -9,19 +9,17 @@ use Illuminate\Database\Eloquent\Model;
 class HrAttendance extends Model
 {
     use HasFactory;
-    public static function attendanceDataSave($request)
-    {
-        $manualAttendance = new HrAttendance();
-        $manualAttendance->emp_id = $request->employee_name;
-        $manualAttendance->emp_code = $request->emp_code;
-        $manualAttendance->date = $request->date;
-        $manualAttendance->attendance_type = $request->attendance_type;
-        $manualAttendance->start_time = $request->start_time;
-        $manualAttendance->end_time = $request->end_time;
-        $manualAttendance->location = $request->location;
-        $manualAttendance->message = $request->message;
-        $manualAttendance->save();
-    }
+    protected $fillable = [
+        'date',
+        'attendance_type',
+        'start_time',
+        'end_time',
+        'location',
+        'description',
+        'status',
+        'emp_id',
+        'user_id'
+    ];
 
     public function user()
     {

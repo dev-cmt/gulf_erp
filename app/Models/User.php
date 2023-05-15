@@ -13,6 +13,7 @@ use Spatie\Permission\Traits\HasRoles;
 //______HR & ADMIN
 use App\Models\Admin\HrLeaveApplication;
 use App\Models\Admin\InfoPersonal;
+use App\Models\Admin\HrAttendance;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -41,6 +42,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function infoPersonal()
     {
         return $this->hasOne(InfoPersonal::class);
+    }
+    public function attendance()
+    {
+        return $this->hasMany(HrAttendance::class);
     }
     //____________ MINHAZ DATA
     public function hr_leave_application()

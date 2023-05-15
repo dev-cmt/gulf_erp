@@ -94,7 +94,7 @@
                             <tbody>
                                 @foreach ($user as $row)
                                 <tr>
-                                    <td class="sorting_1"><img class="rounded-circle" src="{{asset('public')}}/lose_member/{{ $row->image }}" width="35" height="35" alt=""></td>
+                                    <td class="sorting_1"><img class="rounded-circle" src="{{asset('public')}}/images/profile/{{ $row->profile_photo_path }}" width="35" height="35" alt=""></td>
                                     <td>{{ $row->name }}</td>
                                     <td>{{ $row->email}}</td>
                                     <td>{{ $row->contact_number}}</td>

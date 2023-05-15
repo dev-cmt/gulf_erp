@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Response;
 use App\Models\Admin\InfoPersonal;
 use App\Models\Admin\InfoEducational;
 use App\Models\Admin\InfoWorkExperience;
@@ -93,7 +94,6 @@ class InfoEmployeeController extends Controller
         ]);
 
         //----------Personal Info
-        
         $data= new InfoPersonal();
         $data->emp_id= $id;
         $data->user_id = Auth::user()->id;
@@ -147,15 +147,10 @@ class InfoEmployeeController extends Controller
         $educational =InfoEducational::orderBy('id','DESC')->where('emp_id', $id)->get();
         $work_experience =InfoWorkExperience::orderBy('id','DESC')->where('emp_id', $id)->get();
         $info_bank =InfoBank::orderBy('id','DESC')->where('emp_id', $id)->get();
+        $info_nominee =InfoNominee::orderBy('id','DESC')->where('emp_id', $id)->get();
         $user_id = $id;
 
-        // //----Duration
-        // $startDate = new DateTime($work_experience->start_date);
-        // $endDate = new DateTime($work_experience->end_date);
-        // $interval = $startDate->diff($endDate);
-        // // $duration = $interval->format('%y years, %m months, %d days, %h hours, %i minutes, %s seconds');
-
-        return view('layouts.pages.admin.info_employee.info_related',compact('user','educational','work_experience','info_bank','user_id'));
+        return view('layouts.pages.admin.info_employee.info_related',compact('user','educational','work_experience','info_bank','user_id','info_nominee'));
     }
 
     public function related_store(Request $request, $id) 
@@ -226,13 +221,19 @@ class InfoEmployeeController extends Controller
             if ($validator->fails()) {
                 return response()->json(['errors' => $validator->errors()], 422);
             }
+            if($request->hasFile("profile_image")){
+                $file=$request->file("profile_image");
+                $imageName=time()."_".$file->getClientOriginalName();
+                $file->move(\public_path("images/profile/nominee"),$imageName);
+                $request['profile_image']=$imageName;
+            }
             $data= new InfoNominee();
             $data->full_name=$request->full_name;
             $data->nid_no=$request->nid_no;
             $data->relation=$request->relation;
             $data->mobile_no=$request->mobile_no;
             $data->nominee_percentage=$request->nominee_percentage;
-            $data->profile_image=$request->profile_image;
+            $data->profile_image=$imageName;
             $data->emp_id= $id;
             $data->user_id = Auth::user()->id;
             $data->save();
@@ -244,22 +245,31 @@ class InfoEmployeeController extends Controller
         }
         // return response()->json(['success'=>'Work Experience Information save is being processed.']);
     }
-    public function related_education_destroy($id)
+    public function info_education_destroy($id)
     {
-        // $data = DB::table('info_educationals')->where('id',$id)->delete();
         $data=InfoEducational::find($id);
         $data->delete();
         return response()->json('success');
     }
-    public function experience_education_destroy($id)
+    public function info_experience_destroy($id)
     {
         $data=InfoWorkExperience::find($id);
         $data->delete();
         return response()->json('success');
     }
-    public function experience_info_bank_destroy($id)
+    public function info_bank_destroy($id)
     {
         $data=InfoBank::find($id);
+        $data->delete();
+        return response()->json('success');
+    }
+    public function info_nominee_destroy($id)
+    {
+        $data=InfoNominee::find($id);
+        //-------Eloquent ORM
+        if (File::exists("public/images/profile/nominee/".$data->profile_image)) {
+            File::delete("public/images/profile/nominee/".$data->profile_image);
+        }
         $data->delete();
         return response()->json('success');
     }
