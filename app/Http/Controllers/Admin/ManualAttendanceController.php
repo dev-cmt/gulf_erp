@@ -4,18 +4,22 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Admin\HrAttendance;
 use App\Models\Admin\InfoPersonal;
 use App\Models\User;
-use DB;
-use Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\AttendanceExport;
+use App\Imports\AttendanceImport;
+use App\Imports\UsersImport;
 
 class ManualAttendanceController extends Controller
 {
     public function index()
     {
-        $data = User::with('attendance')->where('status', 1)->get();
+        $data = User::with('attendance')->where('status', 0)->get();
         return view('layouts.pages.admin.attendance.index',compact('data'));
     }
     public function create()
@@ -75,6 +79,28 @@ class ManualAttendanceController extends Controller
         $data = HrAttendance::where('emp_id', $id)->get();
         $user = User::where('id', $id)->first();
         return view('layouts.pages.admin.attendance.attendance-details-view',compact('data','user'));
+    }
+
+    /*____________________________________
+                Upload EXCEL
+    _____________________________________*/
+    public function importAttendance()
+    {
+        return view('layouts.pages.admin.attendance.import');
+    }
+
+    public function uploadAttendance(Request $request)
+    {
+        Excel::import(new AttendanceImport, $request->file);
+        // Excel::import(new UsersImport, $request->file);
+
+        $notification=array('messege'=>'Manual attendance successfully!','alert-type'=>'success');
+        return redirect()->route('manual_attendances.index')->with($notification);
+    }
+
+    public function exportAttendance() 
+    {
+        return Excel::download(new AttendanceExport, 'Attendance.xlsx');
     }
 }
 

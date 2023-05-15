@@ -273,4 +273,5 @@ class InfoEmployeeController extends Controller
         $data->delete();
         return response()->json('success');
     }
+
 }

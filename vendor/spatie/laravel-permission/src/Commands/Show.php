@@ -62,9 +62,8 @@ class Show extends Command
                     config('permission.teams') ? $teams->prepend('')->toArray() : [],
                     $roles->keys()->map(function ($val) {
                         $name = explode('_', $val);
-                        array_pop($name);
 
-                        return implode('_', $name);
+                        return $name[0];
                     })
                     ->prepend('')->toArray(),
                 ]),

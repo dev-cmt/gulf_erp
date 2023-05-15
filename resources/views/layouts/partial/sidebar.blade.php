@@ -39,7 +39,7 @@
                                 <li><a href="{{ route('manual_attendances.index') }}">Attendance List</a></li>
                                 <li><a href="{{ route('manual_attendances.create') }}">Manual Attendance</a></li>
                                 <li><a href="{{ route('attendance_approve.create') }}">Attendance Approve</a></li>
-                                <li><a href="#">Upload Attendance</a></li>
+                                <li><a href="{{route('attendance.import')}}">Upload Attendance</a></li>
                             </ul>
                         </li>
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Salary</a>

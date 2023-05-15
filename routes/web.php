@@ -43,7 +43,7 @@ Route::get('/get-thana', [LocationController::class, 'getThanas'])->name('get_th
 
 
 //____________________// START \\_________________//
-Route::middleware([ 'auth:sanctum','verified','member', config('jetstream.auth_session')])->group(function () {
+Route::middleware([ 'auth:sanctum','verified', config('jetstream.auth_session')])->group(function () {
     Route::get('/dashboard', [BackViewController::class, 'dashboard'])->name('dashboard')->middleware('auth');
     Route::get('/coming_soon', [BackViewController::class, 'coming_soon'])->name('coming_soon')->middleware('auth');
     Route::resource('users', UserController::class);
@@ -88,7 +88,9 @@ Route::group(['middleware' => ['auth']], function(){
     Route::PATCH('attendance/approve/{id}', [ManualAttendanceController::class, 'attendance_approve'])->name('attendance.approve');
     Route::PATCH('attendance/canceled/{id}', [ManualAttendanceController::class, 'decline'])->name('attendance.canceled');
     Route::get('get/employee_repot/{id}', [ManualAttendanceController::class,'getemployee_report'])->name('get_employee_repot');
-
+    Route::get('/attendance/import', [ManualAttendanceController::class, 'importAttendance'])->name('attendance.import');
+    Route::post('/attendance/upload', [ManualAttendanceController::class, 'uploadAttendance'])->name('attendance.upload');    
+    Route::get('/attendance/export', [ManualAttendanceController::class, 'exportAttendance'])->name('attendance.export'); 
 });
 
 Route::group(['middleware' => ['auth']], function(){
@@ -103,7 +105,11 @@ Route::group(['middleware' => ['auth']], function(){
 
 
 
-//__________________________ TEST _____________________________//
+//__________________________TEST EXCEL UPLOAD____________________________//
+// Route::get('/attendance/import', [ManualAttendanceController::class, 'importAttendance'])->name('import_attendance.create');
+// Route::post('/attendance/upload', [ManualAttendanceController::class, 'uploadAttendance'])->name('import_attendance.upload');
+
+//__________________________ TEST AJAX MODEL_____________________________//
 use App\Http\Controllers\TodoController;
 
 Route::get('/todos', [TodoController::class, 'index']);
