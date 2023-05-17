@@ -13,14 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('mast_leaves', function (Blueprint $table) {
+        Schema::create('mast_work_stations', function (Blueprint $table) {
             $table->id();
-            $table->string('leave_name')->nullabale();
-            $table->string('leave_code')->nullabale();
-            $table->integer('max_limit')->nullabale();
-            $table->integer('yearly_limit')->nullabale();
-            $table->text('description')->nullabale();
-            $table->integer('status')->default(true);
+            $table->string('store_name')->nullable();
+            $table->string('contact_number')->nullable();
+            $table->text('location')->nullable();
+            $table->text('description')->nullable();
+            $table->tinyInteger('status')->default(true);
             $table->timestamps();
             
             $table->unsignedBigInteger('user_id');
@@ -35,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mast_leaves');
+        Schema::dropIfExists('mast_work_stations');
     }
 };

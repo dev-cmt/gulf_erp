@@ -392,7 +392,7 @@
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <div class="col-lg-7">
-                                                <select class="form-control default-select" id="department" name="department">
+                                                <select class="form-control default-select" id="department" name="mast_department_id">
                                                     <option value="0" selected>Please select</option>
                                                     @foreach ($department as $row)
                                                         <option value="{{$row->id}}">{{$row->dept_name}}</option>
@@ -412,7 +412,7 @@
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <div class="col-lg-7">
-                                                <select class="form-control default-select" id="designation" name="designation">
+                                                <select class="form-control default-select" id="designation" name="mast_designation_id">
                                                     <option value="0" selected>Please select</option>
                                                     @foreach ($designation as $row)
                                                         <option value="{{$row->id}}">{{$row->desig_name}}</option>
@@ -432,7 +432,7 @@
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <div class="col-lg-7">
-                                                <select class="form-control default-select" id="employee_type" name="employee_type">
+                                                <select class="form-control default-select" id="employee_type" name="mast_employee_type_id">
                                                     <option value="0" selected>Please select</option>
                                                     @foreach ($employee_category as $row)
                                                         <option value="{{$row->id}}">{{$row->cat_name}}</option>
@@ -452,10 +452,11 @@
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <div class="col-lg-7">
-                                                <select name="work_station" id="work_station" class="form-control default-select">
-                                                    <option value="0" selected>Select</option>
-                                                    <option value="1">Gulshan</option>
-                                                    <option value="2">Maghna</option>
+                                                <select class="form-control default-select" name="mast_work_station_id" id="work_station">
+                                                    <option value="0" selected>Please select</option>
+                                                    @foreach ($work_stations as $row)
+                                                        <option value="{{$row->id}}">{{$row->store_name}}</option>
+                                                    @endforeach
                                                 </select>
                                                 @error('work_station')
                                                 <span class="invalid-feedback" role="alert">
@@ -587,8 +588,8 @@
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <div class="col-lg-7">
-                                                <select name="city_present" class="form-control dropdwon_select" id="district"></select>
-                                                @error('city_present')
+                                                <select name="district_present" class="form-control dropdwon_select" id="district"></select>
+                                                @error('district_present')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>

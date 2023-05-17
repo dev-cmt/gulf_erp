@@ -17,9 +17,11 @@ return new class extends Migration
             $table->id();
             $table->string('desig_name')->nullabale();
             $table->text('description')->nullabale();
-            $table->integer('status')->default(false);
-            $table->integer('entry_by')->default(false);
+            $table->integer('status')->default(true);
             $table->timestamps();
+            
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

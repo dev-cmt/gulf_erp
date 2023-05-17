@@ -13,14 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('mast_employee_categories', function (Blueprint $table) {
+        Schema::create('mast_employee_types', function (Blueprint $table) {
             $table->id();
             $table->string('cat_name')->nullabale();
             $table->string('cat_type')->nullabale();
             $table->text('description')->nullabale();
-            $table->integer('status')->default(false);
-            $table->integer('entry_by')->default(false);
+            $table->integer('status')->default(true);
             $table->timestamps();
+            
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -31,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mast_employee_categories');
+        Schema::dropIfExists('mast_employee_types');
     }
 };

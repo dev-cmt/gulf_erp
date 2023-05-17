@@ -13,7 +13,12 @@ use Spatie\Permission\Traits\HasRoles;
 //______HR & ADMIN
 use App\Models\Admin\HrLeaveApplication;
 use App\Models\Admin\InfoPersonal;
+use App\Models\Admin\InfoEducational;
+use App\Models\Admin\InfoWorkExperience;
+use App\Models\Admin\InfoBank;
+use App\Models\Admin\InfoNominee;
 use App\Models\Admin\HrAttendance;
+use App\Models\Master\MastDepartment;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -42,6 +47,22 @@ class User extends Authenticatable implements MustVerifyEmail
     public function infoPersonal()
     {
         return $this->hasOne(InfoPersonal::class);
+    }
+    public function infoEducational()
+    {
+        return $this->hasMany(InfoEducational::class);
+    }
+    public function infoWorkExperience()
+    {
+        return $this->hasMany(InfoWorkExperience::class);
+    }
+    public function infoBank()
+    {
+        return $this->hasMany(InfoBank::class);
+    }
+    public function infoNominee()
+    {
+        return $this->hasMany(InfoNominee::class);
     }
     public function attendance()
     {

@@ -7,6 +7,7 @@ use App\Models\User;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Admin\InfoPersonal;
 
 class MastDepartment extends Model
 {
@@ -15,12 +16,11 @@ class MastDepartment extends Model
         'dept_name',
         'description',
         'dept_head',
-        'status'
+        'status',
+        'user_id'
     ];
-
-    public function user()
+    public function infoPersonal()
     {
-        return $this->hasOne(User::class,'id','dept_head');
+        return $this->hasOne(InfoPersonal::class);
     }
-
 }

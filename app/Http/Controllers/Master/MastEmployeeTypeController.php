@@ -4,13 +4,13 @@ namespace App\Http\Controllers\Master;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Master\MastEmployeeCategory;
+use App\Models\Master\MastEmployeeType;
 use Auth;
 
-class MastEmployeeCategoryController extends Controller
+class MastEmployeeTypeController extends Controller
 {
     public function index() {
-        $employee = MastEmployeeCategory::latest()->get();
+        $employee = MastEmployeeType::latest()->get();
         return view('layouts.pages.master.employee_category.index', compact('employee'));
     }
 
@@ -26,7 +26,7 @@ class MastEmployeeCategoryController extends Controller
             return redirect()->back()->with($notification);
 
         } else  {
-            $data = new MastEmployeeCategory();
+            $data = new MastEmployeeType();
             $data->entry_by = Auth::user()->id;
             $data->cat_name =$request->cat_name;
             $data->cat_type =$request->cat_type;
@@ -45,7 +45,7 @@ class MastEmployeeCategoryController extends Controller
 
     public function edit($id)
     {
-        $data = MastEmployeeCategory::find($id);
+        $data = MastEmployeeType::find($id);
         return view('layouts.pages.master.employee_category.edit', compact('data'));
     }
     
@@ -56,7 +56,7 @@ class MastEmployeeCategoryController extends Controller
             return redirect()->back()->with($notification);
 
         } else  {
-            $data = MastEmployeeCategory::find($id);
+            $data = MastEmployeeType::find($id);
             $data->entry_by = Auth::user()->id;
             $data->cat_name =$request->cat_name;
             $data->cat_type =$request->cat_type;
@@ -75,7 +75,7 @@ class MastEmployeeCategoryController extends Controller
 
     public function show( $id)
     {
-        $data = MastEmployeeCategory::find($id);
+        $data = MastEmployeeType::find($id);
         return view('layouts.pages.master.employee_category.show', compact('data'));
     }
 }

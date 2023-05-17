@@ -4,6 +4,11 @@ namespace App\Models\Admin;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Master\MastDepartment;
+use App\Models\Master\MastDesignation;
+use App\Models\Master\MastEmployeeType;
+use App\Models\Master\MastWorkStation;
+use App\Models\User;
 
 class InfoPersonal extends Model
 {
@@ -14,26 +19,29 @@ class InfoPersonal extends Model
         'employee_gender',
         'nid_no',
         'blood_group',
-        'department',
-        'designation',
-        'employee_type',
-        'work_station',
+        'mast_department_id',
+        'mast_designation_id',
+        'mast_employee_type_id',
+        'mast_work_station_id',
         'number_official',
         'email_official',
         'joining_date',
         'service_length',
         'gross_salary',
         'reporting_boss',
+        
+        'division_present',
         'district_present',
-        'city_present',
+        'upazila_present',
         'thana_present',
-        'zip_code_present',
         'address_present',
+
+        'division_permanent',
         'district_permanent',
-        'city_permanent',
+        'upazila_permanent',
         'thana_permanent',
-        'zip_code_permanent',
         'address_permanent',
+
         'passport_no',
         'driving_license',
         'marital_status',
@@ -49,5 +57,25 @@ class InfoPersonal extends Model
         'user_id',
         'emp_id'
     ];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    public function mastDepartment()
+    {
+        return $this->belongsTo(MastDepartment::class);
+    }
+    public function mastDesignation()
+    {
+        return $this->belongsTo(MastDesignation::class);
+    }
+    public function mastEmployeeType()
+    {
+        return $this->belongsTo(MastEmployeeType::class);
+    }
+    public function mastWorkStation()
+    {
+        return $this->belongsTo(MastWorkStation::class);
+    }
 
 }

@@ -25,20 +25,20 @@ return new class extends Migration
             $table->integer('service_length')->nullable();
             $table->double('gross_salary')->nullable();
             $table->integer('reporting_boss')->nullable();
+            $table->integer('division_present')->nullable();
             $table->integer('district_present')->nullable();
-            $table->integer('city_present')->nullable();
+            $table->integer('upazila_present')->nullable();
             $table->integer('thana_present')->nullable();
-            $table->string('zip_code_present')->nullable();
             $table->string('address_present')->nullable();
             
+            $table->integer('division_permanent')->nullable();
             $table->integer('district_permanent')->nullable();
-            $table->integer('city_permanent')->nullable();
+            $table->integer('upazila_permanent')->nullable();
             $table->integer('thana_permanent')->nullable();
-            $table->string('zip_code_permanent')->nullable();
             $table->string('address_permanent')->nullable();
 
             $table->bigInteger('passport_no')->nullable();
-            $table->string('driving_license')->nullable();
+            $table->bigInteger('driving_license')->nullable();
             $table->integer('marital_status')->nullable();
             $table->string('house_phone')->nullable();
             $table->string('father_name')->nullable();
@@ -47,18 +47,18 @@ return new class extends Migration
             $table->string('emg_person_name')->nullable();
             $table->string('emg_phone_number')->nullable();
             $table->string('emg_relationship')->nullable();
-            $table->string('emg_address')->nullable();
+            $table->text('emg_address')->nullable();
             $table->tinyInteger('status')->default(true);
             $table->timestamps();
-
-            $table->integer('work_station')->nullable();
             
-            $table->unsignedBigInteger('department');
-            $table->foreign('department')->references('id')->on('mast_departments')->onDelete('cascade');
-            $table->unsignedBigInteger('designation');
-            $table->foreign('designation')->references('id')->on('mast_designations')->onDelete('cascade');
-            $table->unsignedBigInteger('employee_type');
-            $table->foreign('employee_type')->references('id')->on('mast_employee_categories')->onDelete('cascade');
+            $table->unsignedBigInteger('mast_department_id');
+            $table->foreign('mast_department_id')->references('id')->on('mast_departments')->onDelete('cascade');
+            $table->unsignedBigInteger('mast_designation_id');
+            $table->foreign('mast_designation_id')->references('id')->on('mast_designations')->onDelete('cascade');
+            $table->unsignedBigInteger('mast_employee_type_id');
+            $table->foreign('mast_employee_type_id')->references('id')->on('mast_employee_types')->onDelete('cascade');
+            $table->unsignedBigInteger('mast_work_station_id');
+            $table->foreign('mast_work_station_id')->references('id')->on('mast_work_stations')->onDelete('cascade');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('emp_id');

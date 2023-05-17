@@ -14,7 +14,8 @@ use App\Models\Admin\InfoBank;
 use App\Models\Admin\InfoNominee;
 use App\Models\Master\MastDepartment;
 use App\Models\Master\MastDesignation;
-use App\Models\Master\MastEmployeeCategory;
+use App\Models\Master\MastEmployeeType;
+use App\Models\Master\MastWorkStation;
 use App\Models\User;
 use App\Helpers\Helper;
 use Carbon\Carbon;
@@ -31,20 +32,23 @@ class InfoEmployeeController extends Controller
      */
     public function employee_list()
     {
-        // $educational = InfoEducational::where('emp_id',3)->first();
-        // $work_experience = InfoWorkExperience::where('emp_id',3)->first();
-        // $bank = InfoBank::where('emp_id',3)->first();
-        // $nominee = InfoNominee::where('emp_id',3)->first();
-
-        // dd($work_experience->status);
-
         $user = User::where('status', 1)->get();
         return view('layouts.pages.admin.info_employee.employee_list',compact('user'));
     }
     public function employee_details($id)
     {
-        $user = User::get();
-        return view('layouts.pages.admin.info_employee.employee_details',compact('user'));
+        $user = User::findOrFail($id);
+        $infoPersonal = $user->infoPersonal;
+        $department = $infoPersonal->mastDepartment;
+        $designation = $infoPersonal->mastDesignation;
+        $employee_type = $infoPersonal->mastEmployeeType;
+        
+        $infoEducational = $user->infoEducational;
+        $infoWorkExperience = $user->infoWorkExperience;
+        $infoBank = $user->infoBank;
+        $infoNominee = $user->infoNominee;
+
+        return view('layouts.pages.admin.info_employee.employee_details', compact('user','infoPersonal','department','designation','employee_type','infoEducational','infoWorkExperience','infoBank','infoNominee'));
     }
 
     /**___________________________________________________________________
@@ -109,11 +113,12 @@ class InfoEmployeeController extends Controller
         $emp_id = $id;
         $user_id = Auth::user()->id;
         $user=User::find($id);
-        $department =MastDepartment::get();
-        $designation =MastDesignation::get();
-        $employee_category =MastEmployeeCategory::get();
+        $department =MastDepartment::where('status', 1)->get();
+        $designation =MastDesignation::where('status', 1)->get();
+        $employee_category =MastEmployeeType::where('status', 1)->get();
+        $work_stations =MastWorkStation::where('status', 1)->get();
 
-        return view('layouts.pages.admin.info_employee.info_personal',compact('data','user','department','designation','employee_category'));
+        return view('layouts.pages.admin.info_employee.info_personal',compact('data','user','department','designation','employee_category','work_stations'));
     }
     public function personal_store(Request $request, $id)
     {
@@ -142,10 +147,10 @@ class InfoEmployeeController extends Controller
         $data->employee_gender=$request->employee_gender;
         $data->nid_no=$request->nid_no;
         $data->blood_group=$request->blood_group;
-        $data->department=$request->department;
-        $data->designation=$request->designation;
-        $data->employee_type=$request->employee_type;
-        $data->work_station=$request->work_station;
+        $data->mast_department_id=$request->mast_department_id;
+        $data->mast_designation_id=$request->mast_department_id;
+        $data->mast_employee_type_id=$request->mast_employee_type_id;
+        $data->mast_work_station_id=$request->mast_work_station_id;
 
         $data->number_official=$request->number_official;
         $data->email_official=$request->email_official;
@@ -153,15 +158,16 @@ class InfoEmployeeController extends Controller
         $data->service_length=$request->service_length;
         $data->gross_salary=$request->gross_salary;
         $data->reporting_boss=$request->reporting_boss;
+
+        $data->division_present=$request->division_present;
         $data->district_present=$request->district_present;
-        $data->city_present=$request->city_present;
+        $data->upazila_present=$request->upazila_present;
         $data->thana_present=$request->thana_present;
-        $data->zip_code_present=$request->zip_code_present;
         $data->address_present=$request->address_present;
+        $data->division_permanent=$request->division_permanent;
         $data->district_permanent=$request->district_permanent;
-        $data->city_permanent=$request->city_permanent;
+        $data->upazila_permanent=$request->upazila_permanent;
         $data->thana_permanent=$request->thana_permanent;
-        $data->zip_code_permanent=$request->zip_code_permanent;
         $data->address_permanent=$request->address_permanent;
 
         $data->passport_no=$request->passport_no;

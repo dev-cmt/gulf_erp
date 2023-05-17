@@ -17,7 +17,7 @@ use App\Http\Controllers\Admin\attendanceApproveController;
 use App\Http\Controllers\Master\MastDepartmentController;
 use App\Http\Controllers\Master\MastDesignationController;
 use App\Http\Controllers\Master\MastLeaveController;
-use App\Http\Controllers\Master\MastEmployeeCategoryController;
+use App\Http\Controllers\Master\MastEmployeeTypeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -114,7 +114,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::resource('mast_department', MastDepartmentController::class);
     Route::resource('mast_designation', MastDesignationController::class);
     Route::resource('mast_leave', MastLeaveController::class);
-    Route::resource('must_employee_category', MastEmployeeCategoryController::class);
+    Route::resource('must_employee_category', MastEmployeeTypeController::class);
     /**______________________________________________________________________________________________
      * Inventory
      * ______________________________________________________________________________________________

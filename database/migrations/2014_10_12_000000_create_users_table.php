@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('profile_photo_path')->nullable();
             $table->boolean('status')->default(false);
             $table->boolean('is_admin')->default(false);
+            $table->integer('attendance_id')->nullable();
             $table->timestamps();
         });
     }
