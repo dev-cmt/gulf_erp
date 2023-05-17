@@ -4,23 +4,23 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title">Related Information ({{$user->name}})</h4>
-                    <a href="{{route('info_employee.index')}}" class="btn btn-sm btn-primary"><i class="fa fa-reply"></i><span class="btn-icon-add"></span>Skip</a>
+                    <a href="{{route('info_employee.list')}}" class="btn btn-sm btn-primary"><i class="fa fa-reply"></i><span class="btn-icon-add"></span>Skip</a>
                 </div>
 
                 <div class="card-body">
-                    <div id="accordion-eleven" class="accordion accordion-rounded-stylish accordion-bordered">
+                    <div id="accordion-eleven" class="accordion accordion-primary">
                         @if (session()->has('success'))
                             <strong class="text-success">{{session()->get('success')}}</strong>
                         @endif
                         <form class="form-valide" data-action="{{ route('info_employee_related.store', $user_id) }}" method="POST" enctype="multipart/form-data" id="add-user-form">
                             @csrf
                             <div class="accordion__item">
-                                <div class="accordion__header accordion__header--primary collapsed" data-toggle="collapse" data-target="#rounded-stylish_collapseOne" aria-expanded="false">
+                                <div class="accordion__header accordion__header--primary" data-toggle="collapse" data-target="#rounded-stylish_collapseOne" aria-expanded="false">
                                     <span class="accordion__header--icon"></span>
                                     <span class="accordion__header--text">Educational Information</span>
                                     <span class="accordion__header--indicator"></span>
                                 </div>
-                                <div id="rounded-stylish_collapseOne" class="accordion__body collapse" data-parent="#accordion-eleven" style="">
+                                <div id="rounded-stylish_collapseOne" class="accordion__body collapse show" data-parent="#accordion-eleven" style="">
                                     <!--Educational Information-->
                                     <div class="row accordion__body--text">
                                         <div class="col-xl-6">
@@ -40,7 +40,7 @@
                                         </div>
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label" for="qualification">Qualification
+                                                <label class="col-lg-5 col-form-label" for="qualification">Qualification
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <div class="col-lg-7">
@@ -78,7 +78,7 @@
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <div class="col-lg-7">
-                                                    <input type="text" class="form-control @error('grade') is-invalid @enderror" id="grade" name="grade" placeholder="" value="{{old('grade')}}">                                     
+                                                    <input type="number" class="form-control @error('grade') is-invalid @enderror" id="grade" name="grade" placeholder="" value="{{old('grade')}}">                                     
                                                     @error('grade')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -87,9 +87,10 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-xl-6"></div>
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <div class="col-lg-8 ml-auto">
+                                                <div class="col-lg-7 ml-auto">
                                                     <button type="submit" class="btn btn-sm btn-primary">Submit</button>
                                                 </div>
                                             </div>
@@ -209,7 +210,7 @@
                                         </div>
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <div class="col-lg-8 ml-auto">
+                                                <div class="col-lg-7 ml-auto">
                                                     <button type="submit" class="btn btn-sm btn-primary">Submit</button>
                                                 </div>
                                             </div>
@@ -246,7 +247,7 @@
                                 </div>
                             </div>
                             <div class="accordion__item">
-                                <div class="accordion__header accordion__header--success collapsed" data-toggle="collapse" data-target="#rounded-stylish_collapseThree" aria-expanded="false">
+                                <div class="accordion__header accordion__header--primary collapsed" data-toggle="collapse" data-target="#rounded-stylish_collapseThree" aria-expanded="false">
                                     <span class="accordion__header--icon"></span>
                                     <span class="accordion__header--text">Banking Information</span>
                                     <span class="accordion__header--indicator"></span>
@@ -329,7 +330,7 @@
                                         </div>
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <div class="col-lg-8 ml-auto">
+                                                <div class="col-lg-7 ml-auto">
                                                     <button type="submit" class="btn btn-sm btn-primary">Submit</button>
                                                 </div>
                                             </div>
@@ -364,7 +365,7 @@
                                 </div>
                             </div>
                             <div class="accordion__item">
-                                <div class="accordion__header accordion__header--success collapsed" data-toggle="collapse" data-target="#rounded-stylish_collapseFour" aria-expanded="false">
+                                <div class="accordion__header accordion__header--info collapsed" data-toggle="collapse" data-target="#rounded-stylish_collapseFour" aria-expanded="false">
                                     <span class="accordion__header--icon"></span>
                                     <span class="accordion__header--text">Nominee Information</span>
                                     <span class="accordion__header--indicator"></span>
@@ -438,7 +439,7 @@
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <div class="col-lg-7">
-                                                    <input type="text" class="form-control @error('nominee_percentage') is-invalid @enderror" id="nominee_percentage" name="nominee_percentage" placeholder="" value="{{old('nominee_percentage')}}">                                     
+                                                    <input type="number" class="form-control @error('nominee_percentage') is-invalid @enderror" id="nominee_percentage" name="nominee_percentage" placeholder="" value="100%">                                     
                                                     @error('nominee_percentage')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -462,9 +463,10 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-xl-6"></div>
                                         <div class="col-xl-6">
                                             <div class="form-group row">
-                                                <div class="col-lg-8 ml-auto">
+                                                <div class="col-lg-7 ml-auto">
                                                     <button type="submit" class="btn btn-sm btn-primary">Submit</button>
                                                 </div>
                                             </div>
@@ -618,7 +620,7 @@
                         });
                         Swal.fire({
                             icon: 'error',
-                            title: 'Validation Errors',
+                            title: 'Required data missing?',
                             html: '<ul>' + errorHtml + '</ul>',
                         });
                     }
@@ -635,25 +637,55 @@
         });
         $("body").on('click','#delete_todo',function(){
             var id = $(this).data('id');
-            $.ajax({
-                url: "{{ url('info_related/education/destroy')}}" + '/' + id,
-                method: 'DELETE',
-                type: 'DELETE',
-                success: function(response) {
-                    toastr.success("Record deleted successfully!");
-                    $("#row_todo_" + id).remove();
-                    $("#educational").load(" #educational");
-                },
-                error: function(response) {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'An error occurred.',
-                        icon: 'error',
-                        confirmButtonText: 'OK'
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You won\'t be able to revert this!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Send the AJAX delete request
+                    $.ajax({
+                        url: "{{ url('info_related/education/destroy')}}" + '/' + id,
+                        type: 'get',
+                        dataType: 'json',
+                        success: function (response) {
+                            Swal.fire('Deleted!', response.message, 'success');
+                            // Perform any other actions after successful deletion
+                        },
+                        error: function (xhr, status, error) {
+                            Swal.fire('Error!', xhr.responseJSON.message, 'error');
+                        }
                     });
                 }
             });
+
+
         });
+        // $("body").on('click','#delete_todo',function(){
+        //     var id = $(this).data('id');
+        //     $.ajax({
+        //         url: "{{ url('info_related/education/destroy')}}" + '/' + id,
+        //         method: 'DELETE',
+        //         type: 'DELETE',
+        //         success: function(response) {
+        //             toastr.success("Record deleted successfully!");
+        //             $("#row_todo_" + id).remove();
+        //             $("#educational").load(" #educational");
+        //         },
+        //         error: function(response) {
+        //             Swal.fire({
+        //                 title: 'Error!',
+        //                 text: 'An error occurred.',
+        //                 icon: 'error',
+        //                 confirmButtonText: 'OK'
+        //             });
+        //         }
+        //     });
+        // });
         $("body").on('click','#delete_experience',function(){
             var id = $(this).data('id');
             $.ajax({

@@ -25,17 +25,43 @@ use Auth;
 
 class InfoEmployeeController extends Controller
 {
-    public function index()
+    /**___________________________________________________________________
+     * Employee List
+     * ____________________________________________________________________
+     */
+    public function employee_list()
+    {
+        // $educational = InfoEducational::where('emp_id',3)->first();
+        // $work_experience = InfoWorkExperience::where('emp_id',3)->first();
+        // $bank = InfoBank::where('emp_id',3)->first();
+        // $nominee = InfoNominee::where('emp_id',3)->first();
+
+        // dd($work_experience->status);
+
+        $user = User::where('status', 1)->get();
+        return view('layouts.pages.admin.info_employee.employee_list',compact('user'));
+    }
+    public function employee_details($id)
     {
         $user = User::get();
-        return view('layouts.pages.admin.info_employee.index',compact('user'));
+        return view('layouts.pages.admin.info_employee.employee_details',compact('user'));
     }
-    public function store(Request $request)
+
+    /**___________________________________________________________________
+     * Employee Register Process
+     * ____________________________________________________________________
+     */
+    public function employee_create()
+    {
+
+        $user = User::where( 'is_admin', '!=', 1)->orWhere('status', '!=', 1)->get();
+        return view('layouts.pages.admin.info_employee.employee_register',compact('user'));
+    }
+    public function employee_register(Request $request)
     {
         $request->validate([
             'name' => 'required|max:80',
             'email' => 'required|email|unique:users,email',
-            // 'password' => 'required|min:6|confirmed',
         ]);
         $employee_codes = Helper::IDGenerator(new User, 'employee_code', 5, 'GULF'); /* Generate id */
 
@@ -45,7 +71,7 @@ class InfoEmployeeController extends Controller
         $user->email= $request->email;
         $user->contact_number=$request->contact_number;
         $user->password=bcrypt($request->password);
-        $user->status='1';
+        $user->status='0';
         $user->is_admin='0';
         $user->email_verified_at='2023-01-01';
         $user->save();
@@ -53,6 +79,19 @@ class InfoEmployeeController extends Controller
         $notification=array('messege'=>'User created successfully!','alert-type'=>'success');
         return redirect()->route('info_employee_prsonal.create', $user->id)->with($notification);
     }
+    public function employee_destroy($id)
+    {
+        // $data=User::find($id);
+        // $data->delete();
+        User::destroy($id);
+
+        $notification=array('messege'=>'User delete successfully!','alert-type'=>'success');
+        return redirect()->back()->with($notification);
+    }
+    /**___________________________________________________________________
+     * Personal Information
+     * ____________________________________________________________________
+     */
     public function personal_create($id){
         $data = DB::table('divisions')->get();
         $divisions = DB::table('divisions')->count('id');
@@ -78,7 +117,7 @@ class InfoEmployeeController extends Controller
     }
     public function personal_store(Request $request, $id)
     {
-        //----------User Create
+        //----------User Update
         $user = User::findorfail($id);
         if($request->hasFile("profile_photo_path")){
             if (File::exists("images/profile/".$user->profile_photo_path)) {
@@ -91,6 +130,7 @@ class InfoEmployeeController extends Controller
         }
         $user->update([
             'profile_photo_path' => $imageName,
+            'status' => 1,
         ]);
 
         //----------Personal Info
@@ -137,10 +177,13 @@ class InfoEmployeeController extends Controller
         $data->emg_address=$request->emg_address;
         $data->save();
         
-        $notification=array('messege'=>'Category save successfully!','alert-type'=>'success');
+        $notification=array('messege'=>'Personal info save successfully!','alert-type'=>'success');
         return redirect()->route('info_employee_related.create', $id)->with($notification);
     }
-
+    /**___________________________________________________________________
+     * Related Information
+     * ____________________________________________________________________
+     */
     public function related_create($id)
     {
         $user =User::findorfail($id);
@@ -155,6 +198,11 @@ class InfoEmployeeController extends Controller
 
     public function related_store(Request $request, $id) 
     {
+        $educational = InfoEducational::where('emp_id', $id)->first();
+        $work_experience = InfoWorkExperience::where('emp_id', $id)->first();
+        $bank = InfoBank::where('emp_id', $id)->first();
+        $nominee = InfoNominee::where('emp_id', $id)->first();
+
         if($request->institute_name != null){
             $validator = Validator::make($request->all(), [
                 'qualification' => 'required',
@@ -164,6 +212,11 @@ class InfoEmployeeController extends Controller
             ]);
             if ($validator->fails()) {
                 return response()->json(['errors' => $validator->errors()], 422);
+            }
+            if($work_experience && $bank && $nominee){
+                $user =User::findorfail($id);
+                $user->is_admin = 1;
+                $user->save();
             }
             $data= new InfoEducational();
             $data->qualification=$request->qualification;
@@ -183,6 +236,11 @@ class InfoEmployeeController extends Controller
             ]);
             if ($validator->fails()) {
                 return response()->json(['errors' => $validator->errors()], 422);
+            }
+            if($educational && $bank && $nominee){
+                $user =User::findorfail($id);
+                $user->is_admin = 1;
+                $user->save();
             }
             $data= new InfoWorkExperience();
             $data->company_name=$request->company_name;
@@ -204,6 +262,11 @@ class InfoEmployeeController extends Controller
             if ($validator->fails()) {
                 return response()->json(['errors' => $validator->errors()], 422);
             }
+            if($work_experience && $educational && $nominee){
+                $user =User::findorfail($id);
+                $user->is_admin = 1;
+                $user->save();
+            }
             $data= new InfoBank();
             $data->bank_name=$request->bank_name;
             $data->brance_name=$request->brance_name;
@@ -217,9 +280,18 @@ class InfoEmployeeController extends Controller
         }elseif($request->full_name){
             $validator = Validator::make($request->all(), [
                 'full_name' => 'required',
+                'nid_no' => 'required',
+                'relation' => 'required',
+                'mobile_no' => 'required',
+                'profile_image' => 'required',
             ]);
             if ($validator->fails()) {
                 return response()->json(['errors' => $validator->errors()], 422);
+            }
+            if($work_experience && $bank && $educational){
+                $user =User::findorfail($id);
+                $user->is_admin = 1;
+                $user->save();
             }
             if($request->hasFile("profile_image")){
                 $file=$request->file("profile_image");
@@ -243,12 +315,12 @@ class InfoEmployeeController extends Controller
                 return response()->json(['errors' => $validator->errors()], 422);
             }
         }
-        // return response()->json(['success'=>'Work Experience Information save is being processed.']);
     }
     public function info_education_destroy($id)
     {
-        $data=InfoEducational::find($id);
-        $data->delete();
+        // $data=InfoEducational::find($id);
+        // $data->delete();
+        InfoEducational::destroy($id);
         return response()->json('success');
     }
     public function info_experience_destroy($id)
@@ -273,5 +345,9 @@ class InfoEmployeeController extends Controller
         $data->delete();
         return response()->json('success');
     }
+    /**___________________________________________________________________
+     * 
+     * ____________________________________________________________________
+     */
 
 }
