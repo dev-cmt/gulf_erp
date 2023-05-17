@@ -83,6 +83,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::post('leave_application/store', [LeaveApplicationController::class, 'store'])->name('leave_application.store');
     Route::get('emergency_leave/application', [LeaveApplicationController::class, 'emergency_leave'])->name('emergency_leave.create');
     Route::post('leave_application/store', [LeaveApplicationController::class, 'store'])->name('leave_application.store');
+    Route::get('get/emargency_leave_repot/{id}', [LeaveApplicationController::class,'getLeaveApplication_report'])->name('get_emargency_leave_repot');
     //--Leave Department Approve
     Route::get('dept/approve_list', [LeaveApplicationController::class, 'dept_approve_list'])->name('dept_approve_list.create');
     Route::PATCH('leave_dept/approve/{id}', [LeaveApplicationController::class, 'dept_approve'])->name('leave_dept.approve');

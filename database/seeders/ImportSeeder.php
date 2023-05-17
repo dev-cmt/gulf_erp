@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Admin\InfoPersonal;
 use App\Models\Master\MastDepartment;
 use App\Models\Master\MastDesignation;
 use App\Models\Master\MastEmployeeType;
@@ -241,6 +242,51 @@ class ImportSeeder extends Seeder
             'user_id'=>'1'
         ]);
         //____________________________________//
+
+        //__________EMPLOYEE INFO_____________//
+        InfoPersonal::create([
+            'date_of_birth'=>'2002-01-01',
+            'employee_gender'=>'0',
+            'nid_no'=>'25745545458',
+            'blood_group'=>'3',
+            'mast_department_id'=>'1',
+            'mast_designation_id'=>'5',
+            'mast_employee_type_id'=>'2',
+            'mast_work_station_id'=>'2',
+            'number_official'=>'0195275932',
+            'email_official'=>'motiur@gulf.com',
+            'joining_date'=>'2022-11-01',
+            'service_length'=>'2',
+            'gross_salary'=>'15000',
+            'reporting_boss'=>'1',
+            
+            'division_present'=>'6',
+            'district_present'=>'42',
+            'upazila_present'=>'322',
+            'thana_present'=>'2887',
+            'address_present'=>'Khilgoan, Domshar, Shariatpur',
+    
+            'division_permanent'=>'6',
+            'district_permanent'=>'42',
+            'upazila_permanent'=>'322',
+            'thana_permanent'=>'2887',
+            'address_permanent'=>'Khilgoan, Domshar, Shariatpur',
+    
+            'passport_no'=>'1185344689',
+            'driving_license'=>'0415441482',
+            'marital_status'=>'0',
+            'house_phone'=>'01922437143',
+            'father_name'=>'Mosharraf Khan',
+            'mother_name'=>'Shilpy Begum',
+            'birth_certificate_no'=>'20222145678938',
+            'emg_person_name'=>'Sagour',
+            'emg_phone_number'=>'01995275933',
+            'emg_relationship'=>'Brother',
+            'emg_address'=>'Shariatpur',
+            'status'=>'1',
+            'user_id'=>'1',
+            'emp_id'=> '1'
+        ]);
 
     }
 }

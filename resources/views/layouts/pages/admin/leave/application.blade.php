@@ -68,7 +68,7 @@
                                     <span class="text-danger">*</span>
                                 </label>
                                 <div class="col-lg-7">
-                                    <select class="form-control default-select" id="leave_type" name="leave_type">
+                                    <select class="form-control default-select" id="leave_type" name="mast_leave_id">
                                         <option disabled selected>Please select</option>
                                         @foreach ($leave_type as $row)
                                             <option value="{{$row->id}}">{{$row->leave_name}}</option>
@@ -156,8 +156,8 @@
                             <tbody id="list_todo">
                                 @foreach($data as $row)
                                     <tr id="row_todo_{{ $row->id}}">
-                                        <td>{{ $row->name}}</td>
-                                        <td>{{ $row->leave_name}}</td>
+                                        <td>{{ $row->user->name}}</td>
+                                        <td>{{ $row->mastLeave->leave_name}}</td>
                                         <td>{{date("j F, Y", strtotime($row->start_date))}}</td>
                                         <td>{{date("j F, Y", strtotime($row->end_date))}}</td>
                                         <td>{{ $row->duration}}</td>
@@ -239,7 +239,7 @@
                         });
                         Swal.fire({
                             icon: 'error',
-                            title: 'Validation Errors',
+                            title: 'Required data missing?',
                             html: '<ul>' + errorHtml + '</ul>',
                         });
                     }

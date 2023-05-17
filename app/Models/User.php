@@ -68,6 +68,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(HrAttendance::class);
     }
+    
     //____________ MINHAZ DATA
     public function hr_leave_application()
     {

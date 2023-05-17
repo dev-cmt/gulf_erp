@@ -4,6 +4,8 @@ namespace App\Models\Master;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Admin\HrLeaveApplication;
+use App\Models\User;
 
 class MastLeave extends Model
 {
@@ -18,4 +20,10 @@ class MastLeave extends Model
         'status',
         'user_id',
     ];
+
+    public function leaveApplication()
+    {
+        return $this->hasOne(HrLeaveApplication::class);
+    }
+    
 }
