@@ -58,6 +58,8 @@ Route::group(['middleware' => ['auth']], function(){
     //--Employee List
     Route::get('info_employee/list', [InfoEmployeeController::class, 'employee_list'])->name('info_employee.list');
     Route::get('info_employee/details/{id}', [InfoEmployeeController::class, 'employee_details'])->name('info_employee.details');
+    Route::get('info_employee/edit/{id}', [InfoEmployeeController::class, 'employee_edit'])->name('info_employee.edit');
+    Route::post('info_employee/update/{id}', [InfoEmployeeController::class, 'employee_update'])->name('info_employee.update');
     //--Employee Register
     Route::get('employee/register/create', [InfoEmployeeController::class, 'employee_create'])->name('employee_register.create');
     Route::post('employee/register/store', [InfoEmployeeController::class, 'employee_register'])->name('employee_register.store');
@@ -69,7 +71,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('employee/info_related/create/{id}', [InfoEmployeeController::class, 'related_create'])->name('info_employee_related.create');
     Route::post('employee/info_related/store/{id}', [InfoEmployeeController::class, 'related_store'])->name('info_employee_related.store');
     
-    Route::get('info_related/education/destroy/{id}', [InfoEmployeeController::class, 'info_education_destroy'])->name('info_education.destroy');
+    Route::delete('info_related/education/destroy/{id}', [InfoEmployeeController::class, 'info_education_destroy'])->name('info_education.destroy');
     Route::delete('info_related/experience/destroy/{id}', [InfoEmployeeController::class, 'info_experience_destroy'])->name('info_experience.destroy');
     Route::delete('info_related/info_bank/destroy/{id}', [InfoEmployeeController::class, 'info_bank_destroy'])->name('info_bank.destroy');
     Route::delete('info_related/info_nominee/destroy/{id}', [InfoEmployeeController::class, 'info_nominee_destroy'])->name('info_nominee.destroy');

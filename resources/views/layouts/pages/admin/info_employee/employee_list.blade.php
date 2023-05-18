@@ -31,7 +31,8 @@
                                     <td>{{ $row->email}}</td>
                                     <td>{{ $row->contact_number}}</td>
                                     <td class="d-flex justify-content-end">
-                                        <a href="{{ route('info_employee.details', $row->id) }}" class="btn btn-success btn-xs mr-2">View</a>
+                                        <a href="{{ route('info_employee.edit', $row->id) }}" class="btn btn-success btn-xs mr-2">Edit</a>
+                                        <a href="{{ route('info_employee.details', $row->id) }}" class="btn btn-info btn-xs mr-2">View</a>
                                     </td>
                                 </tr>
                                 @endforeach

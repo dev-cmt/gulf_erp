@@ -21,7 +21,7 @@ class LeaveApplicationController extends Controller
         $data =HrLeaveApplication::with('mastLeave', 'user')->get();
 
         $leave_type =MastLeave::get();
-        return view('layouts.pages.admin.leave.application',compact('mast_leave_id','data'));
+        return view('layouts.pages.admin.leave.application',compact('leave_type','data'));
     }
     public function emergency_leave()
     {

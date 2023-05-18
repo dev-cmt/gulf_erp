@@ -1,4 +1,37 @@
 <x-app-layout>
+    <style>
+        .table thead th {
+            text-transform: capitalize ;
+        }
+        .avatar-upload .avatar-preview {
+            border-radius: 0%;
+            width: 200px;
+            height: 200px;
+        }
+        .avatar-upload .avatar-preview > div{
+            border-radius: 0%;
+        }
+        .profile_submit{
+            width: 200px;
+            margin: 5px auto;
+        }
+        .profile_submit button{
+            display: flex;
+            width: 100%;
+            justify-content: center;
+        }
+        .avatar-upload .avatar-edit input + label {
+            border-radius: 0%;
+            width: 200px;
+            position: absolute;
+            top: 156px;
+            left: -177px;
+        }
+        .avatar-upload .avatar-edit input + label:hover {
+            background: #f98f73;
+            border-color: #d6d6d6;
+        }
+    </style>
     <div class="row">
         <div class="col-md-12 col-sm-10 mx-auto">
             <!-- Profile widget -->
@@ -9,7 +42,7 @@
                             <div class="rounded mb-2 img-thumbnail" style="width:150px;height:150px;overflow:hidden">
                                 <img src="{{asset('public/images')}}/profile/{{ $user->profile_photo_path }}" alt="..." style="height: 100%;width: 100%;object-fit: cover;">
                             </div>
-                            <a href="#" class="btn btn-primary light text-white btn-sl-sm btn-block">Edit profile</a>
+                            <a href="{{route('info_employee.edit', $user->id)}}" class="btn btn-primary light text-white btn-sl-sm btn-block"><i class="fa fa-pencil mr-2"></i> Edit profile</a>
                         </div>
                         <div class="media-body mb-5 text-white">
                             <h4 class="text-white">{{$user->name}}</h4>
@@ -141,7 +174,7 @@
                                                 <div class="col-sm-6 col-5">
                                                     <h6 class="f-w-500">Department<span class="pull-right">:</span></h6>
                                                 </div>
-                                                <div class="col-sm-6 col-7"><span>{{$department->dept_name}}</span></div>
+                                                <div class="col-sm-6 col-7"><span>{{$data['department']->dept_name}}</span></div>
                                             </div>
                                         </div>
                                         <!--Item-->
@@ -150,7 +183,7 @@
                                                 <div class="col-sm-6 col-5">
                                                     <h6 class="f-w-500">Designation<span class="pull-right">:</span></h6>
                                                 </div>
-                                                <div class="col-sm-6 col-7"><span>{{ $designation->desig_name}}</span></div>
+                                                <div class="col-sm-6 col-7"><span>{{$data['designation']->desig_name}}</span></div>
                                             </div>
                                         </div>
                                         <!--Item-->
@@ -159,7 +192,7 @@
                                                 <div class="col-sm-6 col-5">
                                                     <h6 class="f-w-500">Employee Type<span class="pull-right">:</span></h6>
                                                 </div>
-                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->employee_type }}</span></div>
+                                                <div class="col-sm-6 col-7"><span>{{ $data['employee_type']->cat_name }}</span></div>
                                             </div>
                                         </div>
                                         <!--Item-->
@@ -168,7 +201,7 @@
                                                 <div class="col-sm-6 col-5">
                                                     <h6 class="f-w-500">Work Station<span class="pull-right">:</span></h6>
                                                 </div>
-                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->work_station }}</span></div>
+                                                <div class="col-sm-6 col-7"><span>{{ $data['work_station']->store_name }}</span></div>
                                             </div>
                                         </div>
                                         <!--Item-->
@@ -239,7 +272,7 @@
                                                 <div class="col-sm-6 col-5">
                                                     <h6 class="f-w-500">Present Address<span class="pull-right">:</span></h6>
                                                 </div>
-                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->zip_code_present }}, {{ $infoPersonal->thana_present }}, {{ $infoPersonal->city_present }}, {{ $infoPersonal->district_present }}</span></div>
+                                                <div class="col-sm-6 col-7"><span>{{ $data['union']->name }}, {{ $data['upazila']->name }}, {{ $data['district']->name }}, {{ $data['division']->name }}</span></div>
                                             </div>
                                             <div class="row mb-2">
                                                 <div class="col-sm-6 col-5">
@@ -254,7 +287,7 @@
                                                 <div class="col-sm-6 col-5">
                                                     <h6 class="f-w-500">Permanent Address<span class="pull-right">:</span></h6>
                                                 </div>
-                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->zip_code_permanent }}, {{ $infoPersonal->thana_permanent }}, {{ $infoPersonal->city_permanent }}, {{ $infoPersonal->district_permanent }}</span></div>
+                                                <div class="col-sm-6 col-7"><span>{{ $data['union_permanent']->name }}, {{ $data['upazila_permanent']->name }}, {{ $data['district_permanent']->name }}, {{ $data['division_permanent']->name }}</span></div>
                                             </div>
                                             <div class="row mb-2">
                                                 <div class="col-sm-6 col-5">
@@ -311,7 +344,12 @@
                                                 <div class="col-sm-6 col-5">
                                                     <h6 class="f-w-500">Marital Status<span class="pull-right">:</span></h6>
                                                 </div>
-                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->marital_status }}</span></div>
+                                                <div class="col-sm-6 col-7">
+                                                    @if ($infoPersonal->marital_status == 1)Married
+                                                    @elseif ($infoPersonal->marital_status == 2)Divorce
+                                                    @elseif ($infoPersonal->marital_status == 3)Widowed 
+                                                    @endif
+                                                </div>
                                             </div>
                                         </div>
                                         <!--Item-->
@@ -383,53 +421,218 @@
                                             <h6 class="text-primary my-3">Education Information</h6>
                                         </div>
                                         <!--Item-->
-                                        <div class="col-xl-6 col-sm-12">
-                                            <div class="row mb-2">
-                                                <div class="col-sm-6 col-5">
-                                                    <h6 class="f-w-500">Person Name<span class="pull-right">:</span></h6>
-                                                </div>
-                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->profile_photo_path }}</span></div>
+                                        <div class="col-md-12">
+                                            <div class="table-responsive">
+                                                <table class="table table-hover table-responsive-md">
+                                                    <thead class="table-primary text-dark">
+                                                        <tr>
+                                                            <th>Institute Name</th>
+                                                            <th>Qualification</th>
+                                                            <th>Passing Year</th>
+                                                            <th>Grade</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach($infoEducational as $row)
+                                                            <tr>
+                                                                <td>{{$row->institute_name}}</td>
+                                                                <td>
+                                                                    @if ($row->qualification == 1)SSC
+                                                                    @elseif ($row->qualification ==2)HSC
+                                                                    @elseif ($row->qualification ==3)12th Stander
+                                                                    @elseif ($row->qualification ==4)Graduation
+                                                                    @elseif ($row->qualification ==5)Masters
+                                                                    @elseif ($row->qualification ==6)Ph.D 
+                                                                    @endif
+                                                                </td>
+                                                                <td>{{date("j F Y", strtotime($row->passing_year))}}</td>
+                                                                <td>{{$row->grade}}</td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
                                             </div>
                                         </div>
                                     </div>
-                                    <!--=====// Work Experi Information //=====-->
+                                    <!--=====// Work Experience Information //=====-->
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <h6 class="text-primary my-3">Related Information</h6>
+                                            <h6 class="text-primary my-3">Work Experience Information</h6>
                                         </div>
                                         <!--Item-->
-                                        <div class="col-xl-6 col-sm-12">
-                                            <div class="row mb-2">
-                                                <div class="col-sm-6 col-5">
-                                                    <h6 class="f-w-500">Person Name<span class="pull-right">:</span></h6>
-                                                </div>
-                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->profile_photo_path }}</span></div>
+                                        <div class="col-md-12">
+                                            <div class="table-responsive">
+                                                <table class="table table-hover table-responsive-md">
+                                                    <thead class="table-primary text-dark">
+                                                        <tr>
+                                                            <th>Company Name</th>
+                                                            <th>Start Date</th>
+                                                            <th>End Date</th>
+                                                            <th>Duration</th>
+                                                            <th>Job Description</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach($infoWorkExperience as $row)
+                                                            <tr>
+                                                                <td>{{$row->company_name}}</td>
+                                                                <td>{{date("j F Y", strtotime($row->start_date))}}</td>
+                                                                <td>{{date("j F Y", strtotime($row->end_date))}}</td>
+                                                                <td>{{$row->duration}}</td>
+                                                                <td>{{$row->job_description}}</td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--=====// Bank Information //=====-->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h6 class="text-primary my-3">Bank Information</h6>
+                                        </div>
+                                        <!--Item-->
+                                        <div class="col-md-12">
+                                            <div class="table-responsive">
+                                                <table class="table table-hover table-responsive-md">
+                                                    <thead class="table-primary text-dark">
+                                                        <tr>
+                                                            <th>Bank Name</th>
+                                                            <th>Brance Name</th>
+                                                            <th>Acount Name</th>
+                                                            <th>Acount No</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach($infoBank as $row)
+                                                            <tr>
+                                                                <td>{{$row->bank_name}}</td>
+                                                                <td>{{$row->brance_name}}</td>
+                                                                <td>{{$row->acount_name}}</td>
+                                                                <td>{{$row->acount_no}}</td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--=====// Nominee Information //=====-->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h6 class="text-primary my-3">Nominee Information</h6>
+                                        </div>
+                                        <!--Item-->
+                                        <div class="col-md-12">
+                                            <div class="table-responsive">
+                                                <table class="table table-hover table-responsive-md">
+                                                    <thead class="table-primary text-dark">
+                                                        <tr>
+                                                            <th>Nominee Name</th>
+                                                            <th>NID No.</th>
+                                                            <th>Relation</th>
+                                                            <th>Mobile No.</th>
+                                                            <th>Percentage</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach($infoNominee as $key=> $row)
+                                                            <tr>
+                                                                <td><div class="d-flex align-items-center"><img src="{{asset('public')}}/images/profile/nominee/{{ $row->profile_image }}" class="rounded-lg mr-2" width="24" alt=""> <span class="w-space-no">{{$row->full_name}}</span></div></td>
+                                                                <td>{{$row->nid_no}}</td>
+                                                                <td>{{$row->relation}}</td>
+                                                                <td>{{$row->mobile_no}}</td>
+                                                                <td>{{$row->nominee_percentage}}</td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div id="profile-settings" class="tab-pane fade">
-                                    
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Modal -->
-                        <div class="modal fade" id="replyModal">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h6 class="modal-title">Post Reply</h6>
-                                        <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                                     <!--=====// Personal Information//=====-->
+                                     <div class="row">
+                                        <!--Item-->
+                                        <div class="col-xl-7 col-sm-12 mt-4">
+                                            <div class="form-group row">
+                                                <label class="col-lg-5 col-form-label">Employee Name
+                                                    <span class="text-danger">*</span>
+                                                </label>
+                                                <div class="col-lg-7">
+                                                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" placeholder="" value="{{old('name')}}">                                     
+                                                    @error('name')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-lg-5 col-form-label">Contact Number
+                                                    <span class="text-danger">*</span>
+                                                </label>
+                                                <div class="col-lg-7">
+                                                    <input type="text" class="form-control @error('contact_number') is-invalid @enderror" name="contact_number" placeholder="" value="{{old('contact_number')}}">                                     
+                                                    @error('contact_number')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-lg-5 col-form-label">Old Password
+                                                    <span class="text-danger">*</span>
+                                                </label>
+                                                <div class="col-lg-7">
+                                                    <input type="text" class="form-control @error('contact_number') is-invalid @enderror" name="contact_number" placeholder="" value="{{old('contact_number')}}">                                     
+                                                    @error('contact_number')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-lg-5 col-form-label">New Password
+                                                    <span class="text-danger">*</span>
+                                                </label>
+                                                <div class="col-lg-7">
+                                                    <input type="text" class="form-control @error('contact_number') is-invalid @enderror" name="contact_number" placeholder="" value="{{old('contact_number')}}">                                     
+                                                    @error('contact_number')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-5 col-sm-12 ">
+                                            <div class="skip-email text-center">
+                                                <div class="avatar-upload" style="margin:5px auto">
+                                                    <div class="avatar-edit">
+                                                        <input type='file' class="@error('profile_photo_path') is-invalid @enderror form-control" name="profile_photo_path" id="imageUpload" accept=".png, .jpg, .jpeg" value="{{old('profile_photo_path')}}"/>
+                                                        <label for="imageUpload"><i class="fa fa-camera profile_save_btn"></i></label>
+                                                        @error('profile_photo_path')
+                                                            <span class="invalid-feedback" role="alert" style="">
+                                                                <strong>{{ $message }}</strong>
+                                                            </span>
+                                                        @enderror
+                                                    </div>
+                                                    <label for="imageUpload" class="avatar-preview">
+                                                        <div id="imagePreview" style="background-image: url('{{asset('public/images')}}/profile/{{ $user->profile_photo_path }}');"></div>
+                                                    </label>
+                                                </div>
+                                                <div class="profile_submit">
+                                                    <button class="btn btn-primary">Save</button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="modal-body">
-                                        <form>
-                                            <textarea class="form-control" rows="4">Message</textarea>
-                                        </form>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger light" data-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-primary">Reply</button>
-                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -439,4 +642,24 @@
     
         </div>
     </div>
+    <!--Image Profile-->
+    <script type="text/javascript">
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#imagePreview').css('background-image', 'url('+e.target.result +')');
+                    $('#imagePreview').hide();
+                    $('#imagePreview').fadeIn(650);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        $("#imageUpload").change(function() {
+            readURL(this);
+            $('.submit-btn').css('background-color', '#68cf29');
+            $(".submit-btn").removeAttr('disabled');
+        });
+    </script>
 </x-app-layout>
+    
