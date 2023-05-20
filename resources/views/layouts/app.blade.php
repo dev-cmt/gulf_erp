@@ -141,6 +141,12 @@
                 case 'error':
                     toastr.error("{{ Session::get('messege') }}");
                     break;
+                case 'update':
+                    swal("Success Message Title", "Well done, you pressed a button", "success");
+                    break;
+                case 'fail':
+                    swal("Error!", "{{ Session::get('messege') }}", "error");
+                    break;
             }
         @endif
     </script>  

@@ -14,12 +14,12 @@
                         <div class="form-group row">
                         
                             <div class="col-md-12 mb-3 mt-3">
-                                <p>Please Upload CSV in Given Format <a href="{{ route('attendance.export') }}" target="_blank">Sample CSV Format</a></p>
+                                <p>Please Upload CSV in Given Format <a href="{{ asset('public/attendance.csv') }}" style="color:red;" target="_blank">Sample CSV Format</a></p>
                                 {{-- <p>Please Upload CSV in Given Format <a href="{{ asset('files/sample-data-sheet.csv') }}" target="_blank">Sample CSV Format</a></p> --}}
                             </div>
                             {{-- File Input --}}
                             <div class="col-sm-12 mb-3 mt-3 mb-sm-0">
-                                <span style="color:red;">*</span>File Input(Datasheet)</label>
+                                <span style="color:red;">*</span>File Input (Datasheet)</label>
                                 <input  type="file" class="form-control form-control-user @error('file') is-invalid @enderror" id="exampleFile" name="file" value="{{ old('file') }}">
                                 @error('file')
                                     <span class="text-danger">{{$message}}</span>
@@ -30,6 +30,7 @@
                     </div>
         
                     <div class="card-footer">
+                        
                         <button type="submit" class="btn btn-success btn-user float-right mb-3">Upload Users</button>
                     </div>
                 </form>

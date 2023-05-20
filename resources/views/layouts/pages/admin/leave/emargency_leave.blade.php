@@ -174,132 +174,122 @@
                         </table>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
 
-                <!-- Modal Start-->
-                <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Leave Application List</h5>
-                                <button type="button" class="close" data-dismiss="modal"><span>&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body pt-0">
-                                <div id="responce_attendence">
+     <!-- Modal Start-->
+     <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Attendance List</h5>
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body pt-0">
+                    <div id="responce_attendence">
 
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
     
     @push('script')
-    <script>
-        $(document).ready(function(){
-            //---Save Data
-            var form = '#add-user-form';
-            $(form).on('submit', function(event){
-                event.preventDefault();
+        <script>
+            $(document).ready(function(){
+                //---Save Data
+                var form = '#add-user-form';
+                $(form).on('submit', function(event){
+                    event.preventDefault();
 
-                var url = $(this).attr('data-action');
-                var src = $('#redirect').attr('redirect-action');
-                $.ajax({
-                    url: url,
-                    method: 'POST',
-                    data: new FormData(this),
-                    dataType: 'JSON',
-                    contentType: false,
-                    cache: false,
-                    processData: false,
-                    success:function(response)
-                    {
-                        $(form).trigger("reset");
-                        // alert(response.success);
-                        // window.location.href = src;
-                        // setTimeout(function() {
-                        //     window.location.reload();
-                        // }, 1000);
-                        swal("Success Message Title", "Well done, you pressed a button", "success")
-                        $('.bd-example-modal-lg_form').modal('hide');
+                    var url = $(this).attr('data-action');
+                    var src = $('#redirect').attr('redirect-action');
+                    $.ajax({
+                        url: url,
+                        method: 'POST',
+                        data: new FormData(this),
+                        dataType: 'JSON',
+                        contentType: false,
+                        cache: false,
+                        processData: false,
+                        success:function(response)
+                        {
+                            $(form).trigger("reset");
+                            // alert(response.success);
+                            // window.location.href = src;
+                            // setTimeout(function() {
+                            //     window.location.reload();
+                            // }, 1000);
+                            swal("Success Message Title", "Well done, you pressed a button", "success")
+                            $('.bd-example-modal-lg_form').modal('hide');
 
-                        //---Add Table Row
-                        var row = '<tr id="row_todo_'+ response.id + '">';
-                        row += '<td>' + response.name + '</td>';
-                        row += '<td>' + response.leave_name + '</td>';
-                        row += '<td>' + response.formattedDate1 + '</td>';
-                        row += '<td>' + response.formattedDate2 + '</td>';
-                        row += '<td>' + response.duration + '</td>';
-                        row += '<td class="d-flex justify-content-end"> @if('+response.status == 0 +') <span class="badge light badge-warning"><i class="fa fa-circle text-warning mr-1"></i>Pending</span> @elseif ('+ response.qualification == 1+') <span class="badge light badge-success"><i class="fa fa-circle text-success mr-1"></i>Successful</span> @elseif ('+ response.qualification == 2+') <span class="badge light badge-danger"><i class="fa fa-circle text-danger mr-1"></i>Canceled</span> @endif' + '</td>';
-                        
-                        if($("#id").val()){
-                            $("#row_todo_" + response.id).replaceWith(row);
-                        }else{
-                            $("#list_todo").prepend(row);
+                            //---Add Table Row
+                            var row = '<tr id="row_todo_'+ response.id + '">';
+                            row += '<td>' + response.name + '</td>';
+                            row += '<td>' + response.leave_name + '</td>';
+                            row += '<td>' + response.formattedDate1 + '</td>';
+                            row += '<td>' + response.formattedDate2 + '</td>';
+                            row += '<td>' + response.duration + '</td>';
+                            row += '<td class="d-flex justify-content-end"> @if('+response.status == 0 +') <span class="badge light badge-warning"><i class="fa fa-circle text-warning mr-1"></i>Pending</span> @elseif ('+ response.qualification == 1+') <span class="badge light badge-success"><i class="fa fa-circle text-success mr-1"></i>Successful</span> @elseif ('+ response.qualification == 2+') <span class="badge light badge-danger"><i class="fa fa-circle text-danger mr-1"></i>Canceled</span> @endif' + '</td>';
+                            
+                            if($("#id").val()){
+                                $("#row_todo_" + response.id).replaceWith(row);
+                            }else{
+                                $("#list_todo").prepend(row);
+                            }
+                            $("#form_todo").trigger('reset');
+                            $("#leave_application_list").load(" #leave_application_list");
+                        },
+                        error: function (xhr) {
+                            var errors = xhr.responseJSON.errors;
+                            var errorHtml = '';
+                            $.each(errors, function(key, value) {
+                                errorHtml += '<li style="color:red">' + value + '</li>';
+                            });
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Required data missing?',
+                                html: '<ul>' + errorHtml + '</ul>',
+                            });
                         }
-                        $("#form_todo").trigger('reset');
-                        $("#leave_application_list").load(" #leave_application_list");
-                    },
-                    error: function (xhr) {
-                        var errors = xhr.responseJSON.errors;
-                        var errorHtml = '';
-                        $.each(errors, function(key, value) {
-                            errorHtml += '<li style="color:red">' + value + '</li>';
-                        });
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Required data missing?',
-                            html: '<ul>' + errorHtml + '</ul>',
-                        });
+                    });
+                });
+            });
+
+            $(document).ready(function(){
+                $.ajaxSetup({
+                    headers:{
+                        'x-csrf-token' : $('meta[name="csrf-token"]').attr('content')
                     }
                 });
             });
-        });
-
-        $(document).ready(function(){
-            $.ajaxSetup({
-                headers:{
-                    'x-csrf-token' : $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-        });
-    </script>
-    <script>
-        //----Current Date
-        var d = new Date()
-        var yr =d.getFullYear();
-        var month = d.getMonth()+1
-    
-        if(month<10){
-            month='0'+month
-        }
-    
-        var date =d.getDate();
-        if(date<10)
-        {
-            date='0'+date
-        }
-        var c_date = yr+"-"+month+"-"+date;
-        document.getElementById('start_date').value = c_date;
-        document.getElementById('end_date').value = c_date;
-    </script>
+        </script>
+        <script>
+            //----Current Date
+            var d = new Date()
+            var yr =d.getFullYear();
+            var month = d.getMonth()+1
+        
+            if(month<10){
+                month='0'+month
+            }
+        
+            var date =d.getDate();
+            if(date<10)
+            {
+                date='0'+date
+            }
+            var c_date = yr+"-"+month+"-"+date;
+            document.getElementById('start_date').value = c_date;
+            document.getElementById('end_date').value = c_date;
+        </script>
     @endpush
     
 </x-app-layout>
-<script>
-    $('.table-responsive').on('click','.view_report',function(){
-        let attendence_id = $(this).data('id');
-        $.get('get/employee_repot/'+ attendence_id,function(data){
-            alert('hi');
-            $("#responce_attendence").html(data)
-        });
-    });
-</script>
-
-<script>
+{{-- <script>
+    //Employee Name click show Code
     $('#employeeName').change(function(){
         var userId = $(this).val();
         $.ajax({
@@ -310,6 +300,38 @@
             success:function(response){
                 $('#employeeCode').html(response.employee_code);
             }
+        });
+    });
+    //get Leave Details
+    $(document).ready(function() {
+        $('.table-responsive').on('click','.view_report',function(){
+            let attendence_id = $(this).data('id');
+            alert(attendence_id);
+            $.get('get/emargency_leave_repot/'+ attendence_id, function(data) {
+                var tableBody = $('#employeeTableBody');
+                tableBody.empty();
+                alert('hi');
+                $.each(data, function(index, employee) {
+                    var row = '<tr>' +
+                        '<td>' + employee.name + '</td>' +
+                        '<td>' + employee.position + '</td>' +
+                        '<td>' + employee.department + '</td>' +
+                        '</tr>';
+                    tableBody.append(row);
+                });
+            });
+        });
+    });
+</script> --}}
+
+
+<script>
+    $('.table-responsive').on('click','.view_report',function(){
+        let attendence_id = $(this).data('id');
+        alert(attendence_id);
+        $.get('get/emargency_leave_repot/'+ attendence_id,function(data){
+            alert("his");
+            $("#responce_attendence").html(data)
         });
     });
 </script>

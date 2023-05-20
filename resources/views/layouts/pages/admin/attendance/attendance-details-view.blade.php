@@ -3,7 +3,7 @@
         <div>
             <span class="mr-2" style="font-weight: 700;margin:20px 0px">Employee Name :</span><label class="col-form-label">{{ $user->name }}</label>
         </div>
-        <a href="{{route('attendance.export')}}" class="btn btn-rounded btn-warning"><span class="btn-icon-left text-warning"><i class="fa fa-download color-warning"></i></span>Download</a>
+        <a href="{{route('attendance.export')}}" class="btn btn-primary btn-xs py-1 my-1"><i class="fa fa-download"></i><span class="btn-icon-add"></span>Download</a>
     </div>
     <thead>
         <tr>

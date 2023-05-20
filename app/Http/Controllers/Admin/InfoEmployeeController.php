@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
@@ -73,9 +74,53 @@ class InfoEmployeeController extends Controller
         ];
         return view('layouts.pages.admin.info_employee.employee_details', compact('user','infoPersonal','infoEducational','infoWorkExperience','infoBank','infoNominee','data'));
     }
+    public function profileUpdate(Request $request, $id)
+    {
+        //----------User Update
+        $user = User::findorfail($id);
+        if($request->hasFile("profile_photo_path")){
+            if (File::exists("public/images/profile/".$user->profile_photo_path)) {
+                File::delete("public/images/profile/".$user->profile_photo_path);
+            }
+            $file=$request->file("profile_photo_path");
+            $imageName=time()."_".$file->getClientOriginalName();
+            $file->move(\public_path("images/profile/"),$imageName);
+            $request['profile_photo_path']=$imageName;
+            $user->profile_photo_path = $imageName;
+        }
+        if($request->password){
+            $validator = Validator::make($request->all(), [
+                'current_password' => 'required',
+                'password' => 'required|min:8',
+            ]);
+        
+            if ($validator->fails()) {
+                $notification=array('messege'=>'The validator failed.','alert-type'=>'fail');
+                return back()->with($notification)->withErrors($validator)->withInput();
+            }
+            if (Hash::check($request->current_password, $user->password)) {
+                $user->name = $request->name;
+                $user->contact_number = $request->contact_number;
+                $user->password = Hash::make($request->password);
+                $user->save();
+    
+                $notification=array('messege'=>'User update successfully!','alert-type'=>'update');
+                return redirect()->back()->with($notification);
+            }
+        }else{
+            $user->name = $request->name;
+            $user->contact_number = $request->contact_number;
+            $user->save();
 
+            $notification=array('messege'=>'User update successfully!','alert-type'=>'update');
+            return redirect()->back()->with($notification); 
+        }
+        $notification=array('messege'=>'The current password is incorrect.','alert-type'=>'fail');
+        $current_password=array('current_password'=>'The current password is incorrect.');
+        return back()->with($notification)->withErrors($current_password)->withInput($current_password);
+    }
     /**___________________________________________________________________
-     * Employee Update Process
+     * Employee Personal Information Update
      * ____________________________________________________________________
      */
     public function employee_edit($id)

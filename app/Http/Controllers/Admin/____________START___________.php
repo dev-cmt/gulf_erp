@@ -392,8 +392,16 @@ class ImageUpload{
 
 
 
+//--Validation 
+$validator = Validator::make($request->all(), [
+    'current_password' => 'required',
+    'password' => 'required|min:8',
+]);
 
-
+if ($validator->fails()) {
+    $notification=array('messege'=>'Password change failed.','alert-type'=>'fail');
+    return back()->with($notification)->withErrors($validator)->withInput();
+}
 
 
 

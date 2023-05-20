@@ -55,12 +55,14 @@
                     <div class="profile-tab">
                         <div class="custom-tab-1">
                             <ul class="nav nav-tabs">
-                                <li class="nav-item"><a href="#my-posts" data-toggle="tab" class="nav-link active">Employee Information</a></li>
+                                <li class="nav-item"><a href="#my-posts" data-toggle="tab" class="nav-link {{Session::has('messege') || $errors->any() ? '' : 'active'}}">Employee Information</a></li>
                                 <li class="nav-item"><a href="#about-me" data-toggle="tab" class="nav-link">Related Information</a></li>
-                                <li class="nav-item"><a href="#profile-settings" data-toggle="tab" class="nav-link">Setting</a></li>
+                                <li class="nav-item"><a href="#profile-settings" data-toggle="tab" class="nav-link {{Session::has('messege') || $errors->any() ? 'active' : ''}}">Setting</a></li>
                             </ul>
+                            
+
                             <div class="tab-content">
-                                <div id="my-posts" class="tab-pane fade active show">
+                                <div id="my-posts" class="tab-pane fade {{Session::has('messege') || $errors->any() ? '' : 'active show'}}">
                                     <!--=====// Personal Information//=====-->
                                     <div class="row">
                                         <div class="col-md-12">
@@ -552,87 +554,111 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div id="profile-settings" class="tab-pane fade">
+                                <div id="profile-settings" class="tab-pane fade {{Session::has('messege') || $errors->any() ? 'active show' : ''}}">
                                      <!--=====// Personal Information//=====-->
-                                     <div class="row">
-                                        <!--Item-->
-                                        <div class="col-xl-7 col-sm-12 mt-4">
-                                            <div class="form-group row">
-                                                <label class="col-lg-5 col-form-label">Employee Name
-                                                    <span class="text-danger">*</span>
-                                                </label>
-                                                <div class="col-lg-7">
-                                                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" placeholder="" value="{{old('name')}}">                                     
-                                                    @error('name')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                    @enderror
-                                                </div>
+                                     <form method="POST" action="{{ route('change.password', $user->id) }}" enctype="multipart/form-data">
+                                        @csrf
+                                        <div class="row">
+                                            <!--Item-->
+                                            <div class="col-lg-12">
+                                                @if ($errors->any())
+                                                    <div class="alert alert-danger solid alert-dismissible fade show mt-2">
+                                                        @foreach ($errors->all() as $error)
+                                                            <svg viewBox="0 0 24 24" width="24 " height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+                                                            <strong>Error!</strong> {{$error}}.
+                                                            <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span></button>
+                                                        @endforeach
+                                                    </div>
+                                                @endif
                                             </div>
-                                            <div class="form-group row">
-                                                <label class="col-lg-5 col-form-label">Contact Number
-                                                    <span class="text-danger">*</span>
-                                                </label>
-                                                <div class="col-lg-7">
-                                                    <input type="text" class="form-control @error('contact_number') is-invalid @enderror" name="contact_number" placeholder="" value="{{old('contact_number')}}">                                     
-                                                    @error('contact_number')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-lg-5 col-form-label">Old Password
-                                                    <span class="text-danger">*</span>
-                                                </label>
-                                                <div class="col-lg-7">
-                                                    <input type="text" class="form-control @error('contact_number') is-invalid @enderror" name="contact_number" placeholder="" value="{{old('contact_number')}}">                                     
-                                                    @error('contact_number')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-lg-5 col-form-label">New Password
-                                                    <span class="text-danger">*</span>
-                                                </label>
-                                                <div class="col-lg-7">
-                                                    <input type="text" class="form-control @error('contact_number') is-invalid @enderror" name="contact_number" placeholder="" value="{{old('contact_number')}}">                                     
-                                                    @error('contact_number')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xl-5 col-sm-12 ">
-                                            <div class="skip-email text-center">
-                                                <div class="avatar-upload" style="margin:5px auto">
-                                                    <div class="avatar-edit">
-                                                        <input type='file' class="@error('profile_photo_path') is-invalid @enderror form-control" name="profile_photo_path" id="imageUpload" accept=".png, .jpg, .jpeg" value="{{old('profile_photo_path')}}"/>
-                                                        <label for="imageUpload"><i class="fa fa-camera profile_save_btn"></i></label>
-                                                        @error('profile_photo_path')
-                                                            <span class="invalid-feedback" role="alert" style="">
-                                                                <strong>{{ $message }}</strong>
-                                                            </span>
+                                            <div class="col-xl-7 col-sm-12 mt-4">
+                                                <div class="form-group row">
+                                                    <label class="col-lg-5 col-form-label">Email</label>
+                                                    <div class="col-lg-7">
+                                                        <input type="text" class="form-control @error('email') is-invalid @enderror" name="email" placeholder="" value="{{$user->email }}" disabled>                                     
+                                                        @error('email')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
                                                         @enderror
                                                     </div>
-                                                    <label for="imageUpload" class="avatar-preview">
-                                                        <div id="imagePreview" style="background-image: url('{{asset('public/images')}}/profile/{{ $user->profile_photo_path }}');"></div>
-                                                    </label>
                                                 </div>
-                                                <div class="profile_submit">
-                                                    <button class="btn btn-primary">Save</button>
+                                                <div class="form-group row">
+                                                    <label class="col-lg-5 col-form-label">Employee Name
+                                                        <span class="text-danger">*</span>
+                                                    </label>
+                                                    <div class="col-lg-7">
+                                                        <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" placeholder="" value="{{$user->name }}">                                     
+                                                        @error('name')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-lg-5 col-form-label">Contact Number
+                                                        <span class="text-danger">*</span>
+                                                    </label>
+                                                    <div class="col-lg-7">
+                                                        <input type="text" class="form-control @error('contact_number') is-invalid @enderror" name="contact_number" placeholder="" value="{{$user->contact_number }}">                                     
+                                                        @error('contact_number')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="current_password" class="col-lg-5 col-form-label">Current Password
+                                                        <span class="text-danger">*</span>
+                                                    </label>
+                                                    <div class="col-lg-7">
+                                                        <input id="current_password" type="password" class="form-control @error('current_password') is-invalid @enderror" name="current_password" value="{{old('current_password')}}" autocomplete="current-password">
+                                                        @error('current_password')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-lg-5 col-form-label">New Password
+                                                        <span class="text-danger">*</span>
+                                                    </label>
+                                                    <div class="col-lg-7">
+                                                        <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" value="{{old('password')}}" autocomplete="new-password">
+                                                        @error('password')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-5 col-sm-12 ">
+                                                <div class="skip-email text-center">
+                                                    <div class="avatar-upload" style="margin:5px auto">
+                                                        <div class="avatar-edit">
+                                                            <input type='file' class="@error('profile_photo_path') is-invalid @enderror form-control" name="profile_photo_path" id="imageUpload" accept=".png, .jpg, .jpeg" value="{{$user->profile_photo_path}}"/>
+                                                            <label for="imageUpload"><i class="fa fa-camera profile_save_btn"></i></label>
+                                                            @error('profile_photo_path')
+                                                                <span class="invalid-feedback" role="alert" style="">
+                                                                    <strong>{{ $message }}</strong>
+                                                                </span>
+                                                            @enderror
+                                                        </div>
+                                                        <label for="imageUpload" class="avatar-preview">
+                                                            <div id="imagePreview" style="background-image: url('{{asset('public/images')}}/profile/{{ $user->profile_photo_path }}');"></div>
+                                                        </label>
+                                                    </div>
+                                                    <div class="profile_submit">
+                                                        <button class="btn btn-primary">Save</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -661,5 +687,12 @@
             $(".submit-btn").removeAttr('disabled');
         });
     </script>
+
+    {{-- <script>
+        setTimeout(function() {
+            swal("Error!", "Password change failed.", "error");
+        }, 1000);
+    </script> --}}
+   
 </x-app-layout>
     

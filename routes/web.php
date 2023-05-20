@@ -64,6 +64,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('employee/register/create', [InfoEmployeeController::class, 'employee_create'])->name('employee_register.create');
     Route::post('employee/register/store', [InfoEmployeeController::class, 'employee_register'])->name('employee_register.store');
     Route::get('employee/register/destroy/{id}', [InfoEmployeeController::class, 'employee_destroy'])->name('employee_register.destroy');
+    Route::post('/change-password/{id}', [InfoEmployeeController::class, 'profileUpdate'])->name('change.password');
     //--Personal Information
     Route::get('employee/info_prsonal/create/{id}', [InfoEmployeeController::class, 'personal_create'])->name('info_employee_prsonal.create');
     Route::post('employee/info_prsonal/store/{id}', [InfoEmployeeController::class, 'personal_store'])->name('info_employee_prsonal.store');

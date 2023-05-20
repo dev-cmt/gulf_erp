@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Admin\HrLeaveApplication;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\Models\Admin\HrLeaveApplication;
 use App\Models\Master\MastDesignation;
 use App\Models\Master\MastLeave;
 use App\Models\User;
@@ -19,7 +19,6 @@ class LeaveApplicationController extends Controller
     public function leave_application()
     {
         $data =HrLeaveApplication::with('mastLeave', 'user')->get();
-
         $leave_type =MastLeave::get();
         return view('layouts.pages.admin.leave.application',compact('leave_type','data'));
     }
@@ -28,8 +27,7 @@ class LeaveApplicationController extends Controller
         $leave_type =MastLeave::get();
         $employee =User::where('status', 1)->get();
         $data =HrLeaveApplication::with('mastLeave', 'user')->get();
-        
-        return view('layouts.pages.admin.leave.emergency_leave',compact('leave_type','employee','data'));
+        return view('layouts.pages.admin.leave.emargency_leave',compact('leave_type','employee','data'));
     }
 
     public function store(Request $request)
@@ -134,8 +132,8 @@ class LeaveApplicationController extends Controller
     //---View Attendance List
     public function getLeaveApplication_report($id)
     {
-        // $data = HrLeaveApplication::where('emp_id', $id)->get();
-        // $user = User::where('id', $id)->first();
-        return view('layouts.pages.admin.leave.leave-details-view');
+        $data = HrLeaveApplication::get();
+        $user = User::where('id', $id)->first();
+        return view('layouts.pages.admin.leave.attendance-details-view',compact('data'));
     }
 }
