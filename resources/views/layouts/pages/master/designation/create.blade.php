@@ -30,8 +30,7 @@
                                             <span class="text-danger">*</span>
                                         </label>
                                         <div class="row-lg">
-                                            <input type="text" id="desig_name" class="form-control text-capitalize @error('desig_name') is-invalid @enderror" name="desig_name" placeholder="" value="{{old('desig_name')}}" pattern="[a-zA-Z]+.*" title="Desig. name must start with alphabets then others" autofocus required>
-
+                                            <input type="text" id="desig_name" class="form-control text-capitalize @error('desig_name') is-invalid @enderror" name="desig_name" placeholder="" value="{{old('desig_name')}}">
                                             @error('desig_name')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -52,12 +51,11 @@
                                     </div>
                                 </div>
                                 <div class="col-xl-6">
-
                                     <!-- this is for description -->
                                     <div class="form-group col">
                                         <label>Description:</label>
                                         <div class="row-lg">
-                                            <textarea class="form-control mt-1 @error('description') is-invalid @enderror" rows="5" id="description" name="description" placeholder="" value="{{old('description')}}"></textarea>
+                                            <textarea class="form-control mt-1 @error('description') is-invalid @enderror" rows="5" id="description" name="description" placeholder="">{{old('description')}}</textarea>
                                             @error('description')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>

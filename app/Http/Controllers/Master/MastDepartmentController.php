@@ -12,44 +12,33 @@ use Auth;
 class MastDepartmentController extends Controller
 {
     public function index() {
-        $department = MastDepartment::with('user')->latest()->get();
-        $department = MastDepartment::latest()->get();
+        $department = MastDepartment::latest()->with('user')->get();
         return view('layouts.pages.master.department.index', compact('department'));
     }
 
     public function create() {
-        $data = User::orderBy('id','DESC')->get();
+        $data =User::orderBy('id','DESC')->where('status', 1)->get();
         return view('layouts.pages.master.department.create', compact('data'));
     }
 
     public function store(Request $request)
     {
-        if (empty($request->dept_name)) {
-            $notification = array('messege' => 'Department Name can not left blank', 'alert-type' => 'error');
-            return redirect()->back()->with($notification);
+        $validated=$request -> validate([
+            'dept_name'=> 'required|max:255',
+            'dept_head'=> 'required',
+            'status'=> 'required',
+        ]);
 
-        } else if (empty($request->dept_head)) {
-            $notification = array('messege' => 'Department Head not selected', 'alert-type' => 'error');
-            return redirect()->back()->with($notification); 
-
-        } else  {
-            $data = new MastDepartment();
-            $data->entry_by = Auth::user()->id;
-            $data->dept_name = $request->dept_name;
-            if(empty($request->description)) {
-                $data->description = " ";
-            } else {
-                $data->description = $request->description;
-            }
-            $data->dept_head = $request->dept_head;
-            $data->status = $request->status;
-            $data->save();
-            $notification = array('messege' => 'Department data save successfully.', 'alert-type' => 'success');
-            return redirect()->route('mast_department.index')->with($notification);
-        } 
+        $data = new MastDepartment();
+        $data->dept_name = $request->dept_name;
+        $data->dept_head = $request->dept_head;
+        $data->description = $request->description;
+        $data->status = $request->status;
+        $data->user_id = Auth::user()->id;
+        $data->save();
+        $notification = array('messege' => 'Department save successfully.', 'alert-type' => 'success');
+        return redirect()->route('mast_department.index')->with($notification);
     }
-
-
 
     public function edit($id)
     {
@@ -58,37 +47,18 @@ class MastDepartmentController extends Controller
         return view('layouts.pages.master.department.edit', compact('data', 'users'));
     }
     
-
-
     public function update(Request $request, $id)
     {
-        if (empty($request->dept_name)) {
-            $notification = array('messege' => 'Department Name can not left blank', 'alert-type' => 'error');       
-            return redirect()->back()->with($notification);
-            
-        } else if (empty($request->dept_head)) {
-            $notification = array('messege' => 'Department Head not selected', 'alert-type' => 'error');
-            return redirect()->back()->with($notification);
-
-        } else  {
-            $data = MastDepartment::find($id);
-            $data->entry_by = Auth::user()->id;
-            $data->dept_name = $request->dept_name;
-            if(empty($request->description)) {
-                $data->description = " ";
-            } else {
-                $data->description = $request->description;
-            }
-            $data->dept_head = $request->dept_head;
-            $data->status = $request->status;
-            $data->save();        
-            $notification = array('messege' => 'Department data update successfully.', 'alert-type' => 'success');        
-            return redirect()->route('mast_department.index')->with($notification);
-        } 
+        $data = MastDepartment::find($id);
+        $data->dept_name = $request->dept_name;
+        $data->dept_head = $request->dept_head;
+        $data->description = $request->description;
+        $data->status = $request->status;
+        $data->user_id = Auth::user()->id;
+        $data->save();
+        $notification = array('messege' => 'Department data update successfully.', 'alert-type' => 'success');        
+        return redirect()->route('mast_department.index')->with($notification);
     }
-
-
-
     public function show( $id)
     {
         $data = MastDepartment::with('user')->find($id);

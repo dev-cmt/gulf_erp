@@ -35,9 +35,9 @@
                                     <td>{{ $data->yearly_limit }}</td>										
                                     <td>{{ $data->description }}</td>										
                                     <td>{{ $data->status == 1 ? 'Active' : 'Inactive'  }}</td>																			
-                                    <td class="float-right">                                
-                                        <a href="{{ route('mast_leave.edit', $data->id) }}" class="btn btn-success btn-sm">Edit</a>
-                                        <a href="{{ route('mast_leave.show', $data->id) }}" class="btn btn-info btn-sm">View</a>                                                              
+                                    <td class="float-right" style="width:100px">                                
+                                        <a href="{{ route('mast_leave.edit', $data->id) }}" class="btn btn-success btn-sm btn-xm p-2">Edit</a>
+                                        <a href="{{ route('mast_leave.show', $data->id) }}" class="btn btn-info btn-sm btn-xm p-2">View</a>                                                              
                                     </td>
                                 </tr>
                                 @endforeach

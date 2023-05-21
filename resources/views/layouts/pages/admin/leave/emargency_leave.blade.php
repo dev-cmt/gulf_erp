@@ -16,7 +16,9 @@
                     <div class="modal-body row">
                         <div class="col-lg-6">
                             <div class="form-group row">
-                                <label class="col-lg-5 col-form-label">Employee Name</label>
+                                <label class="col-lg-5 col-form-label">Employee Name
+                                    <span class="text-danger">*</span>
+                                </label>
                                 <div class="col-lg-7">
                                     <select class="form-control dropdwon_select" id="employeeName" name="emp_id">
                                         <option selected>Select</option>
@@ -177,20 +179,20 @@
             </div>
         </div>
     </div>
+    
 
      <!-- Modal Start-->
      <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Attendance List</h5>
-                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span>
-                    </button>
+                    <h5 class="modal-title">Leave Application Details</h5>
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                 </div>
-                <div class="modal-body pt-0">
-                    <div id="responce_attendence">
-
-                    </div>
+                <div class="modal-body pt-2">
+                    <table class="table table-bordered table-responsive-sm leaves-table">
+                        <div id="target-element"></div>
+                    </table>
                 </div>
             </div>
         </div>
@@ -271,16 +273,9 @@
             var d = new Date()
             var yr =d.getFullYear();
             var month = d.getMonth()+1
-        
-            if(month<10){
-                month='0'+month
-            }
-        
+            if(month<10){month='0'+month}
             var date =d.getDate();
-            if(date<10)
-            {
-                date='0'+date
-            }
+            if(date<10){date='0'+date}
             var c_date = yr+"-"+month+"-"+date;
             document.getElementById('start_date').value = c_date;
             document.getElementById('end_date').value = c_date;
@@ -288,7 +283,7 @@
     @endpush
     
 </x-app-layout>
-{{-- <script>
+<script>
     //Employee Name click show Code
     $('#employeeName').change(function(){
         var userId = $(this).val();
@@ -305,33 +300,26 @@
     //get Leave Details
     $(document).ready(function() {
         $('.table-responsive').on('click','.view_report',function(){
-            let attendence_id = $(this).data('id');
-            alert(attendence_id);
-            $.get('get/emargency_leave_repot/'+ attendence_id, function(data) {
-                var tableBody = $('#employeeTableBody');
-                tableBody.empty();
-                alert('hi');
-                $.each(data, function(index, employee) {
-                    var row = '<tr>' +
-                        '<td>' + employee.name + '</td>' +
-                        '<td>' + employee.position + '</td>' +
-                        '<td>' + employee.department + '</td>' +
-                        '</tr>';
-                    tableBody.append(row);
-                });
+            let userId = $(this).data('id');
+            alert(userId);
+            $.ajax({
+                url:'{{ route('get_emargency_leave_repot','+userId +') }}',
+                method:'GET',
+                data:{userId},
+                success:function(response){
+                    $('#target-element').html(response);
+                    // var tbody = $('.leaves-table tbody');
+                    // tbody.empty();
+                    // $.each(response, function(index, leave) {
+                    //     var row = $('<tr></tr>');
+                    //     row.append('<td>' + leave.leave_name + '</td>');
+                    //     row.append('<td>' + leave.start_date + '</td>');
+                    //     row.append('<td>' + leave.start_date + '</td>');
+                    //     row.append('<td>' + leave.duration + '</td>');
+                    //     tbody.append(row);
+                    // });
+                }
             });
-        });
-    });
-</script> --}}
-
-
-<script>
-    $('.table-responsive').on('click','.view_report',function(){
-        let attendence_id = $(this).data('id');
-        alert(attendence_id);
-        $.get('get/emargency_leave_repot/'+ attendence_id,function(data){
-            alert("his");
-            $("#responce_attendence").html(data)
         });
     });
 </script>

@@ -24,7 +24,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-                             
                                 @foreach($employee as $data)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>										
@@ -32,9 +31,9 @@
                                     <td>{{ $data->cat_type == 1 ? 'In' : 'Out'  }}</td>										
                                     <td>{{ $data->description }}</td>										
                                     <td>{{ $data->status == 1 ? 'Active' : 'Inactive'  }}</td>																			
-                                    <td class="float-right">                                
-                                        <a href="{{ route('must_employee_category.edit', $data->id) }}" class="btn btn-success btn-sm">Edit</a>
-                                        <a href="{{ route('must_employee_category.show', $data->id) }}" class="btn btn-info btn-sm">View</a>                                                              
+                                    <td class="float-right" style="width:100px">                                
+                                        <a href="{{ route('must_employee_category.edit', $data->id) }}" class="btn btn-success btn-sm btn-xm p-2">Edit</a>
+                                        <a href="{{ route('must_employee_category.show', $data->id) }}" class="btn btn-info btn-sm btn-xm p-2">View</a>                                                              
                                     </td>
                                 </tr>
                                 @endforeach

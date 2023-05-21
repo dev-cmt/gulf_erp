@@ -24,8 +24,8 @@
                             <tbody>
                                 @foreach ($data as $key=> $row )
                                 <tr>
-                                    <td>{{ $row->name}}</td>
-                                    <td>{{ $row->leave_name}}</td>
+                                    <td>{{ $row->user->name}}</td>
+                                    <td>{{ $row->mastLeave->leave_name}}</td>
                                     <td>{{date("j F, Y", strtotime($row->start_date))}}</td>
                                     <td>{{date("j F, Y", strtotime($row->end_date))}}</td>
                                     <td>{{ $row->duration}}</td>

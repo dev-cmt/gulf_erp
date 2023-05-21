@@ -140,19 +140,19 @@ class InfoEmployeeController extends Controller
             'employee_type' => $employee_type,
             'work_station' => $work_station,
         ];
-
-
         $user = User::findOrFail($id);
-        $infoPersonal = $user->infoPersonal;
+        $infoPersonal = InfoPersonal::where('emp_id',$id);
         $infoEducational = $user->infoEducational;
         $infoWorkExperience = $user->infoWorkExperience;
         $infoBank = $user->infoBank;
         $infoNominee = $user->infoNominee;
         //--Personal Information
+        
         $department = $infoPersonal->mastDepartment;
         $designation = $infoPersonal->mastDesignation;
         $employee_type = $infoPersonal->mastEmployeeType;
         $work_station = $infoPersonal->mastWorkStation;
+
         //---Address (Divistion)
         $divisions = DB::table('divisions')->where('id', $infoPersonal->division_present)->first();
         $districts = DB::table('districts')->where('id', $infoPersonal->district_present)->first();

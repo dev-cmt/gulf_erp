@@ -1,11 +1,7 @@
 <x-app-layout>
-
     <div class="row">
-
         <div class="col-12">
-
             <div class="card">
-
                 <!-- card header -->
                 <div class="card-header">
                     <h4 class="card-title">Create Leave</h4>
@@ -65,7 +61,7 @@
                                         </label>
 
                                         <div class="row-lg">
-                                            <input type="text" id="leave_code" class="form-control text-uppercase @error('leave_code') is-invalid @enderror" name="leave_code" value="{{old('leave_code')}}" pattern="[A-Z]+" required>                                 
+                                            <input type="text" id="leave_code" class="form-control text-uppercase @error('leave_code') is-invalid @enderror" name="leave_code" value="{{old('leave_code')}}">                                 
                                             @error('leave_code')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -80,7 +76,7 @@
                                             <span class="text-danger">*</span>
                                         </label>
                                         <div class="row-lg">
-                                            <input type="number" id="yearly_limit" class="form-control @error('yearly_limit') is-invalid @enderror" name="yearly_limit" value="{{old('yearly_limit')}}" data-type="integer" min="0" max="100" required>
+                                            <input type="number" id="yearly_limit" class="form-control @error('yearly_limit') is-invalid @enderror" name="yearly_limit" value="{{old('yearly_limit')}}" data-type="integer" min="0" max="50" required>
                                             @error('yearly_limit')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>

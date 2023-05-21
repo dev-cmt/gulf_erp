@@ -142,7 +142,9 @@
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            <a href="{{route('employee_register.destroy', $row ->id)}}" class="btn btn-danger shadow btn-xs" id="delete"><i class="fa fa-trash"></i></a>
+                                            @if ($row->status == 0)
+                                                <a href="{{route('employee_register.destroy', $row ->id)}}" class="btn btn-danger shadow btn-xs" id="delete"><i class="fa fa-trash"></i></a>
+                                            @endif
                                             {{-- @can('User delete')
                                             <form action="{{ route('employee_register.destroy', $row->id) }}" method="POST">
                                                 @method('DELETE')

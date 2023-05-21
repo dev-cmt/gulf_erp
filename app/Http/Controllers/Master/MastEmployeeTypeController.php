@@ -20,27 +20,21 @@ class MastEmployeeTypeController extends Controller
 
     public function store(Request $request)
     {
+        $validated=$request -> validate([
+            'cat_name'=> 'required|max:255',
+            'cat_type'=> 'required',
+            'status'=> 'required',
+        ]);
 
-        if (empty($request->cat_name)) {
-            $notification = array('messege' => 'Category Name can not left blank', 'alert-type' => 'error');
-            return redirect()->back()->with($notification);
-
-        } else  {
-            $data = new MastEmployeeType();
-            $data->entry_by = Auth::user()->id;
-            $data->cat_name =$request->cat_name;
-            $data->cat_type =$request->cat_type;
-
-            if(empty($request->description)) {
-                $data->description = " ";
-            } else {
-                $data->description = $request->description;
-            }
-            $data->status = $request->status;
-            $data->save();
-            $notification = array('messege' => 'Employee Category data save successfully.', 'alert-type' => 'success');
-            return redirect()->route('must_employee_category.index')->with($notification);
-        }
+        $data = new MastEmployeeType();
+        $data->user_id = Auth::user()->id;
+        $data->cat_name =$request->cat_name;
+        $data->cat_type =$request->cat_type;
+        $data->description = $request->description;
+        $data->status = $request->status;
+        $data->save();
+        $notification = array('messege' => 'Employee Category data save successfully.', 'alert-type' => 'success');
+        return redirect()->route('must_employee_category.index')->with($notification);
     }
 
     public function edit($id)
@@ -51,26 +45,15 @@ class MastEmployeeTypeController extends Controller
     
     public function update(Request $request, $id)
     {
-        if (empty($request->cat_name)) {
-            $notification = array('messege' => 'Category Name can not left blank', 'alert-type' => 'error');
-            return redirect()->back()->with($notification);
-
-        } else  {
-            $data = MastEmployeeType::find($id);
-            $data->entry_by = Auth::user()->id;
-            $data->cat_name =$request->cat_name;
-            $data->cat_type =$request->cat_type;
-
-            if(empty($request->description)) {
-                $data->description = " ";
-            } else {
-                $data->description = $request->description;
-            }
-            $data->status = $request->status;
-            $data->save();
-            $notification = array('messege' => 'Employee Category data update successfully.', 'alert-type' => 'success');
-            return redirect()->route('must_employee_category.index')->with($notification);
-        }
+        $data = MastEmployeeType::find($id);
+        $data->user_id = Auth::user()->id;
+        $data->cat_name =$request->cat_name;
+        $data->cat_type =$request->cat_type;
+        $data->description = $request->description;
+        $data->status = $request->status;
+        $data->save();
+        $notification = array('messege' => 'Employee type update successfully.', 'alert-type' => 'success');
+        return redirect()->route('must_employee_category.index')->with($notification);
     }
 
     public function show( $id)

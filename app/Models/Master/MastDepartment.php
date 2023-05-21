@@ -2,12 +2,10 @@
 
 namespace App\Models\Master;
 
-
-use App\Models\User;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Admin\InfoPersonal;
+use App\Models\User;
 
 class MastDepartment extends Model
 {
@@ -22,5 +20,9 @@ class MastDepartment extends Model
     public function infoPersonal()
     {
         return $this->hasOne(InfoPersonal::class);
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

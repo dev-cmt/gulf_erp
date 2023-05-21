@@ -2,15 +2,23 @@
             Nav header start
         ***********************************-->
         <div class="nav-header">
-					<a href="{{url('/')}}" class="brand-logo">
-					<span class="logo-abbr" width="30" height="50">
-							<img src="{{asset('public/backend')}}/images/favicon.png" width="20" height="30" alt="">
-					</span>
-          <span class="brand-title" width="80" height="50">
-						{{-- <h2>con</h2> --}}
-						<img src="{{asset('public/backend')}}/images/iconisl.png" width="75" height="25" style="margin-bottom: -1px" alt="">
-					</span>
+			<a href="{{url('/')}}" class="brand-logo">
+				{{-- <div style="background-image: url('{{asset('public/images')}}/logo-bg.png');position: absolute;top: 0;width: 100%;height: 100%;background-repeat: no-repeat;background-size: cover;"></div> --}}
+				<span class="logo-abbr" width="30" height="50">
+						<img src="{{asset('public/images')}}/icon.png" width="20" height="30" alt="">
+				</span>
+				<span class="brand-title" width="80" height="50">
+					<img src="{{asset('public/images')}}/logo-01.png" width="125" height="30" style="margin-bottom: -1px" alt="">
+				</span>
             </a>
+			{{-- <a href="{{url('/')}}" class="brand-logo">
+				<span class="logo-abbr" width="30" height="50">
+						<img src="{{asset('public/backend')}}/images/favicon.png" width="20" height="30" alt="">
+				</span>
+				<span class="brand-title" width="80" height="50">
+					<img src="{{asset('public/backend')}}/images/iconisl.png" width="75" height="25" style="margin-bottom: -1px" alt="">
+				</span>
+            </a> --}}
 
             {{-- <a href="index.html" class="brand-logo">
                 <img src="{{asset('public/backend')}}/images/logo.png" width="65" height="30" alt="">

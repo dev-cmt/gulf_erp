@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -74,13 +75,7 @@ class LeaveApplicationController extends Controller
 
     public function dept_approve_list()
     {
-        $data = HrLeaveApplication::join('users', 'users.id', 'hr_leave_applications.user_id')
-        ->join('info_personals', 'info_personals.user_id', 'users.id')
-        ->join('mast_designations', 'info_personals.designation', 'mast_designations.id')
-        ->join('mast_leaves', 'hr_leave_applications.mast_leave_id', 'mast_leaves.id')
-        ->where('hr_leave_applications.status', 0 )
-        ->select('hr_leave_applications.*','users.name','mast_designations.desig_name','mast_leaves.leave_name')
-        ->get();
+        $data =HrLeaveApplication::with('mastLeave', 'user')->where('status',0)->get();
 
         return view('layouts.pages.admin.leave.approve_dept',compact('data'));
     }
@@ -97,7 +92,7 @@ class LeaveApplicationController extends Controller
     {
         $data = HrLeaveApplication::join('users', 'users.id', 'hr_leave_applications.user_id')
         ->join('info_personals', 'info_personals.user_id', 'users.id')
-        ->join('mast_designations', 'info_personals.designation', 'mast_designations.id')
+        ->join('mast_designations', 'info_personals.mast_designation_id', 'mast_designations.id')
         ->join('mast_leaves', 'hr_leave_applications.mast_leave_id', 'mast_leaves.id')
         ->where('hr_leave_applications.status', 1 )
         ->select('hr_leave_applications.*','users.name','mast_designations.desig_name','mast_leaves.leave_name')
@@ -130,10 +125,11 @@ class LeaveApplicationController extends Controller
         return response()->json($employeeCode);
     }
     //---View Attendance List
-    public function getLeaveApplication_report($id)
+    public function getLeaveApplication_report(Request $request, $id)
     {
-        $data = HrLeaveApplication::get();
-        $user = User::where('id', $id)->first();
-        return view('layouts.pages.admin.leave.attendance-details-view',compact('data'));
+        $data =HrLeaveApplication::with('mastLeave', 'user')->where('status',2)->get();
+ 
+        return view('layouts.pages.admin.leave.leave-details-view', compact('data'));
+        
     }
 }
