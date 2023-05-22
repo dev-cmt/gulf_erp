@@ -22,8 +22,9 @@ use App\Helpers\Helper;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use DateTime;
-use DB;
-use Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Intervention\Image\Facades\Image;
 
 class InfoEmployeeController extends Controller
 {
@@ -49,15 +50,16 @@ class InfoEmployeeController extends Controller
         $designation = $infoPersonal->mastDesignation;
         $employee_type = $infoPersonal->mastEmployeeType;
         $work_station = $infoPersonal->mastWorkStation;
+
         //---Address (Divistion)
         $divisions = DB::table('divisions')->where('id', $infoPersonal->division_present)->first();
         $districts = DB::table('districts')->where('id', $infoPersonal->district_present)->first();
         $upazilas = DB::table('upazilas')->where('id', $infoPersonal->upazila_present)->first();
-        $unions = DB::table('unions')->where('id', $infoPersonal->thana_present)->first();
+        $unions = DB::table('unions')->where('id', $infoPersonal->union_present)->first();
         $divisions_permanent = DB::table('divisions')->where('id', $infoPersonal->division_permanent)->first();
         $districts_permanent = DB::table('districts')->where('id', $infoPersonal->district_permanent)->first();
         $upazilas_permanent = DB::table('upazilas')->where('id', $infoPersonal->upazila_permanent)->first();
-        $unions_permanent = DB::table('unions')->where('id', $infoPersonal->thana_permanent)->first();
+        $unions_permanent = DB::table('unions')->where('id', $infoPersonal->union_permanent)->first();
         $data = [
             'department' => $department,
             'designation' => $designation,
@@ -82,11 +84,27 @@ class InfoEmployeeController extends Controller
             if (File::exists("public/images/profile/".$user->profile_photo_path)) {
                 File::delete("public/images/profile/".$user->profile_photo_path);
             }
-            $file=$request->file("profile_photo_path");
-            $imageName=time()."_".$file->getClientOriginalName();
-            $file->move(\public_path("images/profile/"),$imageName);
-            $request['profile_photo_path']=$imageName;
-            $user->profile_photo_path = $imageName;
+            //get filename with extension
+            $filenamewithextension = $request->file('profile_photo_path')->getClientOriginalName();
+            //get filename without extension
+            $filename = pathinfo($filenamewithextension, PATHINFO_FILENAME);
+            //get file extension
+            $extension = $request->file('profile_photo_path')->getClientOriginalExtension();
+            //filename to store
+            $filenametostore = $filename.'_'.time().'.'.$extension;
+            //Upload File
+            $request->file('profile_photo_path')->move('public/images/profile/', $filenametostore); //--Upload Location
+            // $request->file('profile_image')->storeAs('public/profile_images', $filenametostore);
+            //Resize image here
+            $thumbnailpath = public_path('images/profile/'.$filenametostore); //--Get File Location
+            // $thumbnailpath = public_path('storage/images/profile/'.$filenametostore);
+            $img = Image::make($thumbnailpath)->resize(1200, 850, function($constraint) {
+                $constraint->aspectRatio();
+            }); 
+            $img->save($thumbnailpath);
+
+            //---Data Save
+            $user->profile_photo_path = $filenametostore;
         }
         if($request->password){
             $validator = Validator::make($request->all(), [
@@ -310,16 +328,30 @@ class InfoEmployeeController extends Controller
         //----------User Update
         $user = User::findorfail($id);
         if($request->hasFile("profile_photo_path")){
-            if (File::exists("images/profile/".$user->profile_photo_path)) {
-                File::delete("images/profile/".$user->profile_photo_path);
+            if (File::exists("public/images/profile/".$user->profile_photo_path)) {
+                File::delete("public/images/profile/".$user->profile_photo_path);
             }
-            $file=$request->file("profile_photo_path");
-            $imageName=time()."_".$file->getClientOriginalName();
-            $file->move(\public_path("images/profile/"),$imageName);
-            $request['profile_photo_path']=$imageName;
+            //get filename with extension
+            $filenamewithextension = $request->file('profile_photo_path')->getClientOriginalName();
+            //get filename without extension
+            $filename = pathinfo($filenamewithextension, PATHINFO_FILENAME);
+            //get file extension
+            $extension = $request->file('profile_photo_path')->getClientOriginalExtension();
+            //filename to store
+            $filenametostore = $filename.'_'.time().'.'.$extension;
+            //Upload File
+            $request->file('profile_photo_path')->move('public/images/profile/', $filenametostore); //--Upload Location
+            // $request->file('profile_image')->storeAs('public/profile_images', $filenametostore); //--Orginal Img Save
+            //Resize image here
+            $thumbnailpath = public_path('images/profile/'.$filenametostore); //--Get File Location
+            // $thumbnailpath = public_path('storage/images/profile/'.$filenametostore);
+            $img = Image::make($thumbnailpath)->resize(1200, 850, function($constraint) {
+                $constraint->aspectRatio();
+            }); 
+            $img->save($thumbnailpath);
         }
         $user->update([
-            'profile_photo_path' => $imageName,
+            'profile_photo_path' => $filenametostore,
             'status' => 1,
         ]);
 

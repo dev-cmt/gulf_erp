@@ -3,7 +3,7 @@
         'name' => 'laravel/laravel',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'bff6d6e8280b92b18c12ea52e1fa4fbf9688e87c',
+        'reference' => '8cc58ef0f5b2c66e91c4933f00ce527d1cfbe13d',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -394,6 +394,15 @@
                 0 => 'v9.52.5',
             ),
         ),
+        'intervention/image' => array(
+            'pretty_version' => '2.7.2',
+            'version' => '2.7.2.0',
+            'reference' => '04be355f8d6734c826045d02a1079ad658322dad',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../intervention/image',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'jaybizzle/crawler-detect' => array(
             'pretty_version' => 'v1.2.114',
             'version' => '1.2.114.0',
@@ -448,7 +457,7 @@
         'laravel/laravel' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'bff6d6e8280b92b18c12ea52e1fa4fbf9688e87c',
+            'reference' => '8cc58ef0f5b2c66e91c4933f00ce527d1cfbe13d',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

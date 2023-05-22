@@ -274,7 +274,7 @@
                                                 <div class="col-sm-6 col-5">
                                                     <h6 class="f-w-500">Present Address<span class="pull-right">:</span></h6>
                                                 </div>
-                                                <div class="col-sm-6 col-7"><span>{{ $data['union']->name }}, {{ $data['upazila']->name }}, {{ $data['district']->name }}, {{ $data['division']->name }}</span></div>
+                                                <div class="col-sm-6 col-7"><span>{{ $data['union']->name ?? '-' }}, {{ $data['upazila']->name ?? '-' }}, {{ $data['district']->name ?? '-'}}, {{ $data['division']->name ?? '-' }}</span></div>
                                             </div>
                                             <div class="row mb-2">
                                                 <div class="col-sm-6 col-5">
@@ -289,7 +289,7 @@
                                                 <div class="col-sm-6 col-5">
                                                     <h6 class="f-w-500">Permanent Address<span class="pull-right">:</span></h6>
                                                 </div>
-                                                <div class="col-sm-6 col-7"><span>{{ $data['union_permanent']->name }}, {{ $data['upazila_permanent']->name }}, {{ $data['district_permanent']->name }}, {{ $data['division_permanent']->name }}</span></div>
+                                                <div class="col-sm-6 col-7"><span>{{ $data['union_permanent']->name ?? '-' }}, {{ $data['upazila_permanent']->name ?? '-' }}, {{ $data['district_permanent']->name ?? '-' }}, {{ $data['division_permanent']->name ?? '-' }}</span></div>
                                             </div>
                                             <div class="row mb-2">
                                                 <div class="col-sm-6 col-5">

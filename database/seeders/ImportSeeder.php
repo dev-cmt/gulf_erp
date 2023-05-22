@@ -263,13 +263,13 @@ class ImportSeeder extends Seeder
             'division_present'=>'6',
             'district_present'=>'42',
             'upazila_present'=>'322',
-            'thana_present'=>'2887',
+            'union_present'=>'2887',
             'address_present'=>'Khilgoan, Domshar, Shariatpur',
     
             'division_permanent'=>'6',
             'district_permanent'=>'42',
             'upazila_permanent'=>'322',
-            'thana_permanent'=>'2887',
+            'union_permanent'=>'2887',
             'address_permanent'=>'Khilgoan, Domshar, Shariatpur',
     
             'passport_no'=>'1185344689',

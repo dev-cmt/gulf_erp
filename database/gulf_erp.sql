@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 21, 2023 at 09:34 AM
+-- Generation Time: May 22, 2023 at 06:06 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -163,12 +163,13 @@ CREATE TABLE `failed_jobs` (
 CREATE TABLE `hr_attendances` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `date` date DEFAULT NULL,
+  `in_time` time DEFAULT NULL,
+  `out_time` time DEFAULT NULL,
   `attendance_type` tinyint(4) NOT NULL DEFAULT 0,
-  `start_time` time DEFAULT NULL,
-  `end_time` time DEFAULT NULL,
   `location` text DEFAULT NULL,
   `description` text DEFAULT NULL,
   `status` tinyint(4) NOT NULL DEFAULT 0,
+  `finger_id` int(11) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
@@ -227,7 +228,8 @@ CREATE TABLE `info_educationals` (
   `qualification` int(11) DEFAULT NULL,
   `institute_name` varchar(255) DEFAULT NULL,
   `passing_year` date DEFAULT NULL,
-  `grade` int(11) DEFAULT NULL,
+  `out_of` int(11) DEFAULT NULL,
+  `grade` double(8,2) DEFAULT 0.00,
   `status` tinyint(4) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -277,12 +279,16 @@ CREATE TABLE `info_personals` (
   `division_present` int(11) DEFAULT NULL,
   `district_present` int(11) DEFAULT NULL,
   `upazila_present` int(11) DEFAULT NULL,
-  `thana_present` int(11) DEFAULT NULL,
+  `union_present` int(11) DEFAULT NULL,
+  `thana_present` varchar(255) DEFAULT NULL,
+  `post_code_present` int(11) DEFAULT NULL,
   `address_present` varchar(255) DEFAULT NULL,
   `division_permanent` int(11) DEFAULT NULL,
   `district_permanent` int(11) DEFAULT NULL,
   `upazila_permanent` int(11) DEFAULT NULL,
-  `thana_permanent` int(11) DEFAULT NULL,
+  `union_permanent` int(11) DEFAULT NULL,
+  `thana_permanent` varchar(255) DEFAULT NULL,
+  `post_code_permanent` int(11) DEFAULT NULL,
   `address_permanent` varchar(255) DEFAULT NULL,
   `passport_no` bigint(20) DEFAULT NULL,
   `driving_license` bigint(20) DEFAULT NULL,
@@ -310,8 +316,8 @@ CREATE TABLE `info_personals` (
 -- Dumping data for table `info_personals`
 --
 
-INSERT INTO `info_personals` (`id`, `date_of_birth`, `employee_gender`, `nid_no`, `blood_group`, `number_official`, `email_official`, `joining_date`, `service_length`, `gross_salary`, `reporting_boss`, `division_present`, `district_present`, `upazila_present`, `thana_present`, `address_present`, `division_permanent`, `district_permanent`, `upazila_permanent`, `thana_permanent`, `address_permanent`, `passport_no`, `driving_license`, `marital_status`, `house_phone`, `father_name`, `mother_name`, `birth_certificate_no`, `emg_person_name`, `emg_phone_number`, `emg_relationship`, `emg_address`, `status`, `created_at`, `updated_at`, `mast_department_id`, `mast_designation_id`, `mast_employee_type_id`, `mast_work_station_id`, `user_id`, `emp_id`) VALUES
-(1, '2002-01-01', 0, '25745545458', 3, '0195275932', 'motiur@gulf.com', '2022-11-01', 2, 15000, 1, 6, 42, 322, 2887, 'Khilgoan, Domshar, Shariatpur', 6, 42, 322, 2887, 'Khilgoan, Domshar, Shariatpur', 1185344689, 415441482, 0, '01922437143', 'Mosharraf Khan', 'Shilpy Begum', 20222145678938, 'Sagour', '01995275933', 'Brother', 'Shariatpur', 1, '2023-05-21 01:22:10', '2023-05-21 01:22:10', 1, 5, 2, 2, 1, 1);
+INSERT INTO `info_personals` (`id`, `date_of_birth`, `employee_gender`, `nid_no`, `blood_group`, `number_official`, `email_official`, `joining_date`, `service_length`, `gross_salary`, `reporting_boss`, `division_present`, `district_present`, `upazila_present`, `union_present`, `thana_present`, `post_code_present`, `address_present`, `division_permanent`, `district_permanent`, `upazila_permanent`, `union_permanent`, `thana_permanent`, `post_code_permanent`, `address_permanent`, `passport_no`, `driving_license`, `marital_status`, `house_phone`, `father_name`, `mother_name`, `birth_certificate_no`, `emg_person_name`, `emg_phone_number`, `emg_relationship`, `emg_address`, `status`, `created_at`, `updated_at`, `mast_department_id`, `mast_designation_id`, `mast_employee_type_id`, `mast_work_station_id`, `user_id`, `emp_id`) VALUES
+(1, '2002-01-01', 0, '25745545458', 3, '0195275932', 'motiur@gulf.com', '2022-11-01', 2, 15000, 1, 6, 42, 322, 2887, NULL, NULL, 'Khilgoan, Domshar, Shariatpur', 6, 42, 322, 2887, NULL, NULL, 'Khilgoan, Domshar, Shariatpur', 1185344689, 415441482, 0, '01922437143', 'Mosharraf Khan', 'Shilpy Begum', 20222145678938, 'Sagour', '01995275933', 'Brother', 'Shariatpur', 1, '2023-05-22 10:05:22', '2023-05-22 10:05:22', 1, 5, 2, 2, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -355,9 +361,9 @@ CREATE TABLE `mast_departments` (
 --
 
 INSERT INTO `mast_departments` (`id`, `dept_name`, `dept_head`, `description`, `status`, `created_at`, `updated_at`, `user_id`) VALUES
-(1, 'AC', 1, 'A department is one section or part of a larger group.', 1, '2023-05-21 01:22:08', '2023-05-21 01:22:08', 1),
-(2, 'AC Spare Parts', 1, 'A department is one section or part of a larger group.', 1, '2023-05-21 01:22:08', '2023-05-21 01:22:08', 1),
-(3, 'Car Spare Parts', 1, 'A department is one section or part of a larger group.', 1, '2023-05-21 01:22:08', '2023-05-21 01:22:08', 1);
+(1, 'AC', 1, 'A department is one section or part of a larger group.', 1, '2023-05-22 10:05:21', '2023-05-22 10:05:21', 1),
+(2, 'AC Spare Parts', 1, 'A department is one section or part of a larger group.', 1, '2023-05-22 10:05:21', '2023-05-22 10:05:21', 1),
+(3, 'Car Spare Parts', 1, 'A department is one section or part of a larger group.', 1, '2023-05-22 10:05:21', '2023-05-22 10:05:21', 1);
 
 -- --------------------------------------------------------
 
@@ -380,18 +386,18 @@ CREATE TABLE `mast_designations` (
 --
 
 INSERT INTO `mast_designations` (`id`, `desig_name`, `description`, `status`, `created_at`, `updated_at`, `user_id`) VALUES
-(1, 'CEO (Chief Executive Officer)', 'The highest-ranking officer in a company who is responsible for making major corporate decisions, managing the overall operations and resources of the company, and acting as the main point of communication between the board of directors and the companys management team.', 1, '2023-05-21 01:22:08', '2023-05-21 01:22:08', 1),
-(2, 'GM (General Manager)', 'The person in charge of managing a specific business unit or division within the company.', 1, '2023-05-21 01:22:08', '2023-05-21 01:22:08', 1),
-(3, 'Director', 'An executive-level position that oversees a particular department or function within the company.', 1, '2023-05-21 01:22:08', '2023-05-21 01:22:08', 1),
-(4, 'HR Manager', 'Developing and implementing HR policies and procedures that align with the company goals and objectives', 1, '2023-05-21 01:22:09', '2023-05-21 01:22:09', 1),
-(5, 'Sales Manager', 'A Sales Manager is an executive-level position responsible for managing the sales department of a company. They oversee the company sales policies and procedures, including sales strategies, customer relationships, sales forecasting, and revenue generation.', 1, '2023-05-21 01:22:09', '2023-05-21 01:22:09', 1),
-(6, 'Store Manager', 'A Store Manager is a mid-level position responsible for managing the day-to-day operations of a retail store. They oversee the store policies and procedures, including customer service, inventory management, sales, and staff management.', 1, '2023-05-21 01:22:09', '2023-05-21 01:22:09', 1),
-(7, 'Marketing Manager', 'A Marketing Manager is an executive-level position responsible for managing a company marketing strategies and initiatives. They oversee the marketing department, including advertising, promotions, market research, and brand management.', 1, '2023-05-21 01:22:09', '2023-05-21 01:22:09', 1),
-(8, 'Supervisor', 'A lower-level position that is responsible for overseeing a small team or group of employees.', 1, '2023-05-21 01:22:09', '2023-05-21 01:22:09', 1),
-(9, 'Service Technician', 'A Service Technician, also known as a Field Service Technician, is a skilled worker who provides technical support and maintenance services to customers. They typically work in industries such as information technology, telecommunications, healthcare, and manufacturing.', 1, '2023-05-21 01:22:09', '2023-05-21 01:22:09', 1),
-(10, 'Installation Technician', '\r\n            An Installation Technician is a skilled worker who is responsible for installing and setting up various types of equipment and systems. They work in a variety of industries, including telecommunications, information technology, healthcare, and manufacturing.', 1, '2023-05-21 01:22:09', '2023-05-21 01:22:09', 1),
-(11, 'Customer Service', 'Customer service is the support and assistance provided to customers before, during, and after they purchase a product or service. It involves a range of activities designed to enhance the customer experience, increase customer satisfaction, and promote customer loyalty.', 1, '2023-05-21 01:22:09', '2023-05-21 01:22:09', 1),
-(12, 'Staff', 'An entry-level position that typically involves performing administrative or support duties.', 1, '2023-05-21 01:22:09', '2023-05-21 01:22:09', 1);
+(1, 'CEO (Chief Executive Officer)', 'The highest-ranking officer in a company who is responsible for making major corporate decisions, managing the overall operations and resources of the company, and acting as the main point of communication between the board of directors and the companys management team.', 1, '2023-05-22 10:05:21', '2023-05-22 10:05:21', 1),
+(2, 'GM (General Manager)', 'The person in charge of managing a specific business unit or division within the company.', 1, '2023-05-22 10:05:21', '2023-05-22 10:05:21', 1),
+(3, 'Director', 'An executive-level position that oversees a particular department or function within the company.', 1, '2023-05-22 10:05:21', '2023-05-22 10:05:21', 1),
+(4, 'HR Manager', 'Developing and implementing HR policies and procedures that align with the company goals and objectives', 1, '2023-05-22 10:05:21', '2023-05-22 10:05:21', 1),
+(5, 'Sales Manager', 'A Sales Manager is an executive-level position responsible for managing the sales department of a company. They oversee the company sales policies and procedures, including sales strategies, customer relationships, sales forecasting, and revenue generation.', 1, '2023-05-22 10:05:21', '2023-05-22 10:05:21', 1),
+(6, 'Store Manager', 'A Store Manager is a mid-level position responsible for managing the day-to-day operations of a retail store. They oversee the store policies and procedures, including customer service, inventory management, sales, and staff management.', 1, '2023-05-22 10:05:21', '2023-05-22 10:05:21', 1),
+(7, 'Marketing Manager', 'A Marketing Manager is an executive-level position responsible for managing a company marketing strategies and initiatives. They oversee the marketing department, including advertising, promotions, market research, and brand management.', 1, '2023-05-22 10:05:21', '2023-05-22 10:05:21', 1),
+(8, 'Supervisor', 'A lower-level position that is responsible for overseeing a small team or group of employees.', 1, '2023-05-22 10:05:22', '2023-05-22 10:05:22', 1),
+(9, 'Service Technician', 'A Service Technician, also known as a Field Service Technician, is a skilled worker who provides technical support and maintenance services to customers. They typically work in industries such as information technology, telecommunications, healthcare, and manufacturing.', 1, '2023-05-22 10:05:22', '2023-05-22 10:05:22', 1),
+(10, 'Installation Technician', '\r\n            An Installation Technician is a skilled worker who is responsible for installing and setting up various types of equipment and systems. They work in a variety of industries, including telecommunications, information technology, healthcare, and manufacturing.', 1, '2023-05-22 10:05:22', '2023-05-22 10:05:22', 1),
+(11, 'Customer Service', 'Customer service is the support and assistance provided to customers before, during, and after they purchase a product or service. It involves a range of activities designed to enhance the customer experience, increase customer satisfaction, and promote customer loyalty.', 1, '2023-05-22 10:05:22', '2023-05-22 10:05:22', 1),
+(12, 'Staff', 'An entry-level position that typically involves performing administrative or support duties.', 1, '2023-05-22 10:05:22', '2023-05-22 10:05:22', 1);
 
 -- --------------------------------------------------------
 
@@ -415,12 +421,12 @@ CREATE TABLE `mast_employee_types` (
 --
 
 INSERT INTO `mast_employee_types` (`id`, `cat_name`, `cat_type`, `description`, `status`, `created_at`, `updated_at`, `user_id`) VALUES
-(1, 'Full-Time Employees', '1', 'These are employees who work for the company on a regular basis and are typically paid a salary or an hourly wage. They may be eligible for benefits such as health insurance, retirement plans, and paid time off.', 1, '2023-05-21 01:22:09', '2023-05-21 01:22:09', 1),
-(2, 'Part-Time Employees', '1', 'These are employees who work for the company on a part-time basis, usually less than 40 hours per week. They may be paid an hourly wage and may or may not be eligible for benefits depending on the company policies.', 1, '2023-05-21 01:22:09', '2023-05-21 01:22:09', 1),
-(3, 'Contract Employees', '1', 'These are individuals who work for the company on a temporary basis and are usually hired to perform a specific job or task. They may be paid a flat fee or an hourly rate and are typically not eligible for benefits.', 1, '2023-05-21 01:22:09', '2023-05-21 01:22:09', 1),
-(4, 'Interns', '1', 'These are students or recent graduates who work for the company on a temporary basis to gain work experience and develop skills. They may be paid a stipend or may work for free, and are typically not eligible for benefits.', 1, '2023-05-21 01:22:09', '2023-05-21 01:22:09', 1),
-(5, 'Consultants', '1', 'These are individuals or firms who are hired by the company to provide specialized expertise or services on a project basis. They may be paid a flat fee or an hourly rate and are typically not eligible for benefits.', 1, '2023-05-21 01:22:09', '2023-05-21 01:22:09', 1),
-(6, 'Seasonal Employees', '1', 'These are employees who work for the company during specific times of the year when there is a higher demand for the companys products or services. They may be paid an hourly wage and may or may not be eligible for benefits depending on the companys policies.', 1, '2023-05-21 01:22:09', '2023-05-21 01:22:09', 1);
+(1, 'Full-Time Employees', '1', 'These are employees who work for the company on a regular basis and are typically paid a salary or an hourly wage. They may be eligible for benefits such as health insurance, retirement plans, and paid time off.', 1, '2023-05-22 10:05:22', '2023-05-22 10:05:22', 1),
+(2, 'Part-Time Employees', '1', 'These are employees who work for the company on a part-time basis, usually less than 40 hours per week. They may be paid an hourly wage and may or may not be eligible for benefits depending on the company policies.', 1, '2023-05-22 10:05:22', '2023-05-22 10:05:22', 1),
+(3, 'Contract Employees', '1', 'These are individuals who work for the company on a temporary basis and are usually hired to perform a specific job or task. They may be paid a flat fee or an hourly rate and are typically not eligible for benefits.', 1, '2023-05-22 10:05:22', '2023-05-22 10:05:22', 1),
+(4, 'Interns', '1', 'These are students or recent graduates who work for the company on a temporary basis to gain work experience and develop skills. They may be paid a stipend or may work for free, and are typically not eligible for benefits.', 1, '2023-05-22 10:05:22', '2023-05-22 10:05:22', 1),
+(5, 'Consultants', '1', 'These are individuals or firms who are hired by the company to provide specialized expertise or services on a project basis. They may be paid a flat fee or an hourly rate and are typically not eligible for benefits.', 1, '2023-05-22 10:05:22', '2023-05-22 10:05:22', 1),
+(6, 'Seasonal Employees', '1', 'These are employees who work for the company during specific times of the year when there is a higher demand for the companys products or services. They may be paid an hourly wage and may or may not be eligible for benefits depending on the companys policies.', 1, '2023-05-22 10:05:22', '2023-05-22 10:05:22', 1);
 
 -- --------------------------------------------------------
 
@@ -446,13 +452,13 @@ CREATE TABLE `mast_leaves` (
 --
 
 INSERT INTO `mast_leaves` (`id`, `leave_name`, `leave_code`, `max_limit`, `yearly_limit`, `description`, `status`, `created_at`, `updated_at`, `user_id`) VALUES
-(1, 'Vacation Leave', 'LV-0001', 1, 3, 'This is time off that an employee can take for rest, relaxation, or personal reasons. Vacation leave is usually earned based on the length of time the employee has worked for the company.', 1, '2023-05-21 01:22:09', '2023-05-21 01:22:09', 1),
-(2, 'Sick Leave', 'LV-0002', 1, 3, 'This is time off that an employee can take when they are ill or injured. Sick leave may be paid or unpaid, depending on the companys policies.', 1, '2023-05-21 01:22:09', '2023-05-21 01:22:09', 1),
-(3, 'Personal Leave', 'LV-0003', 1, 3, 'This is time off that an employee can take for personal reasons, such as attending to family matters or dealing with a personal emergency.', 1, '2023-05-21 01:22:09', '2023-05-21 01:22:09', 1),
-(4, 'Parental Leave', 'LV-0004', 1, 3, 'This is time off that an employee can take when they become a parent, either through childbirth or adoption. Parental leave may be paid or unpaid, depending on the company policies.', 1, '2023-05-21 01:22:10', '2023-05-21 01:22:10', 1),
-(5, 'Bereavement Leave', 'LV-0005', 1, 3, 'This is time off that an employee can take when a close family member dies. Bereavement leave is usually paid and the amount of time off may vary depending on the company policies.', 1, '2023-05-21 01:22:10', '2023-05-21 01:22:10', 1),
-(6, 'Maternity Leave', 'LV-0006', 1, 3, 'This is time off that a female employee can take before and after childbirth. Maternity leave may be paid or unpaid, depending on the company policies.', 1, '2023-05-21 01:22:10', '2023-05-21 01:22:10', 1),
-(7, 'Maternity Leave', 'LV-0006', 1, 3, 'This is time off that a female employee can take before and after childbirth. Maternity leave may be paid or unpaid, depending on the company policies.', 1, '2023-05-21 01:22:10', '2023-05-21 01:22:10', 1);
+(1, 'Vacation Leave', 'LV-0001', 1, 3, 'This is time off that an employee can take for rest, relaxation, or personal reasons. Vacation leave is usually earned based on the length of time the employee has worked for the company.', 1, '2023-05-22 10:05:22', '2023-05-22 10:05:22', 1),
+(2, 'Sick Leave', 'LV-0002', 1, 3, 'This is time off that an employee can take when they are ill or injured. Sick leave may be paid or unpaid, depending on the companys policies.', 1, '2023-05-22 10:05:22', '2023-05-22 10:05:22', 1),
+(3, 'Personal Leave', 'LV-0003', 1, 3, 'This is time off that an employee can take for personal reasons, such as attending to family matters or dealing with a personal emergency.', 1, '2023-05-22 10:05:22', '2023-05-22 10:05:22', 1),
+(4, 'Parental Leave', 'LV-0004', 1, 3, 'This is time off that an employee can take when they become a parent, either through childbirth or adoption. Parental leave may be paid or unpaid, depending on the company policies.', 1, '2023-05-22 10:05:22', '2023-05-22 10:05:22', 1),
+(5, 'Bereavement Leave', 'LV-0005', 1, 3, 'This is time off that an employee can take when a close family member dies. Bereavement leave is usually paid and the amount of time off may vary depending on the company policies.', 1, '2023-05-22 10:05:22', '2023-05-22 10:05:22', 1),
+(6, 'Maternity Leave', 'LV-0006', 1, 3, 'This is time off that a female employee can take before and after childbirth. Maternity leave may be paid or unpaid, depending on the company policies.', 1, '2023-05-22 10:05:22', '2023-05-22 10:05:22', 1),
+(7, 'Maternity Leave', 'LV-0006', 1, 3, 'This is time off that a female employee can take before and after childbirth. Maternity leave may be paid or unpaid, depending on the company policies.', 1, '2023-05-22 10:05:22', '2023-05-22 10:05:22', 1);
 
 -- --------------------------------------------------------
 
@@ -477,8 +483,8 @@ CREATE TABLE `mast_work_stations` (
 --
 
 INSERT INTO `mast_work_stations` (`id`, `store_name`, `contact_number`, `location`, `description`, `status`, `created_at`, `updated_at`, `user_id`) VALUES
-(1, 'Gulf international associates ltd.', '01995275933', 'Gulshan', 'This is time off that a female employee can take before and after childbirth. Maternity leave may be paid or unpaid, depending on the company policies.', 1, '2023-05-21 01:22:10', '2023-05-21 01:22:10', 1),
-(2, 'Icon information Systems ltd.', '01995275933', 'Mirpur', 'This is time off that a female employee can take before and after childbirth. Maternity leave may be paid or unpaid, depending on the company policies.', 1, '2023-05-21 01:22:10', '2023-05-21 01:22:10', 1);
+(1, 'Gulf international associates ltd.', '01995275933', 'Gulshan', 'This is time off that a female employee can take before and after childbirth. Maternity leave may be paid or unpaid, depending on the company policies.', 1, '2023-05-22 10:05:22', '2023-05-22 10:05:22', 1),
+(2, 'Icon information Systems ltd.', '01995275933', 'Mirpur', 'This is time off that a female employee can take before and after childbirth. Maternity leave may be paid or unpaid, depending on the company policies.', 1, '2023-05-22 10:05:22', '2023-05-22 10:05:22', 1);
 
 -- --------------------------------------------------------
 
@@ -580,25 +586,25 @@ CREATE TABLE `permissions` (
 --
 
 INSERT INTO `permissions` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VALUES
-(1, 'Setting access', 'web', '2023-05-21 01:22:04', '2023-05-21 01:22:04'),
-(2, 'Pages access', 'web', '2023-05-21 01:22:05', '2023-05-21 01:22:05'),
-(3, 'Gallery access', 'web', '2023-05-21 01:22:05', '2023-05-21 01:22:05'),
-(4, 'Gallery create', 'web', '2023-05-21 01:22:05', '2023-05-21 01:22:05'),
-(5, 'Gallery edit', 'web', '2023-05-21 01:22:05', '2023-05-21 01:22:05'),
-(6, 'Gallery delete', 'web', '2023-05-21 01:22:05', '2023-05-21 01:22:05'),
-(7, 'Member access', 'web', '2023-05-21 01:22:05', '2023-05-21 01:22:05'),
-(8, 'Approve Member', 'web', '2023-05-21 01:22:05', '2023-05-21 01:22:05'),
-(9, 'Member create', 'web', '2023-05-21 01:22:05', '2023-05-21 01:22:05'),
-(10, 'Member edit', 'web', '2023-05-21 01:22:05', '2023-05-21 01:22:05'),
-(11, 'Member delete', 'web', '2023-05-21 01:22:06', '2023-05-21 01:22:06'),
-(12, 'User access', 'web', '2023-05-21 01:22:06', '2023-05-21 01:22:06'),
-(13, 'User create', 'web', '2023-05-21 01:22:06', '2023-05-21 01:22:06'),
-(14, 'User edit', 'web', '2023-05-21 01:22:06', '2023-05-21 01:22:06'),
-(15, 'User delete', 'web', '2023-05-21 01:22:06', '2023-05-21 01:22:06'),
-(16, 'Role access', 'web', '2023-05-21 01:22:06', '2023-05-21 01:22:06'),
-(17, 'Role create', 'web', '2023-05-21 01:22:06', '2023-05-21 01:22:06'),
-(18, 'Role edit', 'web', '2023-05-21 01:22:06', '2023-05-21 01:22:06'),
-(19, 'Role delete', 'web', '2023-05-21 01:22:06', '2023-05-21 01:22:06');
+(1, 'Setting access', 'web', '2023-05-22 10:05:19', '2023-05-22 10:05:19'),
+(2, 'Pages access', 'web', '2023-05-22 10:05:19', '2023-05-22 10:05:19'),
+(3, 'Gallery access', 'web', '2023-05-22 10:05:20', '2023-05-22 10:05:20'),
+(4, 'Gallery create', 'web', '2023-05-22 10:05:20', '2023-05-22 10:05:20'),
+(5, 'Gallery edit', 'web', '2023-05-22 10:05:20', '2023-05-22 10:05:20'),
+(6, 'Gallery delete', 'web', '2023-05-22 10:05:20', '2023-05-22 10:05:20'),
+(7, 'Member access', 'web', '2023-05-22 10:05:20', '2023-05-22 10:05:20'),
+(8, 'Approve Member', 'web', '2023-05-22 10:05:20', '2023-05-22 10:05:20'),
+(9, 'Member create', 'web', '2023-05-22 10:05:20', '2023-05-22 10:05:20'),
+(10, 'Member edit', 'web', '2023-05-22 10:05:20', '2023-05-22 10:05:20'),
+(11, 'Member delete', 'web', '2023-05-22 10:05:20', '2023-05-22 10:05:20'),
+(12, 'User access', 'web', '2023-05-22 10:05:20', '2023-05-22 10:05:20'),
+(13, 'User create', 'web', '2023-05-22 10:05:20', '2023-05-22 10:05:20'),
+(14, 'User edit', 'web', '2023-05-22 10:05:20', '2023-05-22 10:05:20'),
+(15, 'User delete', 'web', '2023-05-22 10:05:20', '2023-05-22 10:05:20'),
+(16, 'Role access', 'web', '2023-05-22 10:05:20', '2023-05-22 10:05:20'),
+(17, 'Role create', 'web', '2023-05-22 10:05:20', '2023-05-22 10:05:20'),
+(18, 'Role edit', 'web', '2023-05-22 10:05:20', '2023-05-22 10:05:20'),
+(19, 'Role delete', 'web', '2023-05-22 10:05:20', '2023-05-22 10:05:20');
 
 -- --------------------------------------------------------
 
@@ -638,9 +644,9 @@ CREATE TABLE `roles` (
 --
 
 INSERT INTO `roles` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VALUES
-(1, 'Supper-Admin', 'web', '2023-05-21 01:22:04', '2023-05-21 01:22:04'),
-(2, 'Admin', 'web', '2023-05-21 01:22:04', '2023-05-21 01:22:04'),
-(3, 'Member', 'web', '2023-05-21 01:22:04', '2023-05-21 01:22:04');
+(1, 'Supper-Admin', 'web', '2023-05-22 10:05:19', '2023-05-22 10:05:19'),
+(2, 'Admin', 'web', '2023-05-22 10:05:19', '2023-05-22 10:05:19'),
+(3, 'Member', 'web', '2023-05-22 10:05:19', '2023-05-22 10:05:19');
 
 -- --------------------------------------------------------
 
@@ -693,13 +699,6 @@ CREATE TABLE `sessions` (
   `payload` longtext NOT NULL,
   `last_activity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `sessions`
---
-
-INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('ztzdKXOsa2sUlPaUjslafu839NhjFbWHXy6IzK50', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoicEZnSTE1c0l3YTBUMGRKNzBIM0c4UnRiNHJBZE1KQnRiTGoxdGJzdiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MzU6Imh0dHA6Ly9sb2NhbGhvc3QvZ3VsZl9lcnAvZGFzaGJvYXJkIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTtzOjIxOiJwYXNzd29yZF9oYXNoX3NhbmN0dW0iO3M6NjA6IiQyeSQxMCRLSlp6NS55Nm9MdjlnVFNnZ0xnRktlaWtTZFNCQ0hrMk1POFV6VHp5UXZuQVJuaEgudEI5bSI7fQ==', 1684654179);
 
 -- --------------------------------------------------------
 
@@ -5870,7 +5869,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `contact_number`, `employee_code`, `email_verified_at`, `password`, `two_factor_secret`, `two_factor_recovery_codes`, `two_factor_confirmed_at`, `remember_token`, `current_team_id`, `profile_photo_path`, `status`, `is_admin`, `attendance_id`, `created_at`, `updated_at`) VALUES
-(1, 'Gulf-ERP', 'admin@gmail.com', '01909302126', 'GULF-00000', '2023-12-31 18:00:00', '$2y$10$KJZz5.y6oLv9gTSggLgFKeikSdSBCHk2MO8UzTzyQvnARnhH.tB9m', NULL, NULL, NULL, NULL, NULL, 'fix/admin.jpg', 1, 0, NULL, '2023-05-21 01:22:04', '2023-05-21 01:22:04');
+(1, 'Gulf-ERP', 'admin@gmail.com', '01909302126', 'GULF-00000', '2023-12-31 18:00:00', '$2y$10$Vbjy9Y6Y1PpBdT13O1NDB.COYR8V6Qin.LCOjPqyWdVOmswxow6O.', NULL, NULL, NULL, NULL, NULL, 'fix/admin.jpg', 1, 0, NULL, '2023-05-22 10:05:19', '2023-05-22 10:05:19');
 
 --
 -- Indexes for dumped tables

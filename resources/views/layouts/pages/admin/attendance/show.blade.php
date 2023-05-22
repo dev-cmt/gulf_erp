@@ -3,7 +3,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Attendance List<span class="bg-blue-500 text-info rounded px-1 text-xs py-0.5">({{ $user->name }})</span></h4>
+                    <h4 class="card-title">Attendance List<span class="bg-blue-500 text-info rounded px-1 text-xs py-0.5">({{ $user->name ?? '' }})</span></h4>
                     @can('Role create')                    
                     <a href="{{route('attendance.export')}}" class="btn btn-primary btn-xs py-1 my-1"><i class="fa fa-download"></i><span class="btn-icon-add"></span>Download</a>
                     @endcan
