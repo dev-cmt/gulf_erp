@@ -14,8 +14,8 @@ class LocationController extends Controller
      */
     public function index()
     {
-       $data = DB::table('divisions')->get();
-       $divisions = DB::table('divisions')->count('id');
+        $data = DB::table('divisions')->orderBy('name','ASC')->get();
+        $divisions = DB::table('divisions')->count('id');
         $districts = DB::table('districts')->count('id');
         $upazilas = DB::table('upazilas')->count('id');
         $unions = DB::table('unions')->count('id');
@@ -100,21 +100,21 @@ class LocationController extends Controller
     public function getDistricts(Request $request)
     {
         $division_id = $request->division_id;
-        $districts = DB::table('districts')->where('division_id',$division_id)->get();
+        $districts = DB::table('districts')->orderBy('name','ASC')->where('division_id',$division_id)->get();
         return response()->json($districts);
     }
 
     public function getUpazilas(Request $request)
     {
         $district_id = $request->district_id;
-        $upazilas = DB::table('upazilas')->where('district_id',$district_id)->get();
+        $upazilas = DB::table('upazilas')->orderBy('name','ASC')->where('district_id',$district_id)->get();
         return response()->json($upazilas);
     }
 
     public function getThanas(Request $request)
     {
         $upazila_id = $request->upazilas_id;
-        $thanas = DB::table('unions')->where('upazila_id',$upazila_id)->get();
+        $thanas = DB::table('unions')->orderBy('name','ASC')->where('upazila_id',$upazila_id)->get();
         return response()->json($thanas);
     }
 

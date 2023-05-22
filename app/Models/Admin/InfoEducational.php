@@ -12,6 +12,7 @@ class InfoEducational extends Model
         'qualification',
         'institute_name',
         'passing_year',
+        'out_of',
         'grade',
         'status',
         'emp_id',

@@ -104,6 +104,8 @@ Route::group(['middleware' => ['auth']], function(){
     Route::PATCH('attendance/approve/{id}', [ManualAttendanceController::class, 'attendance_approve'])->name('attendance.approve');
     Route::PATCH('attendance/canceled/{id}', [ManualAttendanceController::class, 'decline'])->name('attendance.canceled');
     Route::get('get/employee_repot/{id}', [ManualAttendanceController::class,'getemployee_report'])->name('get_employee_repot');
+    Route::post('/filter-attendance', [DataController::class, 'filterData'])->name('filter.attendance');
+
     //--Attendances Imports or Exports Excel
     Route::get('attendance/import', [ManualAttendanceController::class, 'importAttendance'])->name('attendance.import');
     Route::post('attendance/upload', [ManualAttendanceController::class, 'uploadAttendance'])->name('attendance.upload');    

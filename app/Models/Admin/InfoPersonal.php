@@ -33,13 +33,17 @@ class InfoPersonal extends Model
         'division_present',
         'district_present',
         'upazila_present',
+        'union_present',
         'thana_present',
+        'post_code_present',
         'address_present',
 
         'division_permanent',
         'district_permanent',
         'upazila_permanent',
+        'union_permanent',
         'thana_permanent',
+        'post_code_permanent',
         'address_permanent',
 
         'passport_no',

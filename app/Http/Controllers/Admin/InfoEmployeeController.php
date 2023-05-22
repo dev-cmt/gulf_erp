@@ -39,12 +39,12 @@ class InfoEmployeeController extends Controller
     public function employee_details($id)
     {
         $user = User::findOrFail($id);
-        $infoPersonal = $user->infoPersonal;
         $infoEducational = $user->infoEducational;
         $infoWorkExperience = $user->infoWorkExperience;
         $infoBank = $user->infoBank;
         $infoNominee = $user->infoNominee;
         //--Personal Information
+        $infoPersonal = InfoPersonal::where('emp_id', $id)->first();
         $department = $infoPersonal->mastDepartment;
         $designation = $infoPersonal->mastDesignation;
         $employee_type = $infoPersonal->mastEmployeeType;
@@ -126,7 +126,6 @@ class InfoEmployeeController extends Controller
     public function employee_edit($id)
     {
         $divisions = DB::table('divisions')->get();
-
         $department =MastDepartment::where('status', 1)->get();
         $designation =MastDesignation::where('status', 1)->get();
         $employee_type =MastEmployeeType::where('status', 1)->get();
@@ -140,14 +139,15 @@ class InfoEmployeeController extends Controller
             'employee_type' => $employee_type,
             'work_station' => $work_station,
         ];
+
         $user = User::findOrFail($id);
-        $infoPersonal = InfoPersonal::where('emp_id',$id);
         $infoEducational = $user->infoEducational;
         $infoWorkExperience = $user->infoWorkExperience;
         $infoBank = $user->infoBank;
         $infoNominee = $user->infoNominee;
-        //--Personal Information
         
+        //--Personal Information
+        $infoPersonal = InfoPersonal::where('emp_id', $id)->first();
         $department = $infoPersonal->mastDepartment;
         $designation = $infoPersonal->mastDesignation;
         $employee_type = $infoPersonal->mastEmployeeType;
@@ -347,12 +347,16 @@ class InfoEmployeeController extends Controller
         $data->division_present=$request->division_present;
         $data->district_present=$request->district_present;
         $data->upazila_present=$request->upazila_present;
+        $data->union_present=$request->union_present;
         $data->thana_present=$request->thana_present;
+        $data->post_code_present=$request->post_code_present;
         $data->address_present=$request->address_present;
         $data->division_permanent=$request->division_permanent;
         $data->district_permanent=$request->district_permanent;
         $data->upazila_permanent=$request->upazila_permanent;
+        $data->union_permanent=$request->union_permanent;
         $data->thana_permanent=$request->thana_permanent;
+        $data->post_code_permanent=$request->post_code_permanent;
         $data->address_permanent=$request->address_permanent;
 
         $data->passport_no=$request->passport_no;

@@ -577,7 +577,7 @@
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <div class="col-lg-7">
-                                                    <input type="number" class="form-control @error('grade') is-invalid @enderror" id="grade" name="grade" placeholder="" value="{{old('grade')}}">                                     
+                                                    <input type="text" class="form-control @error('grade') is-invalid @enderror" id="grade" name="grade" placeholder="" value="{{old('grade')}}">                                     
                                                     @error('grade')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -818,7 +818,14 @@
                                             <div class="form-group row">
                                                 <label class="col-lg-5 col-form-label">Account Type</label>
                                                 <div class="col-lg-7">
-                                                    <input type="text" class="form-control @error('acount_type') is-invalid @enderror" id="acount_type" name="acount_type" placeholder="" value="{{old('acount_type')}}"/>                         
+                                                    <select class="form-control default-select" name="acount_type" >
+                                                        <option disabled selected>Please select</option>
+                                                        <option value="1">Savings account</option>
+                                                        <option value="2">Salary account</option>
+                                                        <option value="3">Fixed deposit account</option>
+                                                        <option value="4">Recurring deposit account</option>
+                                                        <option value="5">NRI accounts</option>
+                                                    </select>
                                                     @error('acount_type')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>

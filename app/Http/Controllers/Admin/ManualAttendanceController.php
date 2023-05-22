@@ -32,15 +32,15 @@ class ManualAttendanceController extends Controller
         $validated=$request -> validate([
             'date' => 'date',
             'attendance_type' => 'required',
-            'start_time' => 'required',
-            'end_time' => 'required',
+            'in_time' => 'required',
+            'out_time' => 'required',
         ]);
         
         $data = new HrAttendance();
         $data->date = $request->date;
+        $data->in_time = $request->in_time;
+        $data->out_time = $request->out_time;
         $data->attendance_type = $request->attendance_type;
-        $data->start_time = $request->start_time;
-        $data->end_time = $request->end_time;
         $data->location = $request->location;
         $data->description = $request->description;
         $data->emp_id = $request->emp_id;
@@ -78,7 +78,17 @@ class ManualAttendanceController extends Controller
     {
         $data = HrAttendance::where('emp_id', $id)->get();
         $user = User::where('id', $id)->first();
-        return view('layouts.pages.admin.attendance.attendance-details-view',compact('data','user'));
+        return view('layouts.pages.admin.attendance.show',compact('data','user'));
+    }
+    public function filterData(Request $request)
+    {
+        $month = $request->month;
+        // Retrieve the filtered data based on the month
+        $data = HrAttendance::whereMonth('date', $month)->get();
+        $user = User::where('id', $id)->first();
+        // Return the filtered data as a partial view
+        return response()->json($data, 200, $headers);
+        // return view('layouts.pages.admin.attendance.show', compact('data'));
     }
 
     /*____________________________________

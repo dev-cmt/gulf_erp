@@ -28,7 +28,7 @@
                                     <td>{{ $row->name }}</td>
                                     <td>{{ $row->email }}</td>
                                     <td class="d-flex justify-content-end">
-                                        <button class="btn btn-sm btn-success p-1 px-2 view_report" data-toggle="modal" data-id="{{ $row->id }}" data-target=".bd-example-modal-lg"><i class="fa fa-folder-open"></i><span class="btn-icon-add"></span>View</button>
+                                        <a href="{{route('get_employee_repot',$row->id)}}" class="btn btn-sm btn-success p-1 px-2 view_report"><i class="fa fa-folder-open"></i><span class="btn-icon-add"></span>View</a>
                                     </td>
                                </tr>
                                 @endforeach
@@ -42,7 +42,7 @@
     </div>
 
     <!-- Modal Start-->
-    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+    {{-- <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -57,16 +57,16 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
 </x-app-layout>
-<script>
+{{-- <script>
     $('.table-responsive').on('click','.view_report',function(){
         let attendence_id = $(this).data('id');
         $.get('get/employee_repot/'+ attendence_id,function(data){
             $("#responce_attendence").html(data)
         });
     });
-</script>
+</script> --}}
 
 

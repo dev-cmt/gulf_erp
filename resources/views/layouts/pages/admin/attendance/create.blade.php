@@ -69,7 +69,7 @@
                                             <select class="form-control default-select @error('attendance_type') is-invalid @enderror" name="attendance_type" required>
                                                 <option disabled selected> Select </option>
                                                 <option value="1" {{ old('attendance_type') == '1' ? 'selected' : '' }}>Present</option>
-                                                <option value="2" {{ old('attendance_type') == '2' ? 'selected' : '' }}>Absent</option>
+                                                <option value="0" {{ old('attendance_type') == '2' ? 'selected' : '' }}>Absent</option>
                                             </select>
                                             @error('attendance_type')
                                                 <span class="invalid-feedback" role="alert">
@@ -85,8 +85,8 @@
                                             <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-8">
-                                            <input type="time" class="form-control @error('start_time') is-invalid @enderror" name="start_time" value="09:00">
-                                            @error('start_time')
+                                            <input type="time" class="form-control @error('in_time') is-invalid @enderror" name="in_time" value="09:00">
+                                            @error('in_time')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
@@ -100,8 +100,8 @@
                                             <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-8">
-                                            <input type="time" class="form-control @error('end_time') is-invalid @enderror" name="end_time" value="17:00">
-                                            @error('end_time')
+                                            <input type="time" class="form-control @error('out_time') is-invalid @enderror" name="out_time" value="17:00">
+                                            @error('out_time')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>

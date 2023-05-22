@@ -28,13 +28,17 @@ return new class extends Migration
             $table->integer('division_present')->nullable();
             $table->integer('district_present')->nullable();
             $table->integer('upazila_present')->nullable();
-            $table->integer('thana_present')->nullable();
+            $table->integer('union_present')->nullable();
+            $table->string('thana_present')->nullable();
+            $table->integer('post_code_present')->nullable();
             $table->string('address_present')->nullable();
             
             $table->integer('division_permanent')->nullable();
             $table->integer('district_permanent')->nullable();
             $table->integer('upazila_permanent')->nullable();
-            $table->integer('thana_permanent')->nullable();
+            $table->integer('union_permanent')->nullable();
+            $table->string('thana_permanent')->nullable();
+            $table->integer('post_code_permanent')->nullable();
             $table->string('address_permanent')->nullable();
 
             $table->bigInteger('passport_no')->nullable();

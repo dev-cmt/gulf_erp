@@ -18,7 +18,8 @@ return new class extends Migration
             $table->integer('qualification')->nullable();
             $table->string('institute_name')->nullable();
             $table->date('passing_year')->nullable();
-            $table->integer('grade')->nullable();
+            $table->integer('out_of')->nullable();
+            $table->float('grade')->nullable()->default(0.00);
             $table->tinyInteger('status')->default(true);
             $table->timestamps();
             

@@ -418,6 +418,7 @@
                                 </div>
                                 <div id="about-me" class="tab-pane fade">
                                     <!--=====// Education Information //=====-->
+                                    @if (count($infoEducational) > 0)
                                     <div class="row">
                                         <div class="col-md-12">
                                             <h6 class="text-primary my-3">Education Information</h6>
@@ -456,7 +457,9 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @endif
                                     <!--=====// Work Experience Information //=====-->
+                                    @if (count($infoWorkExperience) > 0)
                                     <div class="row">
                                         <div class="col-md-12">
                                             <h6 class="text-primary my-3">Work Experience Information</h6>
@@ -489,7 +492,9 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @endif
                                     <!--=====// Bank Information //=====-->
+                                    @if (count($infoBank) > 0)
                                     <div class="row">
                                         <div class="col-md-12">
                                             <h6 class="text-primary my-3">Bank Information</h6>
@@ -504,6 +509,7 @@
                                                             <th>Brance Name</th>
                                                             <th>Acount Name</th>
                                                             <th>Acount No</th>
+                                                            <th>Acount Type</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -513,6 +519,14 @@
                                                                 <td>{{$row->brance_name}}</td>
                                                                 <td>{{$row->acount_name}}</td>
                                                                 <td>{{$row->acount_no}}</td>
+                                                                <td>
+                                                                    @if ($row->acount_type ==1)Savings account
+                                                                    @elseif ($row->acount_type ==2)Salary account 
+                                                                    @elseif ($row->acount_type ==3)Fixed deposit account
+                                                                    @elseif ($row->acount_type ==4)Recurring deposit account
+                                                                    @elseif ($row->acount_type ==5)NRI accounts
+                                                                    @endif
+                                                                </td>
                                                             </tr>
                                                         @endforeach
                                                     </tbody>
@@ -520,7 +534,9 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @endif
                                     <!--=====// Nominee Information //=====-->
+                                    @if (count($infoNominee) > 0)
                                     <div class="row">
                                         <div class="col-md-12">
                                             <h6 class="text-primary my-3">Nominee Information</h6>
@@ -553,6 +569,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @endif
                                 </div>
                                 <div id="profile-settings" class="tab-pane fade {{Session::has('messege') || $errors->any() ? 'active show' : ''}}">
                                      <!--=====// Personal Information//=====-->

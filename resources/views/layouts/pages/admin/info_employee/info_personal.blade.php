@@ -562,6 +562,9 @@
                             <!-- Step 3 Content, default hidden on page load. -->
                             <section id="step-3" class="form-step d-none">
                                 <div class="row">
+                                    <div class="col-lg-12">
+                                        <hr><p class="text-label bg-white text-primary" style="margin-top:-30px;font-style:bold;width:130px">Present Address</p>
+                                    </div>
                                     <div class="col-lg-6">
                                         <div class="form-group row">
                                             <label class="col-lg-4 col-form-label">Division
@@ -599,7 +602,7 @@
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label">Upazila
+                                            <label class="col-lg-4 col-form-label">Upazila/City
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <div class="col-lg-7">
@@ -614,12 +617,38 @@
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label">Thana
+                                            <label class="col-lg-4 col-form-label">Union
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <div class="col-lg-7">
-                                                <select name="thana_present" class="form-control dropdwon_select" id="thana"></select>
+                                                <select name="union_present" class="form-control dropdwon_select" id="union"></select>
+                                                @error('union_present')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label">Thana</label>
+                                            <div class="col-lg-7">
+                                                <input type="text" name="thana_present" id="thana" class="form-control @error('thana_present') is-invalid @enderror" placeholder=""/>
                                                 @error('thana_present')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label">Post Code</label>
+                                            <div class="col-lg-7">
+                                                <input type="number" name="post_code_present" id="post_code" class="form-control @error('post_code_present') is-invalid @enderror" placeholder=""/>
+                                                @error('post_code_present')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
@@ -631,7 +660,7 @@
                                         <div class="form-group row">
                                             <label class="col-lg-4 col-form-label">Address Description</label>
                                             <div class="col-lg-7">
-                                                <textarea name="address_present" class="form-control @error('address_present') is-invalid @enderror" rows="2" placeholder="Write your present address details!" id="address-present">{{old('address_present')}}</textarea>
+                                                <textarea name="address_present" class="form-control @error('address_present') is-invalid @enderror" rows="2" placeholder="Write your present address details!" id="present-address">{{old('address_present')}}</textarea>
                                                 @error('address_present')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -655,17 +684,12 @@
                                         <div class="form-group row">
                                             <label class="col-lg-4 col-form-label">Division</label>
                                             <div class="col-lg-7">
-                                                <select name="division_permanent" class="form-control @error('division_permanent') is-invalid @enderror" id="permanent-division" value="{{old('division_permanent')}}">
+                                                <select name="division_permanent" class="form-control" id="permanent-division">
                                                     <option selected disabled>Select Division</option>
                                                     @foreach($data['divisions'] as $division)
                                                         <option value="{{ $division->id }}">{{ $division->name }}</option>
                                                     @endforeach
                                                 </select>
-                                                @error('division_permanent')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                                @enderror
                                             </div>
                                         </div>
                                     </div>
@@ -673,25 +697,23 @@
                                         <div class="form-group row">
                                             <label class="col-lg-4 col-form-label">District</label>
                                             <div class="col-lg-7">
-                                                <select name="district_permanent" class="form-control @error('district_permanent') is-invalid @enderror" id="permanent-district" value="{{old('district_permanent')}}"></select>
-                                                @error('district_permanent')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                                @enderror
+                                                <select name="district_permanent" class="form-control" id="permanent-district"></select>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label">Upazila</label>
+                                            <label class="col-lg-4 col-form-label">Upazila/City</label>
                                             <div class="col-lg-7">
-                                                <select name="upazila_permanent" class="form-control @error('upazila_permanent') is-invalid @enderror" id="permanent-upazila" value="{{old('upazila_permanent')}}"></select>
-                                                @error('upazila_permanent')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                                @enderror
+                                                <select name="upazila_permanent" class="form-control" id="permanent-upazila"></select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label">Union</label>
+                                            <div class="col-lg-7">
+                                                <select name="union_permanent" class="form-control" id="permanent-union"></select>
                                             </div>
                                         </div>
                                     </div>
@@ -699,8 +721,21 @@
                                         <div class="form-group row">
                                             <label class="col-lg-4 col-form-label">Thana</label>
                                             <div class="col-lg-7">
-                                                <select name="thana_permanent" class="form-control @error('thana_permanent') is-invalid @enderror" id="permanent-thana" value="{{old('thana_permanent')}}"></select>
+                                                <input type="text" name="thana_permanent" id="permanent-thana" class="form-control @error('thana_permanent') is-invalid @enderror" placeholder=""/>
                                                 @error('thana_permanent')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label">Post Code</label>
+                                            <div class="col-lg-7">
+                                                <input type="number" name="post_code_permanent" id="permanent-post_code" class="form-control @error('post_code_permanent') is-invalid @enderror" placeholder=""/>
+                                                @error('post_code_permanent')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
@@ -712,12 +747,7 @@
                                         <div class="form-group row">
                                             <label class="col-lg-4 col-form-label">Address Description</label>
                                             <div class="col-lg-7">
-                                                <textarea name="address_permanent" class="form-control  @error('address_permanent') is-invalid @enderror" rows="2" placeholder="Write your permanent address details!" id="address-permanent"></textarea>
-                                                @error('address_permanent')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                                @enderror
+                                                <textarea name="address_permanent" class="form-control" rows="2" placeholder="Write your permanent address details" id="permanent-address"></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -878,7 +908,9 @@
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label">Address</label>
+                                            <label class="col-lg-4 col-form-label">Address
+                                                <span class="text-danger">*</span>
+                                            </label>
                                             <div class="col-lg-7">
                                                 <input type="test" name="emg_address" class="form-control @error('emg_address') is-invalid @enderror" placeholder="" value="{{old('emg_address')}}" />
                                                 @error('emg_address')
@@ -994,7 +1026,7 @@
             formNavigationBtn.addEventListener("click", () => {
                 /*Get the value of the step.*/
                 const stepNumber = parseInt(formNavigationBtn.getAttribute("step_number"));
-                if(stepNumber == 2){
+                if(stepNumber == 12){
                     var step1  = [];
                     step1 = document.getElementById("date_of_birth").value;
                     step1 = document.getElementById("nid_no").value;
@@ -1009,7 +1041,7 @@
                     }else{
                         navigateToFormStep(stepNumber);
                     }
-                }else if (stepNumber == 3) {
+                }else if (stepNumber == 13) {
                     //--Step 2
                     var step2  = [];
                     step2 = document.getElementById("gross_salary").value;
@@ -1140,18 +1172,106 @@
                     dataType : 'json',
     
                     success:function(thana){
-                        thana_option += "<option selected disabled>Select Thana</option>";
+                        thana_option += "<option selected disabled>Select Union</option>";
                         for(var i = 0; i < thana.length; i++){
                             var thana_id = thana[i]['id'];
                             var thana_name = thana[i]['name'];
                             thana_option += "<option value='"+thana_id+"'>"+thana_name+"</option>";
-                            $('#thana').empty();
+                            $('#union').empty();
                         }
-                        $('#thana').append(thana_option);
-                        $('#permanent-thana').append(thana_option);
+                        $('#union').append(thana_option);
+                        $('#permanent-union').append(thana_option);
                     },
                     error:function(){
-                        console.log("There was an error while fetching Thana!");
+                        console.log("There was an error while fetching Union!");
+                    }
+    
+                });
+            });
+        });
+    </script>
+
+    <!-- Divistion Copy-->
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#permanent-division').change(function(){
+                var division_id = $(this).val();
+                var option = '';
+    
+                $.ajax({
+                    url : "{{ url('/get-districts') }}",
+                    method : "GET",
+                    data : {'division_id' : division_id},
+                    dataType : 'json',
+    
+                    success:function(response){
+                        var district_length = response.length; 
+                        option += "<option selected disabled>Select District</option>";
+                        for( var i = 0; i < district_length; i++){
+                            var id = response[i]['id'];
+                            var district_name = response[i]['name'];
+                            option += "<option value='"+id+"'>"+district_name+"</option>";
+                            $('#permanent-district').empty();
+                            $('#permanent-upazila').empty();
+                            $('#permanent-union').empty();
+                        }
+                        $("#permanent-district").append(option);
+                    },
+                    error:function(){
+                        console.log("There was an error while fetching District!");
+                    }
+                });
+            });
+    
+            $('#permanent-district').change(function(){
+                var district_id = $(this).val();
+                var upazila_option = '';
+    
+                $.ajax({
+                    url : "{{ url('/get-upazila') }}",
+                    method : "GET",
+                    data : {'district_id' : district_id},
+                    dataType : 'json',
+    
+                    success:function(upazilas){
+                        upazila_option += "<option selected disabled>Select Upazila</option>";
+                        for(var i = 0; i < upazilas.length; i++){
+                            var upazila_id = upazilas[i]['id'];
+                            var upazila_name = upazilas[i]['name'];
+                            upazila_option += "<option value='"+upazila_id+"'>"+upazila_name+"</option>";
+                            $('#permanent-upazila').empty();
+                        }
+                        $('#permanent-upazila').append(upazila_option);
+                    },
+                    error:function(){
+                        console.log("There was an error while fetching Upazila!");
+                    }
+    
+                });
+            });
+    
+            $('#permanent-upazila').change(function(){
+                var upazilas_id = $(this).val();
+                var thana_option = '';
+    
+                $.ajax({
+                    url : "{{ url('/get-thana') }}",
+                    method : "GET",
+                    data : {'upazilas_id' : upazilas_id},
+                    dataType : 'json',
+    
+                    success:function(thana){
+                        thana_option += "<option selected disabled>Select Union</option>";
+                        for(var i = 0; i < thana.length; i++){
+                            var thana_id = thana[i]['id'];
+                            var thana_name = thana[i]['name'];
+                            thana_option += "<option value='"+thana_id+"'>"+thana_name+"</option>";
+                            $('#permanent-union').empty();
+                        }
+                        $('#permanent-union').append(thana_option);
+                    },
+                    error:function(){
+                        console.log("There was an error while fetching Union!");
                     }
     
                 });
@@ -1168,11 +1288,17 @@
         const presentUpazilaDropdown = document.getElementById("upazila");
         const permanentUpazilaDropdown = document.getElementById("permanent-upazila");
     
+        const presentUnionDropdown = document.getElementById("union");
+        const permanentUnionDropdown = document.getElementById("permanent-union");
+
         const presentThanaDropdown = document.getElementById("thana");
         const permanentThanaDropdown = document.getElementById("permanent-thana");
+        
+        const presentPostCodeDropdown = document.getElementById("post_code");
+        const permanentPostCodeDropdown = document.getElementById("permanent-post_code");
 
-        const addressPresentDropdown = document.getElementById("address-present");
-        const addressPermanentDropdown = document.getElementById("address-permanent");
+        const addressPresentDropdown = document.getElementById("present-address");
+        const addressPermanentDropdown = document.getElementById("permanent-address");
     
         const sameAddressCheckbox = document.getElementById("same-address-checkbox");
         sameAddressCheckbox.addEventListener("change", function() {
@@ -1181,13 +1307,17 @@
                 permanentAddressDropdown.value = presentAddressDropdown.value;
                 permanentDistrictDropdown.value = presentDistrictDropdown.value;
                 permanentUpazilaDropdown.value = presentUpazilaDropdown.value;
+                permanentUnionDropdown.value = presentUnionDropdown.value;
                 permanentThanaDropdown.value = presentThanaDropdown.value;
+                permanentPostCodeDropdown.value = presentPostCodeDropdown.value;
                 addressPermanentDropdown.value = addressPresentDropdown.value;
             } else {
                 permanentAddressDropdown.value = "";
                 permanentDistrictDropdown.value = "";
                 permanentUpazilaDropdown.value = "";
+                permanentUnionDropdown.value = "";
                 permanentThanaDropdown.value = "";
+                permanentPostCodeDropdown.value = "";
                 addressPermanentDropdown.value = "";
             }
         });

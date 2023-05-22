@@ -9,7 +9,6 @@
         <tr>
             <th>SL NO</th>
             <th>Date</th>
-            <th>Day type</th>
             <th>In time</th>
             <th>Out time</th>
         </tr>
@@ -19,9 +18,8 @@
             <tr>
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $row->date }}</td>
-                <td>{{ $row->start_time }}</td>
-                <td>{{ $row->start_time }}</td>
-                <td>{{ $row->end_time }}</td>
+                <td>{{ $row->in_time }}</td>
+                <td>{{ $row->out_time }}</td>
             </tr>
         @endforeach
     </tbody>

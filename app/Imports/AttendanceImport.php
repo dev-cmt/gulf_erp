@@ -3,10 +3,12 @@
 namespace App\Imports;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Admin\HrAttendance;
 use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class AttendanceImport implements ToModel
+class AttendanceImport implements ToModel, WithHeadingRow
 {
     /**
     * @param array $row
@@ -16,15 +18,16 @@ class AttendanceImport implements ToModel
     public function model(array $row)
     {
         return new HrAttendance([
-            "date"              => $row[0],
-            "start_time"        => $row[1],
-            "end_time"          => $row[2],
-            "location"          => $row[3],
-            "description"       => $row[4],
-            "attendance_type"   => $row[5],
-            "status"            => $row[6],
-            "emp_id"            => $row[7],
-            "user_id"           => $row[8],
+            "date"              => $row['date'],
+            "in_time"           => $row['in'],
+            "out_time"          => $row['out'],
+            "location"          => $row['location'],
+            "description"       => $row['description'],
+            "attendance_type"   => 1,
+            // "status"            => $row[6],
+            // "finger_id"         => $row[7],
+            "emp_id"            => 1,
+            "user_id"           => Auth::user()->id,
         ]);
 
     }

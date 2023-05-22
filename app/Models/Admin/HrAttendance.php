@@ -12,12 +12,13 @@ class HrAttendance extends Model
     use HasFactory;
     protected $fillable = [
         'date',
+        'in_time',
+        'out_time',
         'attendance_type',
-        'start_time',
-        'end_time',
         'location',
         'description',
         'status',
+        'finger_id',
         'emp_id',
         'user_id'
     ];

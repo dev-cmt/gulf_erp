@@ -28,8 +28,8 @@
                                     <td>{{ $row->user->employee_code }}</td>
                                     <td>{{ $row->user->name }}</td>
                                     <td>{{$row->attendance_type == 1 ? 'Present' : 'Absent'}}</td>
-                                    <td>{{ $row->start_time }}</td>
-                                    <td>{{ $row->end_time }}</td>
+                                    <td>{{ $row->in_time }}</td>
+                                    <td>{{ $row->out_time }}</td>
                                     <td class="d-flex justify-content-end">
                                         <form action="{{route('attendance.approve', $row->id)}}" method="post">
                                             <button class="btn btn-sm btn-info p-1 mr-1">Approve</i></button>
