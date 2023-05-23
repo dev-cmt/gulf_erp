@@ -760,9 +760,9 @@
 						<h5 class="dashboard_bar">Dashboard</h5>
 					</div>
 					<div class="d-flex align-items-center">
-						<a href="javascript:void(0);" class="btn btn-xs btn-primary light mr-1">Today</a>
-						<a href="javascript:void(0);" class="btn btn-xs btn-primary light mr-1">Month</a>
-						<a href="javascript:void(0);" class="btn btn-xs btn-primary light">Year</a>
+						<a href="javascript:void(0);" class="btn btn-xs btn-primary light mr-1">{{date('d');}}</a>
+						<a href="javascript:void(0);" class="btn btn-xs btn-primary light mr-1">{{date('F');}}</a>
+						<a href="javascript:void(0);" class="btn btn-xs btn-primary light">{{date('Y');}}</a>
 					</div>
 				</div>
                 <!--Border Style-->

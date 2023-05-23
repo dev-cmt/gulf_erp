@@ -10,6 +10,12 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
 class AttendanceImport implements ToModel, WithHeadingRow
 {
+    private $emp_id;
+
+    public function __construct($emp_id)
+    {
+        $this->emp_id = $emp_id;
+    }
     /**
     * @param array $row
     *
@@ -26,7 +32,7 @@ class AttendanceImport implements ToModel, WithHeadingRow
             "attendance_type"   => 1,
             // "status"            => $row[6],
             // "finger_id"         => $row[7],
-            "emp_id"            => 1,
+            "emp_id"            => $this->emp_id,
             "user_id"           => Auth::user()->id,
         ]);
 

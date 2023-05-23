@@ -33,7 +33,6 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-
 //==================// Location //==================//
 Route::get('/location', [LocationController::class, 'index'])->name('location');
 Route::get('/get-districts', [LocationController::class, 'getDistricts'])->name('get_districts');
@@ -138,3 +137,10 @@ Route::get('/todos', [TodoController::class, 'index']);
 Route::get('todos/{todo}/edit', [TodoController::class, 'edit']);
 Route::post('todos/store', [TodoController::class, 'store']);
 Route::delete('todos/destroy/{todo}', [TodoController::class, 'destroy']);
+
+
+Route::get('get-procedure', function () {
+    $id = 1;
+    $post = DB::select("CALL get_users_by_id(".$id.")");
+    dd($post);
+});

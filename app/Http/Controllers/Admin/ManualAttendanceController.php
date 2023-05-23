@@ -101,7 +101,10 @@ class ManualAttendanceController extends Controller
 
     public function uploadAttendance(Request $request)
     {
-        Excel::import(new AttendanceImport, $request->file);
+        $emp_id = 1;
+        $file = $request->file('file');
+
+        Excel::import(new AttendanceImport($emp_id), $file);
         // Excel::import(new UsersImport, $request->file);
 
         $notification=array('messege'=>'Manual attendance successfully!','alert-type'=>'success');

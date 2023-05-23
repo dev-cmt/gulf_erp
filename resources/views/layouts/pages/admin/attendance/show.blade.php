@@ -10,15 +10,14 @@
                 </div>
                 <div class="card-body">
                     <!-- Add your HTML markup here -->
-                    <select id="month-filter">
+                    {{-- <select id="month-filter">
                         <option value="5">January</option>
                         <option value="4">January2</option>
-                        <!-- Add options for other months -->
-                    </select>
-
+                    </select> --}}
+                    <a href="{{url('get-procedure')}}" class="btn btn-primary btn-xs">Store Procedure</a>
                     <div class="table-responsive">
                         {{-- <table class="table table-bordered table-responsive-sm" style="min-width: 500px"> --}}
-                        <table id="example3" class="display" style="min-width: 845px">
+                        {{-- <table id="example3" class="display" style="min-width: 845px">
                             <thead>
                                 <tr>
                                     <th>SL NO</th>
@@ -37,7 +36,7 @@
                                     </tr>
                                 @endforeach
                             </tbody>
-                        </table>
+                        </table> --}}
                     </div>
                 </div>
 
