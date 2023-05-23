@@ -19,8 +19,12 @@ class ManualAttendanceController extends Controller
 {
     public function index()
     {
-        $data = User::with('attendance')->where('status', 1)->get();
-        return view('layouts.pages.admin.attendance.index',compact('data'));
+        $employee = User::get();
+        $data = HrAttendance::paginate(30);
+        return view('layouts.pages.admin.attendance.index',compact('data','employee'));
+
+        // $data = User::with('attendance')->where('status', 1)->get();
+        // return view('layouts.pages.admin.attendance.index',compact('data'));
     }
     public function create()
     {
