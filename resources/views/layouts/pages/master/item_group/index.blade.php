@@ -27,7 +27,7 @@
                                 @foreach($data as $data)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>										
-                                        <td>{{ $data->itemName->cat_name ?? 'N/A' }}</td>
+                                        <td>{{ $data->itemName->cat_id ?? 'N/A' }}</td>
                                         <td>{{ $data->part_name }}</td>
                                         <td>{{ $data->description }}</td>										
                                         <td>{{ $data->status == 1 ? 'Active' : 'Inactive'  }}</td>	

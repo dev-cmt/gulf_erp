@@ -43,11 +43,14 @@ class MastItemGroupController extends Controller
      */
     public function store(Request $request)
     {
+        $validated=$request -> validate([
+            'unit_name'=> 'required|max:255',
+        ]);
         $data = new MastItemGroup();
-        $data->cat_name = $request->cat_name;
         $data->part_name = $request->part_name;
         $data->description = $request->description;
         $data->status = $request->status;
+        $data->cat_id = $request->cat_id;
         $data->user_id = Auth::user()->id;
         $data->save();
         $notification = array('messege' => 'Item Group data save successfully.', 'alert-type' => 'success');
@@ -89,11 +92,11 @@ class MastItemGroupController extends Controller
     public function update(Request $request, $id)
     {
         $data = MastItemGroup::find($id);
-        $data->cat_name = $request->cat_name;
         $data->part_name = $request->part_name;
         $data->description = $request->description;
         $data->status = $request->status;
         $data->user_id = Auth::user()->id;
+        $data->cat_id = $request->cat_id;
         $data->save();
         $notification = array('messege' => 'Item Group update save successfully.', 'alert-type' => 'success');
         return redirect()->route('mast_item_group.index', compact('data'))->with($notification);

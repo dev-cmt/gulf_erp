@@ -8,8 +8,9 @@
                         <a href="{{ route('manual_attendances.create') }}" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i><span class="btn-icon-add"></span>Manual Attendance</a>
                     @endcan
                 </div>
+                
                 <div class="card-body">
-                    <form class="row" action="{{ route('filter.attendance') }}" method="GET" enctype="multipart/form-data">
+                    {{-- <form class="row" action="{{ route('filter.attendance') }}" method="GET">
                         @csrf
                         <div class="col-lg-4">
                             <div class="form-group row">
@@ -28,20 +29,30 @@
                             <div class="form-group row mr-2">
                                 <label class="col-lg-4 col-form-label">Start Date</label>
                                 <div class="col-lg-8">
-                                    <input type="date" class="form-control" name="start_date" value="{{old('date')}}">
+                                    <input type="date" class="form-control" name="start_date" value="{{old('start_date')}}">
                                 </div>
                             </div>
                             <div class="form-group row mr-2">
                                 <label class="col-lg-4 col-form-label">End Date</label>
                                 <div class="col-lg-8">
-                                    <input type="date" class="form-control" name="end_date" value="{{old('date')}}">
+                                    <input type="date" class="form-control" name="end_date" value="{{old('end_date')}}">
                                 </div>
                             </div>
                             <div class="form-group row mr-4">
                                 <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-filter" aria-hidden="true"></i> Filter</button>
                             </div>
                         </div>
-                    </form>
+                    </form> --}}
+                    {{-- <form action="{{ route('items.filter') }}" method="GET">
+                        @csrf
+                        <input type="date" id="start_date" name="start_date" required>
+                        <input type="date"id="end_date" name="end_date" required>
+                        <button type="submit">Filter</button>
+                    </form> --}}
+                    <input type="date" id="start_date" required>
+                    <input type="date" id="end_date" required>
+                    <button onclick="filterItems()">Filter</button>
+                    <div id="items-container"></div>
                     <div class="table-responsive">
                         <table class="table table-bordered table-responsive-sm">
                             <thead>
@@ -77,6 +88,33 @@
         </div>
     </div>
 
-</x-app-layout>
+    
 
+</x-app-layout>
+<script>
+    function filterItems() {
+    var startDate = document.getElementById('start_date').value;
+    var endDate = document.getElementById('end_date').value;
+
+    // Send AJAX request
+    $.ajax({
+        url: "{{route('items.filter')}}",
+        type: 'GET',
+        data: {
+            start_date: startDate,
+            end_date: endDate
+        },
+        success: function(response) {
+            // Update the page with the filtered results
+            alert(response.startDate);
+            $('#items-container').html(response);
+        },
+        error: function(xhr, status, error) {
+            // Handle error if necessary
+            console.log(error);
+            alert('fail');
+        }
+    });
+}
+</script>
 

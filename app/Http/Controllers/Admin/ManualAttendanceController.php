@@ -84,12 +84,20 @@ class ManualAttendanceController extends Controller
         $user = User::where('id', $id)->first();
         return view('layouts.pages.admin.attendance.show',compact('data','user'));
     }
-    public function filterData(Request $request)
-    {$employee = User::get();
-        $start = $request->start_date;
-        $end = $request->end_date;
-        $data = HrAttendance::whereDate('date','>=', $start)->whereDate('date','<=', $end)->get();
-        return view('layouts.pages.admin.attendance.index',compact('data','employee'));
+
+    public function filterByDate(Request $request)
+    {
+        // $startDate = '2022-05-05';
+        // $endDate = '2022-05-13';
+        $startDate = $request->start_date;
+        $endDate = $request->end_date;
+        // dd($startDate,$endDate);
+        $data = HrAttendance::whereDate('date','>=', $startDate)->whereDate('date','<=', $endDate)->get();
+
+        return redirect()->jeson($startDate);
+        // Return the filtered items to the view or perform any other desired action
+        return view('barcode', compact('data'));
+        // return view('layouts.pages.admin.attendance.index', compact('data'));
     }
 
     /*____________________________________

@@ -39,6 +39,9 @@ class MastUnitController extends Controller
      */
     public function store(Request $request)
     {
+        $validated=$request -> validate([
+            'unit_name'=> 'required|max:255',
+        ]);
         $data = new MastUnit();
         $data->unit_name = $request->unit_name;
         $data->description = $request->description;

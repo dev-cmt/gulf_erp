@@ -26,7 +26,7 @@
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <div class="col-md-6">
-                                                <select class="form-control dropdwon_select" id="cat_name" name="cat_name" >
+                                                <select class="form-control dropdwon_select" name="cat_id" >
                                             <!-- <option selected disabled>Please select</option> -->
                                                     @foreach ($users as $user)
                                                         <option value="{{$user->id}}" {{$user->id==$data->itemName->id ? 'selected' : '' }}>{{ $user->cat_name}}</option>

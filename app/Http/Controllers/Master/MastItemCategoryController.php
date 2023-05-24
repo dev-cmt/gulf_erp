@@ -38,6 +38,9 @@ class MastItemCategoryController extends Controller
      */
     public function store(Request $request)
     {
+        $validated=$request -> validate([
+            'cat_name'=> 'required|max:255',
+        ]);
         $data = new MastItemCategory();
         $data->cat_name = $request->cat_name;
         $data->description = $request->description;
