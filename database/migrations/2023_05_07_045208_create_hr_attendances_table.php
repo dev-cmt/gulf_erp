@@ -22,6 +22,7 @@ return new class extends Migration
             $table->text('location')->nullable();
             $table->text('description')->nullable();
             $table->tinyInteger('status')->default(false);
+            $table->tinyInteger('late')->default(false);
             $table->integer('finger_id')->nullable();
             $table->timestamps();
             

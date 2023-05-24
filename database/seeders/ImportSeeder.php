@@ -10,6 +10,11 @@ use App\Models\Master\MastDesignation;
 use App\Models\Master\MastEmployeeType;
 use App\Models\Master\MastWorkStation;
 use App\Models\Master\MastLeave;
+use App\Models\Master\MastPackage;
+use App\Models\Master\MastUnit;
+use App\Models\Master\MastItemCategory;
+use App\Models\Master\MastItemGroup;
+use App\Models\Master\MastItemRegister;
 
 class ImportSeeder extends Seeder
 {
@@ -241,6 +246,351 @@ class ImportSeeder extends Seeder
             'status'=>'1',
             'user_id'=>'1'
         ]);
+        //____________________________________//
+        MastPackage::create([
+            'pkg_name'=>'1 X 1',
+            'pkg_size'=>'1',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1'
+        ]);
+        MastPackage::create([
+            'pkg_name'=>'1 X 4',
+            'pkg_size'=>'4',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1'
+        ]);
+        MastPackage::create([
+            'pkg_name'=>'1 X 6',
+            'pkg_size'=>'6',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1'
+        ]);
+        MastPackage::create([
+            'pkg_name'=>'1 X 8',
+            'pkg_size'=>'8',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1'
+        ]);
+        MastPackage::create([
+            'pkg_name'=>'1 X 10',
+            'pkg_size'=>'10',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1'
+        ]);
+        MastPackage::create([
+            'pkg_name'=>'1 X 12',
+            'pkg_size'=>'12',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1'
+        ]);
+        MastPackage::create([
+            'pkg_name'=>'1 X 16',
+            'pkg_size'=>'16',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1'
+        ]);
+        MastPackage::create([
+            'pkg_name'=>'1 X 20',
+            'pkg_size'=>'20',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1'
+        ]);
+        MastPackage::create([
+            'pkg_name'=>'1 X 24',
+            'pkg_size'=>'24',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1'
+        ]);
+        MastPackage::create([
+            'pkg_name'=>'1 X 36',
+            'pkg_size'=>'36',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1'
+        ]);
+        MastPackage::create([
+            'pkg_name'=>'1 X 48',
+            'pkg_size'=>'48',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1'
+        ]);
+        //____________________________________//
+        MastUnit::create([
+            'unit_name'=>'Cubic Meter',
+            'description'=>' This is a unit of volume commonly used to measure the capacity of a box or container. ',
+            'status'=>'1',
+            'cat_id'=>'1',
+            'user_id'=>'1'
+        ]);
+        MastUnit::create([
+            'unit_name'=>'Carton',
+            'description'=>' In some cases, "box" may be used interchangeably with "carton" to refer to a specific packaging unit.',
+            'status'=>'1',
+            'cat_id'=>'1',
+            'user_id'=>'1'
+        ]);
+        MastUnit::create([
+            'unit_name'=>'Crate',
+            'description'=>'A crate is a rigid container, typically made of wood or plastic, used for shipping or storing goods.',
+            'status'=>'1',
+            'cat_id'=>'2',
+            'user_id'=>'1'
+        ]);
+        MastUnit::create([
+            'unit_name'=>'Packaging ',
+            'description'=>'In the context of retail or wholesale, products may be packaged in specific units, such as a certain number of items per box or package. ',
+            'status'=>'1',
+            'cat_id'=>'2',
+            'user_id'=>'1'
+        ]);
+        MastUnit::create([
+            'unit_name'=>'Window Air',
+            'description'=>'These units are self-contained and designed to be installed in a window or a specially made opening in a wall. They provide cooling for individual rooms or small spaces.',
+            'status'=>'1',
+            'cat_id'=>'2',
+            'user_id'=>'1'
+        ]);
+        MastUnit::create([
+            'unit_name'=>'Split Air',
+            'description'=>'Split AC units consist of two main components: an indoor unit and an outdoor unit. The indoor unit is installed inside the room, while the outdoor unit is placed outside the building. ',
+            'status'=>'1',
+            'cat_id'=>'2',
+            'user_id'=>'1'
+        ]);
+        MastUnit::create([
+            'unit_name'=>'Central Air',
+            'description'=>'Central AC units are designed to cool entire buildings or large areas. They consist of a centralized cooling unit that distributes cool air through a network of ducts and vents. ',
+            'status'=>'1',
+            'cat_id'=>'2',
+            'user_id'=>'1'
+        ]);
+        MastUnit::create([
+            'unit_name'=>'Portable Air',
+            'description'=>' These units are freestanding and can be moved from room to room as needed. Portable AC units typically include a venting kit that allows hot air to be exhausted through a window or vent.',
+            'status'=>'1',
+            'cat_id'=>'2',
+            'user_id'=>'1'
+        ]);
+        MastUnit::create([
+            'unit_name'=>'Ductless Mini-Split Air',
+            'description'=>'Similar to split AC units, ductless mini-split systems consist of an indoor unit and an outdoor unit. However, they do not require ductwork for air distribution. They are ideal for cooling individual rooms or specific zones within a building.',
+            'status'=>'1',
+            'cat_id'=>'2',
+            'user_id'=>'1'
+        ]);
+        MastUnit::create([
+            'unit_name'=>'Spark plugs',
+            'description'=>'Sold as individual units.',
+            'status'=>'1',
+            'cat_id'=>'3',
+            'user_id'=>'1'
+        ]);
+        MastUnit::create([
+            'unit_name'=>'Brake pads',
+            'description'=>'Sold as a set for each wheel (usually 2 or 4 pads per set).',
+            'status'=>'1',
+            'cat_id'=>'3',
+            'user_id'=>'1'
+        ]);
+        MastUnit::create([
+            'unit_name'=>'Air filters',
+            'description'=>'Sold as individual units.',
+            'status'=>'1',
+            'cat_id'=>'3',
+            'user_id'=>'1'
+        ]);
+        MastUnit::create([
+            'unit_name'=>'Oil filters',
+            'description'=>'Sold as individual units.',
+            'status'=>'1',
+            'cat_id'=>'3',
+            'user_id'=>'1'
+        ]);
+        MastUnit::create([
+            'unit_name'=>'Headlights',
+            'description'=>'Sold as individual units (left and right headlights)',
+            'status'=>'1',
+            'cat_id'=>'3',
+            'user_id'=>'1'
+        ]);
+        MastUnit::create([
+            'unit_name'=>'Taillights',
+            'description'=>'Sold as individual units (left and right taillights).',
+            'status'=>'1',
+            'cat_id'=>'3',
+            'user_id'=>'1'
+        ]);
+        MastUnit::create([
+            'unit_name'=>'Brake discs/rotors',
+            'description'=>'Sold as individual units (typically per wheel).',
+            'status'=>'1',
+            'cat_id'=>'3',
+            'user_id'=>'1'
+        ]);
+        MastUnit::create([
+            'unit_name'=>'Timing belts',
+            'description'=>'Sold as individual units.',
+            'status'=>'1',
+            'cat_id'=>'3',
+            'user_id'=>'1'
+        ]);
+        MastUnit::create([
+            'unit_name'=>'Fuel filters',
+            'description'=>'Sold as individual units.',
+            'status'=>'1',
+            'cat_id'=>'3',
+            'user_id'=>'1'
+        ]);
+        MastUnit::create([
+            'unit_name'=>'Water pumps',
+            'description'=>'Sold as individual units.',
+            'status'=>'1',
+            'cat_id'=>'3',
+            'user_id'=>'1'
+        ]);
+        MastUnit::create([
+            'unit_name'=>'Radiators',
+            'description'=>'Sold as individual units.',
+            'status'=>'1',
+            'cat_id'=>'3',
+            'user_id'=>'1'
+        ]);
+        MastUnit::create([
+            'unit_name'=>'Shock absorbers',
+            'description'=>'Sold as individual units (per wheel).',
+            'status'=>'1',
+            'cat_id'=>'3',
+            'user_id'=>'1'
+        ]);
+        MastUnit::create([
+            'unit_name'=>'Control arms',
+            'description'=>'Sold as individual units (per wheel).',
+            'status'=>'1',
+            'cat_id'=>'3',
+            'user_id'=>'1'
+        ]);
+        MastUnit::create([
+            'unit_name'=>'Ball joints',
+            'description'=>'Sold as individual units (per wheel).',
+            'status'=>'1',
+            'cat_id'=>'3',
+            'user_id'=>'1'
+        ]);
+        //____________________________________//
+        MastItemCategory::create([
+            'cat_name'=>'AC',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1'
+        ]);
+        MastItemCategory::create([
+            'cat_name'=>'AC Spare Parts',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1'
+        ]);
+        MastItemCategory::create([
+            'cat_name'=>'Car Spare Parts',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1'
+        ]);
+        //____________________________________//
+        MastItemGroup::create([
+            'part_name'=>'Window Air Conditioners',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1',
+            'cat_id'=>'1'
+        ]);
+        MastItemGroup::create([
+            'part_name'=>'Split Air Conditioners',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1',
+            'cat_id'=>'1'
+        ]);
+        MastItemGroup::create([
+            'part_name'=>'Central Air Conditioning',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1',
+            'cat_id'=>'1'
+        ]);
+        MastItemGroup::create([
+            'part_name'=>'ARM BUSHING',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1',
+            'cat_id'=>'3'
+        ]);
+        MastItemGroup::create([
+            'part_name'=>'SUSPENSION BUSH',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1',
+            'cat_id'=>'3'
+        ]);
+        MastItemGroup::create([
+            'part_name'=>'REAR SUSPENSION BUSH',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1',
+            'cat_id'=>'3'
+        ]);
+        MastItemGroup::create([
+            'part_name'=>'SPRIN SHACKLE BUSH',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1',
+            'cat_id'=>'3'
+        ]);
+        MastItemGroup::create([
+            'part_name'=>'SHOCK ABSORBER BUSH',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1',
+            'cat_id'=>'3'
+        ]);
+        MastItemGroup::create([
+            'part_name'=>'SUPRING SHACKLE RUBBER',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1',
+            'cat_id'=>'3'
+        ]);
+        MastItemGroup::create([
+            'part_name'=>'UP ARM BUSHING',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1',
+            'cat_id'=>'3'
+        ]);
+        MastItemGroup::create([
+            'part_name'=>'FONT LOWER ARM BUSH',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1',
+            'cat_id'=>'3'
+        ]);
+        //____________________________________//
+        // MastItemRegister::create([
+        //     'part_name'=>'1 X 48',
+        //     'description'=>'',
+        //     'status'=>'1',
+        //     'user_id'=>'1',
+        //     'cat_id'=>'1'
+        // ]);
         //____________________________________//
 
         //__________EMPLOYEE INFO_____________//

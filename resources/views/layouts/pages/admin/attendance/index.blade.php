@@ -9,7 +9,8 @@
                     @endcan
                 </div>
                 <div class="card-body">
-                    <form class="row" action="{{ route('manual_attendances.store') }}" method="POST" enctype="multipart/form-data">
+                    <form class="row" action="{{ route('filter.attendance') }}" method="GET" enctype="multipart/form-data">
+                        @csrf
                         <div class="col-lg-4">
                             <div class="form-group row">
                                 <label class="col-lg-4 col-form-label">Employee Name</label>

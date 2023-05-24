@@ -85,14 +85,11 @@ class ManualAttendanceController extends Controller
         return view('layouts.pages.admin.attendance.show',compact('data','user'));
     }
     public function filterData(Request $request)
-    {
-        $month = $request->month;
-        // Retrieve the filtered data based on the month
-        $data = HrAttendance::whereMonth('date', $month)->get();
-        $user = User::where('id', $id)->first();
-        // Return the filtered data as a partial view
-        return response()->json($data, 200, $headers);
-        // return view('layouts.pages.admin.attendance.show', compact('data'));
+    {$employee = User::get();
+        $start = $request->start_date;
+        $end = $request->end_date;
+        $data = HrAttendance::whereDate('date','>=', $start)->whereDate('date','<=', $end)->get();
+        return view('layouts.pages.admin.attendance.index',compact('data','employee'));
     }
 
     /*____________________________________

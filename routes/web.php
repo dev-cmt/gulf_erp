@@ -13,11 +13,16 @@ use App\Http\Controllers\Admin\InfoEmployeeController;
 use App\Http\Controllers\Admin\LeaveApplicationController;
 use App\Http\Controllers\Admin\ManualAttendanceController;
 use App\Http\Controllers\Admin\attendanceApproveController;
-//--Master Data (HR & Admin)
+//--Master Data
 use App\Http\Controllers\Master\MastDepartmentController;
 use App\Http\Controllers\Master\MastDesignationController;
 use App\Http\Controllers\Master\MastLeaveController;
 use App\Http\Controllers\Master\MastEmployeeTypeController;
+
+use App\Http\Controllers\Master\MastUnitController;
+use App\Http\Controllers\Master\MastItemCategoryController;
+use App\Http\Controllers\Master\MastItemGroupController;
+use App\Http\Controllers\Master\MastItemRegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -103,7 +108,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::PATCH('attendance/approve/{id}', [ManualAttendanceController::class, 'attendance_approve'])->name('attendance.approve');
     Route::PATCH('attendance/canceled/{id}', [ManualAttendanceController::class, 'decline'])->name('attendance.canceled');
     Route::get('get/employee_repot/{id}', [ManualAttendanceController::class,'getemployee_report'])->name('get_employee_repot');
-    Route::post('/filter-attendance', [DataController::class, 'filterData'])->name('filter.attendance');
+    Route::get('filter-attendance', [ManualAttendanceController::class, 'filterData'])->name('filter.attendance');
 
     //--Attendances Imports or Exports Excel
     Route::get('attendance/import', [ManualAttendanceController::class, 'importAttendance'])->name('attendance.import');
@@ -113,7 +118,7 @@ Route::group(['middleware' => ['auth']], function(){
 
 Route::group(['middleware' => ['auth']], function(){
     /**______________________________________________________________________________________________
-     * HR & ADMIN
+     * HR & ADMIN MASTER
      * ______________________________________________________________________________________________
      */
     Route::resource('mast_department', MastDepartmentController::class);
@@ -121,9 +126,14 @@ Route::group(['middleware' => ['auth']], function(){
     Route::resource('mast_leave', MastLeaveController::class);
     Route::resource('must_employee_category', MastEmployeeTypeController::class);
     /**______________________________________________________________________________________________
-     * Inventory
+     * INVENTORY MASTER
      * ______________________________________________________________________________________________
      */
+    Route::resource('mast_unit', MastUnitController::class);
+    Route::resource('mast_item_category', MastItemCategoryController::class);
+    Route::resource('mast_item_group', MastItemGroupController::class);
+    Route::resource('mast_item_register', MastItemRegisterController::class);
+    Route::get('/barcode/download/{bar_code}', [MastItemRegisterController::class, 'generateBarcode'])->name('barcode.download');
 
 });
 
