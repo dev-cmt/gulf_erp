@@ -16,11 +16,11 @@ class MastItemGroup extends Model
         'description',
         'status',
         'user_id',
-        'cat_id'
+        'mast_item_category_id'
     ];
 
-    public function itemName()
+    public function mastItemCategory()
     {
-        return $this->hasOne(MastItemCategory::class,'id','cat_name');
+        return $this->belongsTo(MastItemCategory::class);
     }
 }

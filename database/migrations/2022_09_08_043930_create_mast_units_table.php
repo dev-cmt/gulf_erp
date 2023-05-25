@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('unit_name')->nullable();
             $table->text('description')->nullable();
-            $table->integer('cat_id')->nullable();
+            $table->integer('mast_item_category_id')->nullable();
             $table->tinyInteger('status')->default(false);
             $table->timestamps();
 

@@ -133,7 +133,8 @@ Route::group(['middleware' => ['auth']], function(){
     Route::resource('mast_item_category', MastItemCategoryController::class);
     Route::resource('mast_item_group', MastItemGroupController::class);
     Route::resource('mast_item_register', MastItemRegisterController::class);
-    Route::get('/barcode/download/{bar_code}', [MastItemRegisterController::class, 'generateBarcode'])->name('barcode.download');
+    Route::get('/pdf/download', [MastItemRegisterController::class, 'generateBarcode'])->name('item_pdf.download');
+    Route::get('/item_export/excel', [MastItemRegisterController::class, 'export'])->name('item_export.excel');
 
 });
 

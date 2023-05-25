@@ -22,19 +22,18 @@
                                 </tr>
                             </thead>
                             <tbody>
-                             
-                            @foreach($data as $data)
+                            @foreach($data as $row)
                                 <tr>
-                                    <td>{{ $loop->iteration }}</td>										
-                                    <td>{{ $data->cat_name }}</td>
-                                    <td>{{ $data->description }}</td>										
-                                    <td>{{ $data->status == 1 ? 'Active' : 'Inactive'  }}</td>																			
-                                    <td class="float-right">                                
-                                        <a href="{{ route('mast_item_category.edit', $data->id) }}" class="btn btn-success btn-sm">Edit</a>
-                                        <a href="{{ route('mast_item_category.show', $data->id) }}" class="btn btn-info btn-sm">View</a>                                                             
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $row->cat_name }}</td>
+                                    <td>{{ $row->description }}</td>										
+                                    <td>{{ $row->status == 1 ? 'Active' : 'Inactive'  }}</td>																			
+                                    <td class="text-right">                                
+                                        <a href="{{ route('mast_item_category.edit', $row->id) }}" class="btn btn-success btn-sm p-2">Edit</a>
+                                        <a href="{{ route('mast_item_category.show', $row->id) }}" class="btn btn-info btn-sm p-2">View</a>                                                             
                                     </td>
                                 </tr>
-                                @endforeach
+                            @endforeach
                             </tbody>
                         </table>
                     </div>

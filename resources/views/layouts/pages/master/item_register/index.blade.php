@@ -5,7 +5,11 @@
                 <div class="card-header">
                     <h4 class="card-title">Item List<span class="bg-blue-500 text-white rounded px-1 text-xs py-0.5"></span></h4>
                     {{-- @can('Role create') --}}
-                    <a href="{{ route('mast_item_register.create') }}" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i><span class="btn-icon-add"></span>Create</a>
+                    <div>
+                        <a href="{{route('item_pdf.download')}}" class="btn btn-sm btn-primary mr-1"><i class="fa fa-download"></i><span class="btn-icon-add"></span>PDF</a>
+                        <a href="{{route('item_export.excel')}}" class="btn btn-sm btn-primary mr-1"><i class="fa fa-download"></i><span class="btn-icon-add"></span>Excel</a>
+                        <a href="{{ route('mast_item_register.create') }}" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i><span class="btn-icon-add"></span>Add New</a>
+                    </div>
                     {{-- @endcan --}}
                 </div>
                 <div class="card-body"> 
@@ -18,12 +22,12 @@
                                     <th>Image</th>
                                     <th>Box No.</th>
                                     <th>Gulf Code</th>
-                                    <th>Bare Code</th>
                                     <th>Part Number</th>
                                     <th>Part Name</th>
                                     <th>Description</th>
                                     <th>Box Qty.</th>
                                     <th>Pirce</th>
+                                    <th>Bare Code</th>
                                     <th class="text-right pr-4">Action</th>
                                 </tr>
                             </thead>
@@ -34,17 +38,16 @@
                                         <td class="sorting_1"><img src="{{asset('public')}}/images/car-parts/{{ $row->image }}" width="35" height="35" alt=""></td>
                                         <td>{{ $row->box_code }}</td>
                                         <td>{{ $row->gulf_code }}</td>
-                                        <td>{!! DNS1D::getBarcodeHTML("$row->bar_code", 'PHARMA') !!} GULF-{{$row->bar_code}} </td>
-                                        {{-- <td>{!! DNS1D::getBarcodeHTML("$row->bar_code", 'PHARMA2T',3,33,'green', true) !!}</td> --}}
                                         <td>{{ $row->part_no }}</td>
                                         <td>{{ $row->mastItemGroup->part_name ?? 'N/A' }}</td>
                                         <td>{{ $row->description }}</td>
                                         <td>{{ $row->box_qty }}</td>
                                         <td>{{ $row->price }}</td>
-                                        <td class="float-right" style="width:95px">                                
+                                        <td>{!! DNS1D::getBarcodeHTML("$row->bar_code", 'PHARMA') !!} GULF-{{$row->bar_code}} </td>
+                                        {{-- <td>{!! DNS1D::getBarcodeHTML("$row->bar_code", 'PHARMA2T',3,33,'green', true) !!}</td> --}}
+                                        <td class="float-right" style="width:100px">                                
                                             <a href="{{ route('mast_item_register.edit', $row->id) }}" class="btn btn-success btn-sm btn-xm p-2">Edit</a>
-                                            {{-- <a href="{{ route('barcode.download',$row->bar_code) }}" class="btn btn-info btn-sm btn-xm p-2">Download</a> --}}
-                                            <a href="{{ route('mast_item_register.show', $row->id) }}" class="btn btn-info btn-sm btn-xm p-2">View</a>                                                             
+                                            <a href="{{ route('mast_item_register.show', $row->id) }}" class="btn btn-info  btn-sm btn-xm p-2">View</a>                                                             
                                         </td>
                                     </tr>
                                 @endforeach

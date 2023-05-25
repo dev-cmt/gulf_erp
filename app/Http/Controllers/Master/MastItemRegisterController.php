@@ -13,12 +13,14 @@ use App\Models\Master\MastUnit;
 use App\Models\Master\MastItemGroup;
 use App\Models\Master\MastItemCategory;
 use App\Models\User;
+use App\Exports\BarcodeExport;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ItemExport;
 
 use DNS2D;
 use Barryvdh\DomPDF;
 use Barryvdh\DomPDF\PDF;
 use Milon\Barcode\DNS1D;
-
 class MastItemRegisterController extends Controller
 {
     /**
@@ -108,25 +110,22 @@ class MastItemRegisterController extends Controller
     {
         return MastItemRegister::whereBarCode($number)->exists();
     }
-    public function generateBarcode($bar_code)
+    public function generateBarcode()
     {
-        // Generate barcode image using the barcode library
-        $barcode = new DNS1D();
-        $barcodeData = '123456789';
-        $barcodeType = 'C39';
-        $barcodeImage = $barcode->getBarcodePNG($barcodeData, $barcodeType);
-
-        // Create a new PDF instance using the static loadView() method
-        // $pdf = PDF::loadView('barcode', ['barcodeImage' => $barcodeImage]);
-
-        $pdf = PDF::loadView('barcode')->setPaper('a4', 'portrait');
-        $fileName = $report->issue_number;
-        return $pdf->stream($fileName.'.pdf');
-
-
-
-        // Return the PDF as a download
-        // return $pdf->download('barcode.pdf');
+        $data = MastItemRegister::with('unit', 'mastItemGroup')->get();
+        
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->loadView('layouts.pages.export.mast_item', compact('data'));
+        $pdf->setPaper('a4', 'landscape');
+        // $pdf = PDF::loadView('barcode')->setPaper('a4', 'portrait');
+        // $pdf->save(public_path($path));
+        
+        return $pdf->download('items.pdf'); //--Dwonload
+        // return $pdf->stream('table.pdf'); //--Show
+    }
+    public function export()
+    {
+        return Excel::download(new ItemExport, 'ItemRegister.xlsx');
     }
 
     /**

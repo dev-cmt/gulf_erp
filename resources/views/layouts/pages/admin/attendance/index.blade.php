@@ -10,7 +10,7 @@
                 </div>
                 
                 <div class="card-body">
-                    {{-- <form class="row" action="{{ route('filter.attendance') }}" method="GET">
+                    {{-- <form class="row" action="{{ route('items.filter') }}" method="GET">
                         @csrf
                         <div class="col-lg-4">
                             <div class="form-group row">
@@ -42,12 +42,6 @@
                                 <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-filter" aria-hidden="true"></i> Filter</button>
                             </div>
                         </div>
-                    </form> --}}
-                    {{-- <form action="{{ route('items.filter') }}" method="GET">
-                        @csrf
-                        <input type="date" id="start_date" name="start_date" required>
-                        <input type="date"id="end_date" name="end_date" required>
-                        <button type="submit">Filter</button>
                     </form> --}}
                     <input type="date" id="start_date" required>
                     <input type="date" id="end_date" required>

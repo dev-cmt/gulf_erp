@@ -25,10 +25,10 @@
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <div class="col-md-6">
-                                                <select class="form-control dropdwon_select" name="cat_id" required>
+                                                <select class="form-control dropdwon_select" name="mast_item_category_id" required>
                                                     <option selected disabled value="">Please select category name</option>
-                                                    @foreach ($data as $item)
-                                                        <option value="{{$item->id}}">{{$item->cat_name}}</option>
+                                                    @foreach ($item_cat as $row)
+                                                        <option value="{{$row->id}}">{{$row->cat_name}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>

@@ -22,16 +22,15 @@
                                 </tr>
                             </thead>
                             <tbody>
-                             
-                            @foreach($data as $data)
+                                @foreach($data as $row)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $data->unit_name}}</td>
-                                    <td>{{ $data->description }}</td>										
-                                    <td>{{ $data->status == 1 ? 'Active' : 'Inactive'  }}</td>																			
-                                    <td class="float-right">                                
-                                        <a href="{{ route('mast_unit.edit', $data->id) }}" class="btn btn-success btn-sm">Edit</a>
-                                        <a href="{{ route('mast_unit.show', $data->id) }}" class="btn btn-info btn-sm">View</a>                                                             
+                                    <td>{{ $row->unit_name}}</td>
+                                    <td>{{ $row->description }}</td>										
+                                    <td>{{ $row->status == 1 ? 'Active' : 'Inactive'  }}</td>																			
+                                    <td class="float-right" style="width:100px">                                
+                                        <a href="{{ route('mast_unit.edit', $row->id) }}" class="btn btn-success btn-xm p-2">Edit</a>
+                                        <a href="{{ route('mast_unit.show', $row->id) }}" class="btn btn-info btn-xm p-2">View</a>                                                             
                                     </td>
                                 </tr>
                                 @endforeach

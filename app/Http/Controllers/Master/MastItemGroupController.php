@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Master;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Master\MastItemGroup;
-
 use App\Models\Master\MastItemCategory;
 use Auth;
 
@@ -18,9 +17,8 @@ class MastItemGroupController extends Controller
      */
     public function index()
     {
-        $data = MastItemGroup::latest()->get();
-        $users = MastItemCategory::all();
-        return view('layouts.pages.master.item_group.index', compact('data', 'users'));
+        $data = MastItemGroup::with('mastItemCategory')->latest()->get();
+        return view('layouts.pages.master.item_group.index', compact('data'));
     }
 
     /**
@@ -30,9 +28,8 @@ class MastItemGroupController extends Controller
      */
     public function create()
     {
-        
-        $data = MastItemCategory::all();
-        return view('layouts.pages.master.item_group.create', compact('data'));
+        $item_cat = MastItemCategory::orderBy('cat_name','ASC')->get();
+        return view('layouts.pages.master.item_group.create', compact('item_cat'));
     }
 
     /**
@@ -44,13 +41,13 @@ class MastItemGroupController extends Controller
     public function store(Request $request)
     {
         $validated=$request -> validate([
-            'unit_name'=> 'required|max:255',
+            'part_name'=> 'required|max:255',
         ]);
         $data = new MastItemGroup();
         $data->part_name = $request->part_name;
         $data->description = $request->description;
         $data->status = $request->status;
-        $data->cat_id = $request->cat_id;
+        $data->mast_item_category_id = $request->mast_item_category_id;
         $data->user_id = Auth::user()->id;
         $data->save();
         $notification = array('messege' => 'Item Group data save successfully.', 'alert-type' => 'success');
@@ -78,8 +75,8 @@ class MastItemGroupController extends Controller
     public function edit($id)
     {
         $data = MastItemGroup::find($id);
-        $users = MastItemCategory::latest()->get();
-        return view('layouts.pages.master.item_group.edit', compact('data', 'users'));
+        $item_cat = MastItemCategory::orderBy('cat_name','ASC')->get();
+        return view('layouts.pages.master.item_group.edit', compact('data', 'item_cat'));
     }
 
     /**
@@ -95,8 +92,8 @@ class MastItemGroupController extends Controller
         $data->part_name = $request->part_name;
         $data->description = $request->description;
         $data->status = $request->status;
+        $data->mast_item_category_id = $request->mast_item_category_id;
         $data->user_id = Auth::user()->id;
-        $data->cat_id = $request->cat_id;
         $data->save();
         $notification = array('messege' => 'Item Group update save successfully.', 'alert-type' => 'success');
         return redirect()->route('mast_item_group.index', compact('data'))->with($notification);
