@@ -13,6 +13,8 @@ use App\Http\Controllers\Admin\InfoEmployeeController;
 use App\Http\Controllers\Admin\LeaveApplicationController;
 use App\Http\Controllers\Admin\ManualAttendanceController;
 use App\Http\Controllers\Admin\attendanceApproveController;
+//--HR & Admin
+use App\Http\Controllers\Inventory\PurchaseController;
 //--Master Data
 use App\Http\Controllers\Master\MastDepartmentController;
 use App\Http\Controllers\Master\MastDesignationController;
@@ -118,6 +120,20 @@ Route::group(['middleware' => ['auth']], function(){
 
 Route::group(['middleware' => ['auth']], function(){
     /**______________________________________________________________________________________________
+     * Purchase
+     * ______________________________________________________________________________________________
+     */
+    Route::get('/purchase/cat_id={cat_id}',[PurchaseController::class,'index'])->name('purchase.index');
+    Route::post('/purchase/store', [PurchaseController::class, 'storePurchase'])->name('purchase.store');
+
+    //--purchase ajax
+    // Route::get('get/part-id', [PurchaseController::class, 'getPartNumber'])->name('get_part_number');
+
+    Route::get('/get-part-id',[PurchaseController::class,'getPartNumber'])->name('get-part-id');
+    Route::get('/get-part-number',[PurchaseController::class,'anotherField'])->name('get-part-number');
+});
+Route::group(['middleware' => ['auth']], function(){
+    /**______________________________________________________________________________________________
      * HR & ADMIN MASTER
      * ______________________________________________________________________________________________
      */
@@ -137,7 +153,6 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('/item_export/excel', [MastItemRegisterController::class, 'export'])->name('item_export.excel');
 
 });
-
 
 
 

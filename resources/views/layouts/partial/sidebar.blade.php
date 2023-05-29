@@ -71,7 +71,13 @@
                     </a>
                     <ul aria-expanded="false">
                         <li><a href="#">GRN (Warehouse)</a></li>
-                        <li><a href="#">Purchase</a></li>
+                        <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Purchase</a>
+                            <ul aria-expanded="false">
+                                <li><a href="{{ route('purchase.index',['cat_id' => 1])}}">AC</a></li>
+                                <li><a href="{{ route('purchase.index',['cat_id' => 2])}}">AC Spare Parts</a></li>
+                                <li><a href="{{ route('purchase.index',['cat_id' => 3])}}">Car Spare Parts</a></li>
+                            </ul>
+                        </li>
                         <li><a href="#">Stock Delivery</a></li>
                         <li><a href="#">Stock Update</a></li>
                         <li><a href="#">Stock Possition</a></li>

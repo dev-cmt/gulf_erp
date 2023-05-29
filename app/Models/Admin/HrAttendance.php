@@ -17,6 +17,7 @@ class HrAttendance extends Model
         'attendance_type',
         'location',
         'description',
+        'late',
         'status',
         'finger_id',
         'emp_id',

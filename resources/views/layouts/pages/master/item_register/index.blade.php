@@ -27,7 +27,7 @@
                                     <th>Description</th>
                                     <th>Box Qty.</th>
                                     <th>Pirce</th>
-                                    <th>Bare Code</th>
+                                    <th>Barcode</th>
                                     <th class="text-right pr-4">Action</th>
                                 </tr>
                             </thead>

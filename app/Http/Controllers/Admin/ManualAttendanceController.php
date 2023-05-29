@@ -14,6 +14,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\AttendanceExport;
 use App\Imports\AttendanceImport;
 use App\Imports\UsersImport;
+use Carbon\Carbon;
 
 class ManualAttendanceController extends Controller
 {
@@ -28,6 +29,19 @@ class ManualAttendanceController extends Controller
     }
     public function create()
     {
+        // $currentTime = Carbon::createFromTime(9, 31, 0);
+        // $startTime = Carbon::createFromTime(9, 0, 0);
+        // $endTime = Carbon::createFromTime(9, 30, 0);
+
+
+        // // Compare the current time with the late time
+        // if ($currentTime->between($startTime, $endTime)) {
+        //     dd($currentTime->between($startTime, $endTime));
+        // } else {
+        //     dd($currentTime->between($startTime, $endTime));
+        // }
+
+
         $employee = User::get();
         return view('layouts.pages.admin.attendance.create',compact('employee'));
     }
