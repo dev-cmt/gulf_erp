@@ -15,6 +15,7 @@ use App\Models\Master\MastUnit;
 use App\Models\Master\MastItemCategory;
 use App\Models\Master\MastItemGroup;
 use App\Models\Master\MastItemRegister;
+use App\Models\Master\MastSupplier;
 
 class ImportSeeder extends Seeder
 {
@@ -584,13 +585,59 @@ class ImportSeeder extends Seeder
             'mast_item_category_id'=>'3'
         ]);
         //____________________________________//
-        // MastItemRegister::create([
-        //     'part_name'=>'1 X 48',
-        //     'description'=>'',
-        //     'status'=>'1',
-        //     'user_id'=>'1',
-        //     'mast_item_category_id'=>'1'
-        // ]);
+        MastItemRegister::create([
+            'box_code'=>'5',
+            'gulf_code'=>'2',
+            'part_no'=>'1178598',
+            'description'=>'Test Only',
+            'box_qty'=>'12',
+            'price'=>'90000',
+            'image'=>'',
+            'cat_id'=>'1',
+            'bar_code'=>'97049180517',
+            'user_id'=>'1',
+            'mast_item_group_id'=>'1',
+            'unit_id'=>'6',
+        ]);
+        MastItemRegister::create([
+            'box_code'=>'9',
+            'gulf_code'=>'7',
+            'part_no'=>'1078598',
+            'description'=>'Test Only',
+            'box_qty'=>'16',
+            'price'=>'10000',
+            'image'=>'',
+            'cat_id'=>'2',
+            'bar_code'=>'98049180517',
+            'user_id'=>'1',
+            'mast_item_group_id'=>'2',
+            'unit_id'=>'8',
+        ]);
+        //____________________________________//
+        MastSupplier::create([
+            'supplier_name'=>'Alam',
+            'contact_person'=>'Sagour Khan',
+            'email'=>'alam@gmail.com',
+            'phone_number'=>'01995275933',
+            'address'=>'Shariatpur',
+            'user_id'=>'1',
+        ]);
+        MastSupplier::create([
+            'supplier_name'=>'Sabbir',
+            'contact_person'=>'Sagour Khan',
+            'email'=>'sabbir@gmail.com',
+            'phone_number'=>'01995275933',
+            'address'=>'Shariatpur',
+            'user_id'=>'1',
+        ]);
+        MastSupplier::create([
+            'supplier_name'=>'Minhaz',
+            'contact_person'=>'Sagour Khan',
+            'email'=>'minhaz@gmail.com',
+            'phone_number'=>'01995275933',
+            'address'=>'Shariatpur',
+            'user_id'=>'1',
+        ]);
         //____________________________________//
 
         //__________EMPLOYEE INFO_____________//

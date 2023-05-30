@@ -15,13 +15,15 @@ return new class extends Migration
     {
         Schema::create('purchase_details', function (Blueprint $table) {
             $table->id();
-            $table->integer('item_id')->nullable();
             $table->integer('qty')->nullable();
             $table->decimal('price')->nullable();
             $table->integer('rcv_qty')->nullable();
-            $table->tinyInteger('status')->nullable();
-            $table->bigInteger('pur_id')->nullable();
+            $table->tinyInteger('status')->default(true);
 
+            $table->unsignedBigInteger('purchase_id');
+            $table->foreign('purchase_id')->references('id')->on('purchases')->onDelete('cascade');
+            $table->unsignedBigInteger('mast_item_register_id');
+            $table->foreign('mast_item_register_id')->references('id')->on('mast_item_registers')->onDelete('cascade');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();

@@ -124,13 +124,11 @@ Route::group(['middleware' => ['auth']], function(){
      * ______________________________________________________________________________________________
      */
     Route::get('/purchase/cat_id={cat_id}',[PurchaseController::class,'index'])->name('purchase.index');
-    Route::post('/purchase/store', [PurchaseController::class, 'storePurchase'])->name('purchase.store');
-
-    //--purchase ajax
-    // Route::get('get/part-id', [PurchaseController::class, 'getPartNumber'])->name('get_part_number');
-
+    Route::post('/purchase/store/cat_id={cat_id}', [PurchaseController::class, 'storePurchase'])->name('purchase.store');
     Route::get('/get-part-id',[PurchaseController::class,'getPartNumber'])->name('get-part-id');
     Route::get('/get-part-number',[PurchaseController::class,'anotherField'])->name('get-part-number');
+    Route::get('get/purchase_details/{id}', [PurchaseController::class,'getPurchaseDetails'])->name('get_purchase_details');
+
 });
 Route::group(['middleware' => ['auth']], function(){
     /**______________________________________________________________________________________________
