@@ -123,8 +123,12 @@ Route::group(['middleware' => ['auth']], function(){
      * Purchase
      * ______________________________________________________________________________________________
      */
-    Route::get('/purchase/cat_id={cat_id}',[PurchaseController::class,'index'])->name('purchase.index');
-    Route::post('/purchase/store/cat_id={cat_id}', [PurchaseController::class, 'storePurchase'])->name('purchase.store');
+
+    Route::get('/purchase/cat_id={cat_id}',[PurchaseController::class,'index'])->name('inv_purchase.index');
+    Route::post('/purchase/store/cat_id={cat_id}', [PurchaseController::class, 'store'])->name('inv_purchase.store');
+    Route::get('purchase/edit',[PurchaseController::class,'edit'])->name('inv_purchase_edit');
+    Route::delete('inv_purchase/destroy/{id}', [PurchaseController::class, 'inv_purchase_destroy'])->name('inv_purchase.destroy');
+
     Route::get('/get-part-id',[PurchaseController::class,'getPartNumber'])->name('get-part-id');
     Route::get('/get-part-number',[PurchaseController::class,'anotherField'])->name('get-part-number');
     Route::get('get/purchase_details/{id}', [PurchaseController::class,'getPurchaseDetails'])->name('get_purchase_details');

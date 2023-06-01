@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Master\MastWorkStation;
 use App\Models\Master\MastSupplier;
+use App\Models\Inventory\PurchaseDetails;
 
 class Purchase extends Model
 {
@@ -28,4 +29,9 @@ class Purchase extends Model
     {
         return $this->belongsTo(MastWorkStation::class);
     }
+    public function purchaseDetails()
+    {
+        return $this->hasMany(PurchaseDetails::class);
+    }
+    
 }
