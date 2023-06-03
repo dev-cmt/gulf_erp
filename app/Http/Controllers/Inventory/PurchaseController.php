@@ -88,7 +88,6 @@ class PurchaseController extends Controller
         if(isset($pur_id)){
             $storePurchase = Purchase::findOrFail($pur_id);
         }else{
-            $storePurchase = new Purchase();
             $validator = Validator::make($request->all(), [
                 'inv_date' => 'required',
                 'mast_supplier_id' => 'required',
@@ -97,12 +96,12 @@ class PurchaseController extends Controller
             if ($validator->fails()) {
                 return response()->json(['errors' => $validator->errors()], 422);
             }
+            $storePurchase = new Purchase();
+            $storePurchase->inv_no = $purchase_codes;
         }
-        // $storePurchase = new Purchase();
         $storePurchase->inv_date = $request->inv_date;
         $storePurchase->remarks = $request->remarks;
         $storePurchase->status = 1;
-        $storePurchase->inv_no = $purchase_codes;
         $storePurchase->mast_item_category_id = $type;
         $storePurchase->mast_supplier_id = $request->mast_supplier_id;
         $storePurchase->mast_work_station_id = $request->mast_work_station_id;

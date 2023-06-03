@@ -197,6 +197,7 @@
         </div>
     </div>
 
+
 </x-app-layout>
 <script>
     //----Open Modal
@@ -245,18 +246,18 @@
         $("#items-table").on("click", ".add-row", function() {++i;
             var newRow = $('<tr>' +
                 '<td>'+
-                    '<select id="item_category" class="form-control dropdwon_select">' +
+                    '<select id="item_category" class="form-control dropdwon_select val_item_category">' +
                     '<option selected disabled>--Select--</option>' +
                     '@foreach($item_group as $data)' +
                         '<option value="{{ $data->id}}">{{ $data->part_name}}</option>' +
                         '@endforeach' +
                     '</select>' +
                 '</td>' +
-                '<td><select id="partNumber" name="moreFile['+i+'][item_id]" class="form-control dropdwon_select"></select></td>' +
+                '<td><select id="partNumber" name="moreFile['+i+'][item_id]" class="form-control dropdwon_select val_part_number"></select></td>' +
                 '<td><input type="text" name="" readonly id="packageSize" class="form-control"></td>' +
                 '<td><input type="text" name="" readonly id="unit" class="form-control"></td>' +
-                '<td><input type="number" name="moreFile['+i+'][qty]" id="" class="form-control quantity" placeholder="0.00"></td>' +
-                '<td><input type="number" name="moreFile['+i+'][price]" id="" class="form-control price" placeholder="0.00"></td>' +
+                '<td><input type="number" name="moreFile['+i+'][qty]" id="" class="form-control quantity val_quantity" placeholder="0.00"></td>' +
+                '<td><input type="number" name="moreFile['+i+'][price]" id="" class="form-control price val_price" placeholder="0.00"></td>' +
                 '<td class="subtotal">0.00</td>' +
                 '<td class="text-center">' +
                     '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs add-row"><span class="fa fa-plus"></span></button>' +
@@ -264,8 +265,51 @@
                 '</td>'+
             '</tr>');
 
-            $('#items-table tbody').append(newRow);
-            newRow.find('.dropdwon_select').select2();
+            document.getElementById("add_row").addEventListener("click", function() {
+                var rows = document.querySelectorAll("#audit-design-matrix-table tbody tr");
+                var errorMessages = [];
+            });
+            var count = 2;
+            $("#audit-design-matrix-table").on("click", ".add_row", function() {
+                var i = count;
+                count++;
+                var quantity = $(this).closest("tr").find("#quantity");
+                var quantityValue = quantity.val();
+                if (quantityValue.trim() === "") {
+                        $(".submit_btn").click();
+                    return;
+                }
+            });
+
+
+
+            var val_item_category = $(".val_item_category").val();
+            var val_part_number = $(".val_part_number").val();
+            var val_quantity = $(".val_quantity").val();
+            var val_price = $(".val_price").val();
+
+            if (true) {
+                if (true ) {
+                    if (val_quantity === '') {
+                        if (val_price === '') {
+                            $('#items-table tbody').append(newRow);
+                            newRow.find('.dropdwon_select').select2();
+                        } else {
+                            swal("Error!", "An error occurred. val_price", "error");
+                        }
+                    } else {
+                        swal("Error!", "An error occurred. val_quantity", "error");
+                    }
+                } else {
+                    swal("Error!", "An error occurred. val_part_number", "error");
+                }
+                
+            } else {
+                swal("Error!", "An error occurred. val_item_category", "error");
+            }
+            // $('#items-table tbody').append(newRow);
+            // newRow.find('.dropdwon_select').select2();
+            
         });
         $('#items-table').on('click', '.remove-row', function() {
             $(this).closest('tr').remove();
@@ -386,7 +430,6 @@
 <script>
     $(document).on('click', '#edit_data', function(){
         var id = $(this).data('id');
-        alert(id);
         $.ajax({
             url:'{{ route('inv_purchase_edit')}}',
             method:'GET',
