@@ -12,26 +12,27 @@
                     <button id="open_modal" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i><span class="btn-icon-add"></span>Add New</button>
                 </div>
 
-                <div class="card-body">
+                <div class="card-body" id="reload">
                     <div class="table-responsive">
-                        <table id="example3" class="display" style="min-width: 845px">
+                        <table id="example3" class="display " style="min-width: 845px">
                             <thead>
                             <tr>
-                                <th>SL NO</th>
-                                <th>Order Date</th>
+                                <th></th>
                                 <th>Order No</th>
+                                <th>Order Date</th>
                                 <th>Supplier Name</th>
                                 <th>Store Location</th>
                                 <th>Status</th>
                                 <th class="text-right">Action</th>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="purchase_tbody">
                                 @foreach ($data as $key=> $row)
-                                <tr>
-                                    <td>{{++$key}}</td>
-                                    <td>{{date("j F, Y", strtotime($row->inv_date))}}</td>
+                                <tr id="row_purchase_table_{{ $row->id}}">
+                                    <td></td>
                                     <td>{{$row->inv_no}}</td>
+                                    {{-- <td>{{date("j F, Y", strtotime($row->inv_date))}}</td> --}}
+                                    <td>{{$row->inv_date}}</td>
                                     <td>{{$row->mastSupplier->supplier_name ?? 'NULL'}}</td>
                                     <td>{{$row->mastWorkStation->store_name ?? 'NULL'}}</td>
                                     <td>@if($row->status == 0)
@@ -189,7 +190,7 @@
                     </div>
                     <div class="modal-footer" style="height:50px">
                         <button type="button" class="btn btn-sm btn-danger light" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-sm btn-primary submit_btn">Submit</button>
                     </div>
                 </form>
                 
@@ -199,7 +200,9 @@
 
 
 </x-app-layout>
-<script>
+
+<!--=======//Show Modal//=======-->
+<script type="text/javascript">
     //----Open Modal
     $("#open_modal").on('click',function(){
         $("#main-row-data").load(" #main-row-data", function() {
@@ -216,34 +219,35 @@
 
         var newRow = $('<tr>' +
             '<td>'+
-                '<select id="item_category" class="form-control dropdwon_select">' +
+                '<select id="item_category" class="form-control dropdwon_select val_item_category" required>' +
                 '<option selected disabled>--Select--</option>' +
                 '@foreach($item_group as $data)' +
                     '<option value="{{ $data->id}}">{{ $data->part_name}}</option>' +
                     '@endforeach' +
                 '</select>' +
             '</td>' +
-            '<td><select id="partNumber" name="moreFile['+0+'][item_id]" class="form-control dropdwon_select"></select></td>' +
+            '<td><select id="partNumber" name="moreFile['+0+'][item_id]" class="form-control dropdwon_select val_part_number"></select></td>' +
             '<td><input type="text" name="" readonly id="packageSize" class="form-control"></td>' +
             '<td><input type="text" name="" readonly id="unit" class="form-control"></td>' +
-            '<td><input type="number" name="moreFile['+0+'][qty]" id="" class="form-control quantity" placeholder="0.00"></td>' +
-            '<td><input type="number" name="moreFile['+0+'][price]" id="" class="form-control price" placeholder="0.00"></td>' +
+            '<td><input type="number" name="moreFile['+0+'][qty]" id="" class="form-control quantity val_quantity" placeholder="0.00"></td>' +
+            '<td><input type="number" name="moreFile['+0+'][price]" id="" class="form-control price val_price" placeholder="0.00"></td>' +
             '<td class="subtotal">0.00</td>' +
             '<td class="text-center">' +
                 '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs add-row"><span class="fa fa-plus"></span></button>' +
                 '<button type="button" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0 remove-row"><span class="fa fa-trash"></span></button>' +
             '</td>'+
         '</tr>');
-
         $('#items-table tbody').append(newRow);
         newRow.find('.dropdwon_select').select2();
     });
 </script>
-<script>
+
+<!--=======//Grid Add Remove//=======-->
+<script type="text/javascript">
     //======Add Or Remove Row
     $(document).ready(function() {
-        var i = 0;
-        $("#items-table").on("click", ".add-row", function() {++i;
+        $("#items-table").on("click", ".add-row", function() {
+            var i = 0;++i;
             var newRow = $('<tr>' +
                 '<td>'+
                     '<select id="item_category" class="form-control dropdwon_select val_item_category">' +
@@ -264,52 +268,34 @@
                     '<button type="button" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0 remove-row"><span class="fa fa-trash"></span></button>' +
                 '</td>'+
             '</tr>');
-
-            document.getElementById("add_row").addEventListener("click", function() {
-                var rows = document.querySelectorAll("#audit-design-matrix-table tbody tr");
-                var errorMessages = [];
-            });
-            var count = 2;
-            $("#audit-design-matrix-table").on("click", ".add_row", function() {
-                var i = count;
-                count++;
-                var quantity = $(this).closest("tr").find("#quantity");
-                var quantityValue = quantity.val();
-                if (quantityValue.trim() === "") {
-                        $(".submit_btn").click();
-                    return;
+            var allValuesNotNull = true;
+            $('.val_part_number').each(function() {
+                var value = $(this).val();
+                if (value === null || value === '') {
+                    allValuesNotNull = false;
+                    return false;
                 }
             });
-
-
-
-            var val_item_category = $(".val_item_category").val();
-            var val_part_number = $(".val_part_number").val();
-            var val_quantity = $(".val_quantity").val();
-            var val_price = $(".val_price").val();
-
-            if (true) {
-                if (true ) {
-                    if (val_quantity === '') {
-                        if (val_price === '') {
-                            $('#items-table tbody').append(newRow);
-                            newRow.find('.dropdwon_select').select2();
-                        } else {
-                            swal("Error!", "An error occurred. val_price", "error");
-                        }
-                    } else {
-                        swal("Error!", "An error occurred. val_quantity", "error");
-                    }
-                } else {
-                    swal("Error!", "An error occurred. val_part_number", "error");
+            $('.val_quantity').each(function() {
+                var value = $(this).val();
+                if (value === null || value === '') {
+                    allValuesNotNull = false;
+                    return false;
                 }
-                
+            });
+            $('.val_price').each(function() {
+                var value = $(this).val();
+                if (value === null || value === '') {
+                    allValuesNotNull = false;
+                    return false;
+                }
+            });
+            if (allValuesNotNull) {
+                $('#items-table tbody').append(newRow);
+                newRow.find('.dropdwon_select').select2();
             } else {
-                swal("Error!", "An error occurred. val_item_category", "error");
+                swal("Error!", "All input values are not null or empty.", "error");
             }
-            // $('#items-table tbody').append(newRow);
-            // newRow.find('.dropdwon_select').select2();
-            
         });
         $('#items-table').on('click', '.remove-row', function() {
             $(this).closest('tr').remove();
@@ -334,6 +320,8 @@
             $('#total').text(total.toFixed(2));
         }
     });
+    
+
     //======Get Item Group All Data
     $(document).on('change','#item_category',function(){
         var partId = $(this).val();
@@ -384,50 +372,98 @@
         }
     @endif
 </script>
-
+<!--=========//Save Data //==========-->
 <script type="text/javascript">
+    //---Save Data
     $(document).ready(function(){
-        //---Save Data
         var form = '#add-user-form';
         $(form).on('submit', function(event){
             event.preventDefault();
             var url = $(this).attr('data-action');
-            var src = $('#redirect').attr('redirect-action');
-            $.ajax({
-                url: url,
-                method: 'POST',
-                data: new FormData(this),
-                dataType: 'JSON',
-                contentType: false,
-                cache: false,
-                processData: false,
-                success:function(response)
-                {
-                    $(form).trigger("reset");
-                    // alert(response.success);
-                    swal("Success Message Title", "Well done, you pressed a button", "success")
-                    // window.location.href = src;
-                    $(".bd-example-modal-lg").modal('hide');
-                },
-                error: function (xhr) {
-                    alert('fail');
-                    var errors = xhr.responseJSON.errors;
-                    var errorHtml = '';
-                    $.each(errors, function(key, value) {
-                        errorHtml += '<li style="color:red">' + value + '</li>';
-                    });
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Required data missing?',
-                        html: '<ul>' + errorHtml + '</ul>',
-                    });
+            var allSubValuesNotNull = true;
+            $('.val_part_number').each(function() {
+                var value = $(this).val();
+                if (value === null || value === '') {
+                    allSubValuesNotNull = false;
+                    return false;
                 }
             });
+            $('.val_quantity').each(function() {
+                var value = $(this).val();
+                if (value === null || value === '') {
+                    allSubValuesNotNull = false;
+                    return false;
+                }
+            });
+            $('.val_price').each(function() {
+                var value = $(this).val();
+                if (value === null || value === '') {
+                    allSubValuesNotNull = false;
+                    return false;
+                }
+            });
+            if (allSubValuesNotNull) {
+                $.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: new FormData(this),
+                    dataType: 'JSON',
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    success:function(response)
+                    {
+                        $(form).trigger("reset");
+                        swal("Success Message Title", "Well done, you pressed a button", "success")
+                        $(".bd-example-modal-lg").modal('hide');
+                        var storePurchase = response.storePurchase;
+                        
+                        var i = 0;++i;
+                        var row = '<tr id="row_purchase_table_'+ storePurchase.id + '" role="row" class="odd">';
+                        row += '<td></td>';
+                        row += '<td>' + storePurchase.inv_no + '</td>';
+                        row += '<td>' + storePurchase.inv_date + '</td>';
+                        row += '<td>' + response.mastSupplier.supplier_name + '</td>';
+                        row += '<td>' + response.mastWorkStation.store_name + '</td>';
+                        // row += '<td> @if('+ storePurchase.status == 1 +') <span class="badge light badge-warning"><i class="fa fa-circle text-warning mr-1"></i>Pending</span> @elseif('+ storePurchase.status == 0 +') <span class="badge light badge-success"><i class="fa fa-circle text-success mr-1"></i>Successful</span> @elseif('+storePurchase.status == 2 +') <span class="badge light badge-danger"><i class="fa fa-circle text-danger mr-1"></i>Canceled</span> @endif </td>';
+                        row += '<td>';
+                        if(storePurchase.status == 0)
+                            row += '<span class="badge light badge-warning"><i class="fa fa-circle text-warning mr-1"></i>Pending</span>';
+                        else if(storePurchase.status == 1)
+                            row += '<span class="badge light badge-success"><i class="fa fa-circle text-success mr-1"></i>Successful</span>';
+                        else if(storePurchase.status == 2)
+                            row += '<span class="badge light badge-danger"><i class="fa fa-circle text-danger mr-1"></i>Canceled</span>';
+                        
+                        row += '</td>';
+                        row += '<td class="text-right"><button type="button" class="btn btn-sm btn-success p-1 px-2 mr-1" id="edit_data" data-id="'+storePurchase.id+'"><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button><button class="btn btn-sm btn-info p-1 px-2 veiw_details" data-toggle="modal" data-id="'+storePurchase.id+'" data-target="#purchase-details"><i class="fa fa-folder-open"></i><span class="btn-icon-add"></span>View</button></td>';
+
+                        if($("#pur_id").val()){
+                            $("#row_purchase_table_" + storePurchase.id).replaceWith(row);
+                        }else{
+                            $("#purchase_tbody").prepend(row);
+                        }
+                    },
+                    error: function (xhr) {
+                        var errors = xhr.responseJSON.errors;
+                        var errorHtml = '';
+                        $.each(errors, function(key, value) {
+                            errorHtml += '<li style="color:red">' + value + '</li>';
+                        });
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Required data missing?',
+                            html: '<ul>' + errorHtml + '</ul>',
+                        });
+                    }
+                });
+            } else {
+                swal("Error!", "All input values are not null or empty.", "error");
+            }
         });
     });
 </script>
-
-<script>
+<!--=========//Edit Data //==========-->
+<script type="text/javascript">
     $(document).on('click', '#edit_data', function(){
         var id = $(this).data('id');
         $.ajax({
