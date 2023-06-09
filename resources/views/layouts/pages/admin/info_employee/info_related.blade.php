@@ -558,7 +558,6 @@
                         swal("Success Message Title", "Well done, you pressed a button", "success")
                         // window.location.href = src;
 
-
                         if(response.institute_name){
                             var row = '<tr id="row_todo_'+ response.id + '">';
                             row += '<td> @if('+response.qualification == 1 +') SSC @elseif ('+ response.qualification == 2+') HSC @endif' + '</td>';

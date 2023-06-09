@@ -14,6 +14,7 @@ class PurchaseDetails extends Model
         'qty',
         'price',
         'rcv_qty',
+        'cat_id',
         'status',
         'purchase_id',
         'mast_item_register_id',

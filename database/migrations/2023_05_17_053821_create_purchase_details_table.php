@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('qty')->nullable();
             $table->decimal('price')->nullable();
             $table->integer('rcv_qty')->nullable();
+            $table->bigInteger('cat_id')->nullable();
             $table->tinyInteger('status')->default(true);
 
             $table->unsignedBigInteger('purchase_id');

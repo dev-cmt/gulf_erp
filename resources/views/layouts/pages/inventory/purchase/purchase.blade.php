@@ -22,12 +22,19 @@
                                 <th>Order Date</th>
                                 <th>Supplier Name</th>
                                 <th>Store Location</th>
+                                <th>Total</th>
                                 <th>Status</th>
                                 <th class="text-right">Action</th>
                             </tr>
                             </thead>
                             <tbody id="purchase_tbody">
                                 @foreach ($data as $key=> $row)
+                                @php
+                                    $total = 0;
+                                    foreach ($row->purchaseDetails as $key => $value) {
+                                        $total += $value->qty * $value->price;
+                                    }
+                                @endphp
                                 <tr id="row_purchase_table_{{ $row->id}}">
                                     <td></td>
                                     <td>{{$row->inv_no}}</td>
@@ -35,6 +42,7 @@
                                     <td>{{$row->inv_date}}</td>
                                     <td>{{$row->mastSupplier->supplier_name ?? 'NULL'}}</td>
                                     <td>{{$row->mastWorkStation->store_name ?? 'NULL'}}</td>
+                                    <td>{{$total}}</td>
                                     <td>@if($row->status == 0)
                                         <span class="badge light badge-warning">
                                             <i class="fa fa-circle text-warning mr-1"></i>Pending
@@ -51,7 +59,7 @@
                                     </td>
                                     <td class="text-right">
                                         <button type="button" class="btn btn-sm btn-success p-1 px-2" id="edit_data" data-id="{{ $row->id }}"><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button>
-                                        <button class="btn btn-sm btn-info p-1 px-2 veiw_details" data-toggle="modal" data-id="{{ $row->id }}" data-target="#purchase-details"><i class="fa fa-folder-open"></i><span class="btn-icon-add"></span>View</button>
+                                        <button type="button" class="btn btn-sm btn-info p-1 px-2" id="view_data" data-id="{{ $row->id }}"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</button>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -156,32 +164,14 @@
                                             </tr>
                                         </thead>
                                         <tbody id="table-body">
-                                            {{-- <tr>
-                                                <td>
-                                                    <select id="item_category" class="dropdwon_select">
-                                                    <option selected disabled>--Select--</option>
-                                                    @foreach($item_group as $data)
-                                                        <option value="{{ $data->id}}">{{ $data->part_name}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </td><input type="hidden" id="edit_total" value="5000" class="edit_total">
-                                                <td><select id="partNumber" name="moreFile[0][item_id]" class="dropdwon_select"></select></td>
-                                                <td><input type="text" name="" readonly id="packageSize" class="form-control"></td>
-                                                <td><input type="text" name="" readonly id="unit" class="form-control"></td>
-                                                <td><input type="number" name="moreFile[0][qty]" id="" class="form-control quantity" placeholder="0.00"></td>
-                                                <td><input type="number" name="moreFile[0][price]" id="" class="form-control price" placeholder="0.00"></td>
-                                                <td class="subtotal">0.00</td>
-                                                <td class="text-center">
-                                                    <button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs add-row"><span class="fa fa-plus"></span></button>
-                                                    <button type="button" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0 remove-row"><span class="fa fa-trash"></span></button>
-                                                </td>
-                                            </tr> --}}
+                                            
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="float-right">
+                                    <input type="hidden" id="edit_total" value="">
                                     <h6>Total <span style="border: 1px solid #2222;padding: 10px 40px;margin-left:10px" id="total">0.00</span></h6>
                                 </div>
                             </div>
@@ -239,6 +229,8 @@
         '</tr>');
         $('#items-table tbody').append(newRow);
         newRow.find('.dropdwon_select').select2();
+        $('#total').text("0.00");
+        $("#edit_total").val(0);
     });
 </script>
 
@@ -308,16 +300,15 @@
         function updateSubtotal() {
             var total = 0;
             $('#items-table tbody tr').each(function() {
-            var quantity = parseFloat($(this).find('.quantity').val()) || 0;
-            var price = parseFloat($(this).find('.price').val()) || 0;
-            var edit_total = parseFloat($(this).find('.edit_total').val()) || 0;
-            var subtotal = quantity * price;
-
-            $(this).find('.subtotal').text(subtotal.toFixed(2));
-            // total += subtotal;
-            total = edit_total + subtotal;
+                var quantity = parseFloat($(this).find('.quantity').val()) || 0;
+                var price = parseFloat($(this).find('.price').val()) || 0;
+                var subtotal = quantity * price;
+                $(this).find('.subtotal').text(subtotal.toFixed(2));
+                total += subtotal;
             });
-            $('#total').text(total.toFixed(2));
+            var edit_total = parseFloat($('#edit_total').val()) || 0;
+            var update_total = total + edit_total;
+            $('#total').text(update_total.toFixed(2));
         }
     });
     
@@ -425,7 +416,7 @@
                         row += '<td>' + storePurchase.inv_date + '</td>';
                         row += '<td>' + response.mastSupplier.supplier_name + '</td>';
                         row += '<td>' + response.mastWorkStation.store_name + '</td>';
-                        // row += '<td> @if('+ storePurchase.status == 1 +') <span class="badge light badge-warning"><i class="fa fa-circle text-warning mr-1"></i>Pending</span> @elseif('+ storePurchase.status == 0 +') <span class="badge light badge-success"><i class="fa fa-circle text-success mr-1"></i>Successful</span> @elseif('+storePurchase.status == 2 +') <span class="badge light badge-danger"><i class="fa fa-circle text-danger mr-1"></i>Canceled</span> @endif </td>';
+                        row += '<td>' + response.total + '</td>';
                         row += '<td>';
                         if(storePurchase.status == 0)
                             row += '<span class="badge light badge-warning"><i class="fa fa-circle text-warning mr-1"></i>Pending</span>';
@@ -435,7 +426,7 @@
                             row += '<span class="badge light badge-danger"><i class="fa fa-circle text-danger mr-1"></i>Canceled</span>';
                         
                         row += '</td>';
-                        row += '<td class="text-right"><button type="button" class="btn btn-sm btn-success p-1 px-2 mr-1" id="edit_data" data-id="'+storePurchase.id+'"><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button><button class="btn btn-sm btn-info p-1 px-2 veiw_details" data-toggle="modal" data-id="'+storePurchase.id+'" data-target="#purchase-details"><i class="fa fa-folder-open"></i><span class="btn-icon-add"></span>View</button></td>';
+                        row += '<td class="text-right"><button type="button" class="btn btn-sm btn-success p-1 px-2 mr-1" id="edit_data" data-id="'+storePurchase.id+'"><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button><button type="button" class="btn btn-sm btn-info p-1 px-2" id="view_data" data-id="'+storePurchase.id+'"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</button></td>';
 
                         if($("#pur_id").val()){
                             $("#row_purchase_table_" + storePurchase.id).replaceWith(row);
@@ -462,8 +453,8 @@
         });
     });
 </script>
-<!--=========//Edit Data //==========-->
 <script type="text/javascript">
+    /*=========//Edit Data //==========*/
     $(document).on('click', '#edit_data', function(){
         var id = $(this).data('id');
         $.ajax({
@@ -474,7 +465,7 @@
             success:function(response){
                 $(".bd-example-modal-lg").modal('show');
                 $(".modal-title").html('@if($type == 1) AC Purchase Edit @elseif($type == 2) AC Spare Parts Purchase Edit @else Car Spare Parts Purchase Edit @endif');
-                
+                $(".modal-footer").show();
                 //--Get Master Data
                 var data = response.data;
 
@@ -532,6 +523,7 @@
                 $('#items-table tbody').append(newRow);
                 newRow.find('.dropdwon_select').select2();
 
+                var total=0;
                 $.each(purchase_det, function(index, item) {
                     var subtotal = item.qty * item.price;
                     var row = '<tr id="row_todo_'+ item.id + '">';
@@ -542,18 +534,95 @@
                     row += '<td>' + item.qty + '</td>';
                     row += '<td>' + item.price + '</td>';
                     row += '<td>'+ subtotal +'</td>';
-                    row += '<td class="text-center"><button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs add-row"><span class="fa fa-plus"></span></button><button type="button" id="delete_todo" data-id="' + item.id +'" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0"><span class="fa fa-trash"></span></button></td>';
-                    // Add more columns as needed
+                    row += '<td class="text-center"><button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs add-row"><span class="fa fa-plus"></span></button><button type="button" id="delete_data" data-id="' + item.id +'" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0"><span class="fa fa-trash"></span></button></td>';
                     row += '</tr>';
-                    // tableBody.prepend(row);
 
                     if($("#id").val()){
-                        $("#row_todo_" + item.id).replaceWith(row);
+                        $("#row_todo_"+ item.id).replaceWith(row);
                     }else{
                         tableBody.prepend(row);
                     }
-                    
+
+                    $(this).find('.subtotal').text(subtotal.toFixed(2));
+                    total += subtotal;
                 });
+                $("#edit_total").val(total);
+                $('#total').text(total.toFixed(2));
+            },
+            error: function(xhr, status, error) {
+                console.log(error);
+            }
+        });
+    });
+    /*=========//View Data //==========*/
+    $(document).on('click', '#view_data', function(){
+        var id = $(this).data('id');
+        $.ajax({
+            url:'{{ route('inv_purchase_edit')}}',
+            method:'GET',
+            dataType:"JSON",
+            data:{id:id},
+            success:function(response){
+                $(".bd-example-modal-lg").modal('show');
+                $(".modal-title").html('@if($type == 1) AC Purchase Edit @elseif($type == 2) AC Spare Parts Purchase Edit @else Car Spare Parts Purchase Edit @endif');
+                $(".modal-footer").hide();
+                //--Get Master Data
+                var data = response.data;
+
+                $("#pur_id").val(data.id);
+                $('#inv_no').html(data.inv_no);
+                $("#inv_date").val(data.inv_date);
+                $('#remarks').html(data.remarks);
+                
+                $("#pur_id").attr("disabled", "disabled");
+                $('#inv_no').attr("disabled", "disabled");
+                $("#inv_date").attr("disabled", "disabled");
+                $('#remarks').attr("disabled", "disabled");
+                $('#mast_supplier_id').attr("disabled", "disabled");
+                $('#mast_work_station_id').attr("disabled", "disabled");
+
+                //--Get All Supplier Data
+                var supplier = response.supplier;
+                var supplier_dr = $('#mast_supplier_id');
+                supplier_dr.empty();
+                supplier_dr.append('<option>Select an Supplier</option>');
+                $.each(supplier, function(index, option) {
+                    var selected = (option.id == data.mast_supplier_id) ? 'selected' : '';
+                    supplier_dr.append('<option value="' + option.id + '" ' + selected + '>' + option.supplier_name + '</option>');
+                });
+                //--Get All Supplier Data
+                var store = response.store;
+                var work_station_dr = $('#mast_work_station_id');
+                work_station_dr.empty();
+                work_station_dr.append('<option>Select an Work Station</option>');
+                $.each(store, function(index, option) {
+                    var selected = (option.id == data.mast_work_station_id) ? 'selected' : '';
+                    work_station_dr.append('<option value="' + option.id + '" ' + selected + '>' + option.store_name + '</option>');
+                });
+
+                //--Show Purchase Details Data
+                var purchase_det = response.purchase_details;
+                var tableBody = $('#table-body');
+                tableBody.empty();
+
+                var total = 0;
+                $.each(purchase_det, function(index, item) {
+                    var subtotal = item.qty * item.price;
+                    var row = '<tr id="row_todo_'+ item.id + '">';
+                    row += '<td>' + item.part_name + '</td>';
+                    row += '<td>' + item.part_no + '</td>';
+                    row += '<td>' + item.box_qty + '</td>';
+                    row += '<td>' + item.unit_name + '</td>';
+                    row += '<td>' + item.qty + '</td>';
+                    row += '<td>' + item.price + '</td>';
+                    row += '<td>'+ subtotal +'</td>';
+                    row += '</tr>';
+
+                    tableBody.prepend(row);
+                    $(this).find('.subtotal').text(subtotal.toFixed(2));
+                    total += subtotal;
+                });
+                $('#total').text(total.toFixed(2));
             },
             error: function(xhr, status, error) {
                 console.log(error);
@@ -568,7 +637,7 @@
             }
         });
     });
-    $("body").on('click','#delete_todo',function(){
+    $("body").on('click','#delete_data',function(){
         var id = $(this).data('id');
         $.ajax({
             url: "{{ url('inv_purchase/destroy')}}" + '/' + id,

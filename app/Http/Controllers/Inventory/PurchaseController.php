@@ -20,25 +20,12 @@ class PurchaseController extends Controller
 {
     public function index($type)
     {
-        
-        // $data=Purchase::where('id', 1)->with('mastWorkStation','mastSupplier')->first();
-        // dd($data->inv_date);
-        // $purchase_details =PurchaseDetails::with('mastItemRegister','purchase')->where('purchase_id', 1)->get();
-        // $data=Purchase::where('mast_item_category_id', 1)->where('status', 1)->with('mastWorkStation','mastSupplier')->latest()->get();
-
-
-        $purchase_details = PurchaseDetails::where('purchase_id', 1)
-        ->join('mast_item_registers', 'mast_item_registers.id', 'purchase_details.mast_item_register_id')
-        ->join('purchases', 'purchases.id', 'purchase_details.purchase_id')
-        ->select('purchase_details.*','mast_item_registers.part_no')
-        ->get();
-
-        $item_group = MastItemGroup::where('mast_item_category_id', $type)->get();
+        $item_group = MastItemGroup::where('mast_item_category_id', $type)->orderBy('part_name', 'asc')->get();
         $supplier=MastSupplier::where('status', 1)->get();
         $store=MastWorkStation::where('status', 1)->get();
         
-        $data=Purchase::where('mast_item_category_id', $type)->where('status', 0)->with('mastWorkStation','mastSupplier')->orderBy('id', 'desc')->latest()->get();
-        return view('layouts.pages.inventory.purchase.purchase',compact('type','item_group','supplier','store','data','purchase_details'));
+        $data=Purchase::where('mast_item_category_id', $type)->where('status', 0)->with('purchaseDetails','mastWorkStation','mastSupplier')->orderBy('id', 'desc')->latest()->get();
+        return view('layouts.pages.inventory.purchase.purchase',compact('type','item_group','supplier','store','data'));
     }
     public function store(Request $request, $type)
     {
@@ -86,14 +73,26 @@ class PurchaseController extends Controller
             }
         }
         // $purchase = Purchase::findOrFail($storePurchase->id)->with('mastWorkStation','mastSupplier')->first();
-        $purchase = Purchase::findOrFail($storePurchase->id)->first();
+        if(isset($pur_id)){
+            $purchase = Purchase::where('id', $pur_id)->first();
+        }else{
+            $purchase = Purchase::where('id', $storePurchase->id)->first();
+        }
         $mastWorkStation = $purchase->mastWorkStation;
         $mastSupplier = $purchase->mastSupplier;
+        $purchaseDetails = $purchase->purchaseDetails;
+
+        $total = 0;
+        foreach ($purchaseDetails as $key => $value) {
+            $total += $value->qty * $value->price;
+        }
+        
         return response()->json([
             'storePurchase' => $storePurchase,
             'purchase' => $purchase,
             'mastWorkStation' => $mastWorkStation,
             'mastSupplier' => $mastSupplier,
+            'total' => $total,
         ]);
     }
     public function edit(Request $request)

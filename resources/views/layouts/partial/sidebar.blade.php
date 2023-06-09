@@ -78,7 +78,7 @@
                                 <li><a href="{{ route('inv_purchase.index',['cat_id' => 3])}}">Car Spare Parts</a></li>
                             </ul>
                         </li>
-                        <li><a href="#">Stock Delivery</a></li>
+                        <li><a href="#">Sales Delivery</a></li>
                         <li><a href="#">Stock Update</a></li>
                         <li><a href="#">Stock Possition</a></li>
                         <li><a href="#">Reports</a></li>
@@ -97,19 +97,21 @@
                         <span class="nav-text">Sales</span>
                     </a>
                     <ul aria-expanded="false">
-                        <li><a href="#">Importer Sales</a></li>
-                        <li><a href="#">Distributer Sales</a></li>
-                        <li><a href="#">Reseller Sales</a></li>
-                        <li><a href="#">Delivery</a></li>
-                        <li><a href="#">Product Receive</a></li>
-                        <li><a href="#">Product Return</a></li>
-                        <li><a href="#">Warrenty & Service</a></li>
+                        <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Sales</a>
+                            <ul aria-expanded="false">
+                                <li><a href="{{ route('sales.index',['cat_id' => 1]) }}">AC Sales</a></li>
+                                <li><a href="{{ route('sales.index',['cat_id' => 2]) }}">AC Spare Parts</a></li>
+                                <li><a href="{{ route('sales.index',['cat_id' => 3]) }}">Car Spare Parts</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#">Sales Return</a></li>
+                        <li><a href="#">Sales Receive</a></li>
                         <li><a href="#">Reports</a></li>
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Data Setting</a>
                             <ul aria-expanded="false">
-                                <li><a href="#">Distributer Details</a></li>
-                                <li><a href="#">Reseller Details</a></li>
-                                <li><a href="#">Reseller Sales</a></li>
+                                <li><a href="{{ route('customer.index',['cat_id' => 1]) }}">Corporate Details</a></li>
+                                <li><a href="{{ route('customer.index',['cat_id' => 2]) }}">Distributer Details</a></li>
+                                <li><a href="{{ route('customer.index',['cat_id' => 3]) }}">Retailer Details</a></li>
                             </ul>
                         </li>
                     </ul>

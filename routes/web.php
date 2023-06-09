@@ -13,8 +13,10 @@ use App\Http\Controllers\Admin\InfoEmployeeController;
 use App\Http\Controllers\Admin\LeaveApplicationController;
 use App\Http\Controllers\Admin\ManualAttendanceController;
 use App\Http\Controllers\Admin\attendanceApproveController;
-//--HR & Admin
+//--Inventory
 use App\Http\Controllers\Inventory\PurchaseController;
+//--Sales
+use App\Http\Controllers\Sales\SalesController;
 //--Master Data
 use App\Http\Controllers\Master\MastDepartmentController;
 use App\Http\Controllers\Master\MastDesignationController;
@@ -58,7 +60,7 @@ Route::middleware([ 'auth:sanctum','verified', config('jetstream.auth_session')]
 
 Route::group(['middleware' => ['auth']], function(){
     /**______________________________________________________________________________________________
-     * Employee Register Process
+     * HR & ADMIN => Employee Register
      * ______________________________________________________________________________________________
      */
     //--Employee List
@@ -84,7 +86,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::delete('info_related/info_nominee/destroy/{id}', [InfoEmployeeController::class, 'info_nominee_destroy'])->name('info_nominee.destroy');
 
     /**______________________________________________________________________________________________
-     * Leave Infomation & Other Process 
+     * HR & ADMIN => Leave 
      * ______________________________________________________________________________________________
      */
     Route::get('leave/self', [LeaveApplicationController::class, 'leave_application'])->name('leave_self.create');
@@ -102,7 +104,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::PATCH('leave_application/canceled/{id}', [LeaveApplicationController::class, 'decline'])->name('leave_application.canceled');
 
     /**______________________________________________________________________________________________
-     * Attendances Infomation & Other Process
+     * HR & ADMIN => Attendances
      * ______________________________________________________________________________________________
      */
     Route::resource('manual_attendances', ManualAttendanceController::class);
@@ -116,24 +118,28 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('attendance/import', [ManualAttendanceController::class, 'importAttendance'])->name('attendance.import');
     Route::post('attendance/upload', [ManualAttendanceController::class, 'uploadAttendance'])->name('attendance.upload');    
     Route::get('attendance/export', [ManualAttendanceController::class, 'exportAttendance'])->name('attendance.export'); 
-});
-
-Route::group(['middleware' => ['auth']], function(){
+    
     /**______________________________________________________________________________________________
-     * Purchase
+     * Inventory => Purchase
      * ______________________________________________________________________________________________
      */
-
-    Route::get('/purchase/cat_id={cat_id}',[PurchaseController::class,'index'])->name('inv_purchase.index');
-    Route::post('/purchase/store/cat_id={cat_id}', [PurchaseController::class, 'store'])->name('inv_purchase.store');
-    Route::get('purchase/edit',[PurchaseController::class,'edit'])->name('inv_purchase_edit');
-    Route::delete('inv_purchase/destroy/{id}', [PurchaseController::class, 'inv_purchase_destroy'])->name('inv_purchase.destroy');
-
-    Route::get('/get-part-id',[PurchaseController::class,'getPartNumber'])->name('get-part-id');
-    Route::get('/get-part-number',[PurchaseController::class,'anotherField'])->name('get-part-number');
-    Route::get('get/purchase_details/{id}', [PurchaseController::class,'getPurchaseDetails'])->name('get_purchase_details');
-
+     Route::get('/purchase/cat_id={cat_id}',[PurchaseController::class,'index'])->name('inv_purchase.index');
+     Route::post('/purchase/store/cat_id={cat_id}', [PurchaseController::class, 'store'])->name('inv_purchase.store');
+     Route::get('purchase/edit',[PurchaseController::class,'edit'])->name('inv_purchase_edit');
+     Route::delete('inv_purchase/destroy/{id}', [PurchaseController::class, 'inv_purchase_destroy'])->name('inv_purchase.destroy');
+ 
+     Route::get('/get-part-id',[PurchaseController::class,'getPartNumber'])->name('get-part-id');
+     Route::get('/get-part-number',[PurchaseController::class,'anotherField'])->name('get-part-number');
+    /**______________________________________________________________________________________________
+     * Sales => Sales
+     * ______________________________________________________________________________________________
+     */
+     Route::get('sales/cat_id={cat_id}',[SalesController::class,'index'])->name('sales.index');
+     Route::post('sales/store/cat_id={cat_id}', [SalesController::class, 'store'])->name('sales.store');
+     Route::get('sales/edit',[SalesController::class,'edit'])->name('sales.edit');
+     Route::delete('sales/destroy/{id}', [SalesController::class, 'inv_purchase_destroy'])->name('inv_purchase.destroy');
 });
+
 Route::group(['middleware' => ['auth']], function(){
     /**______________________________________________________________________________________________
      * HR & ADMIN MASTER
@@ -143,6 +149,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::resource('mast_designation', MastDesignationController::class);
     Route::resource('mast_leave', MastLeaveController::class);
     Route::resource('must_employee_category', MastEmployeeTypeController::class);
+    
     /**______________________________________________________________________________________________
      * INVENTORY MASTER
      * ______________________________________________________________________________________________
@@ -153,7 +160,14 @@ Route::group(['middleware' => ['auth']], function(){
     Route::resource('mast_item_register', MastItemRegisterController::class);
     Route::get('/pdf/download', [MastItemRegisterController::class, 'generateBarcode'])->name('item_pdf.download');
     Route::get('/item_export/excel', [MastItemRegisterController::class, 'export'])->name('item_export.excel');
-
+    /**______________________________________________________________________________________________
+     * SALES MASTER
+     * ______________________________________________________________________________________________
+     */
+    Route::get('customer/cat_id={cat_id}',[SalesController::class,'indexCustomer'])->name('customer.index');
+    Route::get('customer/create/cat_id={cat_id}',[SalesController::class,'createCustomer'])->name('customer.create');
+    Route::post('customer/store',[SalesController::class,'storeCustomer'])->name('customer.store');
+    Route::get('get-customer/data',[SalesController::class,'getCustomerData'])->name('get-customer-data');
 });
 
 
@@ -165,7 +179,6 @@ Route::get('/todos', [TodoController::class, 'index']);
 Route::get('todos/{todo}/edit', [TodoController::class, 'edit']);
 Route::post('todos/store', [TodoController::class, 'store']);
 Route::delete('todos/destroy/{todo}', [TodoController::class, 'destroy']);
-
 
 Route::get('get-procedure', function () {
     $id = 1;

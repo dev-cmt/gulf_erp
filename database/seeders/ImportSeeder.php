@@ -16,6 +16,8 @@ use App\Models\Master\MastItemCategory;
 use App\Models\Master\MastItemGroup;
 use App\Models\Master\MastItemRegister;
 use App\Models\Master\MastSupplier;
+use App\Models\Master\MastCustomerType;
+use App\Models\Master\MastCustomer;
 
 class ImportSeeder extends Seeder
 {
@@ -600,6 +602,20 @@ class ImportSeeder extends Seeder
             'unit_id'=>'6',
         ]);
         MastItemRegister::create([
+            'box_code'=>'5',
+            'gulf_code'=>'2',
+            'part_no'=>'1278598',
+            'description'=>'Test Only',
+            'box_qty'=>'12',
+            'price'=>'90000',
+            'image'=>'',
+            'cat_id'=>'1',
+            'bar_code'=>'97049180517',
+            'user_id'=>'1',
+            'mast_item_group_id'=>'1',
+            'unit_id'=>'6',
+        ]);
+        MastItemRegister::create([
             'box_code'=>'9',
             'gulf_code'=>'7',
             'part_no'=>'1078598',
@@ -638,6 +654,101 @@ class ImportSeeder extends Seeder
             'address'=>'Shariatpur',
             'user_id'=>'1',
         ]);
+        //____________________________________//
+        MastCustomerType::create([
+            'name'=>'Corporate',
+            'status'=>'1',
+        ]);
+        MastCustomerType::create([
+            'name'=>'Distributer',
+            'status'=>'1',
+        ]);
+        MastCustomerType::create([
+            'name'=>'Retailer',
+            'status'=>'1',
+        ]);
+        //____________________________________//
+        MastCustomer::create([
+            'name'=>'Motiur Rahman',
+            'email'=>'tayfa@gmail.com',
+            'phone'=>'01913954378',
+            'address'=>'Shariatpur',
+            'cont_person'=>'Sagour Khan',
+            'cont_designation'=>'Teacher',
+            'cont_phone'=>'01922437143',
+            'cont_email'=>'sagour@gmail.com',
+            'web_address'=>'',
+            'credit_limit'=>'1000000',
+            'remarks'=>'Test Only',
+            'status'=>'1',
+            'mast_customer_type_id'=>'1',
+            'user_id'=>'1',
+        ]);
+        MastCustomer::create([
+            'name'=>'Sabbir',
+            'email'=>'tayfa@gmail.com',
+            'phone'=>'01913954378',
+            'address'=>'Shariatpur',
+            'cont_person'=>'Alam Khan',
+            'cont_designation'=>'Teacher',
+            'cont_phone'=>'01922437143',
+            'cont_email'=>'sagour@gmail.com',
+            'web_address'=>'',
+            'credit_limit'=>'1000000',
+            'remarks'=>'Test Only',
+            'status'=>'1',
+            'mast_customer_type_id'=>'1',
+            'user_id'=>'1',
+        ]);
+        MastCustomer::create([
+            'name'=>'Minhaz',
+            'email'=>'tayfa@gmail.com',
+            'phone'=>'01913954378',
+            'address'=>'Shariatpur',
+            'cont_person'=>'Sagour Khan',
+            'cont_designation'=>'Teacher',
+            'cont_phone'=>'01922437143',
+            'cont_email'=>'tamim@gmail.com',
+            'web_address'=>'',
+            'credit_limit'=>'1000000',
+            'remarks'=>'Test Only',
+            'status'=>'1',
+            'mast_customer_type_id'=>'1',
+            'user_id'=>'1',
+        ]);
+        MastCustomer::create([
+            'name'=>'Tamim',
+            'email'=>'tayfa@gmail.com',
+            'phone'=>'01913954378',
+            'address'=>'Shariatpur',
+            'cont_person'=>'Motiur Khan',
+            'cont_designation'=>'Teacher',
+            'cont_phone'=>'01922437143',
+            'cont_email'=>'sagour@gmail.com',
+            'web_address'=>'',
+            'credit_limit'=>'1000000',
+            'remarks'=>'Test Only',
+            'status'=>'1',
+            'mast_customer_type_id'=>'2',
+            'user_id'=>'1',
+        ]);
+        MastCustomer::create([
+            'name'=>'Tayfa Islam',
+            'email'=>'tayfa@gmail.com',
+            'phone'=>'01913954378',
+            'address'=>'Shariatpur',
+            'cont_person'=>'Sagour Khan',
+            'cont_designation'=>'Teacher',
+            'cont_phone'=>'01922437143',
+            'cont_email'=>'koli@gmail.com',
+            'web_address'=>'',
+            'credit_limit'=>'1000000',
+            'remarks'=>'Test Only',
+            'status'=>'1',
+            'mast_customer_type_id'=>'3',
+            'user_id'=>'1',
+        ]);
+
         //____________________________________//
 
         //__________EMPLOYEE INFO_____________//
