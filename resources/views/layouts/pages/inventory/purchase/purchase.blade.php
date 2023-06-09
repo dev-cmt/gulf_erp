@@ -92,7 +92,7 @@
                                 <div class="form-group row">
                                     <label class="col-md-5 col-form-label">Order No.</label>
                                     <div class="col-md-7">
-                                        <label class="col-md-5 col-form-label" id="inv_no">GULF-123545</label>
+                                        <label class="col-md-5 col-form-label" id="inv_no">GULF-XXXXX</label>
                                     </div>
                                 </div>
                             </div>
@@ -289,6 +289,38 @@
                 swal("Error!", "All input values are not null or empty.", "error");
             }
         });
+        //----Check Part Number Duplicates
+        $(document).on('change', '.val_part_number', function() {
+            var dropdownValues = $('.val_part_number').map(function() {
+                return $(this).val();
+            }).get();
+
+            var hasDuplicates = new Set(dropdownValues).size !== dropdownValues.length;
+            if (hasDuplicates) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Duplicate Values',
+                    text: 'Duplicate values are not allowed in the partNumber dropdown.',
+                });
+                //--Reset Option
+                var partId = $('#item_category').val();
+                var currentRow = $(this).closest("tr");
+                $.ajax({
+                    url:'{{ route('get-part-id')}}',
+                    method:'GET',
+                    dataType:"html",
+                    data:{'part_id':partId},
+                    success:function(data){
+                        console.log(data)
+                        currentRow.find('#partNumber').html(data);
+                    },
+                    error:function(){
+                        alert('Fail');
+                    }
+                });
+            }
+        });
+
         $('#items-table').on('click', '.remove-row', function() {
             $(this).closest('tr').remove();
             updateSubtotal();

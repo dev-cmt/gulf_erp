@@ -213,6 +213,7 @@
                     </div>
                 </form>
                 
+                <p id="errorMessage" style="display: none; color: red;">Duplicate Item Selected</p>
             </div>
         </div>
     </div>
@@ -305,7 +306,7 @@
                 }
             });
             $('.val_price').each(function() {
-                var value = $(this).val();
+                var value = $("this").val();
                 if (value === null || value === '') {
                     allValuesNotNull = false;
                     return false;
@@ -318,6 +319,40 @@
                 swal("Error!", "All input values are not null or empty.", "error");
             }
         });
+
+        ///----Check Part Number Duplicates
+        $(document).on('change', '.val_part_number', function() {
+            var dropdownValues = $('.val_part_number').map(function() {
+                return $(this).val();
+            }).get();
+
+            var hasDuplicates = new Set(dropdownValues).size !== dropdownValues.length;
+            if (hasDuplicates) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Duplicate Values',
+                    text: 'Duplicate values are not allowed in the partNumber dropdown.',
+                });
+                //--Reset Option
+                var partId = $('#item_category').val();
+                var currentRow = $(this).closest("tr");
+                $.ajax({
+                    url:'{{ route('get-part-id')}}',
+                    method:'GET',
+                    dataType:"html",
+                    data:{'part_id':partId},
+                    success:function(data){
+                        console.log(data)
+                        currentRow.find('#partNumber').html(data);
+                    },
+                    error:function(){
+                        alert('Fail');
+                    }
+                });
+            }
+        });
+
+
         $('#items-table').on('click', '.remove-row', function() {
             $(this).closest('tr').remove();
             updateSubtotal();
@@ -341,7 +376,6 @@
         }
     });
     
-
     //======Get Item Group All Data
     $(document).on('change','#item_category',function(){
         var partId = $(this).val();
@@ -695,7 +729,6 @@
                 $("#row_todo_" + id).remove();
                 $('#table-body').closest('tr').remove();
                 updateSubtotal();
-                
             },
             error: function(response) {
                 Swal.fire({
