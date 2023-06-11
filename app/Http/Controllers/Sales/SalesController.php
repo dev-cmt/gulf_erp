@@ -123,13 +123,18 @@ class SalesController extends Controller
             'sales_details' => $sales_details,
         ]);
     }
-    public function inv_purchase_destroy($id)
+    public function sales_destroy($id)
     {
         $data=SalesDetails::find($id);
+        $subTotal = $data->qty*$data->price;
         $data->delete();
-        return response()->json('success');
+        return response()->json($subTotal);
     }
-
+    public function getSalesDetails(Request $request)
+    {
+        // $data=SalesDetails::find($request->id);
+        return response()->json($subTotal);
+    }
     //---------------------------------------
     //-----------------DISTRIBUTOR
     //---------------------------------------

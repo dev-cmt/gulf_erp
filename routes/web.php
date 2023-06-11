@@ -137,7 +137,8 @@ Route::group(['middleware' => ['auth']], function(){
      Route::get('sales/cat_id={cat_id}',[SalesController::class,'index'])->name('sales.index');
      Route::post('sales/store/cat_id={cat_id}', [SalesController::class, 'store'])->name('sales.store');
      Route::get('sales/edit',[SalesController::class,'edit'])->name('sales.edit');
-     Route::delete('sales/destroy/{id}', [SalesController::class, 'inv_purchase_destroy'])->name('inv_purchase.destroy');
+     Route::get('get/sales_details',[SalesController::class,'getSalesDetails'])->name('sales.sales_details');
+     Route::delete('sales/destroy/{id}', [SalesController::class, 'sales_destroy'])->name('sales.destroy');
 });
 
 Route::group(['middleware' => ['auth']], function(){
