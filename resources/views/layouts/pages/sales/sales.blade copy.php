@@ -564,69 +564,39 @@
         });
     });
 
-    function salesDetails(sales_details) {
-    //--New Row Add
-    var tableBody = $('#table-body');
-    tableBody.empty();
-    
-    var total = 0;
-    var i = 0;
-    $.each(sales_details, function(index, item) {
-        var subtotal = item.qty * item.price;
+    function salesDetails(sales_det){
+        //--New Row Add
+        var tableBody = $('#table-body');
+        tableBody.empty();
+
+        addRow(0)
         
-        var row = '<tr id="row_todo_'+ item.id + '">';
-        row += '<td>';
-        row += '<select id="item_category" class="form-control dropdwon_select val_item_category">';
-        row += '<option selected disabled>--Select--</option>';
-        @foreach($item_group as $data)
-        row += '<option value="{{ $data->id }}" data-part_name="{{ $data->part_name }}" ' + ('{{ $data->id }}' == item.item_groups_id ? 'selected' : '') + '>' + '{{ $data->part_name }}' + '</option>';
-        @endforeach
-        row += '</select>';
-        row += '</td>';
-        row += '<td><select id="partNumber_' + i + '" name="moreFile[' + i + '][item_id]" class="form-control dropdwon_select val_part_number"></select></td>';
-        row += '<td><input type="text" name="" readonly id="packageSize" class="form-control" value="' + item.box_qty + '"></td>';
-        row += '<td><input type="text" name="" readonly id="unit" class="form-control" value="' + item.unit_name + '"></td>';
-        row += '<td><input type="number" name="moreFile['+i+'][qty]" id="" class="form-control quantity val_quantity" placeholder="0.00" value="'+ item.qty +'"></td>';
-        row += '<td><input type="number" name="moreFile['+i+'][price]" id="price" class="form-control price val_price" placeholder="0.00" value="'+ item.price +'"></td>';
-        row += '<td class="subtotal">'+ subtotal +'</td>';
-        row += '<td class="text-center">';
-        row += '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs add-row"><span class="fa fa-plus"></span></button>';
-        row += '<button type="button" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0 remove-row"><span class="fa fa-trash"></span></button>';
-        row += '</td>';
-        row += '</tr>';
+        var total = 0;
+        $.each(sales_det, function(index, item) {
+            var subtotal = item.qty * item.price;
+            var row = '<tr id="row_todo_'+ item.id + '">';
+            row += '<td>' + item.part_name + '</td>';
+            row += '<td>' + item.part_no + '</td>';
+            row += '<td>' + item.box_qty + '</td>';
+            row += '<td>' + item.unit_name + '</td>';
+            row += '<td>' + item.qty + '</td>';
+            row += '<td>' + item.price + '</td>';
+            row += '<td>'+ subtotal +'</td>';
+            row += '<td class="text-center"><button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs add-row"><span class="fa fa-plus"></span></button><button type="button" id="delete_data" data-id="' + item.id +'" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0"><span class="fa fa-trash"></span></button></td>';
+            row += '</tr>';
 
-        if ($("#id").val()) {
-            $("#row_todo_" + item.id).replaceWith(row);
-        } else {
-            tableBody.prepend(row);
-        }
-
-        // AJAX request to populate the part number select element
-        $.ajax({
-            url: '{{ route('get-part-id') }}',
-            method: 'GET',
-            dataType: 'html',
-            // data: { 'part_id': 1 },
-            data: { 'part_id': item.item_groups_id },
-            success: function(data) {
-                alert('hi');
-                $('#partNumber_' + i).html(data);
-            },
-            error: function() {
-                alert('Fail');
+            if($("#id").val()){
+                $("#row_todo_"+ item.id).replaceWith(row);
+            }else{
+                tableBody.prepend(row);
             }
+
+            $(this).find('.subtotal').text(subtotal.toFixed(2));
+            total += subtotal;
         });
-
-        $(this).find('.subtotal').text(subtotal.toFixed(2));
-        total += subtotal;
-        i++;
-    });
-
-    addRow(0);
-    $("#edit_total").val(total);
-    $('#total').text(total.toFixed(2));
-}
-
+        $("#edit_total").val(total);
+        $('#total').text(total.toFixed(2));
+    }
     /*========//Delete Data//========*/
     $(document).ready(function(){
         $.ajaxSetup({
@@ -743,9 +713,4 @@
         }
     @endif
 </script>
-
-
-
-
-
 

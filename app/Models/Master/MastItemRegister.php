@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Master\MastUnit;
 use App\Models\Master\MastItemGroup;
 use App\Models\Master\MastItemCategory;
+use App\Models\Sales\SalesDetails;
 
 class MastItemRegister extends Model
 {
@@ -34,5 +35,9 @@ class MastItemRegister extends Model
     public function mastItemGroup()
     {
         return $this->belongsTo(MastItemGroup::class);
+    }
+    public function salesDetails()
+    {
+        return $this->belongsTo(SalesDetails::class);
     }
 }
