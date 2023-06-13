@@ -1,0 +1,10 @@
+public function up()
+    {
+        $procedure ="DROP PROCEDURE IF EXISTS `get_users_by_id`;
+            CREATE PROCEDURE `get_users_by_id` (IN inx int)
+            BEGIN
+                SELECT * FROM  users where id = inx;
+            END;
+        ";
+        \DB::unprepared($procedure);
+    }

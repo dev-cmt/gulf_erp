@@ -75,6 +75,24 @@ class SalesController extends Controller
                 $data->save();
             }
         }
+        if (isset($request->editFile[0]['item_id']) && !empty($request->editFile[0]['item_id'])) {
+            foreach($request->editFile as $item){
+                $data = SalesDetails::findOrFail($item['id']);
+
+                $data->mast_item_register_id = $item['item_id'];
+                $data->qty = $item['qty'];
+                $data->price = $item['price'];
+                $data->status = 1;
+                if(isset($sal_id)){
+                    $data->sales_id = $sal_id;
+                }else{
+                    $data->sales_id = $sales->id;
+                }
+                $data->user_id = Auth::user()->id;
+                $data->save();
+            }
+        }
+
         if(isset($sal_id)){
             $new_sales = Sales::where('id', $sal_id)->first();
         }else{
@@ -128,15 +146,15 @@ class SalesController extends Controller
     public function sales_destroy($id)
     {
         $data=SalesDetails::find($id);
-        $subTotal = $data->qty*$data->price;
+        // $subTotal = $data->qty*$data->price;
         $data->delete();
-        return response()->json($subTotal);
+        // return response()->json($subTotal);
+        return response()->json('success');
     }
     public function getSalesDetails(Request $request)
     {
-        // $data_part_id = MastItemRegister::all();
         $data = MastItemRegister::where('mast_item_group_id', $request->part_id)->get();
-        return view('layouts.pages.inventory.purchase.load-part-number',compact('data'));
+        return response()->json($data);
     }
     //---------------------------------------
     //-----------------DISTRIBUTOR

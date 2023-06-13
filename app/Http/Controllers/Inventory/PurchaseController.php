@@ -105,7 +105,7 @@ class PurchaseController extends Controller
         ->join('mast_item_groups', 'mast_item_groups.id', 'mast_item_registers.mast_item_group_id')
         ->join('purchases', 'purchases.id', 'purchase_details.purchase_id')
         ->join('mast_units', 'mast_units.id', 'mast_item_registers.unit_id')
-        ->select('purchase_details.*','mast_item_registers.part_no','mast_item_registers.box_qty','mast_units.unit_name','mast_item_groups.part_name')
+        ->select('purchase_details.*','mast_item_registers.id as item_rg_id','mast_item_registers.part_no','mast_item_registers.box_qty','mast_units.unit_name','mast_item_groups.part_name','mast_item_groups.id as item_groups_id')
         ->get();
 
         // $purchase_details =PurchaseDetails::with('mastItemRegister','purchase')->where('purchase_id', 1)->get();

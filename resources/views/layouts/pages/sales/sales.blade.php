@@ -87,14 +87,6 @@
                     <div class="modal-body py-2">
                         <div class="row" id="main-row-data">
                             <input type="hidden" name="sal_id" id="sal_id">
-                            {{-- <div class="col-md-6 mr-4">
-                                <div class="form-group row">
-                                    <label class="col-md-5 col-form-label">Invoice No.</label>
-                                    <div class="col-md-7">
-                                        <label class="col-md-5 col-form-label" id="inv_no">GULF-XXXXX</label>
-                                    </div>
-                                </div>
-                            </div> --}}
                             <div class="col-md-6">
                                 <div class="form-group row">
                                     <label class="col-md-5 col-form-label">Customer Type
@@ -189,7 +181,7 @@
                                                 <th width="10%">Qty</th>
                                                 <th width="12%">Price</th>
                                                 <th width="13%">Subtotal</th>
-                                                <th width="10%" class="text-center">Action</th>
+                                                <th width="10%" class="text-center table_action">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody id="table-body">
@@ -200,7 +192,6 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="float-right">
-                                    <input type="hidden" id="edit_total" value="">
                                     <h6>Total <span style="border: 1px solid #2222;padding: 10px 40px;margin-left:10px" id="total">0.00</span></h6>
                                 </div>
                             </div>
@@ -239,87 +230,6 @@
     });
 </script>
 <script type="text/javascript">
-    //======Add ROW
-    var count = 0;
-    $("#items-table").on("click", ".add-row", function() {
-        var allValuesNotNull = true;
-        $('.val_part_number').each(function() {
-            var value = $(this).val();
-            if (value === null || value === '') {
-                allValuesNotNull = false;
-                return false;
-            }
-        });
-        $('.val_quantity').each(function() {
-            var value = $(this).val();
-            if (value === null || value === '') {
-                allValuesNotNull = false;
-                return false;
-            }
-        });
-        $('.val_price').each(function() {
-            var value = $(this).val();
-            if (value === null || value === '') {
-                allValuesNotNull = false;
-                return false;
-            }
-        });
-        if (allValuesNotNull) {
-            ++count;
-            addRow(count);
-        } else {
-            swal("Error!", "All input values are not null or empty.", "error");
-        }
-    });
-    function addRow(i){
-        alert(i);
-        var newRow = $('<tr>' +
-            '<td>'+
-                '<select id="item_category" class="form-control dropdwon_select val_item_category">' +
-                '<option selected disabled>--Select--</option>' +
-                '@foreach($item_group as $data)' +
-                    '<option value="{{ $data->id}}">{{ $data->part_name}}</option>' +
-                    '@endforeach' +
-                '</select>' +
-            '</td>' +
-            '<td><select id="partNumber" name="moreFile['+i+'][item_id]" class="form-control dropdwon_select val_part_number"></select></td>' +
-            '<td><input type="text" name="" readonly id="packageSize" class="form-control"></td>' +
-            '<td><input type="text" name="" readonly id="unit" class="form-control"></td>' +
-            '<td><input type="number" name="moreFile['+i+'][qty]" id="" class="form-control quantity val_quantity" placeholder="0.00"></td>' +
-            '<td><input type="number" name="moreFile['+i+'][price]" id="price" class="form-control price val_price" placeholder="0.00"></td>' +
-            '<td class="subtotal">0.00</td>' +
-            '<td class="text-center">' +
-                '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs add-row"><span class="fa fa-plus"></span></button>' +
-                '<button type="button" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0 remove-row"><span class="fa fa-trash"></span></button>' +
-            '</td>'+
-        '</tr>');
-
-        $('#items-table tbody').append(newRow);
-        newRow.find('.dropdwon_select').select2();
-    }
-
-    //======Remove ROW
-    $('#items-table').on('click', '.remove-row', function() {
-        $(this).closest('tr').remove();
-        updateSubtotal(0);
-    });
-    //======Total Count
-    $('#items-table').on('input', '.quantity, .price', function() {
-        updateSubtotal(0);
-    });
-    function updateSubtotal(update_subTotal) {
-        var total = 0;
-        $('#items-table tbody tr').each(function() {
-            var quantity = parseFloat($(this).find('.quantity').val()) || 0;
-            var price = parseFloat($(this).find('.price').val()) || 0;
-            var subtotal = quantity * price;
-            $(this).find('.subtotal').text(subtotal.toFixed(2));
-            total += subtotal;
-        });
-        var edit_total = parseFloat($('#edit_total').val()) || 0;
-        var update_total = total + edit_total - update_subTotal;
-        $('#total').text(update_total.toFixed(2));
-    }
     /*=======//Show Modal//=========*/
     $(document).on('click','#open_modal',function(){
         //----Open New Add Row
@@ -332,11 +242,11 @@
         });
         $(".modal-title").html('@if($type == 1) Add AC Sales @elseif($type == 2) Add AC Spare Parts Sales @else Add Car Spare Parts Sales @endif');
         $(".bd-example-modal-lg").modal('show');
+        $(".table_action").show();
+        $(".submit_btn").show();
         $("#id").val("");
         $('#total').text("0.00");
-        $("#edit_total").val(0);
     });
-
     /*=======//Save Data //=========*/
     $(document).ready(function(){
         var form = '#add-user-form';
@@ -411,10 +321,12 @@
                         $.each(errors, function(key, value) {
                             errorHtml += '<li style="color:red">' + value + '</li>';
                         });
+
                         Swal.fire({
                             icon: 'error',
-                            title: 'Required data missing?',
+                            title: 'Error!',
                             html: '<ul>' + errorHtml + '</ul>',
+                            text: 'All input values are not null or empty.',
                         });
                     }
                 });
@@ -432,49 +344,7 @@
             dataType:"JSON",
             data:{id:id},
             success:function(response){
-                $(".bd-example-modal-lg").modal('show');
-                $(".modal-title").html('@if($type == 1) AC Sales Edit @elseif($type == 2) AC Spare Parts Sales Edit @else Car Spare Parts Sales Edit @endif');
-                $(".modal-footer").show();
-                //--Get Master Data
-                var data = response.data;
-
-                $("#sal_id").val(data.id);
-                $('#inv_no').html(data.inv_no);
-                $("#inv_date").val(data.inv_date);
-                $("#vat").val(data.inv_date);
-                $("#tax").val(data.inv_date);
-                $('#remarks').html(data.remarks);
-
-                $("#sal_id").prop("disabled", false);
-                $('#inv_no').prop("disabled", false);
-                $("#inv_date").prop("disabled", false);
-                $("#vat").prop("disabled", false);
-                $("#tax").prop("disabled", false);
-                $('#remarks').prop("disabled", false);
-                $('#mast_customer_id').prop("disabled", false);
-
-                //--Get Customer Type Data
-                var customer_type = response.customer_type;
-                var customer_type_dr = $('#mast_customer_type');
-                customer_type_dr.empty();
-                customer_type_dr.append('<option disabled>--Select--</option>');
-                $.each(customer_type, function(index, option) {
-                    var selected = (option.id == response.customer_type_id.id) ? 'selected' : '';
-                    customer_type_dr.append('<option value="' + option.id + '" ' + selected + '>' + option.name + '</option>');
-                });
-
-                //--Get All Supplier Data
-                var customer = response.customer;
-                var customer_dr = $('#mast_customer_id');
-                customer_dr.empty();
-                customer_dr.append('<option>Select an Supplier</option>');
-                $.each(customer, function(index, option) {
-                    var selected = (option.id == data.mast_customer_id) ? 'selected' : '';
-                    customer_dr.append('<option value="' + option.id + '" ' + selected + '>' + option.name + '</option>');
-                });
-                // salesDetails(data.id);
-                salesDetails(response.sales_details);
-                
+                showData(response, 1);
             },
             error: function(xhr, status, error) {
                 console.log(error);
@@ -490,73 +360,7 @@
             dataType:"JSON",
             data:{id:id},
             success:function(response){
-                $(".bd-example-modal-lg").modal('show');
-                $(".modal-title").html('@if($type == 1) AC Sales Edit @elseif($type == 2) AC Spare Parts Sales Edit @else Car Spare Parts Sales Edit @endif');
-                $(".modal-footer").hide();
-                //--Get Master Data
-                var data = response.data;
-
-                $("#sal_id").val(data.id);
-                $('#inv_no').html(data.inv_no);
-                $("#inv_date").val(data.inv_date);
-                $("#vat").val(data.inv_date);
-                $("#tax").val(data.inv_date);
-                $('#remarks').html(data.remarks);
-
-                $("#sal_id").attr("disabled", "disabled");
-                $('#inv_no').attr("disabled", "disabled");
-                $("#inv_date").attr("disabled", "disabled");
-                $("#vat").attr("disabled", "disabled");
-                $("#tax").attr("disabled", "disabled");
-                $('#remarks').attr("disabled", "disabled");
-                $('#mast_customer_id').attr("disabled", "disabled");
-
-               //--Get Customer Type Data
-               var customer_type = response.customer_type;
-                var customer_type_dr = $('#mast_customer_type');
-                customer_type_dr.empty();
-                customer_type_dr.append('<option disabled>--Select--</option>');
-                $.each(customer_type, function(index, option) {
-                    var selected = (option.id == response.customer_type_id.id) ? 'selected' : '';
-                    customer_type_dr.append('<option value="' + option.id + '" ' + selected + '>' + option.name + '</option>');
-                });
-
-                //--Get All Supplier Data
-                var customer = response.customer;
-                var customer_dr = $('#mast_customer_id');
-                customer_dr.empty();
-                customer_dr.append('<option>Select an Supplier</option>');
-                $.each(customer, function(index, option) {
-                    var selected = (option.id == data.mast_customer_id) ? 'selected' : '';
-                    customer_dr.append('<option value="' + option.id + '" ' + selected + '>' + option.name + '</option>');
-                });
-
-                //--New Row Add
-                var tableBody = $('#table-body');
-                tableBody.empty();
-                
-                var sales_det = response.sales_details;
-                
-                var total =0;
-                $.each(sales_det, function(index, item) {
-                    var subtotal = item.qty * item.price;
-                    var row = '<tr id="row_todo_'+ item.id + '">';
-                    row += '<td>' + item.part_name + '</td>';
-                    row += '<td>' + item.part_no + '</td>';
-                    row += '<td>' + item.box_qty + '</td>';
-                    row += '<td>' + item.unit_name + '</td>';
-                    row += '<td>' + item.qty + '</td>';
-                    row += '<td>' + item.price + '</td>';
-                    row += '<td>'+ subtotal +'</td>';
-                    row += '</tr>';
-                    tableBody.prepend(row);
-
-                    $(this).find('.subtotal').text(subtotal.toFixed(2));
-                    total += subtotal;
-                });
-                
-                $('#total').text(total.toFixed(2));
-            
+                showData(response, 2);
             },
             error: function(xhr, status, error) {
                 console.log(error);
@@ -564,68 +368,152 @@
         });
     });
 
-    function salesDetails(sales_details) {
-    //--New Row Add
-    var tableBody = $('#table-body');
-    tableBody.empty();
-    
-    var total = 0;
-    var i = 0;
-    $.each(sales_details, function(index, item) {
-        var subtotal = item.qty * item.price;
+    function showData(response, check) {
+        $(".bd-example-modal-lg").modal('show');
+        $(".modal-footer").show();
         
-        var row = '<tr id="row_todo_'+ item.id + '">';
-        row += '<td>';
-        row += '<select id="item_category" class="form-control dropdwon_select val_item_category">';
-        row += '<option selected disabled>--Select--</option>';
-        @foreach($item_group as $data)
-        row += '<option value="{{ $data->id }}" data-part_name="{{ $data->part_name }}" ' + ('{{ $data->id }}' == item.item_groups_id ? 'selected' : '') + '>' + '{{ $data->part_name }}' + '</option>';
-        @endforeach
-        row += '</select>';
-        row += '</td>';
-        row += '<td><select id="partNumber_' + i + '" name="moreFile[' + i + '][item_id]" class="form-control dropdwon_select val_part_number"></select></td>';
-        row += '<td><input type="text" name="" readonly id="packageSize" class="form-control" value="' + item.box_qty + '"></td>';
-        row += '<td><input type="text" name="" readonly id="unit" class="form-control" value="' + item.unit_name + '"></td>';
-        row += '<td><input type="number" name="moreFile['+i+'][qty]" id="" class="form-control quantity val_quantity" placeholder="0.00" value="'+ item.qty +'"></td>';
-        row += '<td><input type="number" name="moreFile['+i+'][price]" id="price" class="form-control price val_price" placeholder="0.00" value="'+ item.price +'"></td>';
-        row += '<td class="subtotal">'+ subtotal +'</td>';
-        row += '<td class="text-center">';
-        row += '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs add-row"><span class="fa fa-plus"></span></button>';
-        row += '<button type="button" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0 remove-row"><span class="fa fa-trash"></span></button>';
-        row += '</td>';
-        row += '</tr>';
+        //--Get Master Data
+        var data = response.data;
 
-        if ($("#id").val()) {
-            $("#row_todo_" + item.id).replaceWith(row);
-        } else {
-            tableBody.prepend(row);
+        $("#sal_id").val(data.id);
+        $('#inv_no').html(data.inv_no);
+        $("#inv_date").val(data.inv_date);
+        $("#vat").val(data.inv_date);
+        $("#tax").val(data.inv_date);
+        $('#remarks').html(data.remarks);
+
+        if(check == 1){
+            $(".modal-title").html('@if($type == 1) AC Sales Edit @elseif($type == 2) AC Spare Parts Sales Edit @else Car Spare Parts Sales Edit @endif');
+
+            $("#sal_id").prop("disabled", false);
+            $('#inv_no').prop("disabled", false);
+            $("#inv_date").prop("disabled", false);
+            $("#vat").prop("disabled", false);
+            $("#tax").prop("disabled", false);
+            $('#remarks').prop("disabled", false);
+            $('#mast_customer_type').prop("disabled", false);
+            $('#mast_customer_id').prop("disabled", false);
+
+            
+            $(".table_action").show();
+            $('.submit_btn').show();
+        }else{
+            $(".modal-title").html('@if($type == 1) AC Sales View @elseif($type == 2) AC Spare Parts Sales View @else Car Spare Parts Sales View @endif');
+
+            $("#sal_id").prop("disabled", true);
+            $('#inv_no').prop("disabled", true);
+            $("#inv_date").prop("disabled", true);
+            $("#vat").prop("disabled", true);
+            $("#tax").prop("disabled", true);
+            $('#remarks').prop("disabled", true);
+            $('#mast_customer_type').prop("disabled", true);
+            $('#mast_customer_id').prop("disabled", true);
+
+            $('.table_action').hide();
+            $('.submit_btn').hide();
         }
 
-        // AJAX request to populate the part number select element
-        $.ajax({
-            url: '{{ route('get-part-id') }}',
-            method: 'GET',
-            dataType: 'html',
-            // data: { 'part_id': 1 },
-            data: { 'part_id': item.item_groups_id },
-            success: function(data) {
-                alert('hi');
-                $('#partNumber_' + i).html(data);
-            },
-            error: function() {
-                alert('Fail');
-            }
+        //--Get Customer Type Data
+        var customer_type = response.customer_type;
+        var customer_type_dr = $('#mast_customer_type');
+        customer_type_dr.empty();
+        customer_type_dr.append('<option disabled>--Select--</option>');
+        $.each(customer_type, function(index, option) {
+            var selected = (option.id == response.customer_type_id.id) ? 'selected' : '';
+            customer_type_dr.append('<option value="' + option.id + '" ' + selected + '>' + option.name + '</option>');
         });
 
-        $(this).find('.subtotal').text(subtotal.toFixed(2));
-        total += subtotal;
-        i++;
-    });
+        //--Get Supplier Data
+        var customer = response.customer;
+        var customer_dr = $('#mast_customer_id');
+        customer_dr.empty();
+        customer_dr.append('<option>Select an Supplier</option>');
+        $.each(customer, function(index, option) {
+            var selected = (option.id == data.mast_customer_id) ? 'selected' : '';
+            customer_dr.append('<option value="' + option.id + '" ' + selected + '>' + option.name + '</option>');
+        });
+        //--Tabel Sales Details
+        var tableBody = $('#table-body');
+        tableBody.empty();
+        var salesDetails = response.sales_details;
+        var total = 0;
+        var i = 0;
+        if(check == 1){ //Edit - 1
+            $.each(salesDetails, function(index, item) {
+                var subtotal = item.qty * item.price;
+                var newRow = $('<tr id="row_todo_'+ item.id + '">' +
+                    '<input type="hidden" name="editFile['+i+'][id]" id="salesDetailsId" value="' + item.id + '">' +
+                    '<td>'+
+                        '<select id="item_category" class="form-control dropdwon_select val_item_category">' +
+                        '<option selected disabled>--Select--</option>' +
+                        '@foreach($item_group as $data)' +
+                            '<option value="{{ $data->id }}" data-part_name="{{ $data->part_name }}" ' + ('{{ $data->id }}' == item.item_groups_id ? 'selected' : '') + '>' + '{{ $data->part_name }}' + '</option>' +
+                        '@endforeach' +
+                        '</select>' +
+                    '</td>' +
+                    '<td><select id="partNumber" name="editFile['+i+'][item_id]" class="form-control dropdwon_select val_part_number"></select></td>' +
+                    '<td><input type="text" name="" readonly id="packageSize" class="form-control" value="' + item.box_qty + '"></td>' +
+                    '<td><input type="text" name="" readonly id="unit" class="form-control" value="' + item.unit_name + '"></td>' +
+                    '<td><input type="number" name="editFile['+i+'][qty]" id="" class="form-control quantity val_quantity" placeholder="0.00" value="'+ item.qty +'"></td>' +
+                    '<td><input type="number" name="editFile['+i+'][price]" id="price" class="form-control price val_price" placeholder="0.00" value="'+ item.price +'"></td>' +
+                    '<td class="subtotal">'+ subtotal +'</td>' +
+                    '<td class="text-center">' +
+                        '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs edit_add_hide" onClick="addRow(0)"><span class="fa fa-plus"></span></button>' +
+                        '<button type="button" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0" id="delete_data" data-id="' + item.id +'"><span class="fa fa-trash"></span></button>' +
+                    '</td>'+
+                '</tr>');
 
-    addRow(0);
-    $("#edit_total").val(total);
-    $('#total').text(total.toFixed(2));
-}
+                if ($("#id").val()) {
+                    $("#row_todo_" + item.id).replaceWith(newRow);
+                } else {
+                    tableBody.append(newRow);
+                }
+
+                var currentRow = $(newRow);
+                var partNumberSelect = currentRow.find('.val_part_number');
+                $.ajax({
+                    url: '{{ route('sales.edit-part-id')}}',
+                    method: 'GET',
+                    dataType: 'JSON',
+                    data: { 'part_id': item.item_groups_id },
+                    success: function(data) {
+                        partNumberSelect.append('<option value="" selected>--Select--</option>');
+
+                        $.each(data, function(index, option) {
+                            var selected = (option.id == item.item_rg_id) ? 'selected' : '';
+                            partNumberSelect.append('<option value="' + option.id + '" ' + selected + '>' + option.part_no + '</option>');
+                        });
+                    },
+                    error: function() {
+                        alert('Fail');
+                    }
+                });
+                i++;
+                $(this).find('.subtotal').text(subtotal.toFixed(2));
+                total += subtotal;
+            });
+            $('#total').text(total.toFixed(2));
+        }
+        if(check == 2){ //View - 2
+            $.each(salesDetails, function(index, item) {
+                var subtotal = item.qty * item.price;
+                var row = '<tr id="row_todo_'+ item.id + '">';
+                row += '<td>' + item.part_name + '</td>';
+                row += '<td>' + item.part_no + '</td>';
+                row += '<td>' + item.box_qty + '</td>';
+                row += '<td>' + item.unit_name + '</td>';
+                row += '<td>' + item.qty + '</td>';
+                row += '<td>' + item.price + '</td>';
+                row += '<td>'+ subtotal +'</td>';
+                row += '</tr>';
+                tableBody.prepend(row);
+
+                $(this).find('.subtotal').text(subtotal.toFixed(2));
+                total += subtotal;
+            });
+            $('#total').text(total.toFixed(2));
+        }
+    }
 
     /*========//Delete Data//========*/
     $(document).ready(function(){
@@ -645,7 +533,7 @@
                 toastr.success("Record deleted successfully!");
                 $("#row_todo_" + id).remove();
                 $('#table-body').closest('tr').remove();
-                updateSubtotal(response);
+                updateSubtotal(0);
             },
             error: function(response) {
                 Swal.fire({
@@ -657,7 +545,89 @@
             }
         });
     });
-    
+</script>
+
+<script type="text/javascript">
+    //======Add ROW
+    var count = 0;
+    $("#items-table").on("click", ".add-row", function() {
+        var allValuesNotNull = true;
+        $('.val_part_number').each(function() {
+            var value = $(this).val();
+            if (value === null || value === '') {
+                allValuesNotNull = false;
+                return false;
+            }
+        });
+        $('.val_quantity').each(function() {
+            var value = $(this).val();
+            if (value === null || value === '') {
+                allValuesNotNull = false;
+                return false;
+            }
+        });
+        $('.val_price').each(function() {
+            var value = $(this).val();
+            if (value === null || value === '') {
+                allValuesNotNull = false;
+                return false;
+            }
+        });
+        if (allValuesNotNull) {
+            ++count;
+            addRow(count);
+        } else {
+            swal("Error!", "All input values are not null or empty.", "error");
+        }
+    });
+    function addRow(i){
+        var newRow = $('<tr>' +
+            '<td>'+
+                '<select id="item_category" class="form-control dropdwon_select val_item_category">' +
+                '<option selected disabled>--Select--</option>' +
+                '@foreach($item_group as $data)' +
+                    '<option value="{{ $data->id}}">{{ $data->part_name}}</option>' +
+                    '@endforeach' +
+                '</select>' +
+            '</td>' +
+            '<td><select id="partNumber" name="moreFile['+i+'][item_id]" class="form-control dropdwon_select val_part_number"></select></td>' +
+            '<td><input type="text" name="" readonly id="packageSize" class="form-control"></td>' +
+            '<td><input type="text" name="" readonly id="unit" class="form-control"></td>' +
+            '<td><input type="number" name="moreFile['+i+'][qty]" id="" class="form-control quantity val_quantity" placeholder="0.00"></td>' +
+            '<td><input type="number" name="moreFile['+i+'][price]" id="price" class="form-control price val_price" placeholder="0.00"></td>' +
+            '<td class="subtotal">0.00</td>' +
+            '<td class="text-center">' +
+                '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs add-row"><span class="fa fa-plus"></span></button>' +
+                '<button type="button" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0 remove-row"><span class="fa fa-trash"></span></button>' +
+            '</td>'+
+        '</tr>');
+
+        $('.edit_add_hide').hide();
+        $('#items-table tbody').append(newRow);
+        newRow.find('.dropdwon_select').select2();
+    }
+
+    //======Remove ROW
+    $('#items-table').on('click', '.remove-row', function() {
+        $(this).closest('tr').remove();
+        updateSubtotal(0);
+    });
+    //======Total Count
+    $('#items-table').on('input', '.quantity, .price', function() {
+        updateSubtotal(0);
+    });
+    function updateSubtotal(update_subTotal) {
+        var total = 0;
+        $('#items-table tbody tr').each(function() {
+            var quantity = parseFloat($(this).find('.quantity').val()) || 0;
+            var price = parseFloat($(this).find('.price').val()) || 0;
+            var subtotal = quantity * price;
+            $(this).find('.subtotal').text(subtotal.toFixed(2));
+            total += subtotal;
+        });
+        var update_total = total - update_subTotal;
+        $('#total').text(update_total.toFixed(2));
+    }
 </script>
 <script type="text/javascript">
     //======Get Item Group All Data

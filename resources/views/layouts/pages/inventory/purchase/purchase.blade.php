@@ -24,7 +24,7 @@
                                 <th>Store Location</th>
                                 <th>Total</th>
                                 <th>Status</th>
-                                <th class="text-right">Action</th>
+                                <th class="text-center">Action</th>
                             </tr>
                             </thead>
                             <tbody id="purchase_tbody">
@@ -57,7 +57,7 @@
                                         </span>
                                         @endif
                                     </td>
-                                    <td class="text-right">
+                                    <td style="width:210px">
                                         <button type="button" class="btn btn-sm btn-success p-1 px-2" id="edit_data" data-id="{{ $row->id }}"><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button>
                                         <button type="button" class="btn btn-sm btn-info p-1 px-2" id="view_data" data-id="{{ $row->id }}"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</button>
                                     </td>
@@ -160,7 +160,7 @@
                                                 <th width="10%">Qty</th>
                                                 <th width="12%">Price</th>
                                                 <th width="13%">Subtotal</th>
-                                                <th width="10%" class="text-center">Action</th>
+                                                <th width="10%" class="text-center table_action">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody id="table-body">
@@ -191,213 +191,26 @@
 
 </x-app-layout>
 
-<!--=======//Show Modal//=======-->
+
 <script type="text/javascript">
-    //----Open Modal
-    $("#open_modal").on('click',function(){
+    /*=======//Show Modal//=========*/
+    $(document).on('click','#open_modal',function(){
+        //----Open New Add Row
+        var tableBody = $('#table-body');
+        tableBody.empty();
+        addRow(0);
+        //--Modal Body Fix
         $("#main-row-data").load(" #main-row-data", function() {
             $('.dropdwon_select').select2();
         });
-
         $(".modal-title").html('@if($type == 1) Add AC Purchase @elseif($type == 2) Add AC Spare Parts Purchase @else Add Car Spare Parts Purchase @endif');
         $(".bd-example-modal-lg").modal('show');
+        $(".table_action").show();
+        $(".submit_btn").show();
         $("#id").val("");
-
-        //----Table Add Remove
-        var tableBody = $('#table-body');
-        tableBody.empty();
-
-        var newRow = $('<tr>' +
-            '<td>'+
-                '<select id="item_category" class="form-control dropdwon_select val_item_category" required>' +
-                '<option selected disabled>--Select--</option>' +
-                '@foreach($item_group as $data)' +
-                    '<option value="{{ $data->id}}">{{ $data->part_name}}</option>' +
-                    '@endforeach' +
-                '</select>' +
-            '</td>' +
-            '<td><select id="partNumber" name="moreFile['+0+'][item_id]" class="form-control dropdwon_select val_part_number"></select></td>' +
-            '<td><input type="text" name="" readonly id="packageSize" class="form-control"></td>' +
-            '<td><input type="text" name="" readonly id="unit" class="form-control"></td>' +
-            '<td><input type="number" name="moreFile['+0+'][qty]" id="" class="form-control quantity val_quantity" placeholder="0.00"></td>' +
-            '<td><input type="number" name="moreFile['+0+'][price]" id="" class="form-control price val_price" placeholder="0.00"></td>' +
-            '<td class="subtotal">0.00</td>' +
-            '<td class="text-center">' +
-                '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs add-row"><span class="fa fa-plus"></span></button>' +
-                '<button type="button" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0 remove-row"><span class="fa fa-trash"></span></button>' +
-            '</td>'+
-        '</tr>');
-        $('#items-table tbody').append(newRow);
-        newRow.find('.dropdwon_select').select2();
         $('#total').text("0.00");
-        $("#edit_total").val(0);
     });
-</script>
-
-<!--=======//Grid Add Remove//=======-->
-<script type="text/javascript">
-    //======Add Or Remove Row
-    $(document).ready(function() {
-        $("#items-table").on("click", ".add-row", function() {
-            var i = 0;++i;
-            var newRow = $('<tr>' +
-                '<td>'+
-                    '<select id="item_category" class="form-control dropdwon_select val_item_category">' +
-                    '<option selected disabled>--Select--</option>' +
-                    '@foreach($item_group as $data)' +
-                        '<option value="{{ $data->id}}">{{ $data->part_name}}</option>' +
-                        '@endforeach' +
-                    '</select>' +
-                '</td>' +
-                '<td><select id="partNumber" name="moreFile['+i+'][item_id]" class="form-control dropdwon_select val_part_number"></select></td>' +
-                '<td><input type="text" name="" readonly id="packageSize" class="form-control"></td>' +
-                '<td><input type="text" name="" readonly id="unit" class="form-control"></td>' +
-                '<td><input type="number" name="moreFile['+i+'][qty]" id="" class="form-control quantity val_quantity" placeholder="0.00"></td>' +
-                '<td><input type="number" name="moreFile['+i+'][price]" id="" class="form-control price val_price" placeholder="0.00"></td>' +
-                '<td class="subtotal">0.00</td>' +
-                '<td class="text-center">' +
-                    '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs add-row"><span class="fa fa-plus"></span></button>' +
-                    '<button type="button" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0 remove-row"><span class="fa fa-trash"></span></button>' +
-                '</td>'+
-            '</tr>');
-            var allValuesNotNull = true;
-            $('.val_part_number').each(function() {
-                var value = $(this).val();
-                if (value === null || value === '') {
-                    allValuesNotNull = false;
-                    return false;
-                }
-            });
-            $('.val_quantity').each(function() {
-                var value = $(this).val();
-                if (value === null || value === '') {
-                    allValuesNotNull = false;
-                    return false;
-                }
-            });
-            $('.val_price').each(function() {
-                var value = $(this).val();
-                if (value === null || value === '') {
-                    allValuesNotNull = false;
-                    return false;
-                }
-            });
-            if (allValuesNotNull) {
-                $('#items-table tbody').append(newRow);
-                newRow.find('.dropdwon_select').select2();
-            } else {
-                swal("Error!", "All input values are not null or empty.", "error");
-            }
-        });
-        //----Check Part Number Duplicates
-        $(document).on('change', '.val_part_number', function() {
-            var dropdownValues = $('.val_part_number').map(function() {
-                return $(this).val();
-            }).get();
-
-            var hasDuplicates = new Set(dropdownValues).size !== dropdownValues.length;
-            if (hasDuplicates) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Duplicate Values',
-                    text: 'Duplicate values are not allowed in the partNumber dropdown.',
-                });
-                //--Reset Option
-                var partId = $('#item_category').val();
-                var currentRow = $(this).closest("tr");
-                $.ajax({
-                    url:'{{ route('get-part-id')}}',
-                    method:'GET',
-                    dataType:"html",
-                    data:{'part_id':partId},
-                    success:function(data){
-                        console.log(data)
-                        currentRow.find('#partNumber').html(data);
-                    },
-                    error:function(){
-                        alert('Fail');
-                    }
-                });
-            }
-        });
-
-        $('#items-table').on('click', '.remove-row', function() {
-            $(this).closest('tr').remove();
-            updateSubtotal();
-        });
-        //======Total Count
-        $('#items-table').on('input', '.quantity, .price', function() {
-            updateSubtotal();
-        });
-        function updateSubtotal() {
-            var total = 0;
-            $('#items-table tbody tr').each(function() {
-                var quantity = parseFloat($(this).find('.quantity').val()) || 0;
-                var price = parseFloat($(this).find('.price').val()) || 0;
-                var subtotal = quantity * price;
-                $(this).find('.subtotal').text(subtotal.toFixed(2));
-                total += subtotal;
-            });
-            var edit_total = parseFloat($('#edit_total').val()) || 0;
-            var update_total = total + edit_total;
-            $('#total').text(update_total.toFixed(2));
-        }
-    });
-    
-
-    //======Get Item Group All Data
-    $(document).on('change','#item_category',function(){
-        var partId = $(this).val();
-        var currentRow = $(this).closest("tr");
-        $.ajax({
-            url:'{{ route('get-part-id')}}',
-            method:'GET',
-            dataType:"html",
-            data:{'part_id':partId},
-            success:function(data){
-                console.log(data)
-                currentRow.find('#partNumber').html(data);
-            },
-            error:function(){
-                alert('Fail');
-            }
-        });
-    });
-    //======Show Single Row Data
-    $(document).on('change','#partNumber', function(){
-        var partNumber_id = $(this).val();
-        var currentRows = $(this).closest("tr"); 
-        
-        $.ajax({
-            url:'{{ route('get-part-number')}}',
-            method:'GET',
-            dataType:"JSON",
-            data:{'part_id':partNumber_id},
-            success:function(data){
-                console.log(data)
-                currentRows.find('#packageSize').val(data.box_qty);
-                currentRows.find('#unit').val(data.unit.unit_name);
-                currentRows.find('.quantity').focus();
-            }
-        });
-    });
-    //======Validation
-    @if(Session::has('messege'))
-        var type="{{Session::get('alert-type','info')}}"
-        switch(type){
-            case 'save':
-                swal("Success Message Title", "Well done, you pressed a button", "success");
-                break;
-            case 'fail':
-                swal("Error!", "{{ Session::get('messege') }}", "error");
-                $('.bd-example-modal-lg').modal('show');
-                break;
-        }
-    @endif
-</script>
-<!--=========//Save Data //==========-->
-<script type="text/javascript">
-    //---Save Data
+    /*=======//Save Data //=========*/
     $(document).ready(function(){
         var form = '#add-user-form';
         $(form).on('submit', function(event){
@@ -458,7 +271,7 @@
                             row += '<span class="badge light badge-danger"><i class="fa fa-circle text-danger mr-1"></i>Canceled</span>';
                         
                         row += '</td>';
-                        row += '<td class="text-right"><button type="button" class="btn btn-sm btn-success p-1 px-2 mr-1" id="edit_data" data-id="'+storePurchase.id+'"><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button><button type="button" class="btn btn-sm btn-info p-1 px-2" id="view_data" data-id="'+storePurchase.id+'"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</button></td>';
+                        row += '<td style="width:210px"><button type="button" class="btn btn-sm btn-success p-1 px-2 mr-1" id="edit_data" data-id="'+storePurchase.id+'"><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button><button type="button" class="btn btn-sm btn-info p-1 px-2" id="view_data" data-id="'+storePurchase.id+'"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</button></td>';
 
                         if($("#pur_id").val()){
                             $("#row_purchase_table_" + storePurchase.id).replaceWith(row);
@@ -474,8 +287,9 @@
                         });
                         Swal.fire({
                             icon: 'error',
-                            title: 'Required data missing?',
+                            title: 'Error!',
                             html: '<ul>' + errorHtml + '</ul>',
+                            text: 'All input values are not null or empty.',
                         });
                     }
                 });
@@ -484,9 +298,7 @@
             }
         });
     });
-</script>
-<script type="text/javascript">
-    /*=========//Edit Data //==========*/
+    /*========//Edit Data//=========*/
     $(document).on('click', '#edit_data', function(){
         var id = $(this).data('id');
         $.ajax({
@@ -495,98 +307,14 @@
             dataType:"JSON",
             data:{id:id},
             success:function(response){
-                $(".bd-example-modal-lg").modal('show');
-                $(".modal-title").html('@if($type == 1) AC Purchase Edit @elseif($type == 2) AC Spare Parts Purchase Edit @else Car Spare Parts Purchase Edit @endif');
-                $(".modal-footer").show();
-                //--Get Master Data
-                var data = response.data;
-
-                $("#pur_id").val(data.id);
-                $('#inv_no').html(data.inv_no);
-                $("#inv_date").val(data.inv_date);
-                $('#remarks').html(data.remarks);
-                // $('#inv_no').html(response.inv_no);
-
-                //--Get All Supplier Data
-                var supplier = response.supplier;
-                var supplier_dr = $('#mast_supplier_id');
-                supplier_dr.empty();
-                supplier_dr.append('<option>Select an Supplier</option>');
-                $.each(supplier, function(index, option) {
-                    var selected = (option.id == data.mast_supplier_id) ? 'selected' : '';
-                    supplier_dr.append('<option value="' + option.id + '" ' + selected + '>' + option.supplier_name + '</option>');
-                });
-                //--Get All Supplier Data
-                var store = response.store;
-                var work_station_dr = $('#mast_work_station_id');
-                work_station_dr.empty();
-                work_station_dr.append('<option>Select an Work Station</option>');
-                $.each(store, function(index, option) {
-                    var selected = (option.id == data.mast_work_station_id) ? 'selected' : '';
-                    work_station_dr.append('<option value="' + option.id + '" ' + selected + '>' + option.store_name + '</option>');
-                });
-
-                //--Show Purchase Details Data
-                var purchase_det = response.purchase_details;
-                var tableBody = $('#table-body');
-                tableBody.empty();
-
-                var newRow = $('<tr>' +
-                    '<td>'+
-                        '<select id="item_category" class="form-control dropdwon_select">' +
-                        '<option selected disabled>--Select--</option>' +
-                        '@foreach($item_group as $data)' +
-                            '<option value="{{ $data->id}}">{{ $data->part_name}}</option>' +
-                            '@endforeach' +
-                        '</select>' +
-                    '</td>' +
-                    '<td><select id="partNumber" name="moreFile['+0+'][item_id]" class="form-control dropdwon_select"></select></td>' +
-                    '<td><input type="text" name="" readonly id="packageSize" class="form-control"></td>' +
-                    '<td><input type="text" name="" readonly id="unit" class="form-control"></td>' +
-                    '<td><input type="number" name="moreFile['+0+'][qty]" id="" class="form-control quantity" placeholder="0.00"></td>' +
-                    '<td><input type="number" name="moreFile['+0+'][price]" id="" class="form-control price" placeholder="0.00"></td>' +
-                    '<td class="subtotal">0.00</td>' +
-                    '<td class="text-center">' +
-                        '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs add-row"><span class="fa fa-plus"></span></button>' +
-                        '<button type="button" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0 remove-row"><span class="fa fa-trash"></span></button>' +
-                    '</td>'+
-                '</tr>');
-
-                $('#items-table tbody').append(newRow);
-                newRow.find('.dropdwon_select').select2();
-
-                var total=0;
-                $.each(purchase_det, function(index, item) {
-                    var subtotal = item.qty * item.price;
-                    var row = '<tr id="row_todo_'+ item.id + '">';
-                    row += '<td>' + item.part_name + '</td>';
-                    row += '<td>' + item.part_no + '</td>';
-                    row += '<td>' + item.box_qty + '</td>';
-                    row += '<td>' + item.unit_name + '</td>';
-                    row += '<td>' + item.qty + '</td>';
-                    row += '<td>' + item.price + '</td>';
-                    row += '<td>'+ subtotal +'</td>';
-                    row += '<td class="text-center"><button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs add-row"><span class="fa fa-plus"></span></button><button type="button" id="delete_data" data-id="' + item.id +'" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0"><span class="fa fa-trash"></span></button></td>';
-                    row += '</tr>';
-
-                    if($("#id").val()){
-                        $("#row_todo_"+ item.id).replaceWith(row);
-                    }else{
-                        tableBody.prepend(row);
-                    }
-
-                    $(this).find('.subtotal').text(subtotal.toFixed(2));
-                    total += subtotal;
-                });
-                $("#edit_total").val(total);
-                $('#total').text(total.toFixed(2));
+                showData(response, 1);
             },
             error: function(xhr, status, error) {
                 console.log(error);
             }
         });
     });
-    /*=========//View Data //==========*/
+    /*========//View Data//=========*/
     $(document).on('click', '#view_data', function(){
         var id = $(this).data('id');
         $.ajax({
@@ -595,66 +323,7 @@
             dataType:"JSON",
             data:{id:id},
             success:function(response){
-                $(".bd-example-modal-lg").modal('show');
-                $(".modal-title").html('@if($type == 1) AC Purchase Edit @elseif($type == 2) AC Spare Parts Purchase Edit @else Car Spare Parts Purchase Edit @endif');
-                $(".modal-footer").hide();
-                //--Get Master Data
-                var data = response.data;
-
-                $("#pur_id").val(data.id);
-                $('#inv_no').html(data.inv_no);
-                $("#inv_date").val(data.inv_date);
-                $('#remarks').html(data.remarks);
-                
-                $("#pur_id").attr("disabled", "disabled");
-                $('#inv_no').attr("disabled", "disabled");
-                $("#inv_date").attr("disabled", "disabled");
-                $('#remarks').attr("disabled", "disabled");
-                $('#mast_supplier_id').attr("disabled", "disabled");
-                $('#mast_work_station_id').attr("disabled", "disabled");
-
-                //--Get All Supplier Data
-                var supplier = response.supplier;
-                var supplier_dr = $('#mast_supplier_id');
-                supplier_dr.empty();
-                supplier_dr.append('<option>Select an Supplier</option>');
-                $.each(supplier, function(index, option) {
-                    var selected = (option.id == data.mast_supplier_id) ? 'selected' : '';
-                    supplier_dr.append('<option value="' + option.id + '" ' + selected + '>' + option.supplier_name + '</option>');
-                });
-                //--Get All Supplier Data
-                var store = response.store;
-                var work_station_dr = $('#mast_work_station_id');
-                work_station_dr.empty();
-                work_station_dr.append('<option>Select an Work Station</option>');
-                $.each(store, function(index, option) {
-                    var selected = (option.id == data.mast_work_station_id) ? 'selected' : '';
-                    work_station_dr.append('<option value="' + option.id + '" ' + selected + '>' + option.store_name + '</option>');
-                });
-
-                //--Show Purchase Details Data
-                var purchase_det = response.purchase_details;
-                var tableBody = $('#table-body');
-                tableBody.empty();
-
-                var total = 0;
-                $.each(purchase_det, function(index, item) {
-                    var subtotal = item.qty * item.price;
-                    var row = '<tr id="row_todo_'+ item.id + '">';
-                    row += '<td>' + item.part_name + '</td>';
-                    row += '<td>' + item.part_no + '</td>';
-                    row += '<td>' + item.box_qty + '</td>';
-                    row += '<td>' + item.unit_name + '</td>';
-                    row += '<td>' + item.qty + '</td>';
-                    row += '<td>' + item.price + '</td>';
-                    row += '<td>'+ subtotal +'</td>';
-                    row += '</tr>';
-
-                    tableBody.prepend(row);
-                    $(this).find('.subtotal').text(subtotal.toFixed(2));
-                    total += subtotal;
-                });
-                $('#total').text(total.toFixed(2));
+                showData(response, 2);
             },
             error: function(xhr, status, error) {
                 console.log(error);
@@ -662,6 +331,148 @@
         });
     });
 
+    function showData(response, check) {
+        $(".bd-example-modal-lg").modal('show');
+        $(".modal-footer").show();
+        
+        //--Get Master Data
+        var data = response.data;
+
+        $("#pur_id").val(data.id);
+        $('#inv_no').html(data.inv_no);
+        $("#inv_date").val(data.inv_date);
+        $('#remarks').html(data.remarks);
+        
+        //--Get Supplier Data
+        var supplier = response.supplier;
+        var supplier_dr = $('#mast_supplier_id');
+        supplier_dr.empty();
+        supplier_dr.append('<option>Select an Supplier</option>');
+        $.each(supplier, function(index, option) {
+            var selected = (option.id == data.mast_supplier_id) ? 'selected' : '';
+            supplier_dr.append('<option value="' + option.id + '" ' + selected + '>' + option.supplier_name + '</option>');
+        });
+        //--Get Work Station Data
+        var store = response.store;
+        var work_station_dr = $('#mast_work_station_id');
+        work_station_dr.empty();
+        work_station_dr.append('<option>Select an Work Station</option>');
+        $.each(store, function(index, option) {
+            var selected = (option.id == data.mast_work_station_id) ? 'selected' : '';
+            work_station_dr.append('<option value="' + option.id + '" ' + selected + '>' + option.store_name + '</option>');
+        });
+
+        if(check == 1){
+            $(".modal-title").html('@if($type == 1) AC Purchase Edit @elseif($type == 2) AC Spare Parts Purchase Edit @else Car Spare Parts Purchase Edit @endif');
+
+            $("#pur_id").prop("disabled", false);
+            $('#inv_no').prop("disabled", false);
+            $("#inv_date").prop("disabled", false);
+            $('#remarks').prop("disabled", false);
+            $('#mast_supplier_id').prop("disabled", false);
+            $('#mast_work_station_id').prop("disabled", false);
+
+            
+            $(".table_action").show();
+            $('.submit_btn').show();
+        }else{
+            $(".modal-title").html('@if($type == 1) AC Purchase View @elseif($type == 2) AC Spare Parts Purchase View @else Car Spare Parts Purchase View @endif');
+
+            $("#pur_id").prop("disabled", true);
+            $('#inv_no').prop("disabled", true);
+            $("#inv_date").prop("disabled", true);
+            $('#remarks').prop("disabled", true);
+            $('#mast_supplier_id').prop("disabled", true);
+            $('#mast_work_station_id').prop("disabled", true);
+
+            $('.table_action').hide();
+            $('.submit_btn').hide();
+        }
+
+        //--Tabel Purchase Details
+        var tableBody = $('#table-body');
+        tableBody.empty();
+        var purchaseDetails = response.purchase_details;
+        var total = 0;
+        var i = 0;
+        if(check == 1){ //Edit - 1
+            $.each(purchaseDetails, function(index, item) {
+                var subtotal = item.qty * item.price;
+                var newRow = $('<tr id="row_todo_'+ item.id + '">' +
+                    '<input type="hidden" name="editFile['+i+'][id]" id="salesDetailsId" value="' + item.id + '">' +
+                    '<td>'+
+                        '<select id="item_category" class="form-control dropdwon_select val_item_category">' +
+                        '<option selected disabled>--Select--</option>' +
+                        '@foreach($item_group as $data)' +
+                            '<option value="{{ $data->id }}" data-part_name="{{ $data->part_name }}" ' + ('{{ $data->id }}' == item.item_groups_id ? 'selected' : '') + '>' + '{{ $data->part_name }}' + '</option>' +
+                        '@endforeach' +
+                        '</select>' +
+                    '</td>' +
+                    '<td><select id="partNumber" name="editFile['+i+'][item_id]" class="form-control dropdwon_select val_part_number"></select></td>' +
+                    '<td><input type="text" name="" readonly id="packageSize" class="form-control" value="' + item.box_qty + '"></td>' +
+                    '<td><input type="text" name="" readonly id="unit" class="form-control" value="' + item.unit_name + '"></td>' +
+                    '<td><input type="number" name="editFile['+i+'][qty]" id="" class="form-control quantity val_quantity" placeholder="0.00" value="'+ item.qty +'"></td>' +
+                    '<td><input type="number" name="editFile['+i+'][price]" id="price" class="form-control price val_price" placeholder="0.00" value="'+ item.price +'"></td>' +
+                    '<td class="subtotal">'+ subtotal +'</td>' +
+                    '<td class="text-center">' +
+                        '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs edit_add_hide" onClick="addRow(0)"><span class="fa fa-plus"></span></button>' +
+                        '<button type="button" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0" id="delete_data" data-id="' + item.id +'"><span class="fa fa-trash"></span></button>' +
+                    '</td>'+
+                '</tr>');
+
+                if ($("#id").val()) {
+                    $("#row_todo_" + item.id).replaceWith(newRow);
+                } else {
+                    tableBody.append(newRow);
+                }
+
+                var currentRow = $(newRow);
+                var partNumberSelect = currentRow.find('.val_part_number');
+                $.ajax({
+                    url: '{{ route('sales.edit-part-id')}}',
+                    method: 'GET',
+                    dataType: 'JSON',
+                    data: { 'part_id': item.item_groups_id },
+                    success: function(data) {
+                        partNumberSelect.append('<option value="" selected>--Select--</option>');
+
+                        $.each(data, function(index, option) {
+                            var selected = (option.id == item.item_rg_id) ? 'selected' : '';
+                            partNumberSelect.append('<option value="' + option.id + '" ' + selected + '>' + option.part_no + '</option>');
+                        });
+                    },
+                    error: function() {
+                        alert('Fail');
+                    }
+                });
+                i++;
+                $(this).find('.subtotal').text(subtotal.toFixed(2));
+                total += subtotal;
+            });
+            $('#total').text(total.toFixed(2));
+        }
+        if(check == 2){ //View - 2
+            $.each(purchaseDetails, function(index, item) {
+                var subtotal = item.qty * item.price;
+                var row = '<tr id="row_todo_'+ item.id + '">';
+                row += '<td>' + item.part_name + '</td>';
+                row += '<td>' + item.part_no + '</td>';
+                row += '<td>' + item.box_qty + '</td>';
+                row += '<td>' + item.unit_name + '</td>';
+                row += '<td>' + item.qty + '</td>';
+                row += '<td>' + item.price + '</td>';
+                row += '<td>'+ subtotal +'</td>';
+                row += '</tr>';
+                tableBody.prepend(row);
+
+                $(this).find('.subtotal').text(subtotal.toFixed(2));
+                total += subtotal;
+            });
+            $('#total').text(total.toFixed(2));
+        }
+    }
+
+    /*========//Delete Data//========*/
     $(document).ready(function(){
         $.ajaxSetup({
             headers:{
@@ -679,6 +490,7 @@
                 toastr.success("Record deleted successfully!");
                 $("#row_todo_" + id).remove();
                 $('#table-body').closest('tr').remove();
+                updateSubtotal(0);
             },
             error: function(response) {
                 Swal.fire({
@@ -690,4 +502,171 @@
             }
         });
     });
+</script>
+
+<script type="text/javascript">
+    //======Add ROW
+    var count = 0;
+    $("#items-table").on("click", ".add-row", function() {
+        var allValuesNotNull = true;
+        $('.val_part_number').each(function() {
+            var value = $(this).val();
+            if (value === null || value === '') {
+                allValuesNotNull = false;
+                return false;
+            }
+        });
+        $('.val_quantity').each(function() {
+            var value = $(this).val();
+            if (value === null || value === '') {
+                allValuesNotNull = false;
+                return false;
+            }
+        });
+        $('.val_price').each(function() {
+            var value = $(this).val();
+            if (value === null || value === '') {
+                allValuesNotNull = false;
+                return false;
+            }
+        });
+        if (allValuesNotNull) {
+            ++count;
+            addRow(count);
+        } else {
+            swal("Error!", "All input values are not null or empty.", "error");
+        }
+    });
+    function addRow(i){
+        var newRow = $('<tr>' +
+            '<td>'+
+                '<select id="item_category" class="form-control dropdwon_select val_item_category">' +
+                '<option selected disabled>--Select--</option>' +
+                '@foreach($item_group as $data)' +
+                    '<option value="{{ $data->id}}">{{ $data->part_name}}</option>' +
+                    '@endforeach' +
+                '</select>' +
+            '</td>' +
+            '<td><select id="partNumber" name="moreFile['+i+'][item_id]" class="form-control dropdwon_select val_part_number"></select></td>' +
+            '<td><input type="text" name="" readonly id="packageSize" class="form-control"></td>' +
+            '<td><input type="text" name="" readonly id="unit" class="form-control"></td>' +
+            '<td><input type="number" name="moreFile['+i+'][qty]" id="" class="form-control quantity val_quantity" placeholder="0.00"></td>' +
+            '<td><input type="number" name="moreFile['+i+'][price]" id="price" class="form-control price val_price" placeholder="0.00"></td>' +
+            '<td class="subtotal">0.00</td>' +
+            '<td class="text-center">' +
+                '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs add-row"><span class="fa fa-plus"></span></button>' +
+                '<button type="button" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0 remove-row"><span class="fa fa-trash"></span></button>' +
+            '</td>'+
+        '</tr>');
+
+        $('.edit_add_hide').hide();
+        $('#items-table tbody').append(newRow);
+        newRow.find('.dropdwon_select').select2();
+    }
+
+    //======Remove ROW
+    $('#items-table').on('click', '.remove-row', function() {
+        $(this).closest('tr').remove();
+        updateSubtotal(0);
+    });
+    //======Total Count
+    $('#items-table').on('input', '.quantity, .price', function() {
+        updateSubtotal(0);
+    });
+    function updateSubtotal(update_subTotal) {
+        var total = 0;
+        $('#items-table tbody tr').each(function() {
+            var quantity = parseFloat($(this).find('.quantity').val()) || 0;
+            var price = parseFloat($(this).find('.price').val()) || 0;
+            var subtotal = quantity * price;
+            $(this).find('.subtotal').text(subtotal.toFixed(2));
+            total += subtotal;
+        });
+        var update_total = total - update_subTotal;
+        $('#total').text(update_total.toFixed(2));
+    }
+</script>
+<script type="text/javascript">
+    //======Get Item Group All Data
+    $(document).on('change','#item_category',function(){
+        var partId = $(this).val();
+        var currentRow = $(this).closest("tr");
+        $.ajax({
+            url:'{{ route('get-part-id')}}',
+            method:'GET',
+            dataType:"html",
+            data:{'part_id':partId},
+            success:function(data){
+                console.log(data)
+                currentRow.find('#partNumber').html(data);
+            },
+            error:function(){
+                alert('Fail');
+            }
+        });
+    });
+    //======Show Single Row Data
+    $(document).on('change','#partNumber', function(){
+        var partNumber_id = $(this).val();
+        var currentRows = $(this).closest("tr"); 
+        
+        $.ajax({
+            url:'{{ route('get-part-number')}}',
+            method:'GET',
+            dataType:"JSON",
+            data:{'part_id':partNumber_id},
+            success:function(data){
+                console.log(data)
+                currentRows.find('#packageSize').val(data.box_qty);
+                currentRows.find('#unit').val(data.unit.unit_name);
+                currentRows.find('#price').val(data.price);
+                currentRows.find('.quantity').focus();
+            }
+        });
+    });
+    //======Duplicates Part Number Validation
+    $(document).on('change','.val_part_number', function() {
+        var dropdownValues = $('.val_part_number').map(function() {
+            return $(this).val();
+        }).get();
+
+        var hasDuplicates = new Set(dropdownValues).size !== dropdownValues.length;
+        if (hasDuplicates) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Duplicate Values',
+                text: 'Duplicate values are not allowed in the partNumber dropdown.',
+            });
+            //--Reset Option
+            var $currentRow = $(this).closest('tr');
+            var itemCategoryValue = $currentRow.find('.val_item_category').val();
+            var currentRow = $(this).closest("tr");
+            $.ajax({
+                url:'{{ route('get-part-id')}}',
+                method:'GET',
+                dataType:"html",
+                data:{'part_id':itemCategoryValue},
+                success:function(data){
+                    console.log(data)
+                    currentRow.find('#partNumber').html(data);
+                },
+                error:function(){
+                    alert('Fail');
+                }
+            });
+        }
+    });
+    //======Validation Message
+    @if(Session::has('messege'))
+        var type="{{Session::get('alert-type','info')}}"
+        switch(type){
+            case 'save':
+                swal("Success Message Title", "Well done, you pressed a button", "success");
+                break;
+            case 'fail':
+                swal("Error!", "{{ Session::get('messege') }}", "error");
+                $('.bd-example-modal-lg').modal('show');
+                break;
+        }
+    @endif
 </script>
