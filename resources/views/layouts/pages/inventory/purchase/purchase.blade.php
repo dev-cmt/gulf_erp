@@ -199,9 +199,11 @@
         var tableBody = $('#table-body');
         tableBody.empty();
         addRow(0);
-        //--Modal Body Fix
-        $("#main-row-data").load(" #main-row-data", function() {
-            $('.dropdwon_select').select2();
+        //--Dropdwon Search Fix
+        $('.dropdwon_select').each(function () {
+            $(this).select2({
+                dropdownParent: $(this).parent()
+            });
         });
         $(".modal-title").html('@if($type == 1) Add AC Purchase @elseif($type == 2) Add AC Spare Parts Purchase @else Add Car Spare Parts Purchase @endif');
         $(".bd-example-modal-lg").modal('show');

@@ -99,19 +99,35 @@ class ManualAttendanceController extends Controller
         return view('layouts.pages.admin.attendance.show',compact('data','user'));
     }
 
-    public function filterByDate(Request $request)
+    public function filterDate(Request $request)
     {
-        // $startDate = '2022-05-05';
-        // $endDate = '2022-05-13';
-        $startDate = $request->start_date;
-        $endDate = $request->end_date;
-        // dd($startDate,$endDate);
-        $data = HrAttendance::whereDate('date','>=', $startDate)->whereDate('date','<=', $endDate)->get();
+        // if ($request->ajax()) {
+        //     if ($request->input('start_date') && $request->input('end_date')) {
+ 
+        //         // $start_date = Carbon::parse($request->input('start_date'));
+        //         // $end_date = Carbon::parse($request->input('end_date'));
+        //         $start_date = $request->input('start_date');
+        //         $end_date = $request->input('end_date');
+ 
+        //         if ($end_date->greaterThan($start_date)) {
+        //             $data = HrAttendance::whereBetween('date', [$start_date, $end_date])->count('id');
+        //         } else {
+        //             $data = HrAttendance::latest()->get();
+        //         }
+        //     } else {
+        //         $data = HrAttendance::latest()->get();
+        //     }
+ 
+        //     return response()->json($data);
+        // } else {
+        //     abort(403);
+        // }
 
-        return redirect()->jeson($startDate);
-        // Return the filtered items to the view or perform any other desired action
-        return view('barcode', compact('data'));
-        // return view('layouts.pages.admin.attendance.index', compact('data'));
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');
+
+        $data = HrAttendance::whereBetween('date', [$start_date, $end_date])->get();
+        return response()->json($data);
     }
 
     /*____________________________________

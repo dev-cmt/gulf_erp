@@ -46,10 +46,14 @@ class InfoEmployeeController extends Controller
         $infoNominee = $user->infoNominee;
         //--Personal Information
         $infoPersonal = InfoPersonal::where('emp_id', $id)->first();
+        $reporting_boss = $infoPersonal->reportingBoss;
         $department = $infoPersonal->mastDepartment;
         $designation = $infoPersonal->mastDesignation;
         $employee_type = $infoPersonal->mastEmployeeType;
         $work_station = $infoPersonal->mastWorkStation;
+
+        $joiningDate = $infoPersonal->joining_date;
+        $serviceLength = $this->calculateServiceLength($joiningDate);
 
         //---Address (Divistion)
         $divisions = DB::table('divisions')->where('id', $infoPersonal->division_present)->first();
@@ -65,6 +69,7 @@ class InfoEmployeeController extends Controller
             'designation' => $designation,
             'employee_type' => $employee_type,
             'work_station' => $work_station,
+            'reporting_boss' => $reporting_boss,
             'division' => $divisions,
             'district' => $districts,
             'upazila' => $upazilas,
@@ -74,7 +79,16 @@ class InfoEmployeeController extends Controller
             'upazila_permanent' => $upazilas_permanent,
             'union_permanent' => $unions_permanent,
         ];
-        return view('layouts.pages.admin.info_employee.employee_details', compact('user','infoPersonal','infoEducational','infoWorkExperience','infoBank','infoNominee','data'));
+        return view('layouts.pages.admin.info_employee.employee_details', compact('user','serviceLength','infoPersonal','infoEducational','infoWorkExperience','infoBank','infoNominee','data'));
+    }
+    public function calculateServiceLength($joiningDate)
+    {
+        $joiningDate = Carbon::parse($joiningDate);
+        $currentDate = Carbon::now();
+
+        $serviceLength = $joiningDate->diffInYears($currentDate) . ' years, ' . $joiningDate->diffInMonths($currentDate) % 12 . ' months';
+
+        return $serviceLength;
     }
     public function profileUpdate(Request $request, $id)
     {
@@ -148,14 +162,16 @@ class InfoEmployeeController extends Controller
         $designation =MastDesignation::where('status', 1)->get();
         $employee_type =MastEmployeeType::where('status', 1)->get();
         $work_station =MastWorkStation::where('status', 1)->get();
+        $reporting_boss = User::where( 'is_admin', '!=', 1)->orWhere('status', '!=', 1)->get();
+
 
         $old_data = [
             'divisions' => $divisions,
-
             'department' => $department,
             'designation' => $designation,
             'employee_type' => $employee_type,
             'work_station' => $work_station,
+            'reporting_boss' => $reporting_boss,
         ];
 
         $user = User::findOrFail($id);
@@ -166,6 +182,7 @@ class InfoEmployeeController extends Controller
         
         //--Personal Information
         $infoPersonal = InfoPersonal::where('emp_id', $id)->first();
+        $reporting_boss = $infoPersonal->reportingBoss;
         $department = $infoPersonal->mastDepartment;
         $designation = $infoPersonal->mastDesignation;
         $employee_type = $infoPersonal->mastEmployeeType;
@@ -192,6 +209,7 @@ class InfoEmployeeController extends Controller
             'designation' => $designation,
             'employee_type' => $employee_type,
             'work_station' => $work_station,
+            'reporting_boss' => $reporting_boss,
             
             'division' => $divisions,
             'district' => $districts,
@@ -216,14 +234,14 @@ class InfoEmployeeController extends Controller
         $data->nid_no=$request->nid_no;
         $data->blood_group=$request->blood_group;
         $data->mast_department_id=$request->mast_department_id;
-        $data->mast_designation_id=$request->mast_department_id;
+        $data->mast_designation_id=$request->mast_designation_id;
         $data->mast_employee_type_id=$request->mast_employee_type_id;
         $data->mast_work_station_id=$request->mast_work_station_id;
 
         $data->number_official=$request->number_official;
         $data->email_official=$request->email_official;
         $data->joining_date=$request->joining_date;
-        $data->service_length=$request->service_length;
+        $data->is_reporting_boss=$request->is_reporting_boss;
         $data->gross_salary=$request->gross_salary;
         $data->reporting_boss=$request->reporting_boss;
 
@@ -260,7 +278,6 @@ class InfoEmployeeController extends Controller
      */
     public function employee_create()
     {
-
         $user = User::where( 'is_admin', '!=', 1)->orWhere('status', '!=', 1)->get();
         return view('layouts.pages.admin.info_employee.employee_register',compact('user'));
     }
@@ -288,10 +305,7 @@ class InfoEmployeeController extends Controller
     }
     public function employee_destroy($id)
     {
-        // $data=User::find($id);
-        // $data->delete();
         User::destroy($id);
-
         $notification=array('messege'=>'User delete successfully!','alert-type'=>'success');
         return redirect()->back()->with($notification);
     }
@@ -316,12 +330,13 @@ class InfoEmployeeController extends Controller
         $emp_id = $id;
         $user_id = Auth::user()->id;
         $user=User::find($id);
+        $reporting_boss = User::where( 'is_admin', '!=', 1)->orWhere('status', '!=', 1)->get();
         $department =MastDepartment::where('status', 1)->get();
         $designation =MastDesignation::where('status', 1)->get();
         $employee_category =MastEmployeeType::where('status', 1)->get();
         $work_stations =MastWorkStation::where('status', 1)->get();
 
-        return view('layouts.pages.admin.info_employee.info_personal',compact('data','user','department','designation','employee_category','work_stations'));
+        return view('layouts.pages.admin.info_employee.info_personal',compact('data','user','reporting_boss','department','designation','employee_category','work_stations'));
     }
     public function personal_store(Request $request, $id)
     {
@@ -365,14 +380,14 @@ class InfoEmployeeController extends Controller
         $data->nid_no=$request->nid_no;
         $data->blood_group=$request->blood_group;
         $data->mast_department_id=$request->mast_department_id;
-        $data->mast_designation_id=$request->mast_department_id;
+        $data->mast_designation_id=$request->mast_designation_id;
         $data->mast_employee_type_id=$request->mast_employee_type_id;
         $data->mast_work_station_id=$request->mast_work_station_id;
 
         $data->number_official=$request->number_official;
         $data->email_official=$request->email_official;
         $data->joining_date=$request->joining_date;
-        $data->service_length=$request->service_length;
+        $data->is_reporting_boss=$request->is_reporting_boss;
         $data->gross_salary=$request->gross_salary;
         $data->reporting_boss=$request->reporting_boss;
 

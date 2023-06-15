@@ -250,19 +250,6 @@
                                         </div>
                                         <div class="col-lg-6">
                                             <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">Service Length</label>
-                                                <div class="col-lg-7">
-                                                    <input type="number" name="service_length" class="form-control @error('service_length') is-invalid @enderror" placeholder="" value="{{$data['infoPersonal']->service_length}}" />
-                                                    @error('service_length')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="form-group row">
                                                 <label class="col-lg-4 col-form-label">Gross Salary
                                                     <span class="text-danger">*</span>
                                                 </label>
@@ -278,19 +265,28 @@
                                         </div>
                                         <div class="col-lg-6">
                                             <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label">Reporting Boss
-                                                    <span class="text-danger">*</span>
-                                                </label>
+                                                <label class="col-lg-4 col-form-label">Reporting Boss</label>
                                                 <div class="col-lg-7">
-                                                    <select name="reporting_boss" class="form-control default-select  @error('reporting_boss') is-invalid @enderror" style="height: 40px;">
-                                                        <option value="0">Sabit</option>
-                                                        <option value="1">Alam</option>
+                                                    <select name="reporting_boss" class="form-control dropdwon_select  @error('reporting_boss') is-invalid @enderror" style="height: 40px;">
+                                                        <option value="" selected>Select Reporting Boss</option>
+                                                        @foreach ($old_data['reporting_boss'] as $row)
+                                                            <option value="{{$row->id}}" {{isset($data['reporting_boss']) && $row->id == $data['reporting_boss']->id ? 'selected' : '' }}>{{$row->name}}</option>
+                                                        @endforeach
                                                     </select>
                                                     @error('reporting_boss')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
                                                     </span>
                                                     @enderror
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group row">
+                                                <div class="col-lg-7 ml-4">
+                                                    <input type="hidden" name="is_reporting_boss" value="0">
+                                                    <input type="checkbox" class="form-check-input" name="is_reporting_boss" value="1"  @if($data['infoPersonal']->is_reporting_boss) checked @endif>
+                                                    <label class="form-check-label" for="check-reporting-boss">Is Reporting Boss?</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -608,7 +604,13 @@
                                                     @foreach($data['infoEducational'] as $row)
                                                         <tr id="row_todo_{{ $row->id}}">
                                                             <td>
-                                                                @if ($row->qualification == 1) SSC @else HSC  @endif
+                                                                @if ($row->qualification == 1)SSC 
+                                                                @elseif ($row->qualification == 2)HSC
+                                                                @elseif ($row->qualification == 3)12th Stander
+                                                                @elseif ($row->qualification == 4)Graduation
+                                                                @elseif ($row->qualification == 5)Masters
+                                                                @elseif ($row->qualification == 6)Ph.D
+                                                                @endif
                                                             </td>
                                                             <td>{{ $row->institute_name}}</td>
                                                             <td>{{ $row->grade}}</td>
@@ -1056,7 +1058,7 @@
 
                         if(response.institute_name){
                             var row = '<tr id="row_todo_'+ response.id + '">';
-                            row += '<td> @if('+response.qualification == 1 +') SSC @elseif ('+ response.qualification == 2+') HSC @endif' + '</td>';
+                            row += '<td> @if ('+response.qualification == 1 +') SSC  @elseif ('+response.qualification == 2 +')HSC @elseif ('+response.qualification == 3 +')12th Stander @elseif ('+response.qualification == 4 +')Graduation @elseif ('+response.qualification == 5 +')Masters @elseif ('+response.qualification == 6 +')Ph.D @endif </td>';
                             row += '<td>' + response.institute_name + '</td>';
                             row += '<td>' + response.grade + '</td>';
                             row += '<td>' + response.passing_year + '</td>';

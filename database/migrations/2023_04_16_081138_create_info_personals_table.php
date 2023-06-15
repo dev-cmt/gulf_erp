@@ -25,6 +25,7 @@ return new class extends Migration
             $table->integer('service_length')->nullable();
             $table->double('gross_salary')->nullable();
             $table->integer('reporting_boss')->nullable();
+            $table->tinyInteger('is_reporting_boss')->default(false);
             $table->integer('division_present')->nullable();
             $table->integer('district_present')->nullable();
             $table->integer('upazila_present')->nullable();

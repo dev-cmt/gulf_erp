@@ -70,7 +70,7 @@
                         <span class="nav-text">Inventory</span>
                     </a>
                     <ul aria-expanded="false">
-                        <li><a href="#">GRN (Warehouse)</a></li>
+                        <li><a href="{{route('inv_purchase_grn')}}">GRN (Warehouse)</a></li>
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Purchase</a>
                             <ul aria-expanded="false">
                                 <li><a href="{{ route('inv_purchase.index',['cat_id' => 1])}}">AC</a></li>

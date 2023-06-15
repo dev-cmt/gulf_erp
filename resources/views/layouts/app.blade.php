@@ -171,10 +171,21 @@
             
     </script>
     <!-- End Toaster & Sweetalert -->
+    {{-- <script>
+        $('select:not(.normal)').each(function () {
+            $(this).select2({
+                dropdownParent: $(this).parent()
+            });
+        });
+    </script> --}}
     <script>
-        $(function () {
-            $(".dropdwon_select").select2();
-        }); 
+        $(document).ready(function() {
+          $('.dropdwon_select').each(function () {
+            $(this).select2({
+              dropdownParent: $(this).parent()
+            });
+          });
+        });
     </script>
 
     @stack('script')

@@ -113,7 +113,13 @@
                                                     @foreach($educational as $row)
                                                         <tr id="row_todo_{{ $row->id}}">
                                                             <td>
-                                                                @if ($row->qualification == 1) SSC @else HSC  @endif
+                                                                @if ($row->qualification == 1) SSC 
+                                                                @elseif ($row->qualification == 2)HSC
+                                                                @elseif ($row->qualification == 3)12th Stander
+                                                                @elseif ($row->qualification == 4)Graduation
+                                                                @elseif ($row->qualification == 5)Masters
+                                                                @elseif ($row->qualification == 6)Ph.D
+                                                                @endif
                                                             </td>
                                                             <td>{{ $row->institute_name}}</td>
                                                             <td>{{ $row->grade}}</td>
@@ -560,7 +566,7 @@
 
                         if(response.institute_name){
                             var row = '<tr id="row_todo_'+ response.id + '">';
-                            row += '<td> @if('+response.qualification == 1 +') SSC @elseif ('+ response.qualification == 2+') HSC @endif' + '</td>';
+                            row += '<td> @if ('+response.qualification == 1 +') SSC  @elseif ('+response.qualification == 2 +')HSC @elseif ('+response.qualification == 3 +')12th Stander @elseif ('+response.qualification == 4 +')Graduation @elseif ('+response.qualification == 5 +')Masters @elseif ('+response.qualification == 6 +')Ph.D @endif </td>';
                             row += '<td>' + response.institute_name + '</td>';
                             row += '<td>' + response.grade + '</td>';
                             row += '<td>' + response.passing_year + '</td>';

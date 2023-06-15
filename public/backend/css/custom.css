@@ -235,7 +235,15 @@ table.dataTable tbody td {
     -webkit-transform: translateY(4px) rotate(45deg);
     transform: translateX(-12px) translateY(4px) rotate(140deg) !important;
 }
-.select2-dropdown {
-    position: relative !important;
-    z-index: 1000000000000000 !important;
+.dataTables_wrapper .dataTables_length {
+    margin-bottom: 5px !important;
 }
+
+/* span.select2-container {
+    z-index:10050 !important;
+} */
+/* .dataTables_length {
+    display: none !important;
+} */
+
+

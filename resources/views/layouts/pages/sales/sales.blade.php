@@ -84,8 +84,8 @@
                 </div>
                 <form class="form-valide" data-action="{{ route('sales.store', $type) }}" method="POST" enctype="multipart/form-data" id="add-user-form">
                     @csrf
-                    <div class="modal-body py-2">
-                        <div class="row" id="main-row-data">
+                    <div class="modal-body py-2 px-4">
+                        <div class="row">
                             <input type="hidden" name="sal_id" id="sal_id">
                             <div class="col-md-6">
                                 <div class="form-group row">
@@ -236,9 +236,11 @@
         var tableBody = $('#table-body');
         tableBody.empty();
         addRow(0);
-        //--Modal Body Fix
-        $("#main-row-data").load(" #main-row-data", function() {
-            $('.dropdwon_select').select2();
+        //--Dropdwon Search Fix
+        $('.dropdwon_select').each(function () {
+            $(this).select2({
+                dropdownParent: $(this).parent()
+            });
         });
         $(".modal-title").html('@if($type == 1) Add AC Sales @elseif($type == 2) Add AC Spare Parts Sales @else Add Car Spare Parts Sales @endif');
         $(".bd-example-modal-lg").modal('show');

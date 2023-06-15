@@ -239,7 +239,7 @@
                                                 <div class="col-sm-6 col-5">
                                                     <h6 class="f-w-500">Service Length<span class="pull-right">:</span></h6>
                                                 </div>
-                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->service_length }}</span></div>
+                                                <div class="col-sm-6 col-7"><span>{{ $serviceLength }}</span></div>
                                             </div>
                                         </div>
                                         <!--Item-->
@@ -257,7 +257,7 @@
                                                 <div class="col-sm-6 col-5">
                                                     <h6 class="f-w-500">Reporting Boss<span class="pull-right">:</span></h6>
                                                 </div>
-                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->reporting_boss }}</span></div>
+                                                <div class="col-sm-6 col-7"><span>{{ $data['reporting_boss']->name }}</span></div>
                                             </div>
                                         </div>
 
@@ -712,4 +712,4 @@
     </script> --}}
    
 </x-app-layout>
-    
+  

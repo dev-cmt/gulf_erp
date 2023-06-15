@@ -5,6 +5,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\LocationController;
+use App\Http\Controllers\MovementController;
 //--HR & Admin
 use App\Http\Controllers\Admin\BackViewController;
 use App\Http\Controllers\Admin\InfoPersonalController;
@@ -112,13 +113,20 @@ Route::group(['middleware' => ['auth']], function(){
     Route::PATCH('attendance/approve/{id}', [ManualAttendanceController::class, 'attendance_approve'])->name('attendance.approve');
     Route::PATCH('attendance/canceled/{id}', [ManualAttendanceController::class, 'decline'])->name('attendance.canceled');
     Route::get('get/employee_repot/{id}', [ManualAttendanceController::class,'getemployee_report'])->name('get_employee_repot');
-    Route::get('/items/filter', [ManualAttendanceController::class, 'filterByDate'])->name('items.filter');
+    Route::get('get/attendance/filter', [ManualAttendanceController::class, 'filterDate'])->name('get-attendance-filter');
 
     //--Attendances Imports or Exports Excel
     Route::get('attendance/import', [ManualAttendanceController::class, 'importAttendance'])->name('attendance.import');
     Route::post('attendance/upload', [ManualAttendanceController::class, 'uploadAttendance'])->name('attendance.upload');    
     Route::get('attendance/export', [ManualAttendanceController::class, 'exportAttendance'])->name('attendance.export'); 
     
+    /**______________________________________________________________________________________________
+     * Inventory => GRN
+     * ______________________________________________________________________________________________
+     */
+    Route::get('inv/purchase_grn', [MovementController::class, 'purchase_grn'])->name('inv_purchase_grn');
+    Route::get('get/purchase_grn/{id}', [MovementController::class, 'getPurchaseGRN'])->name('get_purchase_grn');
+
     /**______________________________________________________________________________________________
      * Inventory => Purchase
      * ______________________________________________________________________________________________

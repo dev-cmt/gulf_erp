@@ -29,6 +29,7 @@ class InfoPersonal extends Model
         'service_length',
         'gross_salary',
         'reporting_boss',
+        'is_reporting_boss',
         
         'division_present',
         'district_present',
@@ -80,6 +81,10 @@ class InfoPersonal extends Model
     public function mastWorkStation()
     {
         return $this->belongsTo(MastWorkStation::class);
+    }
+    public function reportingBoss()
+    {
+        return $this->belongsTo(User::class, 'reporting_boss', 'id');
     }
 
 }

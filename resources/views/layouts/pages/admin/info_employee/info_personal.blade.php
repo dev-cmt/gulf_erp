@@ -344,7 +344,7 @@
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <div class="col-lg-7">
-                                                <input type="number" name="nid_no" id="nid_no" class="form-control @error('nid_no') is-invalid @enderror" placeholder="XXX-XXX-XXXX" value="{{old('nid_no')}}" />
+                                                <input type="number" name="nid_no" id="nid_no" class="form-control @error('nid_no') is-invalid @enderror" placeholder="" value="{{old('nid_no')}}"/>
                                                 @error('nid_no')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -509,19 +509,6 @@
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label">Service Length</label>
-                                            <div class="col-lg-7">
-                                                <input type="number" name="service_length" class="form-control @error('service_length') is-invalid @enderror" placeholder="" value="1" />
-                                                @error('service_length')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="form-group row">
                                             <label class="col-lg-4 col-form-label">Gross Salary
                                                 <span class="text-danger">*</span>
                                             </label>
@@ -537,19 +524,28 @@
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label">Reporting Boss
-                                                <span class="text-danger">*</span>
-                                            </label>
+                                            <label class="col-lg-4 col-form-label">Reporting Boss</label>
                                             <div class="col-lg-7">
-                                                <select name="reporting_boss" class="form-control default-select  @error('reporting_boss') is-invalid @enderror" style="height: 40px;">
-                                                    <option value="0">Sabit</option>
-                                                    <option value="1">Alam</option>
+                                                <select name="reporting_boss" class="form-control dropdwon_select  @error('reporting_boss') is-invalid @enderror" style="height: 40px;">
+                                                    <option value="" selected>Select Reporting Boss</option>  
+                                                    @foreach ($reporting_boss as $row)
+                                                        <option value="{{$row->id}}">{{$row->name}}</option>
+                                                    @endforeach
                                                 </select>
                                                 @error('reporting_boss')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
                                                 @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group row">
+                                            <div class="col-lg-7 ml-4">
+                                                <input type="hidden" name="is_reporting_boss" value="0">
+                                                <input type="checkbox" class="form-check-input" name="is_reporting_boss" value="1" id="check-reporting-boss">
+                                                <label class="form-check-label" for="check-reporting-boss">Is Reporting Boss?</label>
                                             </div>
                                         </div>
                                     </div>
@@ -908,9 +904,7 @@
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label">Address
-                                                <span class="text-danger">*</span>
-                                            </label>
+                                            <label class="col-lg-4 col-form-label">Address </label>
                                             <div class="col-lg-7">
                                                 <input type="test" name="emg_address" class="form-control @error('emg_address') is-invalid @enderror" placeholder="" value="{{old('emg_address')}}" />
                                                 @error('emg_address')
@@ -1027,11 +1021,11 @@
                 /*Get the value of the step.*/
                 const stepNumber = parseInt(formNavigationBtn.getAttribute("step_number"));
                 if(stepNumber == 12){
-                    var step1  = [];
-                    step1 = document.getElementById("date_of_birth").value;
-                    step1 = document.getElementById("nid_no").value;
-                    step1 = document.getElementById("blood_group").value;
-                    if (step1 == "" || step1 === null) {
+                    var dateOfBirth = document.getElementById("date_of_birth").value;
+                    var nidNo = document.getElementById("nid_no").value;
+                    var bloodGroup = document.getElementById("blood_group").value;
+                    
+                    if (dateOfBirth === "" || nidNo === "" || bloodGroup === "") {
                         Swal.fire(
                             'Required data missing?',
                             'Is something wrong with your form data?',
@@ -1041,16 +1035,16 @@
                     }else{
                         navigateToFormStep(stepNumber);
                     }
-                }else if (stepNumber == 13) {
+                }else if (stepNumber == 3) {
                     //--Step 2
                     var step2  = [];
-                    step2 = document.getElementById("gross_salary").value;
-                    step2 = document.getElementById("joining_date").value;
+                    var gross_salary = document.getElementById("gross_salary").value;
+                    var joining_date = document.getElementById("joining_date").value;
                     var department = document.getElementById("department").value;
                     var designation = document.getElementById("designation").value;
                     var employee_type = document.getElementById("employee_type").value;
                     var work_station = document.getElementById("work_station").value;
-                    if (step2 == "" || step2 === null || department== 0 || designation== 0 || employee_type== 0 || work_station == 0) {
+                    if (gross_salary == "" || gross_salary === null || joining_date == "" || joining_date === null || department== 0 || designation== 0 || employee_type== 0 || work_station == 0) {
                         Swal.fire(
                             'Required data missing?',
                             'Is something wrong with your form data?',
@@ -1062,11 +1056,10 @@
                     }
                 }else if (stepNumber == 4) {
                     //--Step 3
-                    var step3  = [];
-                    step3 = document.getElementById("division").value;
-                    step3 = document.getElementById("district").value;
-                    step3 = document.getElementById("upazila").value;
-                    if (step3 == "" || step3 == null || step3 === '') {
+                    var division = document.getElementById("division").value;
+                    var district = document.getElementById("district").value;
+                    var upazila = document.getElementById("upazila").value;
+                    if (division === "" || district === "" || upazila === "" || upazila == null) {
                         Swal.fire(
                             'Required data missing?',
                             'Is something wrong with your form data?',
@@ -1078,12 +1071,11 @@
                     }
                 }else if (stepNumber == 5) {
                     //--Step 4
-                    var step4  = [];
-                    step4 = document.getElementById("father_name").value;
-                    step4 = document.getElementById("mother_name").value;
-                    step4 = document.getElementById("emg_person_name").value;
-                    step4 = document.getElementById("emg_phone_number").value;
-                    if (step4 == "" || step4 == null) {
+                    var father_name = document.getElementById("father_name").value;
+                    var mother_name = document.getElementById("mother_name").value;
+                    var emg_person_name = document.getElementById("emg_person_name").value;
+                    var emg_phone_number = document.getElementById("emg_phone_number").value;
+                    if (father_name === "" || mother_name === "" || emg_person_name === "" || emg_phone_number === "") {
                         Swal.fire(
                             'Required data missing?',
                             'Is something wrong with your form data?',
