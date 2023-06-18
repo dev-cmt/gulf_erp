@@ -20,67 +20,43 @@
                                     <select name="user_id" id="user_id" class="form-control dropdwon_select">
                                         <option selected disabled>--Select--</option>
                                         @foreach($employee as $row)
-                                            <option value="{{ $row->id}}">{{ $row->name}}</option>
+                                            <option value="{{ $row->attendance_id}}">{{ $row->name}}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group row">
                                 <label class="col-md-5 col-form-label">Start Date
                                     <span class="text-danger">*</span>
                                 </label>
                                 <div class="col-md-7">
-                                    <input type="date" name="start_date" id="start_date" class="form-control" value="{{ old('date') ? old('date'):  date('Y-m-d') }}">
+                                    <input type="date" name="start_date" id="start_date" class="form-control" value="">
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group row">
                                 <label class="col-md-5 col-form-label">End Date
                                     <span class="text-danger">*</span>
                                 </label>
                                 <div class="col-md-7">
-                                    <input type="date" name="end_date" id="end_date" class="form-control" value="{{ old('date') ? old('date'):  date('Y-m-d') }}">
+                                    <input type="date" name="end_date" id="end_date" class="form-control" value="{{ date('Y-m-d') }}">
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div>
-                                <button id="filter" class="btn btn-primary">Filter</button>
-                                <button id="reset" class="btn btn-warning">Reset</button>
+                        <div class="col-md-2">
+                            <div class="d-flex justify-content-end">
+                                {{-- <button id="filter" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i><span class="btn-icon-add"></span>Filter</button>                    --}}
+                                <button id="reset" class="btn btn-sm btn-warning"><i class="fa fa-plus"></i><span class="btn-icon-add"></span>Reset</button>                   
                             </div>
                         </div>
                     </div>
-                    <hr>
-                    
-                    <div class="table-responsive">
-                        <table id="example3" class="display" style="min-width: 845px">
-                            <thead>
-                                <tr>
-                                    <th>SL</th>
-                                    <th>Date</th>
-                                    <th>In Time</th>
-                                    <th>Out Time</th>
-                                    <th class="text-right">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="table-body">
-                                @foreach ($data as $key=> $row )
-                                <tr>
-                                    <td>{{ ++$key }}</td>
-                                    <td>{{ $row->date }}</td>
-                                    <td>{{ $row->in_time }}</td>
-                                    <td>{{ $row->out_time }}</td>
-                                    <td class="d-flex justify-content-end">
-                                        <a href="{{route('get_employee_repot',$row->id)}}" class="btn btn-sm btn-success p-1 px-2 view_report"><i class="fa fa-folder-open"></i><span class="btn-icon-add"></span>View</a>
-                                    </td>
-                               </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                    <div id="attendance-list"></div>
+                    {{-- {{ $data->links() }}
+                    {{ $data->links('vendor.pagination.custom') }}
+                    {{ $data->links('vendor.pagination.bootstrap-5') }} --}}
                 </div>
 
             </div>
@@ -328,9 +304,9 @@
 @endpush
 </x-app-layout>
 
-
 <script>
-    $(function() {
+    $(document).ready(function(){
+        fetch();
         $("#start_date").datepicker({
             "dateFormat": "yy-mm-dd"
         });
@@ -339,66 +315,39 @@
         });
     });
     // Fetch records
-    function fetch(start_date, end_date) {
+    function fetch(user_id, start_date, end_date) {
         $.ajax({
             url: "{{ route('get-attendance-filter') }}",
-            type: "GET",
+            method:'GET',
+            dataType:"html",
             data: {
+                user_id: user_id,
                 start_date: start_date,
                 end_date: end_date
             },
-            dataType: "json",
-            success: function(response) {
-                // alert(response);
-                var tableBody = $('#table-body');
-                tableBody.empty();
-                $.each(response, function(index, item) {
-                    alert(item.date);
-                    var row = '<tr>';
-                    row += '<td>' + item.date + '</td>';
-                    row += '<td>' + item.in_time + '</td>';
-                    row += '<td>' + item.out_time + '</td>';
-                    row += '<td></td>';
-                    row += '</tr>';
-                    tableBody.prepend(row);
-                });
-                
+            success:function(data){
+                $('#attendance-list').html(data);
+            },
+            error: function(xhr, status, error) {
+                swal("Error!", "Required data missing!", "error");
             }
         });
     }
     // Filter
-    $(document).on("click", "#filter", function(e) {
-        e.preventDefault();
+    $('#filter-data').on('input change', '#start_date, #end_date, #user_id', function() {
+        var user_id = $("#user_id").val();
         var start_date = $("#start_date").val();
         var end_date = $("#end_date").val();
-        alert('click');
 
-        if (start_date == "" || end_date == "") {
-            alert("Both date required");
-        } else {
-            $('#records').DataTable().destroy();
-            fetch(start_date, end_date);
-        }
+        fetch(user_id, start_date, end_date);
     });
     // Reset
+    var clearDropdownHtml = $('#user_id').html();
     $(document).on("click", "#reset", function(e) {
         e.preventDefault();
-        $("#start_date").val(''); // empty value
+        $("#start_date").val('');
         $("#end_date").val('');
-        $('#records').DataTable().destroy();
+        $('#user_id').html(clearDropdownHtml);
         fetch();
     });
-    $('#filter-data').on('input', '#start_date, #end_date', function() {
-
-    });
 </script>
-
-
-
-
-
-
-
-
-
-

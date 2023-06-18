@@ -23,13 +23,12 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->tinyInteger('status')->default(false);
             $table->tinyInteger('late')->default(false);
+            $table->string('user_name')->nullable();
             $table->integer('finger_id')->nullable();
             $table->timestamps();
             
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->unsignedBigInteger('emp_id');
-            $table->foreign('emp_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

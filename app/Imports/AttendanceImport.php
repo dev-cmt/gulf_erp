@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Admin\HrAttendance;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Carbon\Carbon;
 
 class AttendanceImport implements ToModel, WithHeadingRow
 {
@@ -23,8 +24,11 @@ class AttendanceImport implements ToModel, WithHeadingRow
     */
     public function model(array $row)
     {
+        $formattedDate = Carbon::parse($row['date'])->format('Y-m-d');
+
         return new HrAttendance([
-            "date"              => $row['date'],
+            "finger_id"         => $row['id'],
+            "date"              => $formattedDate,
             "in_time"           => $row['in'],
             "out_time"          => $row['out'],
             "location"          => $row['location'],
@@ -32,7 +36,7 @@ class AttendanceImport implements ToModel, WithHeadingRow
             "attendance_type"   => 1,
             // "status"            => $row[6],
             // "finger_id"         => $row[7],
-            "emp_id"            => $this->emp_id,
+            // "emp_id"            => $emp_id,
             "user_id"           => Auth::user()->id,
         ]);
 

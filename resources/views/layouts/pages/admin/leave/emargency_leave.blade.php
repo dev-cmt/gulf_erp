@@ -308,16 +308,6 @@
                 data:{userId},
                 success:function(response){
                     $('#target-element').html(response);
-                    // var tbody = $('.leaves-table tbody');
-                    // tbody.empty();
-                    // $.each(response, function(index, leave) {
-                    //     var row = $('<tr></tr>');
-                    //     row.append('<td>' + leave.leave_name + '</td>');
-                    //     row.append('<td>' + leave.start_date + '</td>');
-                    //     row.append('<td>' + leave.start_date + '</td>');
-                    //     row.append('<td>' + leave.duration + '</td>');
-                    //     tbody.append(row);
-                    // });
                 }
             });
         });

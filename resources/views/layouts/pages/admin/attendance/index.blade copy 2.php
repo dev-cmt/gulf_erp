@@ -26,24 +26,30 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group row">
                                 <label class="col-md-5 col-form-label">Start Date
                                     <span class="text-danger">*</span>
                                 </label>
                                 <div class="col-md-7">
-                                    <input type="date" name="start_date" id="start_date" class="form-control" value="{{ old('date') ? old('date'):  date('Y-m-d') }}">
+                                    <input type="date" name="start_date" id="start_date" class="form-control" value="">
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group row">
                                 <label class="col-md-5 col-form-label">End Date
                                     <span class="text-danger">*</span>
                                 </label>
                                 <div class="col-md-7">
-                                    <input type="date" name="end_date" id="end_date" class="form-control" value="{{ old('date') ? old('date'):  date('Y-m-d') }}">
+                                    <input type="date" name="end_date" id="end_date" class="form-control" value="{{ date('Y-m-d') }}">
                                 </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="d-flex justify-content-end">
+                                {{-- <button id="filter" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i><span class="btn-icon-add"></span>Filter</button>                    --}}
+                                <button id="reset" class="btn btn-sm btn-warning"><i class="fa fa-plus"></i><span class="btn-icon-add"></span>Reset</button>                   
                             </div>
                         </div>
                     </div>
@@ -61,7 +67,7 @@
                                 </tr>
                             </thead>
                             <tbody id="table-body">
-                                @foreach ($data as $key=> $row )
+                                {{-- @foreach ($data as $key=> $row )
                                 <tr>
                                     <td>{{ ++$key }}</td>
                                     <td>{{ $row->date }}</td>
@@ -71,13 +77,10 @@
                                         <a href="{{route('get_employee_repot',$row->id)}}" class="btn btn-sm btn-success p-1 px-2 view_report"><i class="fa fa-folder-open"></i><span class="btn-icon-add"></span>View</a>
                                     </td>
                                </tr>
-                                @endforeach
+                                @endforeach --}}
                             </tbody>
                         </table>
                     </div>
-                    {{-- {{ $data->links() }} --}}
-                    {{-- {{ $data->links('vendor.pagination.custom') }} --}}
-                    {{ $data->links('vendor.pagination.bootstrap-5') }}
                 </div>
 
             </div>
@@ -326,7 +329,7 @@
 </x-app-layout>
 
 
-<script type="text/javascript">
+<script>
     $(function() {
         $("#start_date").datepicker({
             "dateFormat": "yy-mm-dd"
@@ -335,54 +338,73 @@
             "dateFormat": "yy-mm-dd"
         });
     });
-    $('#filter-data').on('input', '#start_date, #end_date', function() {
-        var start_date = $('#start_date').val();
-        var end_date = $('#end_date').val();
-        alert('ji');
+    // Fetch records
+    function fetch(start_date, end_date) {
+        
+
+
         $.ajax({
-            url: '{{ route('get-attendance-filter') }}',
-            method: 'GET',
-            dataType: 'JSON',
+            url: "{{ route('get-attendance-filter') }}",
+            type: "GET",
             data: {
-                'start_date': startString,
-                'end_date': end_date      
+                start_date: start_date,
+                end_date: end_date
             },
-            success: function(data) {
-                alert(data);
-            },
-            error: function() {
-                alert('Fail');
+            dataType: "json",
+            success: function(response) {
+                // alert(response);
+                var tableBody = $('#table-body');
+                tableBody.empty();
+                var i=0;
+                $.each(response, function(index, item) {
+                    var row = '<tr>';
+                    row += '<td>' + ++i + '</td>';
+                    row += '<td>' + item.date + '</td>';
+                    row += '<td>' + item.in_time + '</td>';
+                    row += '<td>' + item.out_time + '</td>';
+                    row += '<td></td>';
+                    row += '</tr>';
+                    tableBody.append(row);
+                });
+                
             }
         });
+    }
+    // Filter
+    $(document).on("click", "#filter", function(e) {
+        e.preventDefault();
+        var start_date = $("#start_date").val();
+        var end_date = $("#end_date").val();
+        alert('click');
+
+        if (start_date == "" || end_date == "") {
+            alert("Both date required");
+        } else {
+            $('#records').DataTable().destroy();
+            fetch(start_date, end_date);
+        }
     });
+    // Reset
+    $(document).on("click", "#reset", function(e) {
+        e.preventDefault();
+        $("#start_date").val(''); // empty value
+        $("#end_date").val('');
+        $('#records').DataTable().destroy();
+        fetch();
+    });
+    $('#filter-data').on('input', '#start_date, #end_date', function() {
+        var start_date = $("#start_date").val();
+        var end_date = $("#end_date").val();
+        alert('click');
 
-
-    // $(document).on('change','#user_id',function(){
-    //     var partId = $(this).val();
-    //     var currentRow = $(this).closest("tr");
-    //     $.ajax({
-    //         url:'{{ route('get-attendance-filter')}}',
-    //         method:'GET',
-    //         dataType:"html",
-    //         data:{'part_id':partId},
-    //         success:function(data){
-    //             console.log(data)
-    //             currentRow.find('#partNumber').html(data);
-    //         },
-    //         error:function(){
-    //             alert('Fail');
-    //         }
-    //     });
-    // });
+        if (start_date == "" || end_date == "") {
+            alert("Both date required");
+        } else {
+            $('#records').DataTable().destroy();
+            fetch(start_date, end_date);
+        }
+    });
 </script>
-
-
-
-
-
-
-
-
 
 
 

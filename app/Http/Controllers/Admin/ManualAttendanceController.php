@@ -29,19 +29,6 @@ class ManualAttendanceController extends Controller
     }
     public function create()
     {
-        // $currentTime = Carbon::createFromTime(9, 31, 0);
-        // $startTime = Carbon::createFromTime(9, 0, 0);
-        // $endTime = Carbon::createFromTime(9, 30, 0);
-
-
-        // // Compare the current time with the late time
-        // if ($currentTime->between($startTime, $endTime)) {
-        //     dd($currentTime->between($startTime, $endTime));
-        // } else {
-        //     dd($currentTime->between($startTime, $endTime));
-        // }
-
-
         $employee = User::get();
         return view('layouts.pages.admin.attendance.create',compact('employee'));
     }
@@ -100,34 +87,39 @@ class ManualAttendanceController extends Controller
     }
 
     public function filterDate(Request $request)
-    {
-        // if ($request->ajax()) {
-        //     if ($request->input('start_date') && $request->input('end_date')) {
- 
-        //         // $start_date = Carbon::parse($request->input('start_date'));
-        //         // $end_date = Carbon::parse($request->input('end_date'));
-        //         $start_date = $request->input('start_date');
-        //         $end_date = $request->input('end_date');
- 
-        //         if ($end_date->greaterThan($start_date)) {
-        //             $data = HrAttendance::whereBetween('date', [$start_date, $end_date])->count('id');
-        //         } else {
-        //             $data = HrAttendance::latest()->get();
-        //         }
-        //     } else {
-        //         $data = HrAttendance::latest()->get();
-        //     }
- 
-        //     return response()->json($data);
-        // } else {
-        //     abort(403);
-        // }
-
+    {  
+        $user_id = $request->input('user_id');
         $start_date = $request->input('start_date');
         $end_date = $request->input('end_date');
 
-        $data = HrAttendance::whereBetween('date', [$start_date, $end_date])->get();
-        return response()->json($data);
+        if ($user_id && $start_date && $end_date ) {
+            if (strtotime($end_date) > strtotime($start_date)) {
+                $data = HrAttendance::whereBetween('date', [$start_date, $end_date])->where('finger_id', $user_id)
+                ->join('users','users.attendance_id','hr_attendances.finger_id')
+                ->select('hr_attendances.*','users.name','users.employee_code')
+                ->orderBy('date')->get();        
+            }else {
+                $data = HrAttendance::join('users','users.attendance_id','hr_attendances.finger_id')
+                ->select('hr_attendances.*','users.name','users.employee_code')->orderBy('date')->get();
+            }
+        } else if($user_id) {
+            $data = HrAttendance::where('finger_id', $user_id)
+            ->join('users','users.attendance_id','hr_attendances.finger_id')
+            ->select('hr_attendances.*','users.name','users.employee_code')->orderBy('date')->get();
+        } else if($start_date && $end_date) {
+            if (strtotime($end_date) > strtotime($start_date)) {
+                $data = HrAttendance::whereBetween('date', [$start_date, $end_date])
+                ->join('users','users.attendance_id','hr_attendances.finger_id')
+                ->select('hr_attendances.*','users.name','users.employee_code')->orderBy('date')->get();
+            }else {
+                $data = HrAttendance::join('users','users.attendance_id','hr_attendances.finger_id')
+                ->select('hr_attendances.*','users.name','users.employee_code')->orderBy('date')->get();
+            }
+        }else {
+            $data = HrAttendance::join('users','users.attendance_id','hr_attendances.finger_id')
+            ->select('hr_attendances.*','users.name','users.employee_code')->orderBy('date')->get();
+        }
+        return view('layouts.pages.admin.attendance.load-attendance-list',compact('data'));
     }
 
     /*____________________________________
@@ -140,7 +132,7 @@ class ManualAttendanceController extends Controller
 
     public function uploadAttendance(Request $request)
     {
-        $emp_id = 1;
+        $emp_id = $request->emp_id;
         $file = $request->file('file');
 
         Excel::import(new AttendanceImport($emp_id), $file);
