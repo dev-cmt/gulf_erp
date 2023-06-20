@@ -4,9 +4,12 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title">Attendance List</h4>
-                    @can('Role create') 
-                        <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg_form"><i class="fa fa-plus"></i><span class="btn-icon-add" data-bs-toggle="modal"></span>Manual Attendance</a>                   
-                    @endcan
+                    <div>
+                        @can('Role create') 
+                            <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#exampleModalCenter"><i class="fa fa-plus"></i><span class="btn-icon-add" data-bs-toggle="modal"></span>Set Fingerprint</a>                   
+                            <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg_form"><i class="fa fa-plus"></i><span class="btn-icon-add" data-bs-toggle="modal"></span>Manual Attendance</a>                   
+                        @endcan
+                    </div>
                 </div>
                 
                 <div class="card-body">
@@ -32,7 +35,7 @@
                                     <span class="text-danger">*</span>
                                 </label>
                                 <div class="col-md-7">
-                                    <input type="date" name="start_date" id="start_date" class="form-control" value="">
+                                    <input type="date" name="start_date" id="start_date" class="form-control"  value="{{ date('Y-m-01') }}">
                                 </div>
                             </div>
                         </div>
@@ -48,15 +51,11 @@
                         </div>
                         <div class="col-md-2">
                             <div class="d-flex justify-content-end">
-                                {{-- <button id="filter" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i><span class="btn-icon-add"></span>Filter</button>                    --}}
-                                <button id="reset" class="btn btn-sm btn-warning"><i class="fa fa-plus"></i><span class="btn-icon-add"></span>Reset</button>                   
+                                <button id="reset" class="btn btn-sm btn-warning"><i class="ti-reload"></i><span class="btn-icon-add"></span>Reset</button>                   
                             </div>
                         </div>
                     </div>
                     <div id="attendance-list"></div>
-                    {{-- {{ $data->links() }}
-                    {{ $data->links('vendor.pagination.custom') }}
-                    {{ $data->links('vendor.pagination.bootstrap-5') }} --}}
                 </div>
 
             </div>
@@ -70,7 +69,7 @@
                 @if (session()->has('success'))
                     <strong class="text-success">{{session()->get('success')}}</strong>
                 @endif
-                <form class="form-valide" action="{{ route('manual_attendances.store') }}" method="POST" enctype="multipart/form-data">
+                <form class="form-valide" data-action="{{ route('manual_attendances.store') }}" method="POST" enctype="multipart/form-data" id="add-user-form">
                     @csrf
                     <div class="modal-header">
                         <h5 class="modal-title">Manual Attendance</h5>
@@ -84,21 +83,17 @@
                                     <span class="text-danger">*</span>
                                 </label>
                                 <div class="col-lg-8">
-                                    <select class="form-control dropdwon_select @error('emp_id') is-invalid @enderror" id="employeeName" name="emp_id" required>
+                                    <select class="form-control dropdwon_select" id="employeeName" name="employeeName" required>
                                         <option selected disabled>Select</option>
                                         @foreach ($employee as $row)
-                                            <option value="{{$row->id}}" {{ old('emp_id') == $row->id ? 'selected' : '' }}>{{$row->name}}</option>
+                                            <option value="{{$row->id}}">{{$row->name}}</option>
                                         @endforeach
                                     </select>
-                                    @error('emp_id')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-6">
+                            <input type="hidden" name="finger_id" id="finger_id">
                             <div class="form-group row">
                                 <label class="col-lg-4 col-form-label">Employee Code</label>
                                 <div class="col-lg-8">
@@ -127,7 +122,7 @@
                                     <span class="text-danger">*</span>
                                 </label>
                                 <div class="col-lg-8">
-                                    <select class="form-control default-select @error('attendance_type') is-invalid @enderror" name="attendance_type" required>
+                                    <select class="form-control default-select @error('attendance_type') is-invalid @enderror" id="attendance_type" name="attendance_type" required>
                                         <option value="1" {{ old('attendance_type') == '1' ? 'selected' : '' }}>Present</option>
                                         <option value="0" {{ old('attendance_type') == '2' ? 'selected' : '' }}>Absent</option>
                                     </select>
@@ -145,7 +140,7 @@
                                     <span class="text-danger">*</span>
                                 </label>
                                 <div class="col-lg-8">
-                                    <input type="time" class="form-control @error('in_time') is-invalid @enderror" name="in_time" value="09:00">
+                                    <input type="time" class="form-control @error('in_time') is-invalid @enderror" id="in_time" name="in_time" value="09:00">
                                     @error('in_time')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -160,7 +155,7 @@
                                     <span class="text-danger">*</span>
                                 </label>
                                 <div class="col-lg-8">
-                                    <input type="time" class="form-control @error('out_time') is-invalid @enderror" name="out_time" value="17:00">
+                                    <input type="time" class="form-control @error('out_time') is-invalid @enderror" id="out_time" name="out_time" value="17:00">
                                     @error('out_time')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -204,90 +199,125 @@
             </div>
         </div>
     </div>
+
+    <!-- Set Up Finger on Softwer -->
+    <div class="modal fade" id="exampleModalCenter">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <form class="form-valide" data-action="{{ route('setup-attendance-store') }}" method="POST" enctype="multipart/form-data" id="add-user-attendacne-id">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title">Setup Fingerprint ID</h5>
+                        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    </div>
+                    <div class="modal-body row">
+                        <div class="col-lg-12">
+                            <div class="form-group row">
+                                <label class="col-lg-4 col-form-label">Employee Name
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <div class="col-lg-8">
+                                    <select class="form-control dropdwon_select" id="attendanceId" name="attendanceId" required>
+                                        <option selected disabled>Select</option>
+                                        @foreach ($employee as $row)
+                                            <option value="{{$row->id}}">{{$row->name}} ({{$row->employee_code}})</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="form-group row">
+                                <label class="col-lg-4 col-form-label">Attendance ID</label>
+                                <div class="col-lg-8">
+                                    <input type="text" class="form-control @error('attendance_id') is-invalid @enderror" id="attendance_id" name="attendance_id" value="{{old('attendance_id')}}">
+                                    @error('attendance_id')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger light" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     
-@push('script')
+    @push('script')
     <script>
-        $(document).ready(function(){
-            //---Save Data
-            var form = '#add-user-form';
-            $(form).on('submit', function(event){
-                event.preventDefault();
+        //---Save Manual Attendance Data
+        var form = '#add-user-form';
+        $(form).on('submit', function(event){
+            event.preventDefault();
 
-                var url = $(this).attr('data-action');
-                var src = $('#redirect').attr('redirect-action');
-                $.ajax({
-                    url: url,
-                    method: 'POST',
-                    data: new FormData(this),
-                    dataType: 'JSON',
-                    contentType: false,
-                    cache: false,
-                    processData: false,
-                    success:function(response)
-                    {
-                        $(form).trigger("reset");
-                        swal("Success Message Title", "Well done, you pressed a button", "success")
-                        $('.bd-example-modal-lg_form').modal('hide');
-
-                        //---Add Table Row
-                        var row = '<tr id="row_todo_'+ response.id + '">';
-                        row += '<td>' + response.name + '</td>';
-                        row += '<td>' + response.leave_name + '</td>';
-                        row += '<td>' + response.formattedDate1 + '</td>';
-                        row += '<td>' + response.formattedDate2 + '</td>';
-                        row += '<td>' + response.duration + '</td>';
-                        row += '<td class="d-flex justify-content-end"> @if('+response.status == 0 +') <span class="badge light badge-warning"><i class="fa fa-circle text-warning mr-1"></i>Pending</span> @elseif ('+ response.qualification == 1+') <span class="badge light badge-success"><i class="fa fa-circle text-success mr-1"></i>Successful</span> @elseif ('+ response.qualification == 2+') <span class="badge light badge-danger"><i class="fa fa-circle text-danger mr-1"></i>Canceled</span> @endif' + '</td>';
-                        
-                        if($("#id").val()){
-                            $("#row_todo_" + response.id).replaceWith(row);
-                        }else{
-                            $("#list_todo").prepend(row);
-                        }
-                        $("#form_todo").trigger('reset');
-                        $("#leave_application_list").load(" #leave_application_list");
-                    },
-                    error: function (xhr) {
-                        var errors = xhr.responseJSON.errors;
-                        var errorHtml = '';
-                        $.each(errors, function(key, value) {
-                            errorHtml += '<li style="color:red">' + value + '</li>';
-                        });
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Required data missing?',
-                            html: '<ul>' + errorHtml + '</ul>',
-                        });
-                    }
-                });
-            });
-        });
-
-        $(document).ready(function(){
-            $.ajaxSetup({
-                headers:{
-                    'x-csrf-token' : $('meta[name="csrf-token"]').attr('content')
+            var url = $(this).attr('data-action');
+            $.ajax({
+                url: url,
+                method: 'POST',
+                data: new FormData(this),
+                dataType: 'JSON',
+                contentType: false,
+                cache: false,
+                processData: false,
+                success:function(response)
+                {
+                    swal("Success Message Title", "Well done, you pressed a button", "success")
+                    $('.bd-example-modal-lg_form').modal('hide');
+                },
+                error: function (xhr) {
+                    var errors = xhr.responseJSON.errors;
+                    var errorHtml = '';
+                    $.each(errors, function(key, value) {
+                        errorHtml += '<li style="color:red">' + value + '</li>';
+                    });
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Required data missing?',
+                        html: '<ul>' + errorHtml + '</ul>',
+                    });
                 }
             });
         });
-    </script>
-    <script>
-        //----Current Date
-        var d = new Date()
-        var yr =d.getFullYear();
-        var month = d.getMonth()+1;
-        if(month<10){
-            month='0'+month
-        }
-
-        var date =d.getDate();
-        if(date<10)
-        {
-            date='0'+date
-        }
-        var c_date = yr+"-"+month+"-"+date;
-        document.getElementById('date').value = c_date;
-    </script>
-    <script>
+        //---Save & Upgrate Attendacne ID 
+        var form = '#add-user-attendacne-id';
+        $(form).on('submit', function(event){
+            event.preventDefault();
+            var url = $(this).attr('data-action');
+            $.ajax({
+                url: url,
+                method: 'POST',
+                data: new FormData(this),
+                dataType: 'JSON',
+                contentType: false,
+                cache: false,
+                processData: false,
+                success:function(response)
+                {
+                    swal("Success Message Title", "Well done, you pressed a button", "success")
+                    $('#exampleModalCenter').modal('hide');
+                },
+                error: function (xhr) {
+                    var errors = xhr.responseJSON.errors;
+                    var errorHtml = '';
+                    $.each(errors, function(key, value) {
+                        errorHtml += '<li style="color:red">' + value + '</li>';
+                    });
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Required data missing?',
+                        html: '<ul>' + errorHtml + '</ul>',
+                    });
+                }
+            });
+        });
+        //--Get Employee List (Manual Attendance)
+        var clearEmpId = $('#employeeName').html();
         $('#employeeName').change(function(){
             var userId = $(this).val();
             $.ajax({
@@ -297,23 +327,50 @@
                 data:{userId},
                 success:function(response){
                     $('#employeeCode').html(response.employee_code);
+                    $('#finger_id').val(response.attendance_id);
+                    if(response.attendance_id == null){
+                        Swal.fire(
+                            'Invalid Attendaance ID',
+                            'Please setup attendance ID!',
+                            'question'
+                        )
+                        $('#employeeName').html(clearEmpId);
+                        $('#employeeCode').html('GF-XXXXX');
+                        $('#finger_id').val('');
+                    }
                 }
             });
         });
+        //--Get Employee List (Set Attendance ID)
+        $('#attendanceId').change(function(){
+            var userId = $(this).val();
+            $.ajax({
+                url:'{{ route('get_employee_code') }}',
+                method:'GET',
+                dataType:"JSON",
+                data:{userId},
+                success:function(response){
+                    $('#attendance_id').val(response.attendance_id);
+                }
+            });
+        });
+        //--Get Employee List (Set Attendance ID)
+        $('#attendance_type').change(function(){
+            var attendanceType = $(this).val();
+            if(attendanceType == 0){
+                $('#in_time').val('');
+                $('#out_time').val('');
+            }
+        });
     </script>
-@endpush
+    @endpush
 </x-app-layout>
 
 <script>
     $(document).ready(function(){
         fetch();
-        $("#start_date").datepicker({
-            "dateFormat": "yy-mm-dd"
-        });
-        $("#end_date").datepicker({
-            "dateFormat": "yy-mm-dd"
-        });
     });
+    
     // Fetch records
     function fetch(user_id, start_date, end_date) {
         $.ajax({
@@ -329,7 +386,7 @@
                 $('#attendance-list').html(data);
             },
             error: function(xhr, status, error) {
-                swal("Error!", "Required data missing!", "error");
+                swal("Error!", "Failed to fetch data!", "error");
             }
         });
     }
@@ -338,16 +395,18 @@
         var user_id = $("#user_id").val();
         var start_date = $("#start_date").val();
         var end_date = $("#end_date").val();
-
+        
         fetch(user_id, start_date, end_date);
     });
     // Reset
     var clearDropdownHtml = $('#user_id').html();
+    var startDate = $('#start_date').val();
+    var endDate = $('#end_date').val();
     $(document).on("click", "#reset", function(e) {
         e.preventDefault();
-        $("#start_date").val('');
-        $("#end_date").val('');
         $('#user_id').html(clearDropdownHtml);
+        $('#start_date').val(startDate);
+        $('#end_date').val(endDate);
         fetch();
     });
 </script>

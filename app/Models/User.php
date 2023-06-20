@@ -50,19 +50,19 @@ class User extends Authenticatable implements MustVerifyEmail
     }
     public function infoEducational()
     {
-        return $this->hasMany(InfoEducational::class);
+        return $this->hasMany(InfoEducational::class,'emp_id');
     }
     public function infoWorkExperience()
     {
-        return $this->hasMany(InfoWorkExperience::class);
+        return $this->hasMany(InfoWorkExperience::class,'emp_id');
     }
     public function infoBank()
     {
-        return $this->hasMany(InfoBank::class);
+        return $this->hasMany(InfoBank::class,'emp_id');
     }
     public function infoNominee()
     {
-        return $this->hasMany(InfoNominee::class);
+        return $this->hasMany(InfoNominee::class,'emp_id');
     }
     public function attendance()
     {

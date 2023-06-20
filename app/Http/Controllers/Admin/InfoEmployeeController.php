@@ -162,7 +162,7 @@ class InfoEmployeeController extends Controller
         $designation =MastDesignation::where('status', 1)->get();
         $employee_type =MastEmployeeType::where('status', 1)->get();
         $work_station =MastWorkStation::where('status', 1)->get();
-        $reporting_boss = User::where( 'is_admin', '!=', 1)->orWhere('status', '!=', 1)->get();
+        $reporting_boss = InfoPersonal::where('is_reporting_boss', 1)->join('users', 'users.id', 'info_personals.emp_id')->select('users.name')->get();
 
 
         $old_data = [
@@ -278,7 +278,7 @@ class InfoEmployeeController extends Controller
      */
     public function employee_create()
     {
-        $user = User::where( 'is_admin', '!=', 1)->orWhere('status', '!=', 1)->get();
+        $user = User::where( 'is_admin', '==', 0)->orWhere('status', '==', 0)->get();
         return view('layouts.pages.admin.info_employee.employee_register',compact('user'));
     }
     public function employee_register(Request $request)
@@ -287,7 +287,7 @@ class InfoEmployeeController extends Controller
             'name' => 'required|max:80',
             'email' => 'required|email|unique:users,email',
         ]);
-        $employee_codes = Helper::IDGenerator(new User, 'employee_code', 5, 'GULF'); /* Generate id */
+        $employee_codes = Helper::IDGenerator(new User, 'employee_code', 5, 'GF'); /* Generate id */
 
         $user= new User();
         $user->employee_code= $employee_codes;
@@ -330,7 +330,7 @@ class InfoEmployeeController extends Controller
         $emp_id = $id;
         $user_id = Auth::user()->id;
         $user=User::find($id);
-        $reporting_boss = User::where( 'is_admin', '!=', 1)->orWhere('status', '!=', 1)->get();
+        $reporting_boss = InfoPersonal::where('is_reporting_boss', 1)->join('users', 'users.id', 'info_personals.emp_id')->select('users.name')->get();
         $department =MastDepartment::where('status', 1)->get();
         $designation =MastDesignation::where('status', 1)->get();
         $employee_category =MastEmployeeType::where('status', 1)->get();

@@ -20,7 +20,7 @@ class PurchaseController extends Controller
 {
     public function index($type)
     {
-        $item_group = MastItemGroup::where('mast_item_category_id', $type)->orderBy('part_name', 'asc')->get();
+        $item_group = MastItemGroup::where('mast_item_category_id', $type)->where('status', 1)->orderBy('part_name', 'asc')->get();
         $supplier=MastSupplier::where('status', 1)->get();
         $store=MastWorkStation::where('status', 1)->get();
         
@@ -128,7 +128,7 @@ class PurchaseController extends Controller
     //____________________Dropdwon Ajax____________________________//
     public function getPartNumber(Request $request)
     {
-        $data = MastItemRegister::where('mast_item_group_id', $request->part_id)->get();
+        $data = MastItemRegister::where('mast_item_group_id', $request->part_id)->where('status', 1)->get();
         return view('layouts.pages.inventory.purchase.load-part-number',compact('data'));
     }
     public function anotherField(Request $request)

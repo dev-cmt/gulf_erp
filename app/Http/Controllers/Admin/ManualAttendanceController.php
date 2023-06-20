@@ -20,27 +20,21 @@ class ManualAttendanceController extends Controller
 {
     public function index()
     {
-        $employee = User::get();
-        $data = HrAttendance::paginate(30);
-        return view('layouts.pages.admin.attendance.index',compact('data','employee'));
-
-        // $data = User::with('attendance')->where('status', 1)->get();
-        // return view('layouts.pages.admin.attendance.index',compact('data'));
-    }
-    public function create()
-    {
-        $employee = User::get();
-        return view('layouts.pages.admin.attendance.create',compact('employee'));
+        $employee = User::where('status', 1)->get();
+        return view('layouts.pages.admin.attendance.index',compact('employee'));
     }
     public function store(Request $request)
     {
-        $validated=$request -> validate([
+        $validator = Validator::make($request->all(), [
+            'employeeName' => 'required',
             'date' => 'date',
             'attendance_type' => 'required',
             'in_time' => 'required',
             'out_time' => 'required',
         ]);
-        
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
         $data = new HrAttendance();
         $data->date = $request->date;
         $data->in_time = $request->in_time;
@@ -48,12 +42,12 @@ class ManualAttendanceController extends Controller
         $data->attendance_type = $request->attendance_type;
         $data->location = $request->location;
         $data->description = $request->description;
-        $data->emp_id = $request->emp_id;
+        $data->finger_id = $request->finger_id;
         $data->user_id = Auth::user()->id;
         $data->save();
 
         $notification=array('messege'=>'Manual attendance successfully!','alert-type'=>'success');
-        return redirect()->back()->with($notification);
+        return response()->json($data);
     }
 
     //------ Attendance Approve
@@ -77,13 +71,31 @@ class ManualAttendanceController extends Controller
         return redirect()->back();
 
     }
-
-    //---View Attendance List
-    public function getemployee_report($id)
+    /*--------------------------------------------------------------
+     * SHOW AJAX CALL DATA
+     *--------------------------------------------------------------
+     */
+    public function setUpAttendanceID(Request $request)
     {
-        $data = HrAttendance::where('emp_id', $id)->get();
-        $user = User::where('id', $id)->first();
-        return view('layouts.pages.admin.attendance.show',compact('data','user'));
+        $validator = Validator::make($request->all(), [
+            'attendanceId' => 'required',
+            'attendance_id' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+        $data = User::find($request->attendanceId);
+        $data->attendance_id = $request->attendance_id;
+        $data->save();
+
+        return response()->json($data);
+    }
+    //--- Attendance Report
+    public function getAttendanceRepot($id)
+    {
+        // $data = HrAttendance::where('emp_id', $id)->get();
+        // $user = User::where('id', $id)->first();
+        // return view('layouts.pages.admin.attendance.show',compact('data','user'));
     }
 
     public function filterDate(Request $request)
@@ -95,29 +107,29 @@ class ManualAttendanceController extends Controller
         if ($user_id && $start_date && $end_date ) {
             if (strtotime($end_date) > strtotime($start_date)) {
                 $data = HrAttendance::whereBetween('date', [$start_date, $end_date])->where('finger_id', $user_id)
-                ->join('users','users.attendance_id','hr_attendances.finger_id')
-                ->select('hr_attendances.*','users.name','users.employee_code')
-                ->orderBy('date')->get();        
+                ->where('hr_attendances.status', 1)->join('users','users.attendance_id','hr_attendances.finger_id')
+                ->select('hr_attendances.*','users.name','users.employee_code')->orderBy('date')->get();        
             }else {
-                $data = HrAttendance::join('users','users.attendance_id','hr_attendances.finger_id')
+                $data = HrAttendance::join('users','users.attendance_id','hr_attendances.finger_id')->where('hr_attendances.status', 1)
                 ->select('hr_attendances.*','users.name','users.employee_code')->orderBy('date')->get();
             }
         } else if($user_id) {
             $data = HrAttendance::where('finger_id', $user_id)
-            ->join('users','users.attendance_id','hr_attendances.finger_id')
+            ->join('users','users.attendance_id','hr_attendances.finger_id')->where('hr_attendances.status', 1)
             ->select('hr_attendances.*','users.name','users.employee_code')->orderBy('date')->get();
         } else if($start_date && $end_date) {
             if (strtotime($end_date) > strtotime($start_date)) {
                 $data = HrAttendance::whereBetween('date', [$start_date, $end_date])
-                ->join('users','users.attendance_id','hr_attendances.finger_id')
+                ->join('users','users.attendance_id','hr_attendances.finger_id')->where('hr_attendances.status', 1)
                 ->select('hr_attendances.*','users.name','users.employee_code')->orderBy('date')->get();
             }else {
-                $data = HrAttendance::join('users','users.attendance_id','hr_attendances.finger_id')
+                $data = HrAttendance::join('users','users.attendance_id','hr_attendances.finger_id')->where('hr_attendances.status', 1)
                 ->select('hr_attendances.*','users.name','users.employee_code')->orderBy('date')->get();
             }
         }else {
-            $data = HrAttendance::join('users','users.attendance_id','hr_attendances.finger_id')
-            ->select('hr_attendances.*','users.name','users.employee_code')->orderBy('date')->get();
+            $data = HrAttendance::join('users', 'users.attendance_id', '=', 'hr_attendances.finger_id')
+            ->select('hr_attendances.*', 'users.name', 'users.employee_code')
+            ->orderBy('date')->where('hr_attendances.status', 1)->get();
         }
         return view('layouts.pages.admin.attendance.load-attendance-list',compact('data'));
     }
@@ -136,7 +148,7 @@ class ManualAttendanceController extends Controller
         $file = $request->file('file');
 
         Excel::import(new AttendanceImport($emp_id), $file);
-        // Excel::import(new UsersImport, $request->file);
+        // Excel::import(new UsersImport, $request->file); //this way try to successfully
 
         $notification=array('messege'=>'Manual attendance successfully!','alert-type'=>'success');
         return redirect()->route('manual_attendances.index')->with($notification);

@@ -1020,7 +1020,7 @@
             formNavigationBtn.addEventListener("click", () => {
                 /*Get the value of the step.*/
                 const stepNumber = parseInt(formNavigationBtn.getAttribute("step_number"));
-                if(stepNumber == 12){
+                if(stepNumber == 2){
                     var dateOfBirth = document.getElementById("date_of_birth").value;
                     var nidNo = document.getElementById("nid_no").value;
                     var bloodGroup = document.getElementById("blood_group").value;

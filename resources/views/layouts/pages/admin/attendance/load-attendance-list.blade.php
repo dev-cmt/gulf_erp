@@ -24,4 +24,4 @@
         @endforeach
     </tbody>
 </table>
-<h5 class="text-right">Total Data: {{ count($data) }}</h5>
+<div class="dataTables_info">Showing {{ count($data) }} entries</div>

@@ -17,18 +17,17 @@ use DateTime;
 
 class LeaveApplicationController extends Controller
 {
+    public function emergency_leave()
+    {
+        $leave_type =MastLeave::where('status', 1)->get();
+        $employee =User::where('status', 1)->get();
+        return view('layouts.pages.admin.leave.index',compact('leave_type','employee','data'));
+    }
     public function leave_application()
     {
         $data =HrLeaveApplication::with('mastLeave', 'user')->get();
-        $leave_type =MastLeave::get();
-        return view('layouts.pages.admin.leave.application',compact('leave_type','data'));
-    }
-    public function emergency_leave()
-    {
-        $leave_type =MastLeave::get();
-        $employee =User::where('status', 1)->get();
-        $data =HrLeaveApplication::with('mastLeave', 'user')->get();
-        return view('layouts.pages.admin.leave.emargency_leave',compact('leave_type','employee','data'));
+        $leave_type =MastLeave::where('status', 1)->get();
+        return view('layouts.pages.admin.leave.self_leave',compact('leave_type','data'));
     }
 
     public function store(Request $request)
@@ -75,7 +74,7 @@ class LeaveApplicationController extends Controller
 
     public function dept_approve_list()
     {
-        $data =HrLeaveApplication::with('mastLeave', 'user')->where('status',0)->get();
+        $data =HrLeaveApplication::with('mastLeave', 'user')->where('status', 0)->get();
 
         return view('layouts.pages.admin.leave.approve_dept',compact('data'));
     }
@@ -90,13 +89,7 @@ class LeaveApplicationController extends Controller
     }
     public function hr_approve_list()
     {
-        $data = HrLeaveApplication::join('users', 'users.id', 'hr_leave_applications.user_id')
-        ->join('info_personals', 'info_personals.user_id', 'users.id')
-        ->join('mast_designations', 'info_personals.mast_designation_id', 'mast_designations.id')
-        ->join('mast_leaves', 'hr_leave_applications.mast_leave_id', 'mast_leaves.id')
-        ->where('hr_leave_applications.status', 1 )
-        ->select('hr_leave_applications.*','users.name','mast_designations.desig_name','mast_leaves.leave_name')
-        ->get();
+        $data =HrLeaveApplication::with('mastLeave', 'user')->where('status', 1)->get();
 
         return view('layouts.pages.admin.leave.approve_hr',compact('data'));
     }
@@ -125,9 +118,9 @@ class LeaveApplicationController extends Controller
         return response()->json($employeeCode);
     }
     //---View Attendance List
-    public function getLeaveApplication_report(Request $request, $id)
+    public function getLeaveApplication_report(Request $request)
     {
-        $data =HrLeaveApplication::with('mastLeave', 'user')->where('status',2)->get();
+        $data =HrLeaveApplication::with('mastLeave', 'user')->where('status', 2)->where('emp_id', $request->userId)->get();
  
         return view('layouts.pages.admin.leave.leave-details-view', compact('data'));
         

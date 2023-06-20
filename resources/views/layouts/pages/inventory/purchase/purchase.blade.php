@@ -596,7 +596,7 @@
         $.ajax({
             url:'{{ route('get-part-id')}}',
             method:'GET',
-            dataType:"html",
+            dataType:"jeson",
             data:{'part_id':partId},
             success:function(data){
                 console.log(data)

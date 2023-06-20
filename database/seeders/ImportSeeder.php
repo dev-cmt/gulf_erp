@@ -766,7 +766,8 @@ class ImportSeeder extends Seeder
             'joining_date'=>'2022-11-01',
             'service_length'=>'2',
             'gross_salary'=>'15000',
-            'reporting_boss'=>'1',
+            'reporting_boss'=>'0',
+            'is_reporting_boss'=>'1',
             
             'division_present'=>'6',
             'district_present'=>'42',

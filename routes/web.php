@@ -95,7 +95,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::post('leave_application/store', [LeaveApplicationController::class, 'store'])->name('leave_application.store');
     Route::get('emergency_leave/application', [LeaveApplicationController::class, 'emergency_leave'])->name('emergency_leave.create');
     Route::post('leave_application/store', [LeaveApplicationController::class, 'store'])->name('leave_application.store');
-    Route::get('get/emargency_leave_repot/{id}', [LeaveApplicationController::class,'getLeaveApplication_report'])->name('get_emargency_leave_repot');
+    Route::get('get/emargency_leave_repot', [LeaveApplicationController::class,'getLeaveApplication_report'])->name('get_emargency_leave_repot');
     //--Leave Department Approve
     Route::get('dept/approve_list', [LeaveApplicationController::class, 'dept_approve_list'])->name('dept_approve_list.create');
     Route::PATCH('leave_dept/approve/{id}', [LeaveApplicationController::class, 'dept_approve'])->name('leave_dept.approve');
@@ -108,11 +108,14 @@ Route::group(['middleware' => ['auth']], function(){
      * HR & ADMIN => Attendances
      * ______________________________________________________________________________________________
      */
-    Route::resource('manual_attendances', ManualAttendanceController::class);
+    // Route::resource('manual_attendances', ManualAttendanceController::class);
+    Route::get('manual_attendances/index', [ManualAttendanceController::class, 'index'])->name('manual_attendances.index');
+    Route::post('manual_attendances/store', [ManualAttendanceController::class, 'store'])->name('manual_attendances.store');
+    Route::post('attendances/attendanceId_store', [ManualAttendanceController::class, 'setUpAttendanceID'])->name('setup-attendance-store');
     Route::get('attendance/approve_list', [ManualAttendanceController::class, 'attendance_approve_list'])->name('attendance_approve.create');
     Route::PATCH('attendance/approve/{id}', [ManualAttendanceController::class, 'attendance_approve'])->name('attendance.approve');
     Route::PATCH('attendance/canceled/{id}', [ManualAttendanceController::class, 'decline'])->name('attendance.canceled');
-    Route::get('get/employee_repot/{id}', [ManualAttendanceController::class,'getemployee_report'])->name('get_employee_repot');
+    Route::get('get/get_attendance_repot/{id}', [ManualAttendanceController::class,'getemployee_report'])->name('get_attendance_repot');
     Route::get('get/attendance/filter', [ManualAttendanceController::class, 'filterDate'])->name('get-attendance-filter');
 
     //--Attendances Imports or Exports Excel

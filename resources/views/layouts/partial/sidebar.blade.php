@@ -34,8 +34,8 @@
                         </li>
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Leave</a>
                             <ul aria-expanded="false">
-                                <li><a href="{{ route('leave_self.create') }}">Self Leave</a></li>
                                 <li><a href="{{ route('emergency_leave.create') }}">Emergency Leave</a></li>
+                                <li><a href="{{ route('leave_self.create') }}">Self Leave</a></li>
                                 <li><a href="{{ route('dept_approve_list.create') }}">Dept. Approve</a></li>
                                 <li><a href="{{ route('hr_approve_list.create') }}">HR Approve</a></li>
                             </ul>
@@ -43,7 +43,6 @@
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Attendance</a>
                             <ul aria-expanded="false">
                                 <li><a href="{{ route('manual_attendances.index') }}">Attendance List</a></li>
-                                <li><a href="{{ route('manual_attendances.create') }}">Manual Attendance</a></li>
                                 <li><a href="{{ route('attendance_approve.create') }}">Attendance Approve</a></li>
                                 <li><a href="{{route('attendance.import')}}">Upload Attendance</a></li>
                             </ul>

@@ -4,9 +4,6 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title">HR Approve<span class="bg-blue-500 text-white rounded px-1 text-xs py-0.5"></span></h4>
-                    @can('Role create')
-                        <a href="#" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i><span class="btn-icon-add"></span>Create</a>
-                    @endcan
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -24,8 +21,8 @@
                             <tbody>
                                 @foreach ($data as $key=> $row )
                                 <tr>
-                                    <td>{{ $row->name}}</td>
-                                    <td>{{ $row->leave_name}}</td>
+                                    <td>{{ $row->user->name}}</td>
+                                    <td>{{ $row->mastLeave->leave_name}}</td>
                                     <td>{{date("j F, Y", strtotime($row->start_date))}}</td>
                                     <td>{{date("j F, Y", strtotime($row->end_date))}}</td>
                                     <td>{{ $row->duration}}</td>

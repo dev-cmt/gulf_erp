@@ -34,7 +34,7 @@ class AttendanceImport implements ToModel, WithHeadingRow
             "location"          => $row['location'],
             "description"       => $row['description'],
             "attendance_type"   => 1,
-            // "status"            => $row[6],
+            "status"            => 1,
             // "finger_id"         => $row[7],
             // "emp_id"            => $emp_id,
             "user_id"           => Auth::user()->id,
