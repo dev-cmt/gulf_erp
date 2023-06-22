@@ -70,7 +70,7 @@
             </div>
         </div>
     </div>
-
+    <!--=======//Modal Show Data//========-->
     <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
@@ -414,7 +414,7 @@
                     '<td><input type="text" name="" readonly id="packageSize" class="form-control" value="' + item.box_qty + '"></td>' +
                     '<td><input type="text" name="" readonly id="unit" class="form-control" value="' + item.unit_name + '"></td>' +
                     '<td><input type="number" name="editFile['+i+'][qty]" id="" class="form-control quantity val_quantity" placeholder="0.00" value="'+ item.qty +'"></td>' +
-                    '<td><input type="number" name="editFile['+i+'][price]" id="price" class="form-control price val_price" placeholder="0.00" value="'+ item.price +'"></td>' +
+                    '<td><input type="number" name="editFile['+i+'][price]" id="" class="form-control price val_price" placeholder="0.00" value="'+ item.price +'"></td>' +
                     '<td class="subtotal">'+ subtotal +'</td>' +
                     '<td class="text-center">' +
                         '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs edit_add_hide" onClick="addRow(0)"><span class="fa fa-plus"></span></button>' +
@@ -553,7 +553,7 @@
             '<td><input type="text" name="" readonly id="packageSize" class="form-control"></td>' +
             '<td><input type="text" name="" readonly id="unit" class="form-control"></td>' +
             '<td><input type="number" name="moreFile['+i+'][qty]" id="" class="form-control quantity val_quantity" placeholder="0.00"></td>' +
-            '<td><input type="number" name="moreFile['+i+'][price]" id="price" class="form-control price val_price" placeholder="0.00"></td>' +
+            '<td><input type="number" name="moreFile['+i+'][price]" id="" class="form-control price val_price" placeholder="0.00"></td>' +
             '<td class="subtotal">0.00</td>' +
             '<td class="text-center">' +
                 '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs add-row"><span class="fa fa-plus"></span></button>' +
@@ -561,9 +561,17 @@
             '</td>'+
         '</tr>');
 
+        
+
         $('.edit_add_hide').hide();
         $('#items-table tbody').append(newRow);
-        newRow.find('.dropdwon_select').select2();
+
+        //--Dropdwon Search Fix
+        newRow.find('.dropdwon_select').each(function () {
+            $(this).select2({
+                dropdownParent: $(this).parent()
+            });
+        });
     }
 
     //======Remove ROW
@@ -596,7 +604,7 @@
         $.ajax({
             url:'{{ route('get-part-id')}}',
             method:'GET',
-            dataType:"jeson",
+            dataType:"html",
             data:{'part_id':partId},
             success:function(data){
                 console.log(data)

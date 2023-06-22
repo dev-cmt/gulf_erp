@@ -606,7 +606,12 @@
 
         $('.edit_add_hide').hide();
         $('#items-table tbody').append(newRow);
-        newRow.find('.dropdwon_select').select2();
+        //--Dropdwon Search Fix
+        newRow.find('.dropdwon_select').each(function () {
+            $(this).select2({
+                dropdownParent: $(this).parent()
+            });
+        });
     }
 
     //======Remove ROW

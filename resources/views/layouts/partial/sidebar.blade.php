@@ -23,9 +23,6 @@
                         <span class="nav-text">HR & Admin</span>
                     </a>
                     <ul aria-expanded="false">
-                        {{-- <li><a href="{{route('info_employee.index')}}">Employee Registration </a></li> --}}
-                        {{-- <li><a href="{{route('info_personal.create')}}">Personal Details</a></li> --}}
-                        {{-- <li><a href="{{route('info_related.index')}}">Related Information</a></li> --}}
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Employee</a>
                             <ul aria-expanded="false">
                                 <li><a href="{{route('info_employee.list')}}">Employee List</a></li>
@@ -69,12 +66,13 @@
                         <span class="nav-text">Inventory</span>
                     </a>
                     <ul aria-expanded="false">
-                        <li><a href="{{route('inv_purchase_grn')}}">GRN (Warehouse)</a></li>
+                        <li><a href="{{route('grm-purchase-index')}}">GRN (Warehouse)</a></li>
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Purchase</a>
                             <ul aria-expanded="false">
                                 <li><a href="{{ route('inv_purchase.index',['cat_id' => 1])}}">AC</a></li>
                                 <li><a href="{{ route('inv_purchase.index',['cat_id' => 2])}}">AC Spare Parts</a></li>
                                 <li><a href="{{ route('inv_purchase.index',['cat_id' => 3])}}">Car Spare Parts</a></li>
+                                <li><a href="{{ route('inv_purchase_approve.create')}}">Approve Purchase </a></li>
                             </ul>
                         </li>
                         <li><a href="#">Sales Delivery</a></li>
@@ -101,6 +99,7 @@
                                 <li><a href="{{ route('sales.index',['cat_id' => 1]) }}">AC Sales</a></li>
                                 <li><a href="{{ route('sales.index',['cat_id' => 2]) }}">AC Spare Parts</a></li>
                                 <li><a href="{{ route('sales.index',['cat_id' => 3]) }}">Car Spare Parts</a></li>
+                                <li><a href="{{ route('sales_approve.create')}}">Approve Sales </a></li>
                             </ul>
                         </li>
                         <li><a href="#">Sales Return</a></li>

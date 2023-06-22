@@ -156,9 +156,36 @@ class SalesController extends Controller
         $data = MastItemRegister::where('mast_item_group_id', $request->part_id)->get();
         return response()->json($data);
     }
-    //---------------------------------------
-    //-----------------DISTRIBUTOR
-    //---------------------------------------
+    /*=====================================
+     *   Approve Sales
+     *=====================================
+     */
+    function sales_approve_list () {
+        $data=Sales::where('status', 0)->orderBy('id', 'desc')->latest()->get();
+        return view('layouts.pages.sales.sales_approve',compact('data'));
+    }
+    public function approve_sales($id)
+    {
+        $data = Sales::findOrFail($id);
+        $data->status = 1;
+        $data->save();
+
+        $notification=array('messege'=>'Leave approve successfully!','alert-type'=>'success');
+        return redirect()->back()->with($notification);
+    }
+
+    public function decline($id){
+        $data = Sales::findOrFail($id);
+        $data->status = 2;
+        $data->save();
+
+        $notification=array('messege'=>'Canceled successfully!','alert-type'=>'success');
+        return redirect()->back()->with($notification);
+    }
+    /*=====================================
+     *   Customer
+     *=====================================
+     */
     public function indexCustomer($type)
     {
         $distributorList = MastCustomer::where('mast_customer_type_id', $type)->get();

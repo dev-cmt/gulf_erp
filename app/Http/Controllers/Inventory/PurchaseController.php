@@ -72,6 +72,24 @@ class PurchaseController extends Controller
                 $data->save();
             }
         }
+         if (isset($request->editFile[0]['item_id']) && !empty($request->editFile[0]['item_id'])) {
+            foreach($request->editFile as $item){
+                $data = PurchaseDetails::findOrFail($item['id']);
+
+                $data->mast_item_register_id = $item['item_id'];
+                $data->qty = $item['qty'];
+                $data->price = $item['price'];
+
+                $data->status = 1;
+                if(isset($pur_id)){
+                    $data->purchase_id = $pur_id;
+                }else{
+                    $data->purchase_id = $storePurchase->id;
+                }
+                $data->user_id = Auth::user()->id;
+                $data->save();
+            }
+        }
         // $purchase = Purchase::findOrFail($storePurchase->id)->with('mastWorkStation','mastSupplier')->first();
         if(isset($pur_id)){
             $purchase = Purchase::where('id', $pur_id)->first();
@@ -119,16 +137,42 @@ class PurchaseController extends Controller
     }
     public function inv_purchase_destroy($id)
     {
-        // InfoEducational::destroy($id);
         $data=PurchaseDetails::find($id);
         $data->delete();
         return response()->json('success');
     }
 
-    //____________________Dropdwon Ajax____________________________//
+    /**========================================
+     * Purchase Approve
+     * =======================================
+     */
+    function purchase_approve_list() {
+        $data = Purchase::where('status', 0)->get();
+        return view('layouts.pages.inventory.purchase.purchase_approve',compact('data'));
+    }
+    public function approve_purchase($id)
+    {
+        $data = Purchase::findOrFail($id);
+        $data->status = 1;
+        $data->save();
+
+        $notification=array('messege'=>'Leave approve successfully!','alert-type'=>'success');
+        return redirect()->back()->with($notification);
+    }
+
+    public function decline($id){
+        $data = Purchase::findOrFail($id);
+        $data->status = 2;
+        $data->save();
+
+        $notification=array('messege'=>'Canceled successfully!','alert-type'=>'success');
+        return redirect()->back()->with($notification);
+    }
+
+    //____________________Dropdwon Ajax__________________________//
     public function getPartNumber(Request $request)
     {
-        $data = MastItemRegister::where('mast_item_group_id', $request->part_id)->where('status', 1)->get();
+        $data = MastItemRegister::where('mast_item_group_id', $request->part_id)->get();
         return view('layouts.pages.inventory.purchase.load-part-number',compact('data'));
     }
     public function anotherField(Request $request)

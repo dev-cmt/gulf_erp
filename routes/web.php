@@ -115,7 +115,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('attendance/approve_list', [ManualAttendanceController::class, 'attendance_approve_list'])->name('attendance_approve.create');
     Route::PATCH('attendance/approve/{id}', [ManualAttendanceController::class, 'attendance_approve'])->name('attendance.approve');
     Route::PATCH('attendance/canceled/{id}', [ManualAttendanceController::class, 'decline'])->name('attendance.canceled');
-    Route::get('get/get_attendance_repot/{id}', [ManualAttendanceController::class,'getemployee_report'])->name('get_attendance_repot');
+    Route::get('get/get_attendance_repot/{id}', [ManualAttendanceController::class,'getAttendanceRepot'])->name('get_attendance_repot');
     Route::get('get/attendance/filter', [ManualAttendanceController::class, 'filterDate'])->name('get-attendance-filter');
 
     //--Attendances Imports or Exports Excel
@@ -127,8 +127,9 @@ Route::group(['middleware' => ['auth']], function(){
      * Inventory => GRN
      * ______________________________________________________________________________________________
      */
-    Route::get('inv/purchase_grn', [MovementController::class, 'purchase_grn'])->name('inv_purchase_grn');
-    Route::get('get/purchase_grn/{id}', [MovementController::class, 'getPurchaseGRN'])->name('get_purchase_grn');
+    Route::get('inv/grm-purchase/index', [MovementController::class, 'grmPurchaseIndex'])->name('grm-purchase-index');
+    Route::get('inv/grm-purchase/details/{id}', [MovementController::class, 'grmPurchaseDetails'])->name('grmPurchaseDetails');
+    Route::get('inv/grn/purchase/edit', [MovementController::class, 'grnPurchaseEdit'])->name('grn_purchase_edit');
 
     /**______________________________________________________________________________________________
      * Inventory => Purchase
@@ -138,9 +139,14 @@ Route::group(['middleware' => ['auth']], function(){
      Route::post('/purchase/store/cat_id={cat_id}', [PurchaseController::class, 'store'])->name('inv_purchase.store');
      Route::get('purchase/edit',[PurchaseController::class,'edit'])->name('inv_purchase_edit');
      Route::delete('inv_purchase/destroy/{id}', [PurchaseController::class, 'inv_purchase_destroy'])->name('inv_purchase.destroy');
- 
-     Route::get('/get-part-id',[PurchaseController::class,'getPartNumber'])->name('get-part-id');
-     Route::get('/get-part-number',[PurchaseController::class,'anotherField'])->name('get-part-number');
+     Route::delete('inv_approve_purchase/{id}', [PurchaseController::class, 'approve_purchase'])->name('inv_approve_purchase');
+    //--Purchase Approve
+    Route::get('inv_purchase/approve_list', [PurchaseController::class, 'purchase_approve_list'])->name('inv_purchase_approve.create');
+    Route::PATCH('inv_purchase/approve/{id}', [PurchaseController::class, 'approve_purchase'])->name('inv_purchase.approve');
+    Route::PATCH('inv_purchase/canceled/{id}', [LeaveApplicationController::class, 'decline'])->name('inv_purchase.canceled');
+
+    Route::get('/get-part-id',[PurchaseController::class,'getPartNumber'])->name('get-part-id');
+    Route::get('/get-part-number',[PurchaseController::class,'anotherField'])->name('get-part-number');
     /**______________________________________________________________________________________________
      * Sales => Sales
      * ______________________________________________________________________________________________
@@ -150,6 +156,10 @@ Route::group(['middleware' => ['auth']], function(){
      Route::get('sales/edit',[SalesController::class,'edit'])->name('sales.edit');
      Route::get('get/edit-part-id',[SalesController::class,'getSalesDetails'])->name('sales.edit-part-id');
      Route::delete('sales/destroy/{id}', [SalesController::class, 'sales_destroy'])->name('sales.destroy');
+     //--Sales Approve
+    Route::get('sales/approve_list', [SalesController::class, 'sales_approve_list'])->name('sales_approve.create');
+    Route::PATCH('sales/approve/{id}', [SalesController::class, 'approve_sales'])->name('sales.approve');
+    Route::PATCH('sales/canceled/{id}', [SalesController::class, 'decline'])->name('sales.canceled');
 });
 
 Route::group(['middleware' => ['auth']], function(){

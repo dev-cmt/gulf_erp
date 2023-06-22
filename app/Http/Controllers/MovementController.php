@@ -18,14 +18,28 @@ use App\Helpers\Helper;
 
 class MovementController extends Controller
 {
-    public function purchase_grn()
+    public function grmPurchaseIndex()
     {
-        $data=PurchaseDetails::where('status', 0)->orderBy('id', 'desc')->get();
-        return view('layouts.pages.inventory.purchase_receive',compact('data'));
+        $data = Purchase::where('status', 1)->get();
+        return view('layouts.pages.inventory.purchase_receive.index',compact('data'));
     }
-    public function getPurchaseGRN($id)
+    public function grmPurchaseDetails($id)
     {
-        $data=PurchaseDetails::where('status', 0)->orderBy('id', 'desc')->get();
-        return view('layouts.pages.inventory.purchase_receive',compact('data'));
+        $data = PurchaseDetails::where('purchase_details.status', 1)->where('purchase_id', $id)
+        ->join('purchases', 'purchases.id', 'purchase_details.purchase_id')
+        ->join('mast_customers', 'mast_customers.id', 'purchases.mast_supplier_id')
+        ->select('purchase_details.*','purchases.inv_no','purchases.inv_date','mast_customers.name')
+        ->get();
+        return view('layouts.pages.inventory.purchase_receive.receive_details',compact('data'));
+    }
+    public function grnPurchaseEdit(Request $request)
+    {
+        $data = PurchaseDetails::where('purchase_details.status', 1)->where('purchase_details.id', 1)
+        ->join('purchases', 'purchases.id', 'purchase_details.purchase_id')
+        ->join('mast_customers', 'mast_customers.id', 'purchases.mast_supplier_id')
+        ->join('mast_work_stations', 'mast_work_stations.id', 'purchases.mast_work_station_id')
+        ->select('purchase_details.*','purchases.inv_no','purchases.inv_date','mast_customers.name','mast_work_stations.store_name')
+        ->first();
+        return response()->json($data);
     }
 }
