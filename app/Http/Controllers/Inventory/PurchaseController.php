@@ -72,7 +72,7 @@ class PurchaseController extends Controller
                 $data->save();
             }
         }
-         if (isset($request->editFile[0]['item_id']) && !empty($request->editFile[0]['item_id'])) {
+        if (isset($request->editFile[0]['item_id']) && !empty($request->editFile[0]['item_id'])) {
             foreach($request->editFile as $item){
                 $data = PurchaseDetails::findOrFail($item['id']);
 

@@ -79,7 +79,7 @@
                     <h5 class="modal-title">Add Serial Number</h5>
                     <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                 </div>
-                <form class="form-valide" data-action="{{ route('inv_purchase.store', 1) }}" method="POST" enctype="multipart/form-data" id="add-user-form">
+                <form class="form-valide" data-action="{{ route('grm-purchase-store') }}" method="POST" enctype="multipart/form-data" id="add-user-form">
                     @csrf
                     <div class="modal-body py-2">
                         <div class="row" id="main-row-data">
@@ -126,16 +126,17 @@
                             </div> 
                         </div>
 
-                        <div class="row">
+                        <div class="row" style="height: 180px; overflow-y: auto">
                             <div class="col-md-12">
                                 <!--=====//Table//=====-->
                                 <div class="table-responsive">
                                     <table id="items-table" class="table table-bordered">
                                         <thead class="thead-light">
                                             <tr>
-                                                <th width="25%">Part No.</th>
-                                                <th width="60%">SL No.</th>
-                                                <th width="20%" class="text-center">Action</th>
+                                                <th width="10%">SL#</th>
+                                                <th width="22%">Part No.</th>
+                                                <th width="45%">SL No.</th>
+                                                <th width="23%" class="text-center">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody id="table-body"></tbody>
@@ -157,63 +158,106 @@
 
 </x-app-layout>
 
-<script>
-    /*=======//GRN Purchase Add//=========*/
-    $(document).on('click','#edit_data', function(){
-        var id = $(this).data('id');
-        $("#modalGrid").modal('show');
-        addRow(0);
-        $.ajax({
-            url:'{{ route('grn_purchase_edit')}}',
-            method:'GET',
-            dataType:"JSON",
-            data:{'id': id},
-            success:function(response){
-                $('#inv_no').html(response.inv_no);
-                $("#inv_date").html(response.inv_date);
-                $("#mast_supplier_id").html(response.name);
-                $("#mast_work_station_id").html(response.store_name);
-                $('#remarks').html(daresponseta.remarks);
-            },
-            error: function(response) {
-                swal("Error!", "All input values are not null or empty.", "error");
-            }
+    <script>
+        /*=======//GRN Purchase Add Modal//=========*/
+        $(document).on('click','#edit_data', function(){
+            var id = $(this).data('id');
+            $("#modalGrid").modal('show');
+            addRow(0);
+            $.ajax({
+                url:'{{ route('get_purchase_details')}}',
+                method:'GET',
+                dataType:"JSON",
+                data:{'id': id},
+                success:function(response){
+                    $('#inv_no').html(response.inv_no);
+                    $("#inv_date").html(response.inv_date);
+                    $("#mast_supplier_id").html(response.name);
+                    $("#mast_work_station_id").html(response.store_name);
+                    $('#remarks').html(daresponseta.remarks);
+                },
+                error: function(response) {
+                    swal("Error!", "All input values are not null or empty.", "error");
+                }
+            });
         });
-    });
-    /*=======//GRN Purchase Upload//=========*/
-    $(document).on('click','#upload_excel', function(){
-        var id = $(this).data('id');
-        $("#exampleModalCenter").modal('show');
-    });
-</script>
-<script>
-    function addRow(i){
-        
-    }
+        /*=======//GRN Purchase Upload Modal//=========*/
+        $(document).on('click','#upload_excel', function(){
+            var id = $(this).data('id');
+            $("#exampleModalCenter").modal('show');
+        });
+        /*=======//GRN Purchase Save Data//=========*/
+        var form = '#add-user-form';
+        $(form).on('submit', function(event){
+            event.preventDefault();
+            var url = $(this).attr('data-action');
+            $.ajax({
+                url: url,
+                method: 'POST',
+                data: new FormData(this),
+                dataType: 'JSON',
+                contentType: false,
+                cache: false,
+                processData: false,
+                success:function(response)
+                {
+                    swal("Success Message Title", "Well done, you pressed a button", "success")
+                    $("#modalGrid").modal('hide');
+                },
+                error: function (xhr) {
+                    var errors = xhr.responseJSON.errors;
+                    var errorHtml = '';
+                    $.each(errors, function(key, value) {
+                        errorHtml += '<li style="color:red">' + value + '</li>';
+                    });
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: '<ul>' + errorHtml + '</ul>',
+                        text: 'All input values are not null or empty.',
+                    });
+                }
+            });
+        });
+    </script>
+    <script>
+        //======Add ROW
+        var i = 1;
+        $('#items-table').on('click', '.add-row', function() {
+            addRow(i);
+            i++;
+        });
+        function addRow(i) {
+            alert(i);
+            var sl= i+1;
+            var newRow = $('<tr>' +
+                '<td><label class="form-label">'+ sl +'</label></td>' +
+                '<td><label class="form-label" id="partNumber"></label></td>' +
+                '<td><input type="text" name="moreFile['+i+'][serial_no]" id="serial_no" class="form-control val_serial_no" placeholder="XXXXXXXXXX"></td>' +
+                '<td class="text-center">' +
+                    '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs add-row"><span class="fa fa-plus"></span></button>' +
+                    '<button type="button" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0 remove-row"><span class="fa fa-trash"></span></button>' +
+                '</td>'+
+            '</tr>');
 
-    //======Remove ROW
-    var i = 0;
-    $('#items-table').on('click', '.add-row', function() {
-        addRow();
-        i++;
-    });
-    function addRow() {
-        var newRow = $('<tr>' +
-            '<td><select id="partNumber" name="moreFile['+i+'][item_id]" class="form-control dropdwon_select val_part_number"></select></td>' +
-            '<td><input type="number" name="moreFile['+i+'][qty]" id="" class="form-control quantity val_quantity" placeholder="0.00"></td>' +
-            '<td class="text-center">' +
-                '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs add-row"><span class="fa fa-plus"></span></button>' +
-                '<button type="button" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0 remove-row"><span class="fa fa-trash"></span></button>' +
-            '</td>'+
-        '</tr>');
+            if(i){
 
-        $('#items-table tbody').append(newRow);
-    }
-    //======Remove ROW
-    $('#items-table').on('click', '.remove-row', function() {
-        $(this).closest('tr').remove();
-    });
-</script>
+            }else{
+
+            }
+            $('#items-table tbody').append(newRow);
+            //--Dropdwon Search Fix
+            $('.dropdwon_select').each(function () {
+                $(this).select2({
+                    dropdownParent: $(this).parent()
+                });
+            });
+        }
+        //======Remove ROW
+        $('#items-table').on('click', '.remove-row', function() {
+            $(this).closest('tr').remove();
+        });
+    </script>
 
 
 

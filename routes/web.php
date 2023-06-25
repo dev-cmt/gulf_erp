@@ -128,8 +128,9 @@ Route::group(['middleware' => ['auth']], function(){
      * ______________________________________________________________________________________________
      */
     Route::get('inv/grm-purchase/index', [MovementController::class, 'grmPurchaseIndex'])->name('grm-purchase-index');
-    Route::get('inv/grm-purchase/details/{id}', [MovementController::class, 'grmPurchaseDetails'])->name('grmPurchaseDetails');
-    Route::get('inv/grn/purchase/edit', [MovementController::class, 'grnPurchaseEdit'])->name('grn_purchase_edit');
+    Route::get('inv/grm-purchase/details/{id}', [MovementController::class, 'grmPurchaseDetails'])->name('grm-purchase-details');
+    Route::post('inv/grn/purchase/store', [MovementController::class, 'getPurchaseStore'])->name('grm-purchase-store');
+    Route::get('inv/grn/purchase/details', [MovementController::class, 'getPurchaseDetails'])->name('get_purchase_details');
 
     /**______________________________________________________________________________________________
      * Inventory => Purchase
