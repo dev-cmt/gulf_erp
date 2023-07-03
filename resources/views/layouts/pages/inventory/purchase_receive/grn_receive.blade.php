@@ -32,7 +32,7 @@
                                     <td>{{$row->qty}}</td>
                                     <td>{{$row->qty * $row->price}}</td>
                                     <td class="text-right">
-                                        <button type="button" class="btn btn-sm btn-success p-1 px-2" id="edit_data" data-id="{{ $row->id }}"><i class="fa fa-plus"></i></i><span class="btn-icon-add"></span>Add</button>
+                                        <button type="button" class="btn btn-sm btn-success p-1 px-2" id="edit_data" data-detId="5" data-id="{{ $row->id }}"><i class="fa fa-plus"></i></i><span class="btn-icon-add"></span>Add</button>
                                         <button type="button" class="btn btn-sm btn-primary p-1 px-2" id="upload_excel" data-id="{{ $row->id }}"><i class="fa fa-paperclip"></i></i><span class="btn-icon-add"></span>Upload</button>
                                     </td>
                                 </tr>
@@ -124,6 +124,8 @@
                                     </div>
                                 </div>
                             </div> 
+                            <input type="hidden" id="qty">
+                            <input type="hidden" id="getPartNo">
                         </div>
 
                         <div class="row" style="height: 180px; overflow-y: auto">
@@ -162,8 +164,6 @@
         /*=======//GRN Purchase Add Modal//=========*/
         $(document).on('click','#edit_data', function(){
             var id = $(this).data('id');
-            $("#modalGrid").modal('show');
-            addRow(0);
             $.ajax({
                 url:'{{ route('get_purchase_details')}}',
                 method:'GET',
@@ -174,12 +174,19 @@
                     $("#inv_date").html(response.inv_date);
                     $("#mast_supplier_id").html(response.name);
                     $("#mast_work_station_id").html(response.store_name);
-                    $('#remarks').html(daresponseta.remarks);
+                    $('#remarks').html(response.remarks);
+                    $('#qty').val(response.qty);
+                    $('#getPartNo').val(response.part_no);
+                    $('.part_number').html(response.part_no);
                 },
                 error: function(response) {
                     swal("Error!", "All input values are not null or empty.", "error");
                 }
             });
+            $("#modalGrid").modal('show');
+            var tbody = $('#table-body');
+            tbody.empty();
+            addRow(0);
         });
         /*=======//GRN Purchase Upload Modal//=========*/
         $(document).on('click','#upload_excel', function(){
@@ -220,34 +227,55 @@
             });
         });
     </script>
+    <input type="hidden" id="getSerialNo" value="1">
     <script>
-        //======Add ROW
-        var i = 1;
-        $('#items-table').on('click', '.add-row', function() {
-            addRow(i);
-            i++;
+        $(document).ready(function() {
+            //======Add ROW
+            var count = 0;
+            $('#items-table').on('click', '.add-row', function() {
+                var allValuesNotNull = true;
+                $('.val_serial_no').each(function() {
+                    var value = $(this).val();
+                    if (value === null || value === '') {
+                        allValuesNotNull = false;
+                        return false;
+                    }
+                });
+                if (allValuesNotNull) {
+                    var qtyCheck = $('#qty').val();
+                    var rowCount = parseInt($('#items-table tbody tr').length) + 1;
+                    if(qtyCheck >= rowCount ){
+                        ++count;
+                        addRow(count);
+                    }else{
+                        Swal.fire(
+                            'Your filup data',
+                            'Is something wrong with your form data?',
+                            'question'
+                        )
+                    }
+                } else {
+                    swal("Error!", "All input values are not null or empty.", "error");
+                }
+            });
         });
-        function addRow(i) {
-            alert(i);
-            var sl= i+1;
+
+        function addRow(i){
+            var rowCount = parseInt($('#items-table tbody tr').length) + 1;
+            var partNumber = $('#getPartNo').val();
             var newRow = $('<tr>' +
-                '<td><label class="form-label">'+ sl +'</label></td>' +
-                '<td><label class="form-label" id="partNumber"></label></td>' +
+                '<td><label class="form-label">'+rowCount+'</label></td>' +
+                '<td><label class="form-label part_number">'+partNumber+'</label></td>' +
                 '<td><input type="text" name="moreFile['+i+'][serial_no]" id="serial_no" class="form-control val_serial_no" placeholder="XXXXXXXXXX"></td>' +
                 '<td class="text-center">' +
                     '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs add-row"><span class="fa fa-plus"></span></button>' +
                     '<button type="button" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0 remove-row"><span class="fa fa-trash"></span></button>' +
                 '</td>'+
             '</tr>');
-
-            if(i){
-
-            }else{
-
-            }
+        
             $('#items-table tbody').append(newRow);
             //--Dropdwon Search Fix
-            $('.dropdwon_select').each(function () {
+            newRow.find('.dropdwon_select').each(function () {
                 $(this).select2({
                     dropdownParent: $(this).parent()
                 });
