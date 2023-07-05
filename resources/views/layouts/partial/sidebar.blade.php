@@ -66,7 +66,7 @@
                         <span class="nav-text">Inventory</span>
                     </a>
                     <ul aria-expanded="false">
-                        <li><a href="{{route('grm-purchase-index')}}">GRN (Warehouse)</a></li>
+                        <li><a href="{{route('grn-purchase.index')}}">GRN (Warehouse)</a></li>
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Purchase</a>
                             <ul aria-expanded="false">
                                 <li><a href="{{ route('inv_purchase.index',['cat_id' => 1])}}">AC</a></li>
@@ -75,7 +75,7 @@
                                 <li><a href="{{ route('inv_purchase_approve.create')}}">Approve Purchase </a></li>
                             </ul>
                         </li>
-                        <li><a href="#">Sales Delivery</a></li>
+                        <li><a href="{{route('sales-delivery.index')}}">Sales Delivery</a></li>
                         <li><a href="#">Stock Update</a></li>
                         <li><a href="#">Stock Possition</a></li>
                         <li><a href="#">Reports</a></li>

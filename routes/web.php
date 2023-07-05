@@ -127,10 +127,20 @@ Route::group(['middleware' => ['auth']], function(){
      * Inventory => GRN
      * ______________________________________________________________________________________________
      */
-    Route::get('inv/grm-purchase/index', [MovementController::class, 'grmPurchaseIndex'])->name('grm-purchase-index');
-    Route::get('inv/grm-purchase/details/{id}', [MovementController::class, 'grmPurchaseDetails'])->name('grm-purchase-details');
-    Route::post('inv/grn/purchase/store', [MovementController::class, 'getPurchaseStore'])->name('grm-purchase-store');
-    Route::get('inv/grn/purchase/details', [MovementController::class, 'getPurchaseDetails'])->name('get_purchase_details');
+    Route::get('inv/grn-purchase/index', [MovementController::class, 'grnPurchaseIndex'])->name('grn-purchase.index');
+    Route::get('inv/grn-purchase/details/{id}', [MovementController::class, 'grnPurchaseDetails'])->name('grn-purchase-details');
+    Route::post('inv/grn/purchase/store', [MovementController::class, 'grnPurchaseStore'])->name('grn-purchase.store');
+    Route::get('inv/get-purchase/details', [MovementController::class, 'getPurchaseDetails'])->name('get_purchase_details');
+    /**______________________________________________________________________________________________
+     * Inventory => Sales Delivery
+     * ______________________________________________________________________________________________
+     */
+    Route::get('inv/sales-delivery/index', [MovementController::class, 'salesDeliveryIndex'])->name('sales-delivery.index');
+    Route::get('inv/sales-delivery/details/{id}', [MovementController::class, 'salesDeliveryDetails'])->name('sales-delivery-details');
+    Route::post('inv/sales-delivery/store', [MovementController::class, 'salesDeliveryStore'])->name('sales-delivery-store');
+    Route::get('inv/get-sales-delivery/details', [MovementController::class, 'getSalesDetails'])->name('get_sales_details');
+
+    Route::get('/get-serial-no',[MovementController::class,'getSerialNumber'])->name('get-serial-no');
 
     /**______________________________________________________________________________________________
      * Inventory => Purchase

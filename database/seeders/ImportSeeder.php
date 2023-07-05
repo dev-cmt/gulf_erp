@@ -234,6 +234,14 @@ class ImportSeeder extends Seeder
         ]);
         //____________________________________//
         MastWorkStation::create([
+            'store_name'=>'Central Storehouse',
+            'contact_number'=>'01995275933',
+            'location'=>'Gulshan',
+            'description'=>'This is time off that a female employee can take before and after childbirth. Maternity leave may be paid or unpaid, depending on the company policies.',
+            'status'=>'1',
+            'user_id'=>'1'
+        ]);
+        MastWorkStation::create([
             'store_name'=>'Gulf international associates ltd.',
             'contact_number'=>'01995275933',
             'location'=>'Gulshan',

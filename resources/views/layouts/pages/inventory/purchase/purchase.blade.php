@@ -128,7 +128,7 @@
                                     </label>
                                     <div class="col-md-7">
                                         <select name="mast_work_station_id" id="mast_work_station_id" class="form-control dropdwon_select" required>
-                                            <option selected disabled>--Select--</option>
+                                            {{-- <option selected disabled>--Select--</option> --}}
                                             @foreach ($store as $row)
                                                 <option value="{{$row->id}}">{{$row->store_name}}</option>
                                             @endforeach
@@ -273,7 +273,7 @@
                             row += '<span class="badge light badge-danger"><i class="fa fa-circle text-danger mr-1"></i>Canceled</span>';
                         
                         row += '</td>';
-                        row += '<td style="width:210px"><button type="button" class="btn btn-sm btn-success p-1 px-2 mr-1" id="edit_data" data-id="'+storePurchase.id+'"><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button><button type="button" class="btn btn-sm btn-info p-1 px-2" id="view_data" data-id="'+storePurchase.id+'"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</button></td>';
+                        row += '<td class="d-flex"><button type="button" class="btn btn-sm btn-success p-1 px-2 mr-1" id="edit_data" data-id="'+storePurchase.id+'"><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button><button type="button" class="btn btn-sm btn-info p-1 px-2" id="view_data" data-id="'+storePurchase.id+'"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</button></td>';
 
                         if($("#pur_id").val()){
                             $("#row_purchase_table_" + storePurchase.id).replaceWith(row);
@@ -560,7 +560,6 @@
                 '<button type="button" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0 remove-row"><span class="fa fa-trash"></span></button>' +
             '</td>'+
         '</tr>');
-
         
 
         $('.edit_add_hide').hide();

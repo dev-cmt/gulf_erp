@@ -3,7 +3,8 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Purchase Details List</h4>
+                    <h4 class="card-title">Purchase Receive Details</h4>
+                    <a href="{{ route('grn-purchase.index') }}" class="btn btn-sm btn-primary"><i class="fa fa-reply"></i><span class="btn-icon-add"></span>Back</a>
                 </div>
 
                 <div class="card-body">
@@ -17,6 +18,7 @@
                                 <th>Supplier Name</th>
                                 <th>Price</th>
                                 <th>Qty</th>
+                                <th>Rcv. Qty</th>
                                 <th>Total</th>
                                 <th class="text-right">Action</th>
                             </tr>
@@ -30,10 +32,17 @@
                                     <td>{{$row->name}}</td>
                                     <td>{{$row->price}}</td>
                                     <td>{{$row->qty}}</td>
+                                    <td>{{$row->rcv_qty ?? '0' }}</td>
                                     <td>{{$row->qty * $row->price}}</td>
                                     <td class="text-right">
-                                        <button type="button" class="btn btn-sm btn-success p-1 px-2" id="edit_data" data-detId="5" data-id="{{ $row->id }}"><i class="fa fa-plus"></i></i><span class="btn-icon-add"></span>Add</button>
-                                        <button type="button" class="btn btn-sm btn-primary p-1 px-2" id="upload_excel" data-id="{{ $row->id }}"><i class="fa fa-paperclip"></i></i><span class="btn-icon-add"></span>Upload</button>
+                                        @if ($row->qty == $row->rcv_qty)  
+                                        <span class="badge light badge-success">
+                                            <i class="fa fa-circle text-success mr-1"></i>Successful
+                                        </span>
+                                        @else
+                                            <button type="button" class="btn btn-sm btn-success p-1 px-2" id="edit_data" data-detId="5" data-id="{{ $row->id }}"><i class="fa fa-plus"></i></i><span class="btn-icon-add"></span>Add</button>
+                                            <button type="button" class="btn btn-sm btn-primary p-1 px-2" id="upload_excel" data-id="{{ $row->id }}"><i class="fa fa-paperclip"></i></i><span class="btn-icon-add"></span>Upload</button>
+                                        @endif
                                     </td>
                                 </tr>
                                 @endforeach
@@ -79,7 +88,7 @@
                     <h5 class="modal-title">Add Serial Number</h5>
                     <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                 </div>
-                <form class="form-valide" data-action="{{ route('grm-purchase-store') }}" method="POST" enctype="multipart/form-data" id="add-user-form">
+                <form class="form-valide" data-action="{{ route('grn-purchase.store') }}" method="POST" enctype="multipart/form-data" id="add-user-form">
                     @csrf
                     <div class="modal-body py-2">
                         <div class="row" id="main-row-data">
@@ -124,8 +133,14 @@
                                     </div>
                                 </div>
                             </div> 
-                            <input type="hidden" id="qty">
                             <input type="hidden" id="getPartNo">
+                            <input type="hidden" id="getRcvQty">
+                            <input type="hidden" id="qty">
+                            <input type="hidden" id="rcvQty" name="rcv_qty">
+                            <input type="hidden" id="purDetailsId" name="purchase_details_id">
+                            <input type="hidden" id="itemRegisterId" name="item_register_id">
+                            <input type="hidden" id="workStationId" name="work_station_id">
+                            <input type="hidden" id="purchaseId" name="purchase_id">
                         </div>
 
                         <div class="row" style="height: 180px; overflow-y: auto">
@@ -157,47 +172,66 @@
             </div>
         </div>
     </div>
-
 </x-app-layout>
 
-    <script>
-        /*=======//GRN Purchase Add Modal//=========*/
-        $(document).on('click','#edit_data', function(){
-            var id = $(this).data('id');
-            $.ajax({
-                url:'{{ route('get_purchase_details')}}',
-                method:'GET',
-                dataType:"JSON",
-                data:{'id': id},
-                success:function(response){
-                    $('#inv_no').html(response.inv_no);
-                    $("#inv_date").html(response.inv_date);
-                    $("#mast_supplier_id").html(response.name);
-                    $("#mast_work_station_id").html(response.store_name);
-                    $('#remarks').html(response.remarks);
-                    $('#qty').val(response.qty);
-                    $('#getPartNo').val(response.part_no);
-                    $('.part_number').html(response.part_no);
-                },
-                error: function(response) {
-                    swal("Error!", "All input values are not null or empty.", "error");
-                }
-            });
-            $("#modalGrid").modal('show');
-            var tbody = $('#table-body');
-            tbody.empty();
-            addRow(0);
+<script type="text/javascript">
+    /*=======//GRN Purchase Add Modal//=========*/
+    $(document).on('click','#edit_data', function(){
+        var id = $(this).data('id');
+        $.ajax({
+            url:'{{ route('get_purchase_details')}}',
+            method:'GET',
+            dataType:"JSON",
+            data:{'id': id},
+            success:function(response){
+                $('#inv_no').html(response.inv_no);
+                $("#inv_date").html(response.inv_date);
+                $("#mast_supplier_id").html(response.name);
+                $("#mast_work_station_id").html(response.store_name);
+                $('#remarks').html(response.remarks);
+
+                //---SetUp
+                $('#purDetailsId').val(response.id);
+                $('#purchaseId').val(response.purchase_id);
+                $('#workStationId').val(response.work_station_id);
+                $('#itemRegisterId').val(response.item_register_id);
+                $('#qty').val(response.qty);
+                $('#getRcvQty').val(response.rcv_qty);
+                $('#rcvQty').val(response.rcv_qty + 1);
+                $('#getPartNo').val(response.part_no);
+                $('.part_number').html(response.part_no);
+                
+            },
+            error: function(response) {
+                swal("Error!", "All input values are not null or empty.", "error");
+            }
         });
-        /*=======//GRN Purchase Upload Modal//=========*/
-        $(document).on('click','#upload_excel', function(){
-            var id = $(this).data('id');
-            $("#exampleModalCenter").modal('show');
+        $("#modalGrid").modal('show');
+        var tbody = $('#table-body');
+        tbody.empty();
+        addRow(0);
+    });
+    /*=======//GRN Purchase Upload Modal//=========*/
+    $(document).on('click','#upload_excel', function(){
+        var id = $(this).data('id');
+        $("#exampleModalCenter").modal('show');
+    });
+    /*=======//GRN Purchase Save Data//=========*/
+    var form = '#add-user-form';
+    $(form).on('submit', function(event){
+        event.preventDefault();
+        var url = $(this).attr('data-action');
+
+        //--Validation then save
+        var allValuesNotNull = true;
+        $('.val_serial_no').each(function() {
+            var value = $(this).val();
+            if (value === null || value === '') {
+                allValuesNotNull = false;
+                return false;
+            }
         });
-        /*=======//GRN Purchase Save Data//=========*/
-        var form = '#add-user-form';
-        $(form).on('submit', function(event){
-            event.preventDefault();
-            var url = $(this).attr('data-action');
+        if (allValuesNotNull) {
             $.ajax({
                 url: url,
                 method: 'POST',
@@ -208,8 +242,11 @@
                 processData: false,
                 success:function(response)
                 {
-                    swal("Success Message Title", "Well done, you pressed a button", "success")
                     $("#modalGrid").modal('hide');
+                    swal("Your data save successfully", "Well done, you pressed a button", "success")
+                    .then(function() {
+                        location.reload();
+                    });
                 },
                 error: function (xhr) {
                     var errors = xhr.responseJSON.errors;
@@ -225,67 +262,73 @@
                     });
                 }
             });
-        });
-    </script>
-    <input type="hidden" id="getSerialNo" value="1">
-    <script>
-        $(document).ready(function() {
-            //======Add ROW
-            var count = 0;
-            $('#items-table').on('click', '.add-row', function() {
-                var allValuesNotNull = true;
-                $('.val_serial_no').each(function() {
-                    var value = $(this).val();
-                    if (value === null || value === '') {
-                        allValuesNotNull = false;
-                        return false;
-                    }
-                });
-                if (allValuesNotNull) {
-                    var qtyCheck = $('#qty').val();
-                    var rowCount = parseInt($('#items-table tbody tr').length) + 1;
-                    if(qtyCheck >= rowCount ){
-                        ++count;
-                        addRow(count);
-                    }else{
-                        Swal.fire(
-                            'Your filup data',
-                            'Is something wrong with your form data?',
-                            'question'
-                        )
-                    }
-                } else {
-                    swal("Error!", "All input values are not null or empty.", "error");
-                }
-            });
-        });
-
-        function addRow(i){
-            var rowCount = parseInt($('#items-table tbody tr').length) + 1;
-            var partNumber = $('#getPartNo').val();
-            var newRow = $('<tr>' +
-                '<td><label class="form-label">'+rowCount+'</label></td>' +
-                '<td><label class="form-label part_number">'+partNumber+'</label></td>' +
-                '<td><input type="text" name="moreFile['+i+'][serial_no]" id="serial_no" class="form-control val_serial_no" placeholder="XXXXXXXXXX"></td>' +
-                '<td class="text-center">' +
-                    '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs add-row"><span class="fa fa-plus"></span></button>' +
-                    '<button type="button" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0 remove-row"><span class="fa fa-trash"></span></button>' +
-                '</td>'+
-            '</tr>');
-        
-            $('#items-table tbody').append(newRow);
-            //--Dropdwon Search Fix
-            newRow.find('.dropdwon_select').each(function () {
-                $(this).select2({
-                    dropdownParent: $(this).parent()
-                });
-            });
+        } else {
+            swal("Error!", "All input values are not null or empty.", "error");
         }
-        //======Remove ROW
-        $('#items-table').on('click', '.remove-row', function() {
-            $(this).closest('tr').remove();
+    });
+</script>
+<script type="text/javascript">
+    //======Add ROW
+    var count = 0;
+    $('#items-table').on('click', '.add-row', function() {
+        var allValuesNotNull = true;
+        $('.val_serial_no').each(function() {
+            var value = $(this).val();
+            if (value === null || value === '') {
+                allValuesNotNull = false;
+                return false;
+            }
         });
-    </script>
+        if (allValuesNotNull) {
+            var qty = parseInt($('#qty').val());
+            var rcvQty = parseInt($('#getRcvQty').val());
+            var checkQty = qty - rcvQty;
+            var rowCount = parseInt($('#items-table tbody tr').length) + 1;
+            if(checkQty >= rowCount){
+                ++count;
+                addRow(count);
+                var qtyResult = rcvQty + rowCount;
+                $('#rcvQty').val(qtyResult);
+            }else{
+                Swal.fire(
+                    'Done',
+                    'Your already fill up all data!',
+                    'question'
+                )
+            }
+        } else {
+            swal("Error!", "All input values are not null or empty.", "error");
+        }
+    });
+
+    function addRow(i){
+        var rowCount = parseInt($('#items-table tbody tr').length) + 1;
+        var partNumber = $('#getPartNo').val();
+        var newRow = $('<tr>' +
+            '<td><label class="form-label">'+rowCount+'</label></td>' +
+            '<td><label class="form-label part_number">'+partNumber+'</label></td>' +
+            '<td><input type="text" name="moreFile['+i+'][serial_no]" id="serial_no" class="form-control val_serial_no" placeholder="XXXXXXXXXX"></td>' +
+            '<td class="text-center">' +
+                '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs add-row"><span class="fa fa-plus"></span></button>' +
+                '<button type="button" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0 remove-row"><span class="fa fa-trash"></span></button>' +
+            '</td>'+
+        '</tr>');
+    
+        $('#items-table tbody').append(newRow);
+        //--Dropdwon Search Fix
+        newRow.find('.dropdwon_select').each(function () {
+            $(this).select2({
+                dropdownParent: $(this).parent()
+            });
+        });
+    }
+    //======Remove ROW
+    $('#items-table').on('click', '.remove-row', function() {
+        $(this).closest('tr').remove();
+        var rec_qty= $('#rcvQty').val();
+        $('#rcvQty').val(rec_qty-1);
+    });
+</script>
 
 
 

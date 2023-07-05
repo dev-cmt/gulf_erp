@@ -14,18 +14,20 @@ use App\Models\Master\MastUnit;
 use App\Models\Master\MastSupplier;
 use App\Models\Inventory\Purchase;
 use App\Models\Inventory\PurchaseDetails;
+use App\Models\Sales\Sales;
+use App\Models\Sales\SalesDetails;
 use App\Models\SlMovement;
 use App\Models\User;
 use App\Helpers\Helper;
 
 class MovementController extends Controller
 {
-    public function grmPurchaseIndex()
+    public function grnPurchaseIndex()
     {
         $data = Purchase::where('status', 1)->get();
         return view('layouts.pages.inventory.purchase_receive.index',compact('data'));
     }
-    public function grmPurchaseDetails($id)
+    public function grnPurchaseDetails($id)
     {
         $data = PurchaseDetails::where('purchase_details.status', 1)->where('purchase_id', $id)
         ->join('purchases', 'purchases.id', 'purchase_details.purchase_id')
@@ -34,36 +36,74 @@ class MovementController extends Controller
         ->get();
         return view('layouts.pages.inventory.purchase_receive.grn_receive',compact('data'));
     }
-    function getPurchaseStore(Request $request) {
+    function grnPurchaseStore(Request $request) {
+        
+        $PurchaseDetails = PurchaseDetails::findOrFail($request->purchase_details_id);
+        $PurchaseDetails->rcv_qty = $request->rcv_qty;
+        $PurchaseDetails->save();
         
         if (isset($request->moreFile[0]['serial_no']) && !empty($request->moreFile[0]['serial_no'])) {
             foreach($request->moreFile as $item){
                 $data = new SlMovement();
                 $data->serial_no = $item['serial_no'];
-                $data->item_id = 1;
-                $data->ref_id = 1;
-                $data->ref_type = 1;
+                $data->ref_id = $request->purchase_id;
+                $data->ref_type = 1; //1=> Purchase 2=> Sales 3=> Store Transfer
                 $data->status = 1;
-                $data->mast_work_station_id = 1;
+                $data->mast_item_register_id = $request->item_register_id;
+                $data->mast_work_station_id = $request->work_station_id;
                 $data->user_id = Auth::user()->id;
                 $data->save();
             }
             return response()->json('success');
         }
         return response()->json(['errors' => $validator->errors()], 422);
-
-        // $data = new SlMovement();
-        // $data->serial_no = $request->serial_no;
-        // $data->item_id = $request->item_id;
-        // $data->ref_id = $request->ref_id;
-        // $data->ref_type = $request->ref_type;
-        // $data->status = $request->status;
-        // $data->mast_work_station_id = $request->mast_work_station_id;
-        // $data->user_id = $request->user_id;
-        // $data->save();
     }
     /**___________________________________________________________________
-     * Ajax Call Show Data
+     * Sales Delivery
+     * ___________________________________________________________________
+     */
+    public function salesDeliveryIndex()
+    {
+        $data= Sales::where('status', 1)->orderBy('id', 'asc')->get();
+        return view('layouts.pages.inventory.sales_delivery.index',compact('data'));
+    }
+    public function salesDeliveryDetails($id)
+    {
+        $sales = Sales::where('id', $id)->first();
+        $data = SalesDetails::where('sales_details.status', 1)->where('sales_id', $id)
+        ->join('sales', 'sales.id', 'sales_details.sales_id')
+        ->join('mast_item_registers', 'mast_item_registers.id', 'sales_details.mast_item_register_id')
+        ->join('mast_item_groups', 'mast_item_groups.id', 'mast_item_registers.mast_item_group_id')
+        ->join('mast_item_categories', 'mast_item_categories.id', 'sales.mast_item_category_id')
+        ->select('sales_details.*','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
+        ->get();
+        return view('layouts.pages.inventory.sales_delivery.delivery_details', compact('data','sales'));
+    }
+    function salesDeliveryStore(Request $request) {
+        
+        $PurchaseDetails = PurchaseDetails::findOrFail($request->purchase_details_id);
+        $PurchaseDetails->rcv_qty = $request->rcv_qty;
+        $PurchaseDetails->save();
+        
+        if (isset($request->moreFile[0]['serial_no']) && !empty($request->moreFile[0]['serial_no'])) {
+            foreach($request->moreFile as $item){
+                $data = new SlMovement();
+                $data->serial_no = $item['serial_no'];
+                $data->ref_id = $request->purchase_id;
+                $data->ref_type = 1; //1=> Purchase 2=> Sales 3=> Store Transfer
+                $data->status = 1;
+                $data->mast_item_register_id = $request->item_register_id;
+                $data->mast_work_station_id = $request->work_station_id;
+                $data->user_id = Auth::user()->id;
+                $data->save();
+            }
+            return response()->json('success');
+        }
+        return response()->json(['errors' => $validator->errors()], 422);
+    }
+
+    /**___________________________________________________________________
+     * Ajax Call
      * ___________________________________________________________________
      */
     public function getPurchaseDetails(Request $request)
@@ -73,8 +113,25 @@ class MovementController extends Controller
         ->join('mast_item_registers', 'mast_item_registers.id', 'purchase_details.mast_item_register_id')
         ->join('mast_customers', 'mast_customers.id', 'purchases.mast_supplier_id')
         ->join('mast_work_stations', 'mast_work_stations.id', 'purchases.mast_work_station_id')
-        ->select('purchase_details.*','purchases.inv_no','purchases.inv_date','mast_item_registers.part_no','mast_customers.name','mast_work_stations.store_name')
+        ->select('purchase_details.*','purchases.inv_no','purchases.inv_date','purchases.remarks','mast_item_registers.id as item_register_id','mast_item_registers.part_no','mast_customers.name','mast_work_stations.store_name','mast_work_stations.id as work_station_id')
         ->first();
         return response()->json($data);
+    }
+    public function getSalesDetails(Request $request)
+    {
+        
+        $data = SalesDetails::where('sales_details.status', 1)->where('sales_details.id', $request->id)
+        ->join('sales', 'sales.id', 'sales_details.sales_id')
+        ->join('mast_item_categories', 'mast_item_categories.id', 'sales.mast_item_category_id')
+        ->join('mast_item_registers', 'mast_item_registers.id', 'sales_details.mast_item_register_id')
+        ->join('mast_customers', 'mast_customers.id', 'sales.mast_customer_id')
+        ->select('sales_details.*','sales.inv_no','sales.inv_date','sales.remarks','mast_item_categories.cat_name','mast_item_registers.id as item_register_id','mast_item_registers.part_no','mast_customers.name')
+        ->first();
+        return response()->json($data);
+    }
+    public function getSerialNumber(Request $request)
+    {
+        $data = SlMovement::where('mast_item_register_id', $request->item_register_id)->get();
+        return view('layouts.pages.inventory.sales_delivery.load-serial-number',compact('data'));
     }
 }

@@ -19,7 +19,7 @@ class Sales extends Model
         'status',
         'remarks',
         'mast_item_category_id',
-        'mast_distributor_id',
+        'mast_customer_id',
         'user_id'
     ];
     public function mastCustomer()

@@ -28,7 +28,7 @@
                                     <td>{{$row->mastSupplier->supplier_name}}</td>
                                     <td>{{$row->mastWorkStation->store_name}}</td>
                                     <td class="text-right">
-                                        <a href="{{ route('grm-purchase-details', $row->id) }}" class="btn btn-sm btn-info p-1 px-2"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</a>
+                                        <a href="{{ route('grn-purchase-details', $row->id) }}" class="btn btn-sm btn-info p-1 px-2"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</a>
                                     </td>
                                 </tr>
                                 @endforeach

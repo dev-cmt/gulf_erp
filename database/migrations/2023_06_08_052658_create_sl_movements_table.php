@@ -16,11 +16,12 @@ return new class extends Migration
         Schema::create('sl_movements', function (Blueprint $table) {
             $table->id();
             $table->string('serial_no')->nullable();
-            $table->integer('item_id')->nullable();
             $table->integer('ref_id')->nullable();
             $table->integer('ref_type')->nullable();
             $table->tinyInteger('status')->default(true);
 
+            $table->unsignedBigInteger('mast_item_register_id');
+            $table->foreign('mast_item_register_id')->references('id')->on('mast_item_registers')->onDelete('cascade');
             $table->unsignedBigInteger('mast_work_station_id');
             $table->foreign('mast_work_station_id')->references('id')->on('mast_work_stations')->onDelete('cascade');
             $table->unsignedBigInteger('user_id');

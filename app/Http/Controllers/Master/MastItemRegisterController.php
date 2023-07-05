@@ -41,10 +41,9 @@ class MastItemRegisterController extends Controller
      */
     public function create()
     {
-        $unit = MastUnit::all();
-        $item_group = MastItemGroup::all();
+        $unit = MastUnit::orderBy('unit_name', 'asc')->get();
+        $item_group = MastItemGroup::orderBy('part_name', 'asc')->get();
         // $item_category = MastItemCategory::all();
-        // return $unit;
         return view('layouts.pages.master.item_register.create' , compact('unit', 'item_group'));
     }
 

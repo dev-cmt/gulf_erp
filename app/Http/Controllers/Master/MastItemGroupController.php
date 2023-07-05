@@ -17,7 +17,7 @@ class MastItemGroupController extends Controller
      */
     public function index()
     {
-        $data = MastItemGroup::with('mastItemCategory')->latest()->get();
+        $data = MastItemGroup::with('mastItemCategory')->orderBy('mast_item_category_id', 'asc')->get();
         return view('layouts.pages.master.item_group.index', compact('data'));
     }
 

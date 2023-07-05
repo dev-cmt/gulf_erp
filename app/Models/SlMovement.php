@@ -11,10 +11,10 @@ class SlMovement extends Model
 
     protected $fillable = [
         'serial_no',
-        'item_id',
         'ref_id',
         'ref_type',
         'status',
+        'mast_item_register_id',
         'mast_work_station_id',
         'user_id',
     ];

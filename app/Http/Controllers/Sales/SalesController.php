@@ -27,7 +27,7 @@ class SalesController extends Controller
         $customer_type = MastCustomerType::where('status', 1)->get();
         $item_category = MastItemCategory::where('status', 1)->get();
         
-        $data=Sales::where('mast_item_category_id', $type)->where('status', 0)->with('salesDetails','mastCustomer','mastItemCategory')->orderBy('id', 'desc')->latest()->get();
+        $data=Sales::where('mast_item_category_id', $type)->with('salesDetails','mastCustomer','mastItemCategory')->orderBy('id', 'desc')->latest()->get();
         return view('layouts.pages.sales.sales',compact('type','data','item_group','customer','customer_type','item_category'));
     }
     public function store(Request $request, $type)
@@ -63,6 +63,7 @@ class SalesController extends Controller
                 $data = new SalesDetails();
                 $data->mast_item_register_id = $item['item_id'];
                 $data->qty = $item['qty'];
+                $data->deli_qty = 0;
                 $data->price = $item['price'];
                 
                 $data->status = 1;
@@ -81,6 +82,7 @@ class SalesController extends Controller
 
                 $data->mast_item_register_id = $item['item_id'];
                 $data->qty = $item['qty'];
+                $data->deli_qty = 0;
                 $data->price = $item['price'];
                 $data->status = 1;
                 if(isset($sal_id)){

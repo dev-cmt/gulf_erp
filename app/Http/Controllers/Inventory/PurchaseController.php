@@ -24,7 +24,7 @@ class PurchaseController extends Controller
         $supplier=MastSupplier::where('status', 1)->get();
         $store=MastWorkStation::where('status', 1)->get();
         
-        $data=Purchase::where('mast_item_category_id', $type)->where('status', 0)->with('purchaseDetails','mastWorkStation','mastSupplier')->orderBy('id', 'desc')->latest()->get();
+        $data=Purchase::where('mast_item_category_id', $type)->with('purchaseDetails','mastWorkStation','mastSupplier')->orderBy('id', 'desc')->latest()->get();
         return view('layouts.pages.inventory.purchase.purchase',compact('type','item_group','supplier','store','data'));
     }
     public function store(Request $request, $type)
@@ -60,6 +60,7 @@ class PurchaseController extends Controller
                 $data = new PurchaseDetails();
                 $data->mast_item_register_id = $item['item_id'];
                 $data->qty = $item['qty'];
+                $data->rcv_qty = 0;
                 $data->price = $item['price'];
                 
                 $data->status = 1;
@@ -78,6 +79,7 @@ class PurchaseController extends Controller
 
                 $data->mast_item_register_id = $item['item_id'];
                 $data->qty = $item['qty'];
+                $data->rcv_qty = 0;
                 $data->price = $item['price'];
 
                 $data->status = 1;

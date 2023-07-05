@@ -20,7 +20,7 @@
                                 <th></th>
                                 <th>Invoice No</th>
                                 <th>Invoice Date</th>
-                                <th>Distributor Name</th>
+                                <th>Customer Name</th>
                                 <th>Invoice Type</th>
                                 <th>Total</th>
                                 <th>Status</th>
