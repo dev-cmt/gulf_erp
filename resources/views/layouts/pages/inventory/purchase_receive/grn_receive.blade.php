@@ -7,15 +7,36 @@
                     <a href="{{ route('grn-purchase.index') }}" class="btn btn-sm btn-primary"><i class="fa fa-reply"></i><span class="btn-icon-add"></span>Back</a>
                 </div>
 
-                <div class="card-body">
+                <div class="card-body pt-2">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-12">
+                            <div class="row">
+                                <label class="col-6 col-form-label"><strong> Invoice No :</strong></label>
+                                <label class="col-6 col-form-label">{{$purchase->inv_no}}</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                            <div class="row">
+                                <label class="col-6 col-form-label"><strong>Invoice Date :</strong></label>
+                                <label class="col-6 col-form-label">{{date("j F, Y", strtotime($purchase->inv_date))}}</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                            <div class="row">
+                                <label class="col-6 col-form-label"><strong>Supplier Name :</strong></label>
+                                <label class="col-6 col-form-label">{{$purchase->mastSupplier->supplier_name}}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
                     <div class="table-responsive">
                         <table id="example3" class="display " style="min-width: 845px">
                             <thead>
                             <tr>
                                 <th>SL#</th>
-                                <th>Order No</th>
-                                <th>Order Date</th>
-                                <th>Supplier Name</th>
+                                <th>Category</th>
+                                <th>Group Name</th>
+                                <th>Part No.</th>
                                 <th>Price</th>
                                 <th>Qty</th>
                                 <th>Rcv. Qty</th>
@@ -27,9 +48,9 @@
                                 @foreach ($data as $key=> $row)
                                 <tr>
                                     <td>{{++$key}}</td>
-                                    <td>{{$row->inv_no}}</td>
-                                    <td>{{date("j F, Y", strtotime($row->inv_date))}}</td>
-                                    <td>{{$row->name}}</td>
+                                    <td>{{$row->cat_name}}</td>
+                                    <td>{{$row->part_name}}</td>
+                                    <td>{{$row->part_no}}</td>
                                     <td>{{$row->price}}</td>
                                     <td>{{$row->qty}}</td>
                                     <td>{{$row->rcv_qty ?? '0' }}</td>
@@ -129,7 +150,7 @@
                                 <div class="form-group row">
                                     <label class="col-md-4 col-form-label">Remarks</label>
                                     <div class="col-md-8">
-                                        <label class="col-md-12 col-form-label" id="remarks"></label>
+                                        <textarea class="form-control" id="remarks" disabled></textarea>
                                     </div>
                                 </div>
                             </div> 
@@ -186,7 +207,7 @@
             success:function(response){
                 $('#inv_no').html(response.inv_no);
                 $("#inv_date").html(response.inv_date);
-                $("#mast_supplier_id").html(response.name);
+                $("#mast_supplier_id").html(response.supplier_name);
                 $("#mast_work_station_id").html(response.store_name);
                 $('#remarks').html(response.remarks);
 

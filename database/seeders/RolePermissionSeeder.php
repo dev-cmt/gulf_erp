@@ -18,7 +18,7 @@ class RolePermissionSeeder extends Seeder
      */
     public function run()
     {
-        $employee_code = Helper::IDGenerator(new User, 'employee_code', 5, 'GULF'); /* Generate id */
+        $employee_code = Helper::IDGenerator(new User, 'employee_code', 5, 'GF'); /* Generate id */
         $supper_admin = User::create([
             'name'=>'Gulf-ERP',
             'email'=>'admin@gmail.com',
@@ -29,6 +29,7 @@ class RolePermissionSeeder extends Seeder
             'is_admin' => '0',
             'profile_photo_path'=>'fix/admin.jpg',
             'email_verified_at' => '2024-01-01',
+            'mast_work_station_id' => '1',
         ]);
         /*__________________________________________________________ */
         /*__________________________________________________________ */

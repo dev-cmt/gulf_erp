@@ -76,6 +76,14 @@
                             </ul>
                         </li>
                         <li><a href="{{route('sales-delivery.index')}}">Sales Delivery</a></li>
+                        <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Store Transfer</a>
+                            <ul aria-expanded="false">
+                                <li><a href="{{ route('store_transfer.index',['cat_id' => 1]) }}">AC Requisition</a></li>
+                                <li><a href="{{ route('store_transfer.index',['cat_id' => 2]) }}">AC Spare Parts</a></li>
+                                <li><a href="{{ route('store_transfer.index',['cat_id' => 3]) }}">Car Spare Parts</a></li>
+                                <li><a href="{{ route('store_transfer_approve.create')}}">Requisition Approve </a></li>
+                            </ul>
+                        </li>
                         <li><a href="#">Stock Update</a></li>
                         <li><a href="#">Stock Possition</a></li>
                         <li><a href="#">Reports</a></li>
@@ -186,6 +194,16 @@
                 @endcanany
             </ul>
             <div class="copyright">
+                {{-- <style>
+                    @media only screen and (max-width: 767px) {
+                        .apps_install {
+                            display: none;
+                        }
+                    }
+                </style> --}}
+                <div class="image-bx apps_install">
+                    <a href="{{ asset('public/gulf.apk') }}"><img src="{{asset('public')}}/images/icon-android.png" style="width:60%;" alt=""></a>
+                </div>
                 <p><strong>Gulf ERP Admin Dashboard</strong> © 2023 All Rights Reserved</p>
                 <p class="fs-12">Made with <span class="heart"></span> by Icon ISL</p>
             </div>

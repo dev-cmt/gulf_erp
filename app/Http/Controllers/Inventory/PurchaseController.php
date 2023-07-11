@@ -183,6 +183,12 @@ class PurchaseController extends Controller
        
         return response()->json($anotherField);
     }
+    public function getDeleteMaster(Request $request)
+    {
+        $data=Purchase::find($request->id);
+        $data->delete();
+        return response()->json('success');
+    }
 
 }
 

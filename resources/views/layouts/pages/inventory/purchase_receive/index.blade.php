@@ -16,17 +16,33 @@
                                 <th>Order Date</th>
                                 <th>Supplier Name</th>
                                 <th>Store Location</th>
+                                <th>Item Qty</th>
+                                {{-- <th>Total Qty</th> --}}
+                                <th>Total</th>
                                 <th class="text-right">Action</th>
                             </tr>
                             </thead>
                             <tbody>
                                 @foreach ($data as $key=> $row)
+                                @php
+                                    $total = 0;
+                                    $qty = 0;
+                                    $item = 1;
+                                    foreach ($row->purchaseDetails as $key => $value) {
+                                        $total += $value->qty * $value->price;
+                                        $qty += $value->qty;
+                                        $item += $key;
+                                    }
+                                @endphp
                                 <tr>
                                     <td>{{++$key}}</td>
                                     <td>{{$row->inv_no}}</td>
                                     <td>{{date("j F, Y", strtotime($row->inv_date))}}</td>
                                     <td>{{$row->mastSupplier->supplier_name}}</td>
                                     <td>{{$row->mastWorkStation->store_name}}</td>
+                                    <td>{{$item }}</td>
+                                    {{-- <td>{{$qty }}</td> --}}
+                                    <td>{{$total }}</td>
                                     <td class="text-right">
                                         <a href="{{ route('grn-purchase-details', $row->id) }}" class="btn btn-sm btn-info p-1 px-2"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</a>
                                     </td>

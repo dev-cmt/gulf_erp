@@ -10,7 +10,6 @@ use App\Models\Master\MastItemCategory;
 use App\Models\Master\MastItemGroup;
 use App\Models\Master\MastItemRegister;
 use App\Models\Master\MastUnit;
-use App\Models\Master\MastSupplier;
 use App\Models\Master\MastCustomer;
 use App\Models\Master\MastCustomerType;
 use App\Models\Sales\Sales;
@@ -235,5 +234,11 @@ class SalesController extends Controller
     {
         $data = MastCustomer::where('status', 1)->where('mast_customer_type_id', $request->part_id)->get();
         return view('layouts.pages.sales.load-customer',compact('data'));
+    }
+    public function getDeleteMasterSales(Request $request)
+    {
+        $data=Sales::find($request->id);
+        $data->delete();
+        return response()->json('success');
     }
 }

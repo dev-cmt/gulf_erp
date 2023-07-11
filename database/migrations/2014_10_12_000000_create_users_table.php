@@ -28,6 +28,9 @@ return new class extends Migration
             $table->boolean('is_admin')->default(false);
             $table->integer('attendance_id')->nullable();
             $table->timestamps();
+            $table->integer('mast_work_station_id')->default(true);
+            // $table->unsignedBigInteger('mast_work_station_id');
+            // $table->foreign('mast_work_station_id')->references('id')->on('mast_work_stations')->onDelete('cascade');
         });
     }
 

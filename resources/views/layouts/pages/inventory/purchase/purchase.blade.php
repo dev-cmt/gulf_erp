@@ -58,7 +58,7 @@
                                         @endif
                                     </td>
                                     <td style="width:210px">
-                                        <button type="button" class="btn btn-sm btn-success p-1 px-2" id="edit_data" data-id="{{ $row->id }}"><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button>
+                                        <button type="button" class="btn btn-sm btn-success p-1 px-2" id="edit_data" data-id="{{ $row->id }}" {{$row->status !=0 ? 'disabled':''}}><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button>
                                         <button type="button" class="btn btn-sm btn-info p-1 px-2" id="view_data" data-id="{{ $row->id }}"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</button>
                                     </td>
                                 </tr>
@@ -128,7 +128,6 @@
                                     </label>
                                     <div class="col-md-7">
                                         <select name="mast_work_station_id" id="mast_work_station_id" class="form-control dropdwon_select" required>
-                                            {{-- <option selected disabled>--Select--</option> --}}
                                             @foreach ($store as $row)
                                                 <option value="{{$row->id}}">{{$row->store_name}}</option>
                                             @endforeach
@@ -150,7 +149,7 @@
                             <div class="col-md-12">
                                 <!--=====//Table//=====-->
                                 <div class="table-responsive">
-                                    <table id="items-table" class="table table-bordered">
+                                    <table id="items-table" class="table table-bordered mb-0">
                                         <thead class="thead-primary">
                                             <tr>
                                                 <th width="20%">Part Name</th>
@@ -169,7 +168,12 @@
                                     </table>
                                 </div>
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-md-12" id="edit_add_show" style="display: none">
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn btn-sm btn-success rounded-0" onClick="addRow(0)"><span class="fa fa-plus mr-1"></span> ADD ITEM</button>
+                                </div>
+                            </div>
+                            <div class="col-md-12 pt-4">
                                 <div class="float-right">
                                     <input type="hidden" id="edit_total" value="">
                                     <h6>Total <span style="border: 1px solid #2222;padding: 10px 40px;margin-left:10px" id="total">0.00</span></h6>
@@ -193,6 +197,8 @@
 
 
 <script type="text/javascript">
+    var mastSupplierId = $('#mast_supplier_id').html();
+    var mastWorkStationId = $('#mast_work_station_id').html();
     /*=======//Show Modal//=========*/
     $(document).on('click','#open_modal',function(){
         //----Open New Add Row
@@ -205,12 +211,22 @@
                 dropdownParent: $(this).parent()
             });
         });
+
+        $("#pur_id").val('');
+        $('#inv_no').prop("disabled", false);
+        $("#inv_date").prop("disabled", false);
+        $('#remarks').prop("disabled", false);
+        $('#mast_supplier_id').prop("disabled", false);
+        $('#mast_work_station_id').prop("disabled", false);
+        $('#mast_supplier_id').html(mastSupplierId);
+        $('#mast_work_station_id').html(mastWorkStationId);
+        $('#total').text("0.00");
+
+
         $(".modal-title").html('@if($type == 1) Add AC Purchase @elseif($type == 2) Add AC Spare Parts Purchase @else Add Car Spare Parts Purchase @endif');
         $(".bd-example-modal-lg").modal('show');
         $(".table_action").show();
         $(".submit_btn").show();
-        $("#id").val("");
-        $('#total').text("0.00");
     });
     /*=======//Save Data //=========*/
     $(document).ready(function(){
@@ -416,7 +432,7 @@
                     '<td><input type="number" name="editFile['+i+'][qty]" id="" class="form-control quantity val_quantity" placeholder="0.00" value="'+ item.qty +'"></td>' +
                     '<td><input type="number" name="editFile['+i+'][price]" id="" class="form-control price val_price" placeholder="0.00" value="'+ item.price +'"></td>' +
                     '<td class="subtotal">'+ subtotal +'</td>' +
-                    '<td class="text-center">' +
+                    '<td class="text-center countTdData">' +
                         '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs edit_add_hide" onClick="addRow(0)"><span class="fa fa-plus"></span></button>' +
                         '<button type="button" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0" id="delete_data" data-id="' + item.id +'"><span class="fa fa-trash"></span></button>' +
                     '</td>'+
@@ -452,6 +468,14 @@
                 total += subtotal;
             });
             $('#total').text(total.toFixed(2));
+
+            var rowCount = parseInt($('#items-table tbody tr').length);
+            var countTrData = parseInt($('#items-table tbody tr .countTdData').length);
+            if(rowCount < 0 || countTrData < 1 ){
+                $('#edit_add_show').show();
+            }else{
+                $('#edit_add_show').hide();
+            }
         }
         if(check == 2){ //View - 2
             $.each(purchaseDetails, function(index, item) {
@@ -484,26 +508,69 @@
     });
     $("body").on('click','#delete_data',function(){
         var id = $(this).data('id');
-        $.ajax({
-            url: "{{ url('inv_purchase/destroy')}}" + '/' + id,
-            method: 'DELETE',
-            type: 'DELETE',
-            success: function(response) {
-                toastr.success("Record deleted successfully!");
-                $("#row_todo_" + id).remove();
-                $('#table-body').closest('tr').remove();
-                updateSubtotal(0);
-            },
-            error: function(response) {
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'An error occurred.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this data!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                // Place your delete code here
+                $.ajax({
+                    url: "{{ url('inv_purchase/destroy')}}" + '/' + id,
+                    method: 'DELETE',
+                    type: 'DELETE',
+                    success: function(response) {
+                        toastr.success("Record deleted successfully!");
+                        $("#row_todo_" + id).remove();
+                        $('#table-body').closest('tr').remove();
+                        updateSubtotal(0);
+
+                        var countTrData = parseInt($('#items-table tbody tr .countTdData').length);
+                        if(countTrData < 1 ){
+                            $(".bd-example-modal-lg").modal('hide');
+                            deleteMasterData();
+                        }
+                    },
+                    error: function(response) {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'An error occurred.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                });
+            } else {
+                // User clicked "No" button, do nothing
+                swal("Your data is safe!", {
+                    icon: "success",
                 });
             }
         });
+        
     });
+    function deleteMasterData(){
+        var id = $('#pur_id').val();
+        $.ajax({
+            url:'{{ route('getDelete-master-purchase')}}',
+            method:'GET',
+            dataType:"JSON",
+            data:{'id':id},
+            success:function(response){
+                swal("Your data save successfully", "Well done, you pressed a button", "success")
+                    .then(function() {
+                        location.reload();
+                    });
+            },
+            error:function(){
+                alert('Fail');
+            }
+        });
+    }
+
 </script>
 
 <script type="text/javascript">
@@ -563,8 +630,16 @@
         
 
         $('.edit_add_hide').hide();
-        $('#items-table tbody').append(newRow);
+        var rowCount = parseInt($('#items-table tbody tr').length);
+        var countTrData = parseInt($('#items-table tbody tr .countTdData').length);
+        if(rowCount < 0){
+            $('#edit_add_show').show();
+        }else{
+            $('#edit_add_show').hide();
+        }
 
+
+        $('#items-table tbody').append(newRow);
         //--Dropdwon Search Fix
         newRow.find('.dropdwon_select').each(function () {
             $(this).select2({
@@ -577,6 +652,14 @@
     $('#items-table').on('click', '.remove-row', function() {
         $(this).closest('tr').remove();
         updateSubtotal(0);
+
+        var rowCount = parseInt($('#items-table tbody tr td .add-row').length);
+        var countTrData = parseInt($('#items-table tbody tr .countTdData').length);
+        if(rowCount < 1 || countTrData < 1 ){
+            $('#edit_add_show').show();
+        }else{
+            $('#edit_add_show').hide();
+        }
     });
     //======Total Count
     $('#items-table').on('input', '.quantity, .price', function() {

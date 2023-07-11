@@ -1,45 +1,40 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html  lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>{{ config('app.name', 'Laravel') }}</title>
-
-    <!-- Fonts -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="{{asset('public/backend')}}/images/favicon.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
-    <link rel="stylesheet" href="{{asset('public/extra-pages/login')}}/style.css">
+    <link href="{{asset('public/backend')}}/vendor/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet">
+    <link href="{{asset('public/backend')}}/css/style.css" rel="stylesheet">
+
 </head>
-<body>
-    <div class="bg-img" style="background: url('{{asset('public/extra-pages/login')}}/background.jpg');background-size: cover;background-repeat: no-repeat;background-position: center;">
-        <div class="content" style="border:1px solid white">
-            <div style="background: #e8f0fe;margin-left: -20px;margin-right: -20px;padding-top: 8px;">
-                <a href="{{url('/')}}"><img src="{{asset('public/images')}}/logo.png" style="width:75%" alt=""></a>
+
+<body class="vh-100" style="background: url('{{asset('public/extra-pages/login')}}/background.jpg');background-size: cover;background-repeat: no-repeat;background-position: center;">
+    <div class="authincation h-100">
+        <div class="container h-100">
+            <div class="row justify-content-center h-100 align-items-center">
+                <div class="col-md-6">
+                    <div class="authincation-content">
+                        {{ $slot }}
+                    </div>
+                </div>
             </div>
-            {{ $slot }}
         </div>
     </div>
-    
-    <script>
-        const pass_field = document.querySelector('.pass-key');
-        const showBtn = document.querySelector('.show');
-        showBtn.addEventListener('click', function(){
-            if(pass_field.type === "password"){
-                pass_field.type = "text";
-                showBtn.textContent = "HIDE";
-                showBtn.style.color = "#3498db";
-            }else{
-                pass_field.type = "password";
-                showBtn.textContent = "SHOW";
-                showBtn.style.color = "#222";
-            }
-        });
-    </script>
 
-    
+    <!--**********************************
+        Scripts
+    ***********************************-->
+    <!-- Required vendors -->
+    <script src="{{asset('public/backend')}}/vendor/global/global.min.js"></script>
+    <script src="{{asset('public/backend')}}/vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+    <script src="{{asset('public/backend')}}/js/custom.min.js"></script>
+    <script src="{{asset('public/backend')}}/js/deznav-init.js"></script>
+    <script src="{{asset('public/backend')}}/js/demo.js"></script>
+    <script src="{{asset('public/backend')}}/js/styleSwitcher.js"></script>
 </body>
 </html>

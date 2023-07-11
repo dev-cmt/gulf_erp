@@ -298,6 +298,7 @@ class InfoEmployeeController extends Controller
         $user->status='0';
         $user->is_admin='0';
         $user->email_verified_at='2023-01-01';
+        $user->mast_work_station_id='1';
         $user->save();
         
         $notification=array('messege'=>'User created successfully!','alert-type'=>'success');

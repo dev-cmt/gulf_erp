@@ -39,7 +39,7 @@
                                 <th>Part No.</th>
                                 <th>Price</th>
                                 <th>Qty</th>
-                                <th>Delivery Qty</th>
+                                <th>Deli. Qty</th>
                                 <th>Total</th>
                                 <th class="text-right">Action</th>
                             </tr>
@@ -53,10 +53,10 @@
                                     <td>{{$row->part_no}}</td>
                                     <td>{{$row->price}}</td>
                                     <td>{{$row->qty}}</td>
-                                    <td>{{$row->rcv_qty ?? '0' }}</td>
+                                    <td>{{$row->deli_qty ?? '0' }}</td>
                                     <td>{{$row->qty * $row->price}}</td>
                                     <td class="text-right">
-                                        @if ($row->qty == $row->rcv_qty)  
+                                        @if ($row->qty == $row->deli_qty)  
                                         <span class="badge light badge-success">
                                             <i class="fa fa-circle text-success mr-1"></i>Successful
                                         </span>
@@ -86,7 +86,7 @@
                     </button>
                 </div>
                 <div class="modal-body pt-2">
-                    <label class="form-label">Please Upload CSV in Given <a href="#" class="text-danger">Format</a></label>
+                    <label class=col-form-label>Please Upload CSV in Given <a href="#" class="text-danger">Format</a></label>
                     <div class="row">
                         <label class="col-md-4 col-form-label">Upload Excel File</label>
                         <div class="col-md-8">
@@ -106,87 +106,100 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add Serial Number</h5>
+                    <h5 class="modal-title">Add New Delivery </h5>
                     <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                 </div>
-                <form class="form-valide" data-action="{{ route('grn-purchase.store') }}" method="POST" enctype="multipart/form-data" id="add-user-form">
+                <form class="form-valide" data-action="{{ route('sales-delivery.store') }}" method="POST" enctype="multipart/form-data" id="add-user-form">
                     @csrf
                     <div class="modal-body py-2">
                         <div class="row" id="main-row-data">
-                            <input type="hidden" name="pur_id" id="pur_id">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="form-group row">
-                                    <label class="col-md-4 col-form-label">Invoice No.</label>
-                                    <div class="col-md-8">
-                                        <label class="col-md-12 col-form-label" id="inv_no"></label>
+                                    <label class="col-md-5 col-form-label px-0"><strong>Invoice No.</strong> </label>
+                                    <div class="col-md-7">
+                                        <label class=col-form-label id="inv_no"></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-5 col-form-label px-0"><strong>Invoice Date</strong></label>
+                                    <div class="col-md-7">
+                                        <label class=col-form-label id="inv_date"></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-5 col-form-label px-0"><strong>Invoice Type</strong></label>
+                                    <div class="col-md-7">
+                                        <label class=col-form-label id="inv_type"></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-5 col-form-label px-0"><strong>Customer</strong></label>
+                                    <div class="col-md-7">
+                                        <label class=col-form-label id="mast_customer_id"></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-5 col-form-label px-0"><strong>Part No.</strong></label>
+                                    <div class="col-md-7">
+                                        <label class=col-form-label id="getPartNo"></label>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group row">
-                                    <label class="col-md-4 col-form-label">Invoice Date</label>
-                                    <div class="col-md-8">
-                                        <label class="col-md-12 col-form-label" id="inv_date"></label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="form-group row">
-                                    <label class="col-md-4 col-form-label">Invoice Type</label>
-                                    <div class="col-md-8">
-                                        <label class="col-md-12 col-form-label" id="inv_type"></label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="form-group row">
-                                    <label class="col-md-4 col-form-label">Customer Name</label>
-                                    <div class="col-md-8">
-                                        <label class="col-md-12 col-form-label" id="mast_customer_id"></label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-group row">
-                                    <label class="col-md-4 col-form-label">Remarks</label>
-                                    <div class="col-md-8">
-                                        <label class="col-md-12 col-form-label" id="remarks"></label>
+                                    <label class="col-md-2 col-form-label px-0"><strong>Remarks</strong></label>
+                                    <div class="col-md-10">
+                                        <textarea class="form-control" id="remarks" disabled></textarea>
                                     </div>
                                 </div>
                             </div> 
+                            <input type="hidden" id="workStationId" name="mast_work_station_id" value="{{ Auth::user()->mast_work_station_id }}">
+                            {{-- <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label class="col-md-2 col-form-label px-0"><strong>Store Name</strong></label>
+                                    <div class="col-md-10">
+                                        <select id="workStationId" name="mast_work_station_id" class="form-control dropdwon_select" required>
+                                            @foreach ($storeName as $item)
+                                                <option value="{{$item->id}}">{{$item->store_name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div> --}}
                             
                             <input type="hidden" id="itemRegisterId" name="item_register_id">
+                            <input type="hidden" id="getItemCount">
                             <input type="hidden" id="getDeliQty">
-                            Qty<input type="text" id="qty">
-                            DeliQty<input type="text" id="deliQty" name="deli_qty">
-
-
-
-                            <input type="hidden" id="getPartNo">
-                            <input type="hidden" id="purDetailsId" name="purchase_details_id">
-                            <input type="hidden" id="workStationId" name="work_station_id">
-                            <input type="hidden" id="purchaseId" name="purchase_id">
+                            <input type="hidden" id="qty">
+                            <input type="hidden" id="deliQty" name="deli_qty">
+                            <input type="hidden" id="salesId" name="sales_id">
+                            <input type="hidden" id="salesDetailsId" name="sales_details_id">
                         </div>
 
-                        <div>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-12 pl-0">
                                 <!--=====//Table//=====-->
                                 <div class="table-responsive">
                                     <table id="items-table" class="table table-bordered">
                                         <thead class="thead-light">
                                             <tr>
                                                 <th width="10%">SL#</th>
-                                                <th width="22%">Part No.</th>
-                                                <th width="45%">SL No.</th>
-                                                <th width="23%" class="text-center">Action</th>
+                                                <th width="65%">Serial No.</th>
+                                                <th width="25%" class="text-center">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody id="table-body"></tbody>
                                     </table>
                                 </div>
                             </div>
-                        </div>
                         </div>
 
                     </div>
@@ -220,38 +233,58 @@
                 //---SetUp
                 $('#itemRegisterId').val(response.item_register_id);
                 $('#qty').val(response.qty);
-                $('#getPartNo').val(response.part_no);
-                $('.part_number').html(response.part_no);
-                
-                //---SetUp
-                $('#purDetailsId').val(response.id);
-                $('#purchaseId').val(response.purchase_id);
                 $('#getDeliQty').val(response.deli_qty);
                 $('#deliQty').val(response.deli_qty + 1);
+                $('#getPartNo').html(response.part_no);
+                $('#salesId').val(response.sales_id);
+                $('#salesDetailsId').val(response.id);
 
-                getSlNo(response.item_register_id);
+                var storeId= $('#workStationId').val();
+
+                getSlNo(response.item_register_id, storeId);
             },
             error: function(response) {
                 swal("Error!", "All input values are not null or empty.", "error");
             }
         });
         $("#modalGrid").modal('show');
+        //--Dropdwon Search Fix
+        $('.dropdwon_select').each(function () {
+            $(this).select2({
+                dropdownParent: $(this).parent()
+            });
+        });
         var tbody = $('#table-body');
         tbody.empty();
         addRow(0);
     });
+
+    $(document).on('change','#workStationId', function() {
+        var valItemRegisterId = parseInt($('#itemRegisterId').val());
+        var storeId= $('#workStationId').val();
+        getSlNo(valItemRegisterId, storeId);
+    });
+    
     //-----Get Serial Number
-    function getSlNo(item_register_id) {
+    function getSlNo(item_register_id, storeId) {
         var currentRow = $('#items-table tbody').find("tr:last");
         $.ajax({
             url:'{{ route('get-serial-no')}}',
             method:'GET',
-            dataType:"html",
-            data:{'item_register_id':item_register_id},
-            success:function(data){
-                console.log(data)
-                // currentRow.find('#serialNumber').html(data);
-                $('#items-table tbody').find("tr:last #serialNumber").html(data);
+            dataType:"JSON",
+            data:{'item_register_id':item_register_id, 'storeId':storeId},
+            success:function(response){
+                //--Get Serial Number
+                var data_sl = response.data;
+                var serial_number_dr = $('#items-table tbody').find("tr:last #serialNumber")
+                serial_number_dr.empty();
+                serial_number_dr.append('<option selected>--Select--</option>');
+                $.each(data_sl, function(index, option) {
+                    serial_number_dr.append('<option value="' + option.id + '">' + option.serial_no + '</option>');
+                });
+
+                var count_no = response.count;
+                $('#getItemCount').val(count_no);
             },
             error:function(){
                 alert('Fail');
@@ -327,27 +360,29 @@
             }
         });
         if (allValuesNotNull) {
-            var valItemRegisterId = parseInt($('#itemRegisterId').val());
-            getSlNo(valItemRegisterId);
-            ++count;
-            addRow(count);
             
             var qty = parseInt($('#qty').val());
-            var rcvQtyCheck = parseInt($('#getRcvQty').val());
-            var checkQty = qty - rcvQtyCheck;
+            var checkDeliQty = parseInt($('#getDeliQty').val());
+            var checkItemCount = parseInt($('#getItemCount').val());
+            var checkQty = qty - checkDeliQty;
             var rowCount = parseInt($('#items-table tbody tr').length) + 1;
-            // if(checkQty >= rowCount){
-            //     ++count;
-            //     addRow(count);
-            //     var qtyResult = rcvQty + rowCount;
-            //     $('#rcvQty').val(qtyResult);
-            // }else{
-            //     Swal.fire(
-            //         'Done',
-            //         'Your already fill up all data!',
-            //         'question'
-            //     )
-            // }
+            if(checkQty >= rowCount && checkItemCount >= rowCount){
+                ++count;
+                addRow(count);
+                //--------------------
+                var valItemRegisterId = parseInt($('#itemRegisterId').val());
+                var storeId= $('#workStationId').val();
+                getSlNo(valItemRegisterId, storeId);
+                //--------------------
+                var qtyResult = checkDeliQty + rowCount;
+                $('#deliQty').val(qtyResult);
+            }else{
+                Swal.fire(
+                    'Done',
+                    'Your already fill up all data!',
+                    'question'
+                )
+            }
         } else {
             swal("Error!", "All input values are not null or empty.", "error");
         }
@@ -355,11 +390,9 @@
 
     function addRow(i){
         var rowCount = parseInt($('#items-table tbody tr').length) + 1;
-        var partNumber = $('#getPartNo').val();
         var newRow = $('<tr>' +
-            '<td><label class="form-label">'+rowCount+'</label></td>' +
-            '<td><label class="form-label part_number">'+partNumber+'</label></td>' +
-            '<td><select id="serialNumber" name="moreFile['+i+'][serial_no]" class="form-control dropdwon_select val_serial_no" data-index="'+i+'"></select></td>' +
+            '<td><label class=col-form-label>'+rowCount+'</label></td>' +
+            '<td><select id="serialNumber" name="moreFile['+i+'][serial_no]" class="form-control dropdwon_select val_serial_no"></select></td>' +
             '<td class="text-center">' +
                 '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs add-row"><span class="fa fa-plus"></span></button>' +
                 '<button type="button" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0 remove-row"><span class="fa fa-trash"></span></button>' +
@@ -377,52 +410,51 @@
     //======Remove ROW
     $('#items-table').on('click', '.remove-row', function() {
         $(this).closest('tr').remove();
-        var deliQtyRemove= $('#deliQty').val(); 
-        $('#deliQty').val(deliQtyRemove - 1);
+        var removeDeliQty= $('#deliQty').val(); 
+        $('#deliQty').val(removeDeliQty - 1);
     });
     //======Duplicates Part Number Validation
-    $(document).on('change', '.val_serial_no', function() {
-        var $dropdowns = $('.val_serial_no');
-        var hasDuplicates = false;
+    $(document).on('change','.val_serial_no', function() {
+        var dropdownValues = $('.val_serial_no').map(function() {
+            return $(this).val();
+        }).get();
 
-        // Check for duplicates in the current changed dropdown value
-        var currentIndex = $(this).data('index');
-        var currentValue = $(this).val();
-        $dropdowns.each(function(index) {
-            if (index !== currentIndex && $(this).val() === currentValue) {
-                hasDuplicates = true;
-                return false; // Exit the loop early
-            }
-        });
-
+        var hasDuplicates = new Set(dropdownValues).size !== dropdownValues.length;
         if (hasDuplicates) {
             Swal.fire({
                 icon: 'error',
                 title: 'Duplicate Values',
                 text: 'Duplicate values are not allowed in the partNumber dropdown.',
             });
-            // Reset the dropdown
+            //--Reset Option 
             $(this).val('');
 
             // Fetch new data for the current row
             var valItemRegisterId = parseInt($('#itemRegisterId').val());
-            var $currentRow = $(this).closest('tr');
-            var $serialNumberDropdown = $currentRow.find('.dropdwon_select.val_serial_no');
-
+            var storeId= $('#workStationId').val();
+            var currentRow = $(this).closest('tr');
+            var serialNumberDropdown = currentRow.find('.dropdwon_select.val_serial_no');
+            serialNumberDropdown.empty();
             $.ajax({
                 url: '{{ route('get-serial-no')}}',
                 method: 'GET',
-                dataType: "html",
-                data: { 'item_register_id': valItemRegisterId },
-                success: function(data) {
-                    $serialNumberDropdown.html(data);
+                dataType: "JSON",
+                data:{'item_register_id':valItemRegisterId, 'storeId':storeId},
+                success: function(response) {
+                    var data_sl = response.data;
+                    serialNumberDropdown. append('<option selected>--Select--</option>');
+                    $.each(data_sl, function(index, option) {
+                        serialNumberDropdown.append('<option value="' + option.id + '">' + option.serial_no + '</option>');
+                    });
                 },
                 error: function() {
                     alert('Failed to fetch data.');
                 }
-            });
+            }); 
+            
         }
     });
+    
 
 </script>
 

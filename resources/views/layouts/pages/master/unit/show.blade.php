@@ -38,7 +38,7 @@
                                             <div class="row">
                                                 <label class="col-md-4 col-form-label">Description:</label>
                                                 <div class="col-md-6">
-                                                    <input type="text" id="description" class="form-control" name="description" placeholder="" value="{{$data->description}}" disabled>
+                                                    <textarea class="text form-control" id="description" name="description" disabled>{{$data->description}}</textarea>
                                                 </div>
                                             </div>
                                         </div>

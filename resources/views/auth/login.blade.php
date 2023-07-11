@@ -1,35 +1,69 @@
 <x-guest-layout>
-    <header>
-        <h5 style="color: #1078d0;margin-top: 15px;">Member Login</h5>
-    </header>
-    <x-jet-validation-errors class="mb-4" />
-    @if (session('status'))
-        <div class="mb-4 font-medium text-sm text-green-600">
-            {{ session('status') }}
+  
+    <div class="row no-gutters">
+        <div class="col-xl-12">
+            <div class="auth-form">
+                <x-jet-validation-errors class="mb-4" />
+                @if (session('status'))
+                    <div class="mb-4 font-medium text-sm text-green-600">
+                        {{ session('status') }}
+                    </div>
+                @endif
+                <div class="text-center mb-3">
+                    <div style="margin-left: -20px;margin-right: -20px;">
+                        <a href="{{url('/')}}"><img src="{{asset('public/images')}}/logo.png" style="width:75%" alt=""></a>
+                    </div>
+                </div><br>
+                <h4 class="text-center mb-4">Sign in your account</h4>
+                <form method="POST" action="{{ route('login') }}">
+                    @csrf
+                    <div class="form-group">
+                        <label class="mb-1"><strong>Email</strong></label>
+                        <input type="email" name="email" id="email" placeholder="Email or Phone" class="form-control" :value="old('email')" required autofocus>
+                    </div>
+                    <div class="form-group">
+                        <label class="mb-1"><strong>Password</strong></label>
+                        <div class="field space">
+                            <input type="password" name="password" id="password" class="form-control pass-key" placeholder="Password" required autocomplete="current-password">
+                            <span class="show_password">SHOW</span>
+                        </div>
+                    </div>
+                    <div class="form-row d-flex justify-content-between mt-4 mb-2">
+                        <div class="form-group">
+                        <div class="custom-control custom-checkbox ml-1">
+                                <input type="checkbox" class="custom-control-input" id="basic_checkbox_1">
+                                <label class="custom-control-label pt-1" for="basic_checkbox_1">Remember my preference</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <a href="page-forgot-password.html">Forgot Password?</a>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary btn-block">Sign Me In</button>
+                    </div>
+                </form>
+                {{-- <div class="new-account mt-3">
+                        <p>Don't have an account? <a class="text-primary" href="{{ route('register') }}">Sign up</a></p>
+                    </div> --}}
+            </div>
         </div>
-    @endif
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
-        <div class="field">
-            <span class="fa fa-user"></span>
-            <input type="email" name="email" id="email" placeholder="Email or Phone" :value="old('email')" required autofocus>
-        </div>
-        <div class="field space">
-            <span class="fa fa-lock"></span>
-            <input type="password" name="password" id="password" class="pass-key" placeholder="Password" required autocomplete="current-password">
-            <span class="show">SHOW</span>
-        </div>
-        <div class="pass" style="display: flex;justify-content: space-between;">
-            <a href="">Forgot Password?</a>
-            <input style="padding: 10px 25px;
-                        background: #1078d0;
-                        outline: none;
-                        border: none;
-                        color: #fff;
-                        font-weight: bolder;" type="submit" value="LOGIN">
-        </div>
-    </form>
-    {{-- <div class="signup">Don't have account?
-        <a href="{{ route('register') }}">Signup Now</a>
-    </div> --}}
+    </div>
+
 </x-guest-layout>
+
+<script>
+    const pass_field = document.querySelector('.pass-key');
+    const showBtn = document.querySelector('.show_password');
+    showBtn.addEventListener('click', function(){
+        if(pass_field.type === "password"){
+            pass_field.type = "text";
+            showBtn.textContent = "HIDE";
+            showBtn.style.color = "#3498db";
+        }else{
+            pass_field.type = "password";
+            showBtn.textContent = "SHOW";
+            showBtn.style.color = "#222";
+        }
+    });
+</script>

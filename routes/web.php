@@ -8,14 +8,12 @@ use App\Http\Controllers\LocationController;
 use App\Http\Controllers\MovementController;
 //--HR & Admin
 use App\Http\Controllers\Admin\BackViewController;
-use App\Http\Controllers\Admin\InfoPersonalController;
-use App\Http\Controllers\Admin\InfoRelatedController;
 use App\Http\Controllers\Admin\InfoEmployeeController;
 use App\Http\Controllers\Admin\LeaveApplicationController;
 use App\Http\Controllers\Admin\ManualAttendanceController;
-use App\Http\Controllers\Admin\attendanceApproveController;
 //--Inventory
 use App\Http\Controllers\Inventory\PurchaseController;
+use App\Http\Controllers\Inventory\StoreTransferController;
 //--Sales
 use App\Http\Controllers\Sales\SalesController;
 //--Master Data
@@ -137,7 +135,7 @@ Route::group(['middleware' => ['auth']], function(){
      */
     Route::get('inv/sales-delivery/index', [MovementController::class, 'salesDeliveryIndex'])->name('sales-delivery.index');
     Route::get('inv/sales-delivery/details/{id}', [MovementController::class, 'salesDeliveryDetails'])->name('sales-delivery-details');
-    Route::post('inv/sales-delivery/store', [MovementController::class, 'salesDeliveryStore'])->name('sales-delivery-store');
+    Route::post('inv/sales-delivery/store', [MovementController::class, 'salesDeliveryStore'])->name('sales-delivery.store');
     Route::get('inv/get-sales-delivery/details', [MovementController::class, 'getSalesDetails'])->name('get_sales_details');
 
     Route::get('/get-serial-no',[MovementController::class,'getSerialNumber'])->name('get-serial-no');
@@ -151,13 +149,27 @@ Route::group(['middleware' => ['auth']], function(){
      Route::get('purchase/edit',[PurchaseController::class,'edit'])->name('inv_purchase_edit');
      Route::delete('inv_purchase/destroy/{id}', [PurchaseController::class, 'inv_purchase_destroy'])->name('inv_purchase.destroy');
      Route::delete('inv_approve_purchase/{id}', [PurchaseController::class, 'approve_purchase'])->name('inv_approve_purchase');
-    //--Purchase Approve
+     Route::get('/get-delete-master/purchase',[PurchaseController::class,'getDeleteMaster'])->name('getDelete-master-purchase');
+     //--Purchase Approve
     Route::get('inv_purchase/approve_list', [PurchaseController::class, 'purchase_approve_list'])->name('inv_purchase_approve.create');
     Route::PATCH('inv_purchase/approve/{id}', [PurchaseController::class, 'approve_purchase'])->name('inv_purchase.approve');
-    Route::PATCH('inv_purchase/canceled/{id}', [LeaveApplicationController::class, 'decline'])->name('inv_purchase.canceled');
+    Route::PATCH('inv_purchase/canceled/{id}', [PurchaseController::class, 'decline'])->name('inv_purchase.canceled');
 
     Route::get('/get-part-id',[PurchaseController::class,'getPartNumber'])->name('get-part-id');
     Route::get('/get-part-number',[PurchaseController::class,'anotherField'])->name('get-part-number');
+    /**______________________________________________________________________________________________
+     * Inventory => Store Transfer
+     * ______________________________________________________________________________________________
+     */
+    Route::get('store/transfer/cat_id={cat_id}',[StoreTransferController::class,'index'])->name('store_transfer.index');
+    Route::post('store/transfer/store/cat_id={cat_id}', [StoreTransferController::class, 'store'])->name('store_transfer.store');
+    Route::get('store/transfer/edit',[StoreTransferController::class,'edit'])->name('store_transfer.edit');
+    Route::get('get/edit-part-id',[StoreTransferController::class,'getSalesDetails'])->name('store_transfer.edit-part-id');
+    Route::delete('store/transfer/destroy/{id}', [StoreTransferController::class, 'sales_destroy'])->name('store_transfer.destroy');
+    //--Store Transfer Approve
+    Route::get('store/transfer/approve_list', [StoreTransferController::class, 'sales_approve_list'])->name('store_transfer_approve.create');
+    Route::PATCH('store/transfer/approve/{id}', [StoreTransferController::class, 'approve_sales'])->name('store_transfer.approve');
+    Route::PATCH('store/transfer/canceled/{id}', [StoreTransferController::class, 'decline'])->name('store_transfer.canceled');
     /**______________________________________________________________________________________________
      * Sales => Sales
      * ______________________________________________________________________________________________
@@ -167,6 +179,7 @@ Route::group(['middleware' => ['auth']], function(){
      Route::get('sales/edit',[SalesController::class,'edit'])->name('sales.edit');
      Route::get('get/edit-part-id',[SalesController::class,'getSalesDetails'])->name('sales.edit-part-id');
      Route::delete('sales/destroy/{id}', [SalesController::class, 'sales_destroy'])->name('sales.destroy');
+     Route::get('/get-delete-master/sales',[SalesController::class,'getDeleteMaster'])->name('getDelete-master-sales');
      //--Sales Approve
     Route::get('sales/approve_list', [SalesController::class, 'sales_approve_list'])->name('sales_approve.create');
     Route::PATCH('sales/approve/{id}', [SalesController::class, 'approve_sales'])->name('sales.approve');

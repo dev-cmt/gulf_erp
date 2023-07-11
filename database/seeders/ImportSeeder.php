@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\ReferenceType;
 use App\Models\Admin\InfoPersonal;
 use App\Models\Master\MastDepartment;
 use App\Models\Master\MastDesignation;
@@ -256,6 +257,23 @@ class ImportSeeder extends Seeder
             'description'=>'This is time off that a female employee can take before and after childbirth. Maternity leave may be paid or unpaid, depending on the company policies.',
             'status'=>'1',
             'user_id'=>'1'
+        ]);
+        //____________________________________//
+        ReferenceType::create([
+            'name'=>'Purchase',
+            'status'=>'1',
+        ]);
+        ReferenceType::create([
+            'name'=>'Sales',
+            'status'=>'1',
+        ]);
+        ReferenceType::create([
+            'name'=>'Store Transfer',
+            'status'=>'1',
+        ]);
+        ReferenceType::create([
+            'name'=>'Sales Return',
+            'status'=>'1',
         ]);
         //____________________________________//
         MastPackage::create([
