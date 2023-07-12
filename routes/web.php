@@ -154,6 +154,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('inv_purchase/approve_list', [PurchaseController::class, 'purchase_approve_list'])->name('inv_purchase_approve.create');
     Route::PATCH('inv_purchase/approve/{id}', [PurchaseController::class, 'approve_purchase'])->name('inv_purchase.approve');
     Route::PATCH('inv_purchase/canceled/{id}', [PurchaseController::class, 'decline'])->name('inv_purchase.canceled');
+    Route::get('inv/get-purchase/approve/details', [PurchaseController::class, 'getPurchaseApproveDetails'])->name('get_purchase_approve_details');
 
     Route::get('/get-part-id',[PurchaseController::class,'getPartNumber'])->name('get-part-id');
     Route::get('/get-part-number',[PurchaseController::class,'anotherField'])->name('get-part-number');
@@ -184,6 +185,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('sales/approve_list', [SalesController::class, 'sales_approve_list'])->name('sales_approve.create');
     Route::PATCH('sales/approve/{id}', [SalesController::class, 'approve_sales'])->name('sales.approve');
     Route::PATCH('sales/canceled/{id}', [SalesController::class, 'decline'])->name('sales.canceled');
+    Route::get('inv/get-sales/approve/details', [SalesController::class, 'getSalesApproveDetails'])->name('get_sales_approve_details');
 });
 
 Route::group(['middleware' => ['auth']], function(){
@@ -204,6 +206,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::resource('mast_item_category', MastItemCategoryController::class);
     Route::resource('mast_item_group', MastItemGroupController::class);
     Route::resource('mast_item_register', MastItemRegisterController::class);
+    Route::get('get-part/name',[MastItemRegisterController::class,'getPartName'])->name('get-part-name');
     Route::get('/pdf/download', [MastItemRegisterController::class, 'generateBarcode'])->name('item_pdf.download');
     Route::get('/item_export/excel', [MastItemRegisterController::class, 'export'])->name('item_export.excel');
     /**______________________________________________________________________________________________

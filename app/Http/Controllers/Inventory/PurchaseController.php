@@ -92,7 +92,6 @@ class PurchaseController extends Controller
                 $data->save();
             }
         }
-        // $purchase = Purchase::findOrFail($storePurchase->id)->with('mastWorkStation','mastSupplier')->first();
         if(isset($pur_id)){
             $purchase = Purchase::where('id', $pur_id)->first();
         }else{
@@ -152,6 +151,28 @@ class PurchaseController extends Controller
         $data = Purchase::where('status', 0)->get();
         return view('layouts.pages.inventory.purchase.purchase_approve',compact('data'));
     }
+    public function getPurchaseApproveDetails(Request $request)
+    {
+        $data = PurchaseDetails::where('purchase_details.purchase_id', $request->id)
+        ->join('purchases', 'purchases.id', 'purchase_details.purchase_id')
+        ->join('mast_item_registers', 'mast_item_registers.id', 'purchase_details.mast_item_register_id')
+        ->join('mast_item_groups', 'mast_item_groups.id', 'mast_item_registers.mast_item_group_id')
+        ->join('mast_item_categories', 'mast_item_categories.id', 'purchases.mast_item_category_id')
+        ->select('purchase_details.*','purchases.inv_no','purchases.inv_date','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
+        ->get();
+        
+
+        $purchase = Purchase::where('purchases.id', $request->id)
+        ->join('mast_suppliers', 'mast_suppliers.id', 'purchases.mast_supplier_id')
+        ->join('mast_work_stations', 'mast_work_stations.id', 'purchases.mast_work_station_id')
+        ->select('purchases.*','mast_suppliers.supplier_name','mast_work_stations.store_name')
+        ->first();
+        return response()->json([
+            'data' => $data,
+            'purchase' => $purchase,
+        ]);
+    }
+
     public function approve_purchase($id)
     {
         $data = Purchase::findOrFail($id);
@@ -183,6 +204,7 @@ class PurchaseController extends Controller
        
         return response()->json($anotherField);
     }
+    
     public function getDeleteMaster(Request $request)
     {
         $data=Purchase::find($request->id);

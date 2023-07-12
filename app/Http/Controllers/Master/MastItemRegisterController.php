@@ -224,15 +224,9 @@ class MastItemRegisterController extends Controller
     }
 
     // select part name from dropdown against category name
-    public function loadPartName(Request $request)
+    public function getPartName(Request $request)
     {
-        $partName = MastItemGroup::where('cat_name', $request->category_id)->get();
-        return view('layouts.pages.master.item_register.load_part_name',compact('partName'));
-    }
-
-    public function loadPartName2(Request $request)
-    {
-        $partName = MastItemGroup::where('cat_name', $request->category_id)->get();
-        return view('layouts.pages.master.item_register.load_part_name2',compact('partName'));
+        $getpartName = MastItemGroup::where('mast_item_category_id',$request->part_name)->get();
+        return view('layouts.pages.master.item_register.load-part-name',compact('getpartName'));
     }
 }

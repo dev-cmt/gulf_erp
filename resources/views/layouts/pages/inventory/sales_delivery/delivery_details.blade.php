@@ -176,7 +176,6 @@
                             </div> --}}
                             
                             <input type="hidden" id="itemRegisterId" name="item_register_id">
-                            <input type="hidden" id="getItemCount">
                             <input type="hidden" id="getDeliQty">
                             <input type="hidden" id="qty">
                             <input type="hidden" id="deliQty" name="deli_qty">
@@ -283,8 +282,6 @@
                     serial_number_dr.append('<option value="' + option.id + '">' + option.serial_no + '</option>');
                 });
 
-                var count_no = response.count;
-                $('#getItemCount').val(count_no);
             },
             error:function(){
                 alert('Fail');
@@ -363,10 +360,9 @@
             
             var qty = parseInt($('#qty').val());
             var checkDeliQty = parseInt($('#getDeliQty').val());
-            var checkItemCount = parseInt($('#getItemCount').val());
             var checkQty = qty - checkDeliQty;
             var rowCount = parseInt($('#items-table tbody tr').length) + 1;
-            if(checkQty >= rowCount && checkItemCount >= rowCount){
+            if(checkQty >= rowCount){
                 ++count;
                 addRow(count);
                 //--------------------

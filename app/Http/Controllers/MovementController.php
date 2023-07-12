@@ -42,25 +42,38 @@ class MovementController extends Controller
     }
     function grnPurchaseStore(Request $request) {
         
-        $PurchaseDetails = PurchaseDetails::findOrFail($request->purchase_details_id);
-        $PurchaseDetails->rcv_qty = $request->rcv_qty;
-        $PurchaseDetails->save();
+        $purchaseDetails = PurchaseDetails::findOrFail($request->purchase_details_id);
+        $purchaseDetails->rcv_qty = $request->rcv_qty;
+        $purchaseDetails->save();
         
         if (isset($request->moreFile[0]['serial_no']) && !empty($request->moreFile[0]['serial_no'])) {
             foreach($request->moreFile as $item){
                 $data = new SlMovement();
                 $data->serial_no = $item['serial_no'];
                 $data->reference_id = $request->purchase_id;
-                $data->reference_type_id = 1; //1=> Purchase 2=> Sales 3=> Store Transfer
+                $data->reference_type_id = 1; //1=> Purchase || 2=> Sales || 3=> Store Transfer || 4=> Sales Return
                 $data->status = 1;
                 $data->mast_item_register_id = $request->item_register_id;
                 $data->mast_work_station_id = $request->work_station_id;
                 $data->user_id = Auth::user()->id;
                 $data->save();
             }
-            return response()->json('success');
         }
-        return response()->json(['errors' => $validator->errors()], 422);
+        //___________Purchase Status Update
+        $checkPurchase = PurchaseDetails::where('purchase_id', $purchaseDetails->purchase_id)->get();
+        $allTrue = true;
+        foreach ($checkPurchase as $key => $value) {
+            if ($value->qty != $value->rcv_qty) {
+                $allTrue = false;
+                break;
+            }
+        }
+        if ($allTrue){
+            $purchaseUpdate = Purchase::findOrFail($purchaseDetails->purchase_id);
+            $purchaseUpdate->status = 3; // 0 => Pendding || 1 => Success || 2 => Cancel || 3 => Complete
+            $purchaseUpdate->save();
+        }
+        return response()->json('success');
     }
     /**___________________________________________________________________
      * Sales Delivery
@@ -93,17 +106,35 @@ class MovementController extends Controller
         
         if (isset($request->moreFile[0]['serial_no']) && !empty($request->moreFile[0]['serial_no'])) {
             foreach($request->moreFile as $item){
-                $data = SlMovement::findOrFail($item['serial_no']);
+                $dataUpdate = SlMovement::findOrFail($item['serial_no']);
+                $dataUpdate->status = 0;
+                $dataUpdate->save();
+                $data = new SlMovement();
+                $data->serial_no = $dataUpdate->serial_no;
                 $data->reference_id = $request->sales_id;
-                $data->reference_type_id = 2; //1=> Purchase 2=> Sales 3=> Store Transfer
+                $data->reference_type_id = 2; //1=> Purchase 2=> Sales 3=> Store Transfer 4=> Return
                 $data->status = 0;
                 $data->mast_item_register_id = $request->item_register_id;
+                $data->mast_work_station_id = Auth::user()->id;
                 $data->user_id = Auth::user()->id;
                 $data->save();
             }
-            return response()->json('success');
         }
-        return response()->json(['errors' => $validator->errors()], 422);
+        //___________ Sales Status Update
+        $checkSales = SalesDetails::where('sales_id', $salesDetails->sales_id)->get();
+        $allTrue = true;
+        foreach ($checkSales as $key => $value) {
+            if ($value->qty != $value->deli_qty) {
+                $allTrue = false;
+                break;
+            }
+        }
+        if ($allTrue){
+            $salesUpdate = Sales::findOrFail($salesDetails->sales_id);
+            $salesUpdate->status = 3; // Pendding => 0 || Success => 1 || Cencel => 2 || Complete => 3
+            $salesUpdate->save();
+        }
+        return response()->json('success');
     }
 
     /**___________________________________________________________________
@@ -123,7 +154,6 @@ class MovementController extends Controller
     }
     public function getSalesDetails(Request $request)
     {
-        
         $data = SalesDetails::where('sales_details.status', 1)->where('sales_details.id', $request->id)
         ->join('sales', 'sales.id', 'sales_details.sales_id')
         ->join('mast_item_categories', 'mast_item_categories.id', 'sales.mast_item_category_id')
@@ -133,13 +163,11 @@ class MovementController extends Controller
         ->first();
         return response()->json($data);
     }
-    public function getSerialNumber(Request $request)
-    {
-        $count = SlMovement::where('mast_item_register_id', $request->item_register_id)->where('mast_work_station_id', $request->storeId)->where('status', 1)->count();
-        $data = SlMovement::where('mast_item_register_id', $request->item_register_id)->where('mast_work_station_id', $request->storeId)->where('status', 1)->get();
+    public function getSerialNumber(Request $request){
+        //--Use Sales Delivery Page 
+        $data = SlMovement::where('mast_item_register_id', $request->item_register_id)->where('mast_work_station_id', $request->storeId)->where('reference_type_id', 1)->where('status', 1)->get();
         return response()->json([
-            'count' => $count,
-            'data' => $data
+            'data' => $data,
         ]);
     }
 }

@@ -71,21 +71,6 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <div class="row"> 
-                                        <label for="image" class="col-md-4 col-form-label">Image</label>
-                                        <div class="col-md-8">
-                                            <input type="file" name="image" class="form-control-file @error('image') is-invalid @enderror">
-                                            @error('image')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
                                     <div class="row">
                                         <label for="" class="col-md-4 col-form-label">Part Name
                                             <span class="text-danger">*</span>
@@ -159,6 +144,22 @@
                                         <div class="col-md-8">
                                             <textarea name="description" class="text form-control @error('description') is-invalid @enderror" rows="1">{{$data->description}}</textarea> 
                                             @error('description')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <div class="row"> 
+                                        <label for="image" class="col-md-4 col-form-label">Image</label>
+                                        <div class="col-md-8">
+                                            <input type="file" name="image" class="form-control-file @error('image') is-invalid @enderror">
+                                            <img src="{{asset('public')}}/images/car-parts/{{ $data->image }}" alt="" width="100%">
+                                            @error('image')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>

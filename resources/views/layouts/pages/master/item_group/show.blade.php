@@ -26,7 +26,7 @@
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <div class="col-md-6">
-                                                <input type="text" id="cat_name" class="form-control" name="cat_name" placeholder="" value="{{ $data->itemName->cat_name ?? 'N/A'}}" disabled>  
+                                                <input type="text" id="cat_name" class="form-control" name="cat_name" placeholder="" value="{{ $data->mastItemCategory->cat_name ?? 'N/A'}}" disabled>  
                                             </div>
                                         </div>
                                     </div>

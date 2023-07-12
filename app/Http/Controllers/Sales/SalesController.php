@@ -10,6 +10,7 @@ use App\Models\Master\MastItemCategory;
 use App\Models\Master\MastItemGroup;
 use App\Models\Master\MastItemRegister;
 use App\Models\Master\MastUnit;
+use App\Models\Master\MastWorkStation;
 use App\Models\Master\MastCustomer;
 use App\Models\Master\MastCustomerType;
 use App\Models\Sales\Sales;
@@ -165,6 +166,27 @@ class SalesController extends Controller
         $data=Sales::where('status', 0)->orderBy('id', 'desc')->latest()->get();
         return view('layouts.pages.sales.sales_approve',compact('data'));
     }
+    public function getSalesApproveDetails(Request $request)
+    {
+        $data = SalesDetails::where('sales_details.sales_id', $request->id)
+        ->join('sales', 'sales.id', 'sales_details.sales_id')
+        ->join('mast_item_registers', 'mast_item_registers.id', 'sales_details.mast_item_register_id')
+        ->join('mast_item_groups', 'mast_item_groups.id', 'mast_item_registers.mast_item_group_id')
+        ->join('mast_item_categories', 'mast_item_categories.id', 'sales.mast_item_category_id')
+        ->select('sales_details.*','sales.inv_no','sales.inv_date','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
+        ->get();
+
+        $store = MastWorkStation::where('id', Auth::user()->id)->first();
+        $sales = Sales::where('sales.id', $request->id)
+        ->join('mast_customers', 'mast_customers.id', 'sales.mast_customer_id')
+        ->select('sales.*','mast_customers.name')
+        ->first();
+        return response()->json([
+            'data' => $data,
+            'sales' => $sales,
+            'store' => $store->store_name,
+        ]);
+    }
     public function approve_sales($id)
     {
         $data = Sales::findOrFail($id);
@@ -235,7 +257,7 @@ class SalesController extends Controller
         $data = MastCustomer::where('status', 1)->where('mast_customer_type_id', $request->part_id)->get();
         return view('layouts.pages.sales.load-customer',compact('data'));
     }
-    public function getDeleteMasterSales(Request $request)
+    public function getDeleteMaster(Request $request)
     {
         $data=Sales::find($request->id);
         $data->delete();

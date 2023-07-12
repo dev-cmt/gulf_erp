@@ -62,7 +62,7 @@ class MastItemGroupController extends Controller
      */
     public function show($id)
     {
-        $data = MastItemGroup::with('itemName')->find($id);
+        $data = MastItemGroup::find($id);
         return view('layouts.pages.master.item_group.show',compact('data'));
     }
 
