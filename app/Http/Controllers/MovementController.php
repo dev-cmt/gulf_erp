@@ -24,7 +24,7 @@ class MovementController extends Controller
     public function grnPurchaseIndex()
     {
         $data = Purchase::where('status', 1)->where('is_parsial', 0)->orderBy('id', 'asc')->get();
-        $dataParsial = Purchase::where('status', 1)->where('is_parsial', 1)->orderBy('id', 'asc')->get();
+        $dataParsial = Purchase::whereIn('status', [1, 3])->where('is_parsial', 1)->orderBy('id', 'asc')->get();
         return view('layouts.pages.inventory.purchase_receive.index',compact('data','dataParsial'));
     }
     public function grnPurchaseDetails($id)

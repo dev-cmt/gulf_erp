@@ -104,7 +104,9 @@
                                     <td>{{$total }}</td>
                                     <td class="text-right">
                                         <a href="{{ route('purchase-parsial-details', $row->id) }}" class="btn btn-sm btn-info p-1 px-2"><i class="fa fa-info"></i></i><span class="btn-icon-add"></span>Details</a>
+                                        @if ($row->status != 3)
                                         <a href="{{ route('grn-purchase-details', $row->id) }}" class="btn btn-primary p-1 px-2"><i class="fa fa-plus"></i></i><span class="btn-icon-add"></span>Add New</a>
+                                        @endif
                                     </td>
                                 </tr>
                                 @endforeach
