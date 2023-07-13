@@ -27,9 +27,9 @@
                                             $total += $value->qty * $value->price;
                                         }
                                     @endphp
-                                    <tr id="details_data" data-id="{{ $row->id }}" style="cursor: pointer;">
+                                    <tr>
                                         <td>{{++$key}}</td>
-                                        <td>{{$row->inv_no}}</td>
+                                        <td id="details_data" data-id="{{ $row->id }}" style="cursor: pointer" class="text-info">{{$row->inv_no}}</td>
                                         <td>{{$row->inv_date}}</td>
                                         <td>{{$row->mastCustomer->name ?? 'NULL'}}</td>
                                         <td>{{$row->mastItemCategory->cat_name ?? 'NULL'}}</td>

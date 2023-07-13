@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-// use App\Http\Controller\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -24,12 +23,13 @@ class MovementController extends Controller
 {
     public function grnPurchaseIndex()
     {
-        $data = Purchase::where('status', 1)->get();
-        return view('layouts.pages.inventory.purchase_receive.index',compact('data'));
+        $data = Purchase::where('status', 1)->where('is_parsial', 0)->orderBy('id', 'asc')->get();
+        $dataParsial = Purchase::where('status', 1)->where('is_parsial', 1)->orderBy('id', 'asc')->get();
+        return view('layouts.pages.inventory.purchase_receive.index',compact('data','dataParsial'));
     }
     public function grnPurchaseDetails($id)
     {   
-        $purchase = Purchase::where('id', $id)->first();
+        $purchase = Purchase::where('id', $id)->orderBy('id', 'asc')->first();
         $data = PurchaseDetails::where('purchase_details.status', 1)->where('purchase_id', $id)
         ->join('purchases', 'purchases.id', 'purchase_details.purchase_id')
         ->join('mast_item_registers', 'mast_item_registers.id', 'purchase_details.mast_item_register_id')
@@ -37,7 +37,7 @@ class MovementController extends Controller
         ->join('mast_item_categories', 'mast_item_categories.id', 'purchases.mast_item_category_id')
         ->join('mast_suppliers', 'mast_suppliers.id', 'purchases.mast_supplier_id')
         ->select('purchase_details.*','purchases.inv_no','purchases.inv_date','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name','mast_suppliers.supplier_name')
-        ->get();
+        ->orderBy('id', 'asc')->get();
         return view('layouts.pages.inventory.purchase_receive.grn_receive',compact('data','purchase'));
     }
     function grnPurchaseStore(Request $request) {
@@ -72,8 +72,25 @@ class MovementController extends Controller
             $purchaseUpdate = Purchase::findOrFail($purchaseDetails->purchase_id);
             $purchaseUpdate->status = 3; // 0 => Pendding || 1 => Success || 2 => Cancel || 3 => Complete
             $purchaseUpdate->save();
+        }else{
+            $purchaseUpdate = Purchase::findOrFail($purchaseDetails->purchase_id);
+            $purchaseUpdate->is_parsial = 1;
+            $purchaseUpdate->save();
         }
         return response()->json('success');
+    }
+    function parsialPurchaseDetails($id) { 
+        $purchase = Purchase::where('id', $id)->orderBy('id', 'asc')->first();
+        
+        $data = SlMovement::where('sl_movements.reference_id', $id)->where('sl_movements.reference_type_id', 1)
+        ->join('purchases', 'purchases.id', 'sl_movements.reference_id')
+        ->join('mast_item_registers', 'mast_item_registers.id', 'sl_movements.mast_item_register_id')
+        ->join('mast_item_groups', 'mast_item_groups.id', 'mast_item_registers.mast_item_group_id')
+        ->join('mast_item_categories', 'mast_item_categories.id', 'mast_item_groups.mast_item_category_id')
+        ->select('sl_movements.*','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
+        // ->select('sl_movements.*','purchases.inv_no','purchases.inv_date','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name','mast_suppliers.supplier_name')
+        ->orderBy('id', 'asc')->get();
+        return view('layouts.pages.inventory.purchase_receive.parsial-purchase',compact('purchase','data'));
     }
     /**___________________________________________________________________
      * Sales Delivery
@@ -81,8 +98,9 @@ class MovementController extends Controller
      */
     public function salesDeliveryIndex()
     {
-        $data= Sales::where('status', 1)->orderBy('id', 'asc')->get();
-        return view('layouts.pages.inventory.sales_delivery.index',compact('data'));
+        $data= Sales::where('status', 1)->where('is_parsial', 0)->orderBy('id', 'asc')->get();
+        $dataParsial = Sales::where('status', 1)->where('is_parsial', 1)->orderBy('id', 'asc')->get();
+        return view('layouts.pages.inventory.sales_delivery.index',compact('data','dataParsial'));
     }
     public function salesDeliveryDetails($id)
     {
@@ -132,6 +150,10 @@ class MovementController extends Controller
         if ($allTrue){
             $salesUpdate = Sales::findOrFail($salesDetails->sales_id);
             $salesUpdate->status = 3; // Pendding => 0 || Success => 1 || Cencel => 2 || Complete => 3
+            $salesUpdate->save();
+        }else{
+            $salesUpdate = Sales::findOrFail($salesDetails->sales_id);
+            $salesUpdate->is_parsial = 1;
             $salesUpdate->save();
         }
         return response()->json('success');

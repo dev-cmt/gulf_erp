@@ -46,13 +46,13 @@
                                         <span class="badge light badge-warning">
                                             <i class="fa fa-circle text-warning mr-1"></i>Pending
                                         </span>
-                                        @elseif($row->status == 1)
-                                        <span class="badge light badge-success">
-                                            <i class="fa fa-circle text-success mr-1"></i>Successful
-                                        </span>
                                         @elseif($row->status == 2)
                                         <span class="badge light badge-danger">
                                             <i class="fa fa-circle text-danger mr-1"></i>Canceled
+                                        </span>
+                                        @else
+                                        <span class="badge light badge-success">
+                                            <i class="fa fa-circle text-success mr-1"></i>Successful
                                         </span>
                                         @endif
                                     </td>

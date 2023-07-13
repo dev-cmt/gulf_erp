@@ -168,6 +168,37 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <div class="row">
+                                            <label class="col-md-4 col-form-label">Warranty</label>
+                                            <div class="col-md-8">
+                                                <select name="warranty" class="form-control default-select @error('warranty') is-invalid @enderror">
+                                                    <option selected="">Choose...</option>
+                                                    <option value="1">One Mounth</option>
+                                                    <option value="2">Two Mounth</option>
+                                                    <option value="3">Three Mounth</option>
+                                                    <option value="6">Six Mounth</option>
+                                                    <option value="12">1 Years</option>
+                                                    <option value="24">2 Years</option>
+                                                    <option value="36">3 Years</option>
+                                                    <option value="48">4 Years</option>
+                                                    <option value="60">5 Years</option>
+                                                    <option value="72">6 Years</option>
+                                                    <option value="84">7 Years</option>
+                                                    <option value="96">8 Years</option>
+                                                    <option value="108">9 Years</option>
+                                                    <option value="120">10 Years</option>
+                                                </select>
+                                                @error('warranty')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <div class="row">
                                             <label for="" class="col-md-4 col-form-label">Description</label>
                                             <div class="col-md-8">
                                                 <textarea name="description" class="text form-control @error('description') is-invalid @enderror" rows="1">{{old('description')}}</textarea>
@@ -200,7 +231,6 @@
 <script>
     $(document).on('change','#productName',function () {
         var productId = $(this).val();
-       alert(productId);
         $.ajax({
             url:'{{route('get-part-name')}}',
             method:'GET',

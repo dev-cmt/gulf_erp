@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('box_qty')->nullable();
             $table->decimal('price', 8, 2)->nullable();
             $table->string('image')->nullable();
+            $table->integer('warranty')->nullable();
             $table->integer('cat_id')->nullable();
             $table->string('bar_code')->nullable();
             $table->timestamps();

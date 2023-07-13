@@ -17,9 +17,10 @@ return new class extends Migration
             $table->id();
             $table->date('inv_date')->nullable();
             $table->string('inv_no')->nullable();
-            $table->tinyInteger('status')->default(false);
             $table->text('remarks')->nullable();
             $table->integer('mast_item_category_id')->nullable();
+            $table->tinyInteger('status')->default(false);
+            $table->tinyInteger('is_parsial')->default(false);
 
             $table->unsignedBigInteger('mast_work_station_id');
             $table->foreign('mast_work_station_id')->references('id')->on('mast_work_stations')->onDelete('cascade');

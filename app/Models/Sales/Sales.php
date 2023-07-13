@@ -17,6 +17,7 @@ class Sales extends Model
         'vat',
         'tax',
         'status',
+        'is_parsial',
         'remarks',
         'mast_item_category_id',
         'mast_customer_id',

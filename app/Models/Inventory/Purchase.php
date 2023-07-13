@@ -18,6 +18,7 @@ class Purchase extends Model
         'mast_item_category_id',
         'mast_work_station_id',
         'status',
+        'is_parsial',
         'remarks',
         'user_id',
     ];

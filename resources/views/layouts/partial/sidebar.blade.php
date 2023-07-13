@@ -86,7 +86,12 @@
                         </li>
                         <li><a href="#">Stock Update</a></li>
                         <li><a href="#">Stock Possition</a></li>
-                        <li><a href="#">Reports</a></li>
+                        <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Reports</a>
+                            <ul aria-expanded="false">
+                                <li><a href="{{route('report-purchase-recived')}}">Purchase Recived</a></li>
+                                <li><a href="{{route('report-sales-delivery')}}">Sales Delivery</a></li>
+                            </ul>
+                        </li>
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Data Setting</a>
                             <ul aria-expanded="false">
                                 <li><a href="{{route('mast_item_category.index')}}">Item Category</a></li>

@@ -19,8 +19,9 @@ return new class extends Migration
             $table->string('inv_no')->nullable();
             $table->integer('vat')->nullable();
             $table->integer('tax')->nullable();
-            $table->tinyInteger('status')->default(false);
             $table->text('remarks')->nullable();
+            $table->tinyInteger('status')->default(false);
+            $table->tinyInteger('is_parsial')->default(false);
 
             $table->unsignedBigInteger('mast_item_category_id');
             $table->foreign('mast_item_category_id')->references('id')->on('mast_item_categories')->onDelete('cascade');

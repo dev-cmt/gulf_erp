@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\MovementController;
+use App\Http\Controllers\ReportsController;
 //--HR & Admin
 use App\Http\Controllers\Admin\BackViewController;
 use App\Http\Controllers\Admin\InfoEmployeeController;
@@ -129,6 +130,8 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('inv/grn-purchase/details/{id}', [MovementController::class, 'grnPurchaseDetails'])->name('grn-purchase-details');
     Route::post('inv/grn/purchase/store', [MovementController::class, 'grnPurchaseStore'])->name('grn-purchase.store');
     Route::get('inv/get-purchase/details', [MovementController::class, 'getPurchaseDetails'])->name('get_purchase_details');
+
+    Route::get('inv/purchase-parsial/{id}/details/9', [MovementController::class, 'parsialPurchaseDetails'])->name('purchase-parsial-details');
     /**______________________________________________________________________________________________
      * Inventory => Sales Delivery
      * ______________________________________________________________________________________________
@@ -137,8 +140,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('inv/sales-delivery/details/{id}', [MovementController::class, 'salesDeliveryDetails'])->name('sales-delivery-details');
     Route::post('inv/sales-delivery/store', [MovementController::class, 'salesDeliveryStore'])->name('sales-delivery.store');
     Route::get('inv/get-sales-delivery/details', [MovementController::class, 'getSalesDetails'])->name('get_sales_details');
-
-    Route::get('/get-serial-no',[MovementController::class,'getSerialNumber'])->name('get-serial-no');
+    Route::get('inv/get-serial-no',[MovementController::class,'getSerialNumber'])->name('get-serial-no');
 
     /**______________________________________________________________________________________________
      * Inventory => Purchase
@@ -171,6 +173,12 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('store/transfer/approve_list', [StoreTransferController::class, 'sales_approve_list'])->name('store_transfer_approve.create');
     Route::PATCH('store/transfer/approve/{id}', [StoreTransferController::class, 'approve_sales'])->name('store_transfer.approve');
     Route::PATCH('store/transfer/canceled/{id}', [StoreTransferController::class, 'decline'])->name('store_transfer.canceled');
+    /**______________________________________________________________________________________________
+     * Inventory => Reports
+     * ______________________________________________________________________________________________
+     */
+     Route::get('report-purchase/recived',[ReportsController::class,'purchaseReceive'])->name('report-purchase-recived');
+     Route::get('report-sales/delivery',[ReportsController::class,'salesDelivery'])->name('report-sales-delivery');
     /**______________________________________________________________________________________________
      * Sales => Sales
      * ______________________________________________________________________________________________

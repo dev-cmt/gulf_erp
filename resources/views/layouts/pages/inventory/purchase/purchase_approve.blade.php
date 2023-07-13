@@ -21,15 +21,15 @@
                             </thead>
                             <tbody>
                                 @foreach ($data as $key=> $row)
-                                <tr id="details_data" data-id="{{ $row->id }}" style="cursor: pointer;" onmouseover="this.parentNode.style.backgroundColor='#f7f7f7';" onmouseout="this.parentNode.style.backgroundColor='white';">
+                                <tr>
                                     <td>{{++$key}}</td>
-                                    <td>{{$row->inv_no}}</td>
+                                    <td id="details_data" data-id="{{ $row->id }}" style="cursor: pointer" class="text-info">{{$row->inv_no}}</td>
                                     <td>{{date("j F, Y", strtotime($row->inv_date))}}</td>
                                     <td>{{$row->mastSupplier->supplier_name}}</td>
                                     <td>{{$row->mastWorkStation->store_name}}</td>
                                     <td class="d-flex justify-content-end">
                                         <form action="{{route('inv_purchase.approve', $row->id)}}" method="post">
-                                            <button class="btn btn-sm btn-info p-1 mr-1">Approve</i></button>
+                                            <button class="btn btn-sm btn-success p-1 mr-1">Approve</i></button>
                                             @csrf
                                             @method('PATCH')
                                         </form>

@@ -21,6 +21,7 @@ class MastItemRegister extends Model
         'box_qty',
         'price',
         'image',
+        'warranty',
         'cat_id',
         'bar_code',
         'mast_item_group_id',

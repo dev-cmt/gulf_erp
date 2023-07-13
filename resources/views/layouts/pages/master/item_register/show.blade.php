@@ -118,9 +118,38 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="row">
+                                            <label class="col-md-4 col-form-label">Warranty</label>
+                                            <div class="col-md-8">
+                                                <select name="warranty" class="form-control default-select @error('warranty') is-invalid @enderror" disabled>
+                                                    <option selected="">Choose...</option>
+                                                    <option value="1" {{$data->warranty == 1 ? 'selected':''}}>One Mounth</option>
+                                                    <option value="2" {{$data->warranty == 2 ? 'selected':''}}>Two Mounth</option>
+                                                    <option value="3" {{$data->warranty == 3 ? 'selected':''}}>Three Mounth</option>
+                                                    <option value="6" {{$data->warranty == 6 ? 'selected':''}}>Six Mounth</option>
+                                                    <option value="12" {{$data->warranty == 12 ? 'selected':''}}>1 Years</option>
+                                                    <option value="24" {{$data->warranty == 24 ? 'selected':''}}>2 Years</option>
+                                                    <option value="36" {{$data->warranty == 36 ? 'selected':''}}>3 Years</option>
+                                                    <option value="48" {{$data->warranty == 48 ? 'selected':''}}>4 Years</option>
+                                                    <option value="60" {{$data->warranty == 60 ? 'selected':''}}>5 Years</option>
+                                                    <option value="72" {{$data->warranty == 72 ? 'selected':''}}>6 Years</option>
+                                                    <option value="84" {{$data->warranty == 84 ? 'selected':''}}>7 Years</option>
+                                                    <option value="96" {{$data->warranty == 96 ? 'selected':''}}>8 Years</option>
+                                                    <option value="108" {{$data->warranty == 108 ? 'selected':''}}>9 Years</option>
+                                                    <option value="120" {{$data->warranty == 120 ? 'selected':''}}>10 Years</option>
+                                                </select>
+                                                @error('warranty')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="row">
                                             <label for="" class="col-md-4 col-form-label">Description</label>
                                             <div class="col-md-8">
-                                                <textarea name="description" class="text form-control @error('description') is-invalid @enderror" rows="3" disabled>{{$data->description}}</textarea> 
+                                                <textarea name="description" class="text form-control @error('description') is-invalid @enderror" disabled>{{$data->description}}</textarea> 
                                                 @error('description')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>

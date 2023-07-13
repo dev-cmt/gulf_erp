@@ -119,8 +119,8 @@
 }
 .btn-icon-add{
     border-left: 1px solid white;
-    margin: 0px 0px 0px 8px;
-    padding: 8px 8px 8px 0px;
+    margin-left: 4px;
+    padding: 8px 4px;
 }
 
 /*================// Image Profile //================*/

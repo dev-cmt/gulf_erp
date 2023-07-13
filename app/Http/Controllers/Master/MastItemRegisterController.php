@@ -59,6 +59,7 @@ class MastItemRegisterController extends Controller
             'box_code'=> 'required|max:255',
             'gulf_code'=> 'required',
             'part_no'=> 'required',
+            'warranty'=> 'required',
             'box_qty'=> 'required',
             'price' => ['required', 'numeric', 'regex:/^\d{1,6}(\.\d{1,2})?$/'],
         ]);
@@ -87,15 +88,16 @@ class MastItemRegisterController extends Controller
             $img->save($thumbnailpath);
             $data->image = $filenametostore;
         }
-        $number = mt_rand(10000000000,99999999999);
+        $number = mt_rand(10000000000, 99999999999);
         if($this->barCodeExists($number)){
-            $number = mt_rand(10000000000,99999999999);
+            $number = mt_rand(10000000000, 99999999999);
         }
         $data->box_code = $request->box_code;
         $data->gulf_code = $request->gulf_code;
         $data->part_no = $request->part_no;
         $data->description = $request->description;
         $data->box_qty = $request->box_qty;
+        $data->warranty = $request->warranty;
         $data->price = $request->price;
         $data->unit_id = $request->unit_id;
         $data->mast_item_group_id = $request->mast_item_group_id;
@@ -171,6 +173,7 @@ class MastItemRegisterController extends Controller
             'box_code'=> 'required|max:255',
             'gulf_code'=> 'required',
             'part_no'=> 'required',
+            'warranty'=> 'warranty',
             'box_qty'=> 'required',
             'price' => ['required', 'numeric', 'regex:/^\d{1,6}(\.\d{1,2})?$/'],
         ]);
@@ -204,6 +207,7 @@ class MastItemRegisterController extends Controller
         $data->description = $request->description;
         $data->box_qty = $request->box_qty;
         $data->price = $request->price;
+        $data->warranty = $request->warranty;
         $data->unit_id = $request->unit_id;
         $data->mast_item_group_id = $request->mast_item_group_id;
         $data->user_id = Auth::user()->id;
@@ -222,8 +226,7 @@ class MastItemRegisterController extends Controller
     {
         //
     }
-
-    // select part name from dropdown against category name
+    
     public function getPartName(Request $request)
     {
         $getpartName = MastItemGroup::where('mast_item_category_id',$request->part_name)->get();
