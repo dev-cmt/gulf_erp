@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('inv_no')->nullable();
             $table->integer('vat')->nullable();
             $table->integer('tax')->nullable();
+            $table->tinyInteger('is_parsial')->default(false);
             $table->tinyInteger('status')->default(false);
             $table->text('remarks')->nullable();
 

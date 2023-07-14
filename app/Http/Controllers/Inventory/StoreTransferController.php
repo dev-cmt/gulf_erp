@@ -22,11 +22,10 @@ class StoreTransferController extends Controller
     {
         $item_group = MastItemGroup::where('mast_item_category_id', $type)->orderBy('part_name', 'asc')->get();
         $store = MastWorkStation::where('status', 1)->orderBy('store_name', 'asc')->get();
-        $customer_type = MastCustomerType::where('status', 1)->get();
         $item_category = MastItemCategory::where('status', 1)->get();
         
         $data=StoreTransfer::where('mast_item_category_id', $type)->orderBy('id', 'desc')->latest()->get();
-        return view('layouts.pages.inventory.store_transfer.index',compact('type','data','item_group','store','customer_type','item_category'));
+        return view('layouts.pages.inventory.store_transfer.index',compact('type','data','item_group','store','item_category'));
     }
     public function store(Request $request, $type)
     {
@@ -117,39 +116,25 @@ class StoreTransferController extends Controller
     }
     public function edit(Request $request)
     {
-        $sales_details = SalesDetails::where('sales_id', $request->id)
-        ->join('mast_item_registers', 'mast_item_registers.id', 'sales_details.mast_item_register_id')
+        $store_transfer = StoreTransferDetails::where('store_transfer_id', $request->id)
+        ->join('mast_item_registers', 'mast_item_registers.id', 'store_transfer_details.mast_item_register_id')
         ->join('mast_item_groups', 'mast_item_groups.id', 'mast_item_registers.mast_item_group_id')
-        ->join('sales', 'sales.id', 'sales_details.sales_id')
+        ->join('store_transfers', 'store_transfers.id', 'store_transfer_details.store_transfer_id')
         ->join('mast_units', 'mast_units.id', 'mast_item_registers.unit_id')        
-        ->select('sales_details.*','mast_item_registers.id as item_rg_id','mast_item_registers.part_no','mast_item_registers.box_qty','mast_units.unit_name','mast_item_groups.part_name','mast_item_groups.id as item_groups_id')
+        ->select('store_transfer_details.*','mast_item_registers.id as item_rg_id','mast_item_registers.part_no','mast_item_registers.box_qty','mast_units.unit_name','mast_item_groups.part_name','mast_item_groups.id as item_groups_id')
         ->get();
-        $item_register = MastItemRegister::all();
-        
-        $customer_type = MastCustomerType::where('status', 1)->get();
-        $customer_type_id = Sales::where('sales.id', $request->id)
-        ->join('mast_customers', 'mast_customers.id', 'sales.mast_customer_id')
-        ->join('mast_customer_types', 'mast_customer_types.id', 'mast_customers.mast_customer_type_id')
-        ->select('mast_customer_types.id')
-        ->first();
-        $customer = MastCustomer::where('status', 1)->where('mast_customer_type_id', $customer_type_id->id)->get();
-        
-        $data=Sales::where('id', $request->id)->first();
+        $store = MastWorkStation::where('status', 1)->orderBy('store_name', 'asc')->get();
+        $data=StoreTransfer::where('id', $request->id)->first();
         return response()->json([
             'data' => $data,
-            'customer' => $customer,
-            'customer_type' => $customer_type,
-            'customer_type_id' => $customer_type_id,
-            'sales_details' => $sales_details,
-            'item_register' => $item_register,
+            'store' => $store,
+            'store_transfer' => $store_transfer,
         ]);
     }
-    public function sales_destroy($id)
+    public function storeDetailsDestroy($id)
     {
-        $data=SalesDetails::find($id);
-        // $subTotal = $data->qty*$data->price;
+        $data=StoreTransferDetails::find($id);
         $data->delete();
-        // return response()->json($subTotal);
         return response()->json('success');
     }
     public function getSalesDetails(Request $request)
@@ -158,25 +143,25 @@ class StoreTransferController extends Controller
         return response()->json($data);
     }
     /*=====================================
-     *   Approve Sales
+     *   Approve Store Transfer
      *=====================================
      */
-    function sales_approve_list () {
-        $data=Sales::where('status', 0)->orderBy('id', 'desc')->latest()->get();
-        return view('layouts.pages.sales.sales_approve',compact('data'));
+    function storeTransferApprove () {
+        $data=StoreTransfer::where('status', 0)->orderBy('id', 'desc')->latest()->get();
+        return view('layouts.pages.inventory.store_transfer.store_transfer_approve',compact('data'));
     }
     public function approve_sales($id)
     {
-        $data = Sales::findOrFail($id);
+        $data = StoreTransfer::findOrFail($id);
         $data->status = 1;
         $data->save();
 
-        $notification=array('messege'=>'Leave approve successfully!','alert-type'=>'success');
+        $notification=array('messege'=>'Approve successfully!','alert-type'=>'success');
         return redirect()->back()->with($notification);
     }
 
     public function decline($id){
-        $data = Sales::findOrFail($id);
+        $data = StoreTransfer::findOrFail($id);
         $data->status = 2;
         $data->save();
 
@@ -184,56 +169,14 @@ class StoreTransferController extends Controller
         return redirect()->back()->with($notification);
     }
     /*=====================================
-     *   Customer
+     *   Ajax Call Data Change
      *=====================================
      */
-    public function indexCustomer($type)
+    public function getDeleteMaster(Request $request)
     {
-        $distributorList = MastCustomer::where('mast_customer_type_id', $type)->get();
-        return view('layouts.pages.master.customer.index',compact('distributorList','type'));
-    }
-
-    public function createCustomer($type)
-    {
-        return view('layouts.pages.master.customer.create',compact('type'));
-    }
-
-    public function storeCustomer(Request $request)
-    {
-        $validated=$request -> validate([
-            'name' => 'required',
-            'address' => 'required',
-            'email' => 'required',
-            'phone' => 'required',
-        ]);
-
-        $data = new MastCustomer();
-        $data->name = $request->name;
-        $data->address = $request->address;
-        $data->email = $request->email;
-        $data->phone = $request->phone;
-        $data->cont_designation = $request->cont_designation;
-        $data->cont_person = $request->cont_person;
-        $data->cont_phone = $request->cont_phone;
-        $data->cont_email = $request->cont_email;
-        $data->web_address = $request->web_address;
-        $data->credit_limit = $request->credit_limit;
-        $data->remarks = $request->remarks;
-        $data->mast_customer_type_id = $request->mast_customer_type_id;
-        $data->status = 1;
-        $data->user_id = Auth::user()->id;
-        $data->save();
-
-        $notification = array('messege' => 'Distributor create save successfully.', 'alert-type' => 'success');
-        return redirect()->route("customer.index", ['cat_id' => $request->mast_customer_type_id])->with($notification);
-    }
-
-
-    //-----------------------------------------
-    public function getCustomerData(Request $request)
-    {
-        $data = MastCustomer::where('status', 1)->where('mast_customer_type_id', $request->part_id)->get();
-        return view('layouts.pages.sales.load-customer',compact('data'));
+        $data=StoreTransfer::find($request->id);
+        $data->delete();
+        return response()->json('success');
     }
 }
 

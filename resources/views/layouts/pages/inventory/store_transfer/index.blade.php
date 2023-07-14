@@ -20,7 +20,7 @@
                                 <th></th>
                                 <th>Invoice No</th>
                                 <th>Invoice Date</th>
-                                <th>Store Name</th>
+                                <th>Customer Name</th>
                                 <th>Invoice Type</th>
                                 <th>Total</th>
                                 <th>Status</th>
@@ -113,7 +113,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group row">
-                                    <label class="col-md-5 col-form-label">Vat</label>
+                                    <label class="col-md-5 col-form-label">VAT</label>
                                     <div class="col-md-7">
                                         <input type="number" name="vat" id="vat" class="form-control" value="{{ old('vat') ? old('vat'): ''}}" placeholder="0.00">
                                     </div>
@@ -136,7 +136,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group row">
-                                    <label class="col-md-5 col-form-label">Tex</label>
+                                    <label class="col-md-5 col-form-label">TAX</label>
                                     <div class="col-md-7">
                                         <input type="number" name="tax" id="tax" class="form-control" value="{{ old('tax') ? old('tax'): '' }}" placeholder="0.00">
                                     </div>
@@ -156,7 +156,7 @@
                             <div class="col-md-12">
                                 <!--=====//Table//=====-->
                                 <div class="table-responsive">
-                                    <table id="items-table" class="table table-bordered">
+                                    <table id="items-table" class="table table-bordered mb-0">
                                         <thead class="thead-primary">
                                             <tr>
                                                 <th width="20%">Part Name</th>
@@ -169,14 +169,17 @@
                                                 <th width="10%" class="text-center table_action">Action</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="table-body">
-                                            
-                                        </tbody>
+                                        <tbody id="table-body"></tbody>
                                     </table>
                                 </div>
                             </div>
-                            <div class="col-md-12">
-                                <div class="float-right">
+                            <div class="col-md-12" id="edit_add_show" style="display: none">
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn btn-sm btn-success rounded-0" onClick="addRow(0)"><span class="fa fa-plus mr-1"></span> ADD ITEM</button>
+                                </div>
+                            </div>
+                            <div class="col-md-12 pt-4">
+                                <div class="d-flex justify-content-end">
                                     <h6>Total <span style="border: 1px solid #2222;padding: 10px 40px;margin-left:10px" id="total">0.00</span></h6>
                                 </div>
                             </div>
@@ -189,15 +192,16 @@
                     </div>
                 </form>
                 
-                <p id="errorMessage" style="display: none; color: red;">Duplicate Item Selected</p>
             </div>
         </div>
     </div>
 
 
 </x-app-layout>
+
 <script type="text/javascript">
     /*=======//Show Modal//=========*/
+    var getWorkStation = $('#mast_work_station_id').html();
     $(document).on('click','#open_modal',function(){
         //----Open New Add Row
         var tableBody = $('#table-body');
@@ -209,12 +213,21 @@
                 dropdownParent: $(this).parent()
             });
         });
-        $(".modal-title").html('@if($type == 1) Add AC Sales @elseif($type == 2) Add AC Spare Parts Sales @else Add Car Spare Parts Sales @endif');
+        
+        $("#storeTransferId").val('');
+        $('#inv_no').prop("disabled", false);
+        $("#inv_date").prop("disabled", false);
+        $("#vat").prop("disabled", false);
+        $("#tax").prop("disabled", false);
+        $('#remarks').prop("disabled", false);
+        $('#mast_work_station_id').prop("disabled", false);
+        $('#mast_work_station_id').html(getWorkStation);
+        $('#total').text("0.00");
+
+        $(".modal-title").html('@if($type == 1) Add AC Requsition @elseif($type == 2) Add AC Spare Parts Requsition @else Add Car Spare Parts Requsition @endif');
         $(".bd-example-modal-lg").modal('show');
         $(".table_action").show();
         $(".submit_btn").show();
-        $("#id").val("");
-        $('#total').text("0.00");
     });
     /*=======//Save Data //=========*/
     $(document).ready(function(){
@@ -261,8 +274,7 @@
 
                         var add_mastRow = response.transferStore;
 
-                        alert('hi-1');
-                        var row = '<tr id="row_sales_table_'+ add_mastRow.id + '" role="row" class="odd">';
+                        var row = '<tr id="row_master_table_'+ add_mastRow.id + '" role="row" class="odd">';
                         row += '<td></td>';
                         row += '<td>' + add_mastRow.inv_no + '</td>';
                         row += '<td>' + add_mastRow.inv_date + '</td>';
@@ -279,8 +291,8 @@
                         row += '</td>';
                         row += '<td style="width:210px"><button type="button" class="btn btn-sm btn-success p-1 px-2 mr-1" id="edit_data" data-id="'+add_mastRow.id+'"><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button><button type="button" class="btn btn-sm btn-info p-1 px-2" id="view_data" data-id="'+add_mastRow.id+'"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</button></td>';
 
-                        if($("#sal_id").val()){
-                            $("#row_sales_table_" + add_mastRow.id).replaceWith(row);
+                        if($("#storeTransferId").val()){
+                            $("#row_master_table_" + add_mastRow.id).replaceWith(row);
                         }else{
                             $("#sales_tbody").prepend(row);
                         }
@@ -309,7 +321,7 @@
     $(document).on('click', '#edit_data', function(){
         var id = $(this).data('id');
         $.ajax({
-            url:'{{ route('sales.edit')}}',
+            url:'{{ route('store_transfer.edit')}}',
             method:'GET',
             dataType:"JSON",
             data:{id:id},
@@ -325,7 +337,7 @@
     $(document).on('click', '#view_data', function(){
         var id = $(this).data('id');
         $.ajax({
-            url:'{{ route('sales.edit')}}',
+            url:'{{ route('store_transfer.edit')}}',
             method:'GET',
             dataType:"JSON",
             data:{id:id},
@@ -352,8 +364,8 @@
         $("#tax").val(data.inv_date);
         $('#remarks').html(data.remarks);
 
-        if(check == 1){
-            $(".modal-title").html('@if($type == 1) AC Sales Edit @elseif($type == 2) AC Spare Parts Sales Edit @else Car Spare Parts Sales Edit @endif');
+        if(check == 1){ //edit => 1
+            $(".modal-title").html('@if($type == 1) AC Requsition Edit @elseif($type == 2) AC Spare Parts Requsition Edit @else Car Spare Parts Requsition Edit @endif');
 
             $("#storeTransferId").prop("disabled", false);
             $('#inv_no').prop("disabled", false);
@@ -361,14 +373,13 @@
             $("#vat").prop("disabled", false);
             $("#tax").prop("disabled", false);
             $('#remarks').prop("disabled", false);
-            $('#mast_customer_type').prop("disabled", false);
-            $('#mast_customer_id').prop("disabled", false);
+            $('#mast_work_station_id').prop("disabled", false);
 
             
             $(".table_action").show();
             $('.submit_btn').show();
-        }else{
-            $(".modal-title").html('@if($type == 1) AC Sales View @elseif($type == 2) AC Spare Parts Sales View @else Car Spare Parts Sales View @endif');
+        }else{ //View => 2
+            $(".modal-title").html('@if($type == 1) AC Requsition View @elseif($type == 2) AC Spare Parts Requsition View @else Car Spare Parts Requsition View @endif');
 
             $("#storeTransferId").prop("disabled", true);
             $('#inv_no').prop("disabled", true);
@@ -376,43 +387,34 @@
             $("#vat").prop("disabled", true);
             $("#tax").prop("disabled", true);
             $('#remarks').prop("disabled", true);
-            $('#mast_customer_type').prop("disabled", true);
-            $('#mast_customer_id').prop("disabled", true);
+            $('#mast_work_station_id').prop("disabled", true);
 
             $('.table_action').hide();
             $('.submit_btn').hide();
         }
 
-        //--Get Customer Type Data
-        var customer_type = response.customer_type;
-        var customer_type_dr = $('#mast_customer_type');
-        customer_type_dr.empty();
-        customer_type_dr.append('<option disabled>--Select--</option>');
-        $.each(customer_type, function(index, option) {
-            var selected = (option.id == response.customer_type_id.id) ? 'selected' : '';
-            customer_type_dr.append('<option value="' + option.id + '" ' + selected + '>' + option.name + '</option>');
+        //--Get Store Data
+        var get_store = response.store;
+        var work_stationr_dr = $('#mast_work_station_id');
+        work_stationr_dr.empty();
+        work_stationr_dr.append('<option disabled>--Select--</option>');
+        $.each(get_store, function(index, option) {
+            var selected = (option.id == data.mast_work_station_id) ? 'selected' : '';
+            work_stationr_dr.append('<option value="' + option.id + '" ' + selected + '>' + option.store_name + '</option>');
         });
 
-        //--Get Supplier Data
-        var customer = response.customer;
-        var customer_dr = $('#mast_customer_id');
-        customer_dr.empty();
-        customer_dr.append('<option>Select an Supplier</option>');
-        $.each(customer, function(index, option) {
-            var selected = (option.id == data.mast_customer_id) ? 'selected' : '';
-            customer_dr.append('<option value="' + option.id + '" ' + selected + '>' + option.name + '</option>');
-        });
+        
         //--Tabel Sales Details
         var tableBody = $('#table-body');
         tableBody.empty();
-        var salesDetails = response.sales_details;
+        var store_transferDetails = response.store_transfer;
         var total = 0;
         var i = 0;
         if(check == 1){ //Edit - 1
-            $.each(salesDetails, function(index, item) {
+            $.each(store_transferDetails, function(index, item) {
                 var subtotal = item.qty * item.price;
                 var newRow = $('<tr id="row_todo_'+ item.id + '">' +
-                    '<input type="hidden" name="editFile['+i+'][id]" id="salesDetailsId" value="' + item.id + '">' +
+                    '<input type="hidden" name="editFile['+i+'][id]" value="' + item.id + '">' +
                     '<td>'+
                         '<select id="item_category" class="form-control dropdwon_select val_item_category">' +
                         '<option selected disabled>--Select--</option>' +
@@ -427,7 +429,7 @@
                     '<td><input type="number" name="editFile['+i+'][qty]" id="" class="form-control quantity val_quantity" placeholder="0.00" value="'+ item.qty +'"></td>' +
                     '<td><input type="number" name="editFile['+i+'][price]" id="price" class="form-control price val_price" placeholder="0.00" value="'+ item.price +'"></td>' +
                     '<td class="subtotal">'+ subtotal +'</td>' +
-                    '<td class="text-center">' +
+                    '<td class="text-center countTdData">' +
                         '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs edit_add_hide" onClick="addRow(0)"><span class="fa fa-plus"></span></button>' +
                         '<button type="button" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0" id="delete_data" data-id="' + item.id +'"><span class="fa fa-trash"></span></button>' +
                     '</td>'+
@@ -442,7 +444,7 @@
                 var currentRow = $(newRow);
                 var partNumberSelect = currentRow.find('.val_part_number');
                 $.ajax({
-                    url: '{{ route('sales.edit-part-id')}}',
+                    url: '{{ route('edit-part-id')}}',
                     method: 'GET',
                     dataType: 'JSON',
                     data: { 'part_id': item.item_groups_id },
@@ -463,9 +465,17 @@
                 total += subtotal;
             });
             $('#total').text(total.toFixed(2));
+
+            var rowCount = parseInt($('#items-table tbody tr').length);
+            var countTrData = parseInt($('#items-table tbody tr .countTdData').length);
+            if(rowCount < 0 || countTrData < 1 ){
+                $('#edit_add_show').show();
+            }else{
+                $('#edit_add_show').hide();
+            }
         }
         if(check == 2){ //View - 2
-            $.each(salesDetails, function(index, item) {
+            $.each(store_transferDetails, function(index, item) {
                 var subtotal = item.qty * item.price;
                 var row = '<tr id="row_todo_'+ item.id + '">';
                 row += '<td>' + item.part_name + '</td>';
@@ -495,26 +505,68 @@
     });
     $("body").on('click','#delete_data',function(){
         var id = $(this).data('id');
-        $.ajax({
-            url: "{{ url('sales/destroy')}}" + '/' + id,
-            method: 'DELETE',
-            type: 'DELETE',
-            success: function(response) {
-                toastr.success("Record deleted successfully!");
-                $("#row_todo_" + id).remove();
-                $('#table-body').closest('tr').remove();
-                updateSubtotal(0);
-            },
-            error: function(response) {
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'An error occurred.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this data!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                // Place your delete code here
+                $.ajax({
+                    url: "{{ url('store/transfer/destroy')}}" + '/' + id,
+                    method: 'DELETE',
+                    type: 'DELETE',
+                    success: function(response) {
+                        toastr.success("Record deleted successfully!");
+                        $("#row_todo_" + id).remove();
+                        $('#table-body').closest('tr').remove();
+                        updateSubtotal(0);
+
+                        var countTrData = parseInt($('#items-table tbody tr .countTdData').length);
+                        if(countTrData < 1 ){
+                            $(".bd-example-modal-lg").modal('hide');
+                            deleteMasterData();
+                        }
+                    },
+                    error: function(response) {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'An error occurred.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                });
+            } else {
+                // User clicked "No" button, do nothing
+                swal("Your data is safe!", {
+                    icon: "success",
                 });
             }
         });
+        
     });
+    function deleteMasterData(){
+        var id = $('#storeTransferId').val();
+        $.ajax({
+            url:'{{ route('getDelete-master-storeTransfer')}}',
+            method:'GET',
+            dataType:"JSON",
+            data:{'id':id},
+            success:function(response){
+                swal("Your data save successfully", "Well done, you pressed a button", "success")
+                    .then(function() {
+                        location.reload();
+                    });
+            },
+            error:function(){
+                alert('Fail');
+            }
+        });
+    }
 </script>
 
 <script type="text/javascript">
@@ -573,6 +625,14 @@
         '</tr>');
 
         $('.edit_add_hide').hide();
+        var rowCount = parseInt($('#items-table tbody tr').length);
+        var countTrData = parseInt($('#items-table tbody tr .countTdData').length);
+        if(rowCount < 0){
+            $('#edit_add_show').show();
+        }else{
+            $('#edit_add_show').hide();
+        }
+
         $('#items-table tbody').append(newRow);
         //--Dropdwon Search Fix
         newRow.find('.dropdwon_select').each(function () {
@@ -586,6 +646,14 @@
     $('#items-table').on('click', '.remove-row', function() {
         $(this).closest('tr').remove();
         updateSubtotal(0);
+        
+        var rowCount = parseInt($('#items-table tbody tr td .add-row').length);
+        var countTrData = parseInt($('#items-table tbody tr .countTdData').length);
+        if(rowCount < 1 || countTrData < 1 ){
+            $('#edit_add_show').show();
+        }else{
+            $('#edit_add_show').hide();
+        }
     });
     //======Total Count
     $('#items-table').on('input', '.quantity, .price', function() {

@@ -17,6 +17,7 @@ use App\Http\Controllers\Inventory\PurchaseController;
 use App\Http\Controllers\Inventory\StoreTransferController;
 //--Sales
 use App\Http\Controllers\Sales\SalesController;
+use App\Http\Controllers\Sales\SalesReturnController;
 //--Master Data
 use App\Http\Controllers\Master\MastDepartmentController;
 use App\Http\Controllers\Master\MastDesignationController;
@@ -130,8 +131,9 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('inv/grn-purchase/details/{id}', [MovementController::class, 'grnPurchaseDetails'])->name('grn-purchase-details');
     Route::post('inv/grn/purchase/store', [MovementController::class, 'grnPurchaseStore'])->name('grn-purchase.store');
     Route::get('inv/get-purchase/details', [MovementController::class, 'getPurchaseDetails'])->name('get_purchase_details');
-
-    Route::get('inv/purchase-parsial/{id}/details/9', [MovementController::class, 'parsialPurchaseDetails'])->name('purchase-parsial-details');
+    
+    Route::get('inv/purchase-parsial/{id}/details', [MovementController::class, 'parsialPurchaseDetails'])->name('purchase-details-parsial');
+    Route::get('report/purchase-receive/{id}/pdf/download', [MovementController::class, 'generatePurchaseReceive'])->name('report-purchase-receive-parsial.download');
     /**______________________________________________________________________________________________
      * Inventory => Sales Delivery
      * ______________________________________________________________________________________________
@@ -140,8 +142,21 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('inv/sales-delivery/details/{id}', [MovementController::class, 'salesDeliveryDetails'])->name('sales-delivery-details');
     Route::post('inv/sales-delivery/store', [MovementController::class, 'salesDeliveryStore'])->name('sales-delivery.store');
     Route::get('inv/get-sales-delivery/details', [MovementController::class, 'getSalesDetails'])->name('get_sales_details');
-    Route::get('inv/get-serial-no',[MovementController::class,'getSerialNumber'])->name('get-serial-no');
-
+    
+    Route::get('inv/sales-delivery-parsial/{id}/details', [MovementController::class, 'parsialSalesDeliveryDetails'])->name('sales-delivery-details-parsial');
+    Route::get('inv/get-serial-no', [MovementController::class,'getSerialNumber'])->name('get-serial-no');
+    Route::get('report/sales-delivery/{id}/pdf/download', [MovementController::class, 'generateSalesDeliver'])->name('report-sales-delivery-parsial.download');
+    /**______________________________________________________________________________________________
+     * Inventory => Requstion Delivery
+     * ______________________________________________________________________________________________
+     */
+    Route::get('inv/requstion-delivery/index', [MovementController::class, 'requstionDeliveryIndex'])->name('requstion-delivery.index');
+    Route::get('inv/requstion-delivery/details/{id}', [MovementController::class, 'requstionDeliveryDetails'])->name('requstion-delivery-details');
+    Route::post('inv/requstion-delivery/store', [MovementController::class, 'requstionDeliveryStore'])->name('requstion-delivery.store');
+    Route::get('inv/get-requstion-delivery/details', [MovementController::class, 'getStoreTransferDetails'])->name('get_store_transfer_details');
+    
+    Route::get('inv/requstion-delivery-parsial/{id}/details', [MovementController::class, 'parsialRequstionDeliveryDetails'])->name('requstion-delivery-details-parsial');
+    Route::get('report/requstion-delivery/{id}/pdf/download', [MovementController::class, 'generateRequstionDeliver'])->name('report-requstion-delivery.download');
     /**______________________________________________________________________________________________
      * Inventory => Purchase
      * ______________________________________________________________________________________________
@@ -159,7 +174,8 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('inv/get-purchase/approve/details', [PurchaseController::class, 'getPurchaseApproveDetails'])->name('get_purchase_approve_details');
 
     Route::get('/get-part-id',[PurchaseController::class,'getPartNumber'])->name('get-part-id');
-    Route::get('/get-part-number',[PurchaseController::class,'anotherField'])->name('get-part-number');
+    Route::get('/get-part-number',[PurchaseController::class,'getPartNo'])->name('get-part-number');
+    Route::get('get/edit-part-id',[PurchaseController::class,'getEditPartNo'])->name('edit-part-id');
     /**______________________________________________________________________________________________
      * Inventory => Store Transfer
      * ______________________________________________________________________________________________
@@ -167,10 +183,10 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('store/transfer/cat_id={cat_id}',[StoreTransferController::class,'index'])->name('store_transfer.index');
     Route::post('store/transfer/store/cat_id={cat_id}', [StoreTransferController::class, 'store'])->name('store_transfer.store');
     Route::get('store/transfer/edit',[StoreTransferController::class,'edit'])->name('store_transfer.edit');
-    Route::get('get/edit-part-id',[StoreTransferController::class,'getSalesDetails'])->name('store_transfer.edit-part-id');
-    Route::delete('store/transfer/destroy/{id}', [StoreTransferController::class, 'sales_destroy'])->name('store_transfer.destroy');
+    Route::delete('store/transfer/destroy/{id}', [StoreTransferController::class, 'storeDetailsDestroy'])->name('store_transfer.destroy');
+    Route::get('/get-delete-master/storeTransfer',[StoreTransferController::class,'getDeleteMaster'])->name('getDelete-master-storeTransfer');
     //--Store Transfer Approve
-    Route::get('store/transfer/approve_list', [StoreTransferController::class, 'sales_approve_list'])->name('store_transfer_approve.create');
+    Route::get('store/transfer/approve_list', [StoreTransferController::class, 'storeTransferApprove'])->name('store_transfer_approve.create');
     Route::PATCH('store/transfer/approve/{id}', [StoreTransferController::class, 'approve_sales'])->name('store_transfer.approve');
     Route::PATCH('store/transfer/canceled/{id}', [StoreTransferController::class, 'decline'])->name('store_transfer.canceled');
     /**______________________________________________________________________________________________
@@ -186,14 +202,19 @@ Route::group(['middleware' => ['auth']], function(){
      Route::get('sales/cat_id={cat_id}',[SalesController::class,'index'])->name('sales.index');
      Route::post('sales/store/cat_id={cat_id}', [SalesController::class, 'store'])->name('sales.store');
      Route::get('sales/edit',[SalesController::class,'edit'])->name('sales.edit');
-     Route::get('get/edit-part-id',[SalesController::class,'getSalesDetails'])->name('sales.edit-part-id');
      Route::delete('sales/destroy/{id}', [SalesController::class, 'sales_destroy'])->name('sales.destroy');
      Route::get('/get-delete-master/sales',[SalesController::class,'getDeleteMaster'])->name('getDelete-master-sales');
      //--Sales Approve
     Route::get('sales/approve_list', [SalesController::class, 'sales_approve_list'])->name('sales_approve.create');
     Route::PATCH('sales/approve/{id}', [SalesController::class, 'approve_sales'])->name('sales.approve');
     Route::PATCH('sales/canceled/{id}', [SalesController::class, 'decline'])->name('sales.canceled');
-    Route::get('inv/get-sales/approve/details', [SalesController::class, 'getSalesApproveDetails'])->name('get_sales_approve_details');
+    Route::get('sales/get-sales/approve/details', [SalesController::class, 'getSalesApproveDetails'])->name('get_sales_approve_details');
+    /**______________________________________________________________________________________________
+     * Sales => Sales Return
+     * ______________________________________________________________________________________________
+     */
+     Route::get('sales/sales-return/index',[SalesReturnController::class,'salesReturnIndex'])->name('sales-return.index');
+     Route::get('sales/get-sales-delivery/details',[SalesReturnController::class,'getSalesDeliveryDetails'])->name('get_sales_delivery_details');     
 });
 
 Route::group(['middleware' => ['auth']], function(){
@@ -226,19 +247,22 @@ Route::group(['middleware' => ['auth']], function(){
     Route::post('customer/store',[SalesController::class,'storeCustomer'])->name('customer.store');
     Route::get('get-customer/data',[SalesController::class,'getCustomerData'])->name('get-customer-data');
 });
+/**______________________________________________________________________________________________
+ * Dwonload File => PDF, EXCEL ETC
+ * ______________________________________________________________________________________________
+ */
 
+/**______________________________________________________________________________________________
+ * Dwonload File => PDF, EXCEL ETC
+ * ______________________________________________________________________________________________
+ */
 
 
 //__________________________ TEST AJAX MODEL_____________________________//
 use App\Http\Controllers\TodoController;
-
 Route::get('/todos', [TodoController::class, 'index']);
 Route::get('todos/{todo}/edit', [TodoController::class, 'edit']);
 Route::post('todos/store', [TodoController::class, 'store']);
 Route::delete('todos/destroy/{todo}', [TodoController::class, 'destroy']);
 
-Route::get('get-procedure', function () {
-    $id = 1;
-    $post = DB::select("CALL get_users_by_id(".$id.")");
-    dd($post);
-});
+Route::get('get-procedure', function () {$id = 1; $post = DB::select("CALL get_users_by_id(".$id.")");dd($post);});

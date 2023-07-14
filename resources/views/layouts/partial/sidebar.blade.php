@@ -75,13 +75,18 @@
                                 <li><a href="{{ route('inv_purchase_approve.create')}}">Approve Purchase </a></li>
                             </ul>
                         </li>
-                        <li><a href="{{route('sales-delivery.index')}}">Sales Delivery</a></li>
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Store Transfer</a>
                             <ul aria-expanded="false">
                                 <li><a href="{{ route('store_transfer.index',['cat_id' => 1]) }}">AC Requisition</a></li>
                                 <li><a href="{{ route('store_transfer.index',['cat_id' => 2]) }}">AC Spare Parts</a></li>
                                 <li><a href="{{ route('store_transfer.index',['cat_id' => 3]) }}">Car Spare Parts</a></li>
                                 <li><a href="{{ route('store_transfer_approve.create')}}">Requisition Approve </a></li>
+                            </ul>
+                        </li>
+                        <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Delivery</a>
+                            <ul aria-expanded="false">
+                                <li><a href="{{route('sales-delivery.index')}}">Sales Delivery</a></li>
+                                <li><a href="{{ route('requstion-delivery.index')}}">Requisition Delivery</a></li>
                             </ul>
                         </li>
                         <li><a href="#">Stock Update</a></li>
@@ -115,7 +120,7 @@
                                 <li><a href="{{ route('sales_approve.create')}}">Approve Sales </a></li>
                             </ul>
                         </li>
-                        <li><a href="#">Sales Return</a></li>
+                        <li><a href="{{route('sales-return.index')}}">Sales Return</a></li>
                         <li><a href="#">Sales Receive</a></li>
                         <li><a href="#">Reports</a></li>
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Data Setting</a>

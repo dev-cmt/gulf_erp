@@ -4,7 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use Intervention\Image\Facades\Image;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\BarcodeExport;
+use App\Exports\ItemExport;
+use PDF;
+use Milon\Barcode\DNS1D;
+use Milon\Barcode\DNS2D;
 use App\Models\Master\MastItemCategory;
 use App\Models\Master\MastItemGroup;
 use App\Models\Master\MastWorkStation;
@@ -13,6 +22,8 @@ use App\Models\Master\MastUnit;
 use App\Models\Master\MastSupplier;
 use App\Models\Inventory\Purchase;
 use App\Models\Inventory\PurchaseDetails;
+use App\Models\Inventory\StoreTransfer;
+use App\Models\Inventory\StoreTransferDetails;
 use App\Models\Sales\Sales;
 use App\Models\Sales\SalesDetails;
 use App\Models\SlMovement;
@@ -88,9 +99,8 @@ class MovementController extends Controller
         ->join('mast_item_groups', 'mast_item_groups.id', 'mast_item_registers.mast_item_group_id')
         ->join('mast_item_categories', 'mast_item_categories.id', 'mast_item_groups.mast_item_category_id')
         ->select('sl_movements.*','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
-        // ->select('sl_movements.*','purchases.inv_no','purchases.inv_date','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name','mast_suppliers.supplier_name')
         ->orderBy('id', 'asc')->get();
-        return view('layouts.pages.inventory.purchase_receive.parsial-purchase',compact('purchase','data'));
+        return view('layouts.pages.inventory.purchase_receive.parsial-purchase-receive',compact('purchase','data'));
     }
     /**___________________________________________________________________
      * Sales Delivery
@@ -99,7 +109,7 @@ class MovementController extends Controller
     public function salesDeliveryIndex()
     {
         $data= Sales::where('status', 1)->where('is_parsial', 0)->orderBy('id', 'asc')->get();
-        $dataParsial = Sales::where('status', 1)->where('is_parsial', 1)->orderBy('id', 'asc')->get();
+        $dataParsial = Sales::whereIn('status', [1, 3])->where('is_parsial', 1)->orderBy('id', 'asc')->get();
         return view('layouts.pages.inventory.sales_delivery.index',compact('data','dataParsial'));
     }
     public function salesDeliveryDetails($id)
@@ -113,8 +123,7 @@ class MovementController extends Controller
         ->select('sales_details.*','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
         ->get();
         
-        $storeName= MastWorkStation::where('status', 1)->orderBy('id', 'asc')->get();
-        return view('layouts.pages.inventory.sales_delivery.delivery_details', compact('data','sales','storeName'));
+        return view('layouts.pages.inventory.sales_delivery.delivery_details', compact('data','sales'));
     }
     function salesDeliveryStore(Request $request) {
         
@@ -158,6 +167,96 @@ class MovementController extends Controller
         }
         return response()->json('success');
     }
+    function parsialSalesDeliveryDetails($id) { 
+        $sales = Sales::where('id', $id)->orderBy('id', 'asc')->first();
+        
+        $data = SlMovement::where('sl_movements.reference_id', $id)->where('sl_movements.reference_type_id', 2)
+        ->join('sales', 'sales.id', 'sl_movements.reference_id')
+        ->join('mast_item_registers', 'mast_item_registers.id', 'sl_movements.mast_item_register_id')
+        ->join('mast_item_groups', 'mast_item_groups.id', 'mast_item_registers.mast_item_group_id')
+        ->join('mast_item_categories', 'mast_item_categories.id', 'mast_item_groups.mast_item_category_id')
+        ->select('sl_movements.*','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
+        ->orderBy('id', 'asc')->get();
+
+        return view('layouts.pages.inventory.sales_delivery.parsial-delivery-details',compact('sales','data'));
+    }
+    /**___________________________________________________________________
+     * Requstion Delivery
+     * ___________________________________________________________________
+     */
+    public function requstionDeliveryIndex()
+    {
+        $data= StoreTransfer::where('status', 1)->where('is_parsial', 0)->orderBy('id', 'asc')->get();
+        $dataParsial = StoreTransfer::whereIn('status', [1, 3])->where('is_parsial', 1)->orderBy('id', 'asc')->get();
+        return view('layouts.pages.inventory.requstion_delivery.index',compact('data','dataParsial'));
+    }
+    public function requstionDeliveryDetails($id)
+    {
+        $sales = StoreTransfer::where('id', $id)->first();
+        $data = StoreTransferDetails::where('store_transfer_details.status', 1)->where('store_transfer_id', $id)
+        ->join('store_transfers', 'store_transfers.id', 'store_transfer_details.store_transfer_id')
+        ->join('mast_item_registers', 'mast_item_registers.id', 'store_transfer_details.mast_item_register_id')
+        ->join('mast_item_groups', 'mast_item_groups.id', 'mast_item_registers.mast_item_group_id')
+        ->join('mast_item_categories', 'mast_item_categories.id', 'store_transfers.mast_item_category_id')
+        ->select('store_transfer_details.*','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
+        ->get();
+        
+        return view('layouts.pages.inventory.requstion_delivery.delivery_details', compact('data','sales'));
+    }
+    function requstionDeliveryStore(Request $request) {
+        
+        $storeTransferDetails = StoreTransferDetails::findOrFail($request->store_transfer_details_id);
+        $storeTransferDetails->deli_qty = $request->deli_qty;
+        $storeTransferDetails->save();
+        
+        if (isset($request->moreFile[0]['serial_no']) && !empty($request->moreFile[0]['serial_no'])) {
+            foreach($request->moreFile as $item){
+                $dataUpdate = SlMovement::findOrFail($item['serial_no']);
+                $dataUpdate->status = 0;
+                $dataUpdate->save();
+                $data = new SlMovement();
+                $data->serial_no = $dataUpdate->serial_no;
+                $data->reference_id = $request->store_transfer_id;
+                $data->reference_type_id = 3; //1=> Purchase || 2=> Sales || 3=> Store Transfer || 4=> Return
+                $data->status = 1;
+                $data->mast_item_register_id = $request->item_register_id;
+                $data->mast_work_station_id = Auth::user()->id;
+                $data->user_id = Auth::user()->id;
+                $data->save();
+            }
+        }
+        //___________ Store Transfer Status Update
+        $checkStoreTransfer = StoreTransferDetails::where('store_transfer_id', $storeTransferDetails->store_transfer_id)->get();
+        $allTrue = true;
+        foreach ($checkStoreTransfer as $key => $value) {
+            if ($value->qty != $value->deli_qty) {
+                $allTrue = false;
+                break;
+            }
+        }
+        if ($allTrue){
+            $storeTransferUpdate = StoreTransfer::findOrFail($storeTransferDetails->store_transfer_id);
+            $storeTransferUpdate->status = 3; // Pendding => 0 || Success => 1 || Cencel => 2 || Complete => 3
+            $storeTransferUpdate->save();
+        }else{
+            $storeTransferUpdate = StoreTransfer::findOrFail($storeTransferDetails->store_transfer_id);
+            $storeTransferUpdate->is_parsial = 1;
+            $storeTransferUpdate->save();
+        }
+        return response()->json('success');
+    }
+    function parsialRequstionDeliveryDetails($id) { 
+        $storeTransfer = StoreTransfer::where('id', $id)->orderBy('id', 'asc')->first();
+        
+        $data = SlMovement::where('sl_movements.reference_id', $id)->where('sl_movements.reference_type_id', 3)
+        ->join('store_transfers', 'store_transfers.id', 'sl_movements.reference_id')
+        ->join('mast_item_registers', 'mast_item_registers.id', 'sl_movements.mast_item_register_id')
+        ->join('mast_item_groups', 'mast_item_groups.id', 'mast_item_registers.mast_item_group_id')
+        ->join('mast_item_categories', 'mast_item_categories.id', 'mast_item_groups.mast_item_category_id')
+        ->select('sl_movements.*','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
+        ->orderBy('id', 'asc')->get();
+        return view('layouts.pages.inventory.requstion_delivery.parsial-requstion-delivery',compact('storeTransfer','data'));
+    }
 
     /**___________________________________________________________________
      * Ajax Call
@@ -185,11 +284,73 @@ class MovementController extends Controller
         ->first();
         return response()->json($data);
     }
-    public function getSerialNumber(Request $request){
-        //--Use Sales Delivery Page 
-        $data = SlMovement::where('mast_item_register_id', $request->item_register_id)->where('mast_work_station_id', $request->storeId)->where('reference_type_id', 1)->where('status', 1)->get();
-        return response()->json([
-            'data' => $data,
-        ]);
+    public function getStoreTransferDetails(Request $request)
+    {
+        $data = StoreTransferDetails::where('store_transfer_details.status', 1)->where('store_transfer_details.id', $request->id)
+        ->join('store_transfers', 'store_transfers.id', 'store_transfer_details.store_transfer_id')
+        ->join('mast_item_categories', 'mast_item_categories.id', 'store_transfers.mast_item_category_id')
+        ->join('mast_item_registers', 'mast_item_registers.id', 'store_transfer_details.mast_item_register_id')
+        ->join('mast_work_stations', 'mast_work_stations.id', 'store_transfers.mast_work_station_id')
+        ->select('store_transfer_details.*','store_transfers.inv_no','store_transfers.inv_date','store_transfers.remarks','mast_item_categories.cat_name','mast_item_registers.id as item_register_id','mast_item_registers.part_no','mast_work_stations.store_name')
+        ->first();
+        return response()->json($data);
     }
+
+    public function getSerialNumber(Request $request){
+        //--Use Sales Delivery Page Or Store Transfer
+        $data = SlMovement::where('mast_item_register_id', $request->item_register_id)->where('mast_work_station_id', $request->storeId)->where('reference_type_id', 1)->where('status', 1)->get();
+        return response()->json(['data' => $data]);
+    }
+
+    /**___________________________________________________________________
+     * Dwonload File, Excel, Pdf
+     * ___________________________________________________________________
+     */
+    public function generatePurchaseReceive($id){
+        $purchase = Purchase::where('id', $id)->orderBy('id', 'asc')->first();
+        
+        $data = SlMovement::where('sl_movements.reference_id', $id)->where('sl_movements.reference_type_id', 1)
+        ->join('purchases', 'purchases.id', 'sl_movements.reference_id')
+        ->join('mast_item_registers', 'mast_item_registers.id', 'sl_movements.mast_item_register_id')
+        ->join('mast_item_groups', 'mast_item_groups.id', 'mast_item_registers.mast_item_group_id')
+        ->join('mast_item_categories', 'mast_item_categories.id', 'mast_item_groups.mast_item_category_id')
+        ->select('sl_movements.*','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
+        ->orderBy('id', 'asc')->get();
+       
+        $pdf = PDF::loadView('layouts.pages.export.parsial-purchase-receive', compact('purchase','data'))->setPaper('a4', 'portrait');
+        return $pdf->download('items6.pdf');
+        // return view('layouts.pages.export.parsial-purchase-receive', compact('purchase','data'));
+    }
+    public function generateSalesDeliver($id){
+        $purchase = Sales::where('id', $id)->orderBy('id', 'asc')->first();
+        
+        $data = SlMovement::where('sl_movements.reference_id', $id)->where('sl_movements.reference_type_id', 2)
+        ->join('sales', 'sales.id', 'sl_movements.reference_id')
+        ->join('mast_item_registers', 'mast_item_registers.id', 'sl_movements.mast_item_register_id')
+        ->join('mast_item_groups', 'mast_item_groups.id', 'mast_item_registers.mast_item_group_id')
+        ->join('mast_item_categories', 'mast_item_categories.id', 'mast_item_groups.mast_item_category_id')
+        ->select('sl_movements.*','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
+        ->orderBy('id', 'asc')->get();
+       
+        $pdf = PDF::loadView('layouts.pages.export.parsial-sales-delivery', compact('purchase','data'))->setPaper('a4', 'portrait');
+        return $pdf->download('items6.pdf');
+        // return view('layouts.pages.export.parsial-purchase-receive', compact('purchase','data'));
+    }
+    public function generateRequstionDeliver($id){
+        $storeTransfer = StoreTransfer::where('id', $id)->orderBy('id', 'asc')->first();
+        
+        $data = SlMovement::where('sl_movements.reference_id', $id)->where('sl_movements.reference_type_id', 3)
+        ->join('store_transfers', 'store_transfers.id', 'sl_movements.reference_id')
+        ->join('mast_item_registers', 'mast_item_registers.id', 'sl_movements.mast_item_register_id')
+        ->join('mast_item_groups', 'mast_item_groups.id', 'mast_item_registers.mast_item_group_id')
+        ->join('mast_item_categories', 'mast_item_categories.id', 'mast_item_groups.mast_item_category_id')
+        ->select('sl_movements.*','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
+        ->orderBy('id', 'asc')->get();
+
+       
+        $pdf = PDF::loadView('layouts.pages.export.parsial-requstion-delivery', compact('storeTransfer','data'))->setPaper('a4', 'portrait');
+        // return $pdf->download('items6.pdf');
+        return view('layouts.pages.export.parsial-requstion-delivery', compact('storeTransfer','data'));
+    }
+
 }

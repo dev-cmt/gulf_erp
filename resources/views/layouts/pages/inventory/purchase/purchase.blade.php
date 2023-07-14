@@ -447,7 +447,7 @@
                 var currentRow = $(newRow);
                 var partNumberSelect = currentRow.find('.val_part_number');
                 $.ajax({
-                    url: '{{ route('sales.edit-part-id')}}',
+                    url: '{{ route('edit-part-id')}}',
                     method: 'GET',
                     dataType: 'JSON',
                     data: { 'part_id': item.item_groups_id },

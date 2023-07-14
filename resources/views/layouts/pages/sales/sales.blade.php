@@ -35,7 +35,7 @@
                                         $total += $value->qty * $value->price;
                                     }
                                 @endphp
-                                <tr id="row_sales_table_{{ $row->id}}">
+                                <tr id="row_master_table_{{ $row->id}}">
                                     <td></td>
                                     <td>{{$row->inv_no}}</td>
                                     <td>{{$row->inv_date}}</td>
@@ -305,7 +305,7 @@
 
                         var add_sales = response.sales;
 
-                        var row = '<tr id="row_sales_table_'+ add_sales.id + '" role="row" class="odd">';
+                        var row = '<tr id="row_master_table_'+ add_sales.id + '" role="row" class="odd">';
                         row += '<td></td>';
                         row += '<td>' + add_sales.inv_no + '</td>';
                         row += '<td>' + add_sales.inv_date + '</td>';
@@ -323,7 +323,7 @@
                         row += '<td style="width:210px"><button type="button" class="btn btn-sm btn-success p-1 px-2 mr-1" id="edit_data" data-id="'+add_sales.id+'"><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button><button type="button" class="btn btn-sm btn-info p-1 px-2" id="view_data" data-id="'+add_sales.id+'"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</button></td>';
 
                         if($("#sal_id").val()){
-                            $("#row_sales_table_" + add_sales.id).replaceWith(row);
+                            $("#row_master_table_" + add_sales.id).replaceWith(row);
                         }else{
                             $("#sales_tbody").prepend(row);
                         }
@@ -455,7 +455,7 @@
             $.each(salesDetails, function(index, item) {
                 var subtotal = item.qty * item.price;
                 var newRow = $('<tr id="row_todo_'+ item.id + '">' +
-                    '<input type="hidden" name="editFile['+i+'][id]" id="salesDetailsId" value="' + item.id + '">' +
+                    '<input type="hidden" name="editFile['+i+'][id]" value="' + item.id + '">' +
                     '<td>'+
                         '<select id="item_category" class="form-control dropdwon_select val_item_category">' +
                         '<option selected disabled>--Select--</option>' +
@@ -485,7 +485,7 @@
                 var currentRow = $(newRow);
                 var partNumberSelect = currentRow.find('.val_part_number');
                 $.ajax({
-                    url: '{{ route('sales.edit-part-id')}}',
+                    url: '{{ route('edit-part-id')}}',
                     method: 'GET',
                     dataType: 'JSON',
                     data: { 'part_id': item.item_groups_id },

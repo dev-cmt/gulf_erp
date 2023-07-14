@@ -192,17 +192,24 @@ class PurchaseController extends Controller
         return redirect()->back()->with($notification);
     }
 
-    //____________________Dropdwon Ajax__________________________//
+    /*=====================================
+     *  Ajax Use Call Data
+     *=====================================
+     */
     public function getPartNumber(Request $request)
     {
         $data = MastItemRegister::where('mast_item_group_id', $request->part_id)->get();
         return view('layouts.pages.inventory.purchase.load-part-number',compact('data'));
     }
-    public function anotherField(Request $request)
+    public function getPartNo(Request $request)
     {
         $anotherField = MastItemRegister::where('id', $request->part_id)->with('unit')->first();
-       
         return response()->json($anotherField);
+    }
+    public function getEditPartNo(Request $request)
+    {
+        $data = MastItemRegister::where('mast_item_group_id', $request->part_id)->get();
+        return response()->json($data);
     }
     
     public function getDeleteMaster(Request $request)

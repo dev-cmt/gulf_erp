@@ -125,7 +125,6 @@ class SalesController extends Controller
         ->join('mast_units', 'mast_units.id', 'mast_item_registers.unit_id')        
         ->select('sales_details.*','mast_item_registers.id as item_rg_id','mast_item_registers.part_no','mast_item_registers.box_qty','mast_units.unit_name','mast_item_groups.part_name','mast_item_groups.id as item_groups_id')
         ->get();
-        $item_register = MastItemRegister::all();
         
         $customer_type = MastCustomerType::where('status', 1)->get();
         $customer_type_id = Sales::where('sales.id', $request->id)
@@ -142,7 +141,6 @@ class SalesController extends Controller
             'customer_type' => $customer_type,
             'customer_type_id' => $customer_type_id,
             'sales_details' => $sales_details,
-            'item_register' => $item_register,
         ]);
     }
     public function sales_destroy($id)
@@ -152,11 +150,6 @@ class SalesController extends Controller
         $data->delete();
         // return response()->json($subTotal);
         return response()->json('success');
-    }
-    public function getSalesDetails(Request $request)
-    {
-        $data = MastItemRegister::where('mast_item_group_id', $request->part_id)->get();
-        return response()->json($data);
     }
     /*=====================================
      *   Approve Sales

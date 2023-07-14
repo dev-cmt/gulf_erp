@@ -16,6 +16,7 @@ class StoreTransfer extends Model
         'inv_no',
         'vat',
         'tax',
+        'is_parsial',
         'status',
         'remarks',
         'mast_item_category_id',

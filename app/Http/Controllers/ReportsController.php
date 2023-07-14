@@ -4,7 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use Intervention\Image\Facades\Image;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\BarcodeExport;
+use App\Exports\ItemExport;
+use Barryvdh\DomPDF\PDF;
+use Milon\Barcode\DNS1D;
+use Milon\Barcode\DNS2D;
 use App\Models\Master\MastItemCategory;
 use App\Models\Master\MastItemGroup;
 use App\Models\Master\MastWorkStation;
@@ -35,4 +44,9 @@ class ReportsController extends Controller
         $data= Sales::where('status', 1)->orderBy('id', 'asc')->get();
         return view('layouts.pages.inventory.sales_delivery.index',compact('data'));
     }
+    /**___________________________________________________________________
+     * Sales
+     * ___________________________________________________________________
+     */
+    
 }

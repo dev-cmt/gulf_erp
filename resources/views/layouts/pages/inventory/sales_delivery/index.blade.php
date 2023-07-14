@@ -24,7 +24,7 @@
                                 </tr>
                             </thead>
                             <tbody id="sales_tbody">
-                                @foreach ($data as $key=> $row)
+                                @foreach ($data as $keys=> $row)
                                 @php
                                     $total = 0;
                                     $qty = 0;
@@ -36,7 +36,7 @@
                                     }
                                 @endphp
                                 <tr id="row_sales_table_{{ $row->id}}">
-                                    <td>{{++$key}}</td>
+                                    <td>{{++$keys}}</td>
                                     <td>{{$row->inv_no}}</td>
                                     <td>{{$row->inv_date}}</td>
                                     <td>{{$row->mastCustomer->name ?? 'NULL'}}</td>
@@ -81,7 +81,7 @@
                                 </tr>
                             </thead>
                             <tbody id="sales_tbody">
-                                @foreach ($dataParsial as $key=> $row)
+                                @foreach ($dataParsial as $keys=> $row)
                                 @php
                                     $total = 0;
                                     $qty = 0;
@@ -93,7 +93,7 @@
                                     }
                                 @endphp
                                 <tr id="row_sales_table_{{ $row->id}}">
-                                    <td>{{++$key}}</td>
+                                    <td>{{++$keys}}</td>
                                     <td>{{$row->inv_no}}</td>
                                     <td>{{$row->inv_date}}</td>
                                     <td>{{$row->mastCustomer->name ?? 'NULL'}}</td>
@@ -102,8 +102,11 @@
                                     {{-- <td>{{$qty }}</td> --}}
                                     <td>{{$total }}</td>
                                     <td class="text-right">
-                                        <a href="#" class="btn btn-sm btn-secondary p-1 px-2"><i class="fa fa-print"></i></i><span class="btn-icon-add"></span>Print</a>
-                                        <a href="{{ route('sales-delivery-details', $row->id) }}" class="btn btn-primary p-1 px-2"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</a>
+                                        <a href="{{ route('report-sales-delivery-parsial.download', $row->id)}}" class="btn btn-sm btn-secondary p-1 px-2"><i class="fa fa-print"></i></i><span class="btn-icon-add"></span>Print</a>
+                                        <a href="{{ route('sales-delivery-details-parsial', $row->id) }}" class="btn btn-sm btn-info p-1 px-2"><i class="fa fa-info"></i></i><span class="btn-icon-add"></span>Details</a>
+                                        @if ($row->status != 3)
+                                        <a href="{{ route('sales-delivery-details', $row->id) }}" class="btn btn-primary p-1 px-2"><i class="fa fa-plus"></i></i><span class="btn-icon-add"></span>Add New</a>
+                                        @endif
                                     </td>
                                 </tr>
                                 @endforeach
