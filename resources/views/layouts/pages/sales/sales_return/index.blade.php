@@ -11,12 +11,10 @@
                             <thead>
                                 <tr>
                                     <th>SL#</th>
-                                    <th>Invoice No</th>
-                                    <th>Invoice Date</th>
+                                    <th>Invoice Info.</th>
+                                    <th>Customer Info.</th>
                                     <th>Category</th>
-                                    <th>Name</th>
-                                    <th>Number</th>
-                                    <th>Type</th>
+                                    <th>Deli. Type</th>
                                     <th>Item</th>
                                     <th>Total</th>
                                     <th class="text-center">Action</th>
@@ -26,7 +24,7 @@
                                 @foreach ($data as $keys=> $row)
                                     @php
                                         $total = 0;
-                                        $item = 1;
+                                        $item = 0;
                                         foreach ($row->salesDetails as $key=> $value) {
                                             $total += $value->qty * $value->price;
                                             $item += $key;
@@ -34,28 +32,24 @@
                                     @endphp
                                     <tr>
                                         <td>{{++$keys}}</td>
-                                        <td>{{$row->inv_no}}</td>
-                                        <td>{{date("j F, Y", strtotime($row->inv_date))}}</td>
-                                        <td>{{$row->mastItemCategory->cat_name ?? 'NULL'}}</td>
-                                        <td>{{$row->mastCustomer->name ?? 'NULL'}}</td>
-                                        <td>{{$row->mastCustomer->phone ?? 'NULL'}}</td>
+                                        <td><strong>No: </strong>{{$row->inv_no}}<br><strong>Date: </strong>{{date("j F, Y", strtotime($row->inv_date))}}</td>
+                                        <td><strong>Name: </strong>{{$row->mastCustomer->name ?? 'NULL'}}<br><strong>Phone: </strong>{{$row->mastCustomer->phone ?? 'NULL'}}</td>
+                                        <td class="text-center">{{$row->mastItemCategory->cat_name ?? 'NULL'}}</td>
                                         <td>@if($row->is_parsial == 0)
-                                            <span class="badge light badge-warning">
-                                                <i class="fa fa-circle text-success mr-1"></i>Successful
+                                            <span class="badge light badge-success">
+                                                <i class="fa fa-circle text-success mr-1"></i>Complete
                                             </span>
                                             @elseif($row->is_parsial == 1)
-                                            <span class="badge light badge-danger">
+                                            <span class="badge light badge-warning">
                                                 <i class="fa fa-circle text-warning mr-1"></i>Parsial
                                             </span>
                                             @endif
                                         </td>
-                                        <td>{{$item}}</td>
-                                        <td>{{$total}}</td>
+                                        <td class="text-center">{{$item !=0 ? $item : '1'}}</td>
+                                        <td class="text-right">{{$total}}</td>
                                         <td class="text-right">
                                             <button id="details_data" data-id="{{ $row->id }}" class="btn btn-sm btn-info p-1 px-2"><i class="fa fa-info"></i></i><span class="btn-icon-add"></span>Details</button>
-                                            @if ($row->status != 3)
-                                            <a href="{{ route('requstion-delivery-details', $row->id) }}" class="btn btn-secondary p-1 px-2"><i class="fa fa-plus"></i></i><span class="btn-icon-add"></span>Return</a>
-                                            @endif
+                                            <a href="{{ route('sales-return-details', $row->id) }}" class="btn btn-secondary p-1 px-2"><i class="fa fa-plus"></i></i><span class="btn-icon-add"></span>Return</a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -141,6 +135,7 @@
     /*=======//View Details Add Modal//=========*/
     $(document).on('click', '#details_data', function() {
     var id = $(this).data('id');
+    alert(id);
     $('#table-body').empty();
         $.ajax({
             url: '{{ route('get_sales_delivery_details')}}',

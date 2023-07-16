@@ -37,6 +37,7 @@ class StoreTransferController extends Controller
         }else{
             $validator = Validator::make($request->all(), [
                 'inv_date' => 'required',
+                'form_store' => 'required',
                 'mast_work_station_id' => 'required',
             ]);
             if ($validator->fails()) {
@@ -49,8 +50,9 @@ class StoreTransferController extends Controller
         $transferStore->vat = $request->vat;
         $transferStore->tax = $request->tax;
         $transferStore->remarks = $request->remarks;
-        $transferStore->status = 0;
+        $transferStore->status = 0; // 1 => Approve || 2 => Cancel || 3 => ReceiveDone
         $transferStore->mast_item_category_id = $type;
+        $transferStore->form_store = $request->form_store;
         $transferStore->mast_work_station_id = $request->mast_work_station_id;
         $transferStore->user_id = Auth::user()->id;
         $transferStore->save();

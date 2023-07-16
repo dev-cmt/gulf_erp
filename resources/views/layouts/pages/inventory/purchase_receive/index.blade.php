@@ -28,7 +28,7 @@
                                 @php
                                     $total = 0;
                                     $qty = 0;
-                                    $item = 1;
+                                    $item = 0;
                                     foreach ($row->purchaseDetails as $key => $value) {
                                         $total += $value->qty * $value->price;
                                         $qty += $value->qty;
@@ -41,7 +41,7 @@
                                     <td>{{date("j F, Y", strtotime($row->inv_date))}}</td>
                                     <td>{{$row->mastSupplier->supplier_name}}</td>
                                     <td>{{$row->mastWorkStation->store_name}}</td>
-                                    <td>{{$item}}</td>
+                                    <td>{{$item != 0 ? $item : '1'}}</td>
                                     {{-- <td>{{$qty }}</td> --}}
                                     <td>{{$total }}</td>
                                     <td class="text-right">
@@ -86,7 +86,7 @@
                                 @php
                                     $total = 0;
                                     $qty = 0;
-                                    $item = 1;
+                                    $item = 0;
                                     foreach ($row->purchaseDetails as $key => $value) {
                                         $total += $value->qty * $value->price;
                                         $qty += $value->qty;
@@ -99,7 +99,7 @@
                                     <td>{{date("j F, Y", strtotime($row->inv_date))}}</td>
                                     <td>{{$row->mastSupplier->supplier_name}}</td>
                                     <td>{{$row->mastWorkStation->store_name}}</td>
-                                    <td>{{$item }}</td>
+                                    <td>{{$item != 0 ? $item : '1'}}</td>
                                     {{-- <td>{{$qty }}</td> --}}
                                     <td>{{$total }}</td>
                                     <td class="text-right">

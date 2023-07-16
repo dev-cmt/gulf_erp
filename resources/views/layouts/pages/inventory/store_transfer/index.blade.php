@@ -87,17 +87,30 @@
                     <div class="modal-body py-2 px-4">
                         <div class="row">
                             <input type="hidden" name="store_transfer_id" id="storeTransferId">
-                            <div class="col-md-6 mr-4">
+                            <div class="col-md-6">
                                 <div class="form-group row">
-                                    <label class="col-md-5 col-form-label">Store Name
+                                    <label class="col-md-5 col-form-label">Form Store
                                         <span class="text-danger">*</span>
                                     </label>
                                     <div class="col-md-7">
-                                        <select name="mast_work_station_id" id="mast_work_station_id" class="form-control dropdwon_select">
+                                        <select name="form_store" class="form-control dropdwon_select">
                                             @foreach ($store as $item)
                                                 <option value="{{$item->id}}">{{$item->store_name}}</option>
                                             @endforeach
                                         </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-5 col-form-label">Store Name</label>
+                                    <div class="col-md-7">
+                                        <select class="form-control dropdwon_select" disabled>
+                                            @foreach ($store as $item)
+                                                <option value="{{$item->id}}" {{$item->id == Auth::user()->mast_work_station_id ? 'selected':''}}>{{$item->store_name}}</option>
+                                            @endforeach
+                                        </select>
+                                        <input type="hidden" class="form-control" name="mast_work_station_id" value="{{ Auth::user()->mast_work_station_id }}">
                                     </div>
                                 </div>
                             </div>
@@ -121,9 +134,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group row">
-                                    <label class="col-md-5 col-form-label">Invoice Type
-                                        <span class="text-danger">*</span>
-                                    </label>
+                                    <label class="col-md-5 col-form-label">Invoice Type</label>
                                     <div class="col-md-7">
                                         <select name="mast_item_category_id" id="mast_item_category_id" class="form-control dropdwon_select" disabled>
                                             <option selected disabled>--Select--</option>

@@ -19,6 +19,7 @@ use App\Models\Admin\InfoBank;
 use App\Models\Admin\InfoNominee;
 use App\Models\Admin\HrAttendance;
 use App\Models\Master\MastDepartment;
+use App\Models\Master\MastWorkStation;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -67,6 +68,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function attendance()
     {
         return $this->hasMany(HrAttendance::class);
+    }
+    public function mastWorkStation()
+    {
+        return $this->belongsTo(MastWorkStation::class);
     }
     
     //____________ MINHAZ DATA

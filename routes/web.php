@@ -215,6 +215,7 @@ Route::group(['middleware' => ['auth']], function(){
      */
      Route::get('sales/sales-return/index',[SalesReturnController::class,'salesReturnIndex'])->name('sales-return.index');
      Route::get('sales/get-sales-delivery/details',[SalesReturnController::class,'getSalesDeliveryDetails'])->name('get_sales_delivery_details');     
+     Route::get('sales/sales-return/details/{id}', [SalesReturnController::class, 'salesReturnDetails'])->name('sales-return-details');
 });
 
 Route::group(['middleware' => ['auth']], function(){

@@ -16,12 +16,13 @@ class StoreTransfer extends Model
         'inv_no',
         'vat',
         'tax',
-        'is_parsial',
-        'status',
         'remarks',
         'mast_item_category_id',
+        'from_store',
         'mast_work_station_id',
-        'user_id'
+        'user_id',
+        'is_parsial',
+        'status',
     ];
     public function mastWorkStation()
     {

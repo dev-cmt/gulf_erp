@@ -56,7 +56,7 @@ class MovementController extends Controller
         $purchaseDetails = PurchaseDetails::findOrFail($request->purchase_details_id);
         $purchaseDetails->rcv_qty = $request->rcv_qty;
         $purchaseDetails->save();
-        
+
         if (isset($request->moreFile[0]['serial_no']) && !empty($request->moreFile[0]['serial_no'])) {
             foreach($request->moreFile as $item){
                 $data = new SlMovement();
@@ -70,7 +70,7 @@ class MovementController extends Controller
                 $data->save();
             }
         }
-        //___________Purchase Status Update
+        //___________Purchase Update
         $checkPurchase = PurchaseDetails::where('purchase_id', $purchaseDetails->purchase_id)->get();
         $allTrue = true;
         foreach ($checkPurchase as $key => $value) {
@@ -81,13 +81,20 @@ class MovementController extends Controller
         }
         if ($allTrue){
             $purchaseUpdate = Purchase::findOrFail($purchaseDetails->purchase_id);
-            $purchaseUpdate->status = 3; // 0 => Pendding || 1 => Success || 2 => Cancel || 3 => Complete
+            $purchaseUpdate->status = 4; // Pendding => 0 || Success => 1 || Cencel => 2 || Parsial => 3 || Complete => 4
+            $variable = SlMovement::where('reference_id', $purchaseDetails->purchase_id)->where('reference_type_id', 1)
+                    ->whereDate('created_at', '!=', date('Y-m-d'))->where('status', 1)->count();
+            if($variable){
+                $purchaseUpdate->is_parsial = 1;
+            }
             $purchaseUpdate->save();
         }else{
             $purchaseUpdate = Purchase::findOrFail($purchaseDetails->purchase_id);
+            $purchaseUpdate->status = 3; // Pendding => 0 || Success => 1 || Cencel => 2 || Parsial => 3 || Complete => 4
             $purchaseUpdate->is_parsial = 1;
             $purchaseUpdate->save();
         }
+        
         return response()->json('success');
     }
     function parsialPurchaseDetails($id) { 
@@ -135,6 +142,7 @@ class MovementController extends Controller
             foreach($request->moreFile as $item){
                 $dataUpdate = SlMovement::findOrFail($item['serial_no']);
                 $dataUpdate->status = 0;
+                $dataUpdate->out_date = date('Y-m-d');
                 $dataUpdate->save();
                 $data = new SlMovement();
                 $data->serial_no = $dataUpdate->serial_no;
@@ -158,10 +166,11 @@ class MovementController extends Controller
         }
         if ($allTrue){
             $salesUpdate = Sales::findOrFail($salesDetails->sales_id);
-            $salesUpdate->status = 3; // Pendding => 0 || Success => 1 || Cencel => 2 || Complete => 3
+            $salesUpdate->status = 4; // Pendding => 0 || Success => 1 || Cencel => 2 || Parsial => 3 || Complete => 4
             $salesUpdate->save();
         }else{
             $salesUpdate = Sales::findOrFail($salesDetails->sales_id);
+            $salesUpdate->status = 3; // Pendding => 0 || Success => 1 || Cencel => 2 || Parsial => 3 || Complete => 4
             $salesUpdate->is_parsial = 1;
             $salesUpdate->save();
         }
@@ -213,6 +222,7 @@ class MovementController extends Controller
             foreach($request->moreFile as $item){
                 $dataUpdate = SlMovement::findOrFail($item['serial_no']);
                 $dataUpdate->status = 0;
+                $dataUpdate->out_date = date('Y-m-d');
                 $dataUpdate->save();
                 $data = new SlMovement();
                 $data->serial_no = $dataUpdate->serial_no;

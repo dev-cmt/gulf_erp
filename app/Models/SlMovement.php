@@ -13,10 +13,11 @@ class SlMovement extends Model
         'serial_no',
         'reference_id',
         'reference_type_id',
-        'status',
         'mast_item_register_id',
         'mast_work_station_id',
         'user_id',
+        'status',
+        'out_date'
     ];
 
 }

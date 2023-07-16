@@ -13,21 +13,17 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('store_transfers', function (Blueprint $table) {
+        Schema::create('sales_returns', function (Blueprint $table) {
             $table->id();
-            $table->date('inv_date')->nullable();
-            $table->string('inv_no')->nullable();
-            $table->integer('vat')->nullable();
-            $table->integer('tax')->nullable();
-            $table->tinyInteger('is_parsial')->default(false);
+            $table->date('return_date')->nullable();
             $table->tinyInteger('status')->default(false);
             $table->text('remarks')->nullable();
             $table->text('from_store')->nullable();
 
             $table->unsignedBigInteger('mast_work_station_id');
             $table->foreign('mast_work_station_id')->references('id')->on('mast_work_stations')->onDelete('cascade');
-            $table->unsignedBigInteger('mast_item_category_id');
-            $table->foreign('mast_item_category_id')->references('id')->on('mast_item_categories')->onDelete('cascade');
+            $table->unsignedBigInteger('sales_id');
+            $table->foreign('sales_id')->references('id')->on('sales')->onDelete('cascade');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
@@ -41,6 +37,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('store_transforms');
+        Schema::dropIfExists('sales_returns');
     }
 };
