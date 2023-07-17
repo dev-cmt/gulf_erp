@@ -162,18 +162,6 @@
                                 </div>
                             </div> 
                             <input type="hidden" id="workStationId" name="mast_work_station_id" value="{{ Auth::user()->mast_work_station_id }}">
-                            {{-- <div class="col-md-12">
-                                <div class="form-group row">
-                                    <label class="col-md-2 col-form-label px-0"><strong>Store Name</strong></label>
-                                    <div class="col-md-10">
-                                        <select id="workStationId" name="mast_work_station_id" class="form-control dropdwon_select" required>
-                                            @foreach ($storeName as $item)
-                                                <option value="{{$item->id}}">{{$item->store_name}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div> --}}
                             
                             <input type="hidden" id="itemRegisterId" name="item_register_id">
                             <input type="hidden" id="getDeliQty">

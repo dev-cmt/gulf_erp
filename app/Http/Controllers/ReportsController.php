@@ -22,6 +22,8 @@ use App\Models\Master\MastUnit;
 use App\Models\Master\MastSupplier;
 use App\Models\Inventory\Purchase;
 use App\Models\Inventory\PurchaseDetails;
+use App\Models\Inventory\StoreTransfer;
+use App\Models\Inventory\StoreTransferDetails;
 use App\Models\Sales\Sales;
 use App\Models\Sales\SalesDetails;
 use App\Models\SlMovement;
@@ -34,15 +36,17 @@ class ReportsController extends Controller
      * Inventory
      * ___________________________________________________________________
      */
-    public function purchaseReceive()
-    {
-        $data = Purchase::where('status', 3)->orderBy('id', 'asc')->get();
+    public function purchaseReceive(){
+        $data = Purchase::where('status', 4)->whereIn('is_parsial', [0, 1])->orderBy('id', 'asc')->get();
         return view('layouts.pages.inventory.reports.purchase-recived',compact('data'));
     }
-    public function salesDelivery()
-    {
-        $data= Sales::where('status', 1)->orderBy('id', 'asc')->get();
-        return view('layouts.pages.inventory.sales_delivery.index',compact('data'));
+    public function salesDelivery(){
+        $data= Sales::where('status', 4)->whereIn('is_parsial', [0, 1])->orderBy('id', 'asc')->get();
+        return view('layouts.pages.inventory.reports.sales-delivery',compact('data'));
+    }
+    public function requstionDelivery(){
+        $data= StoreTransfer::where('status', 4)->whereIn('is_parsial', [0, 1])->orderBy('id', 'asc')->get();
+        return view('layouts.pages.inventory.reports.requstion-delivery',compact('data'));
     }
     /**___________________________________________________________________
      * Sales

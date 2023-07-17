@@ -185,16 +185,19 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('store/transfer/edit',[StoreTransferController::class,'edit'])->name('store_transfer.edit');
     Route::delete('store/transfer/destroy/{id}', [StoreTransferController::class, 'storeDetailsDestroy'])->name('store_transfer.destroy');
     Route::get('/get-delete-master/storeTransfer',[StoreTransferController::class,'getDeleteMaster'])->name('getDelete-master-storeTransfer');
+    
     //--Store Transfer Approve
     Route::get('store/transfer/approve_list', [StoreTransferController::class, 'storeTransferApprove'])->name('store_transfer_approve.create');
-    Route::PATCH('store/transfer/approve/{id}', [StoreTransferController::class, 'approve_sales'])->name('store_transfer.approve');
+    Route::PATCH('store/transfer/approve/{id}', [StoreTransferController::class, 'approve'])->name('store_transfer.approve');
     Route::PATCH('store/transfer/canceled/{id}', [StoreTransferController::class, 'decline'])->name('store_transfer.canceled');
+    Route::get('get/store-transfer/approve/details', [StoreTransferController::class, 'getStoreTransferApproveDetails'])->name('get_store_transfer_approve_details');
     /**______________________________________________________________________________________________
      * Inventory => Reports
      * ______________________________________________________________________________________________
      */
      Route::get('report-purchase/recived',[ReportsController::class,'purchaseReceive'])->name('report-purchase-recived');
      Route::get('report-sales/delivery',[ReportsController::class,'salesDelivery'])->name('report-sales-delivery');
+     Route::get('report-requstion/delivery',[ReportsController::class,'requstionDelivery'])->name('report-requstion-delivery');
     /**______________________________________________________________________________________________
      * Sales => Sales
      * ______________________________________________________________________________________________
@@ -206,7 +209,7 @@ Route::group(['middleware' => ['auth']], function(){
      Route::get('/get-delete-master/sales',[SalesController::class,'getDeleteMaster'])->name('getDelete-master-sales');
      //--Sales Approve
     Route::get('sales/approve_list', [SalesController::class, 'sales_approve_list'])->name('sales_approve.create');
-    Route::PATCH('sales/approve/{id}', [SalesController::class, 'approve_sales'])->name('sales.approve');
+    Route::PATCH('sales/approve/{id}', [SalesController::class, 'approve'])->name('sales.approve');
     Route::PATCH('sales/canceled/{id}', [SalesController::class, 'decline'])->name('sales.canceled');
     Route::get('sales/get-sales/approve/details', [SalesController::class, 'getSalesApproveDetails'])->name('get_sales_approve_details');
     /**______________________________________________________________________________________________

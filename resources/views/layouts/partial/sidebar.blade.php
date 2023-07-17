@@ -95,6 +95,7 @@
                             <ul aria-expanded="false">
                                 <li><a href="{{route('report-purchase-recived')}}">Purchase Recived</a></li>
                                 <li><a href="{{route('report-sales-delivery')}}">Sales Delivery</a></li>
+                                <li><a href="{{ route('report-requstion-delivery')}}">Requisition Delivery</a></li>
                             </ul>
                         </li>
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Data Setting</a>

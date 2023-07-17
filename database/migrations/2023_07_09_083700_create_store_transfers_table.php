@@ -19,10 +19,8 @@ return new class extends Migration
             $table->string('inv_no')->nullable();
             $table->integer('vat')->nullable();
             $table->integer('tax')->nullable();
-            $table->tinyInteger('is_parsial')->default(false);
-            $table->tinyInteger('status')->default(false);
             $table->text('remarks')->nullable();
-            $table->text('from_store')->nullable();
+            $table->text('from_store_id')->nullable();
 
             $table->unsignedBigInteger('mast_work_station_id');
             $table->foreign('mast_work_station_id')->references('id')->on('mast_work_stations')->onDelete('cascade');
@@ -30,6 +28,8 @@ return new class extends Migration
             $table->foreign('mast_item_category_id')->references('id')->on('mast_item_categories')->onDelete('cascade');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->tinyInteger('is_parsial')->default(false);
+            $table->tinyInteger('status')->default(false);
             $table->timestamps();
         });
     }

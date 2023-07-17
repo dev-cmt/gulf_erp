@@ -27,17 +27,18 @@ class StoreTransferController extends Controller
         $data=StoreTransfer::where('mast_item_category_id', $type)->orderBy('id', 'desc')->latest()->get();
         return view('layouts.pages.inventory.store_transfer.index',compact('type','data','item_group','store','item_category'));
     }
+
     public function store(Request $request, $type)
     {
         $invoice_codes = Helper::IDGenerator(new StoreTransfer, 'inv_no', 5, 'INV-NO'); /* Generate id */
         
-        $storeTransferId=$request->store_transfer_id;
+        $storeTransferId= $request->store_transfer_id;
         if(isset($storeTransferId)){
             $transferStore = StoreTransfer::findOrFail($storeTransferId);
         }else{
             $validator = Validator::make($request->all(), [
                 'inv_date' => 'required',
-                'form_store' => 'required',
+                'from_store_id' => 'required',
                 'mast_work_station_id' => 'required',
             ]);
             if ($validator->fails()) {
@@ -52,7 +53,7 @@ class StoreTransferController extends Controller
         $transferStore->remarks = $request->remarks;
         $transferStore->status = 0; // 1 => Approve || 2 => Cancel || 3 => ReceiveDone
         $transferStore->mast_item_category_id = $type;
-        $transferStore->form_store = $request->form_store;
+        $transferStore->from_store_id = $request->from_store_id;
         $transferStore->mast_work_station_id = $request->mast_work_station_id;
         $transferStore->user_id = Auth::user()->id;
         $transferStore->save();
@@ -152,7 +153,30 @@ class StoreTransferController extends Controller
         $data=StoreTransfer::where('status', 0)->orderBy('id', 'desc')->latest()->get();
         return view('layouts.pages.inventory.store_transfer.store_transfer_approve',compact('data'));
     }
-    public function approve_sales($id)
+    public function getStoreTransferApproveDetails(Request $request)
+    {
+        $data = StoreTransferDetails::where('store_transfer_details.store_transfer_id', $request->id)
+        ->join('store_transfers', 'store_transfers.id', 'store_transfer_details.store_transfer_id')
+        ->join('mast_item_registers', 'mast_item_registers.id', 'store_transfer_details.mast_item_register_id')
+        ->join('mast_item_groups', 'mast_item_groups.id', 'mast_item_registers.mast_item_group_id')
+        ->join('mast_item_categories', 'mast_item_categories.id', 'store_transfers.mast_item_category_id')
+        ->select('store_transfer_details.*','store_transfers.inv_no','store_transfers.inv_date','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
+        ->get();
+
+        $storeTransfer = StoreTransfer::where('store_transfers.id', $request->id)
+        ->join('mast_item_categories', 'mast_item_categories.id', 'store_transfers.mast_item_category_id')
+        ->join('mast_work_stations as from_station', 'from_station.id', 'store_transfers.from_store_id')
+        ->join('mast_work_stations as to_station', 'to_station.id', 'store_transfers.mast_work_station_id')
+        ->select('store_transfers.*', 'mast_item_categories.cat_name', 'from_station.store_name as from_store_name', 'to_station.store_name as to_store_name')
+        ->first();
+
+        return response()->json([
+            'data' => $data,
+            'storeTransfer' => $storeTransfer,
+        ]);
+    }
+
+    public function approve($id)
     {
         $data = StoreTransfer::findOrFail($id);
         $data->status = 1;

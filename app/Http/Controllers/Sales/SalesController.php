@@ -180,7 +180,7 @@ class SalesController extends Controller
             'store' => $store->store_name,
         ]);
     }
-    public function approve_sales($id)
+    public function approve($id)
     {
         $data = Sales::findOrFail($id);
         $data->status = 1;

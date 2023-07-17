@@ -18,7 +18,7 @@ class StoreTransfer extends Model
         'tax',
         'remarks',
         'mast_item_category_id',
-        'from_store',
+        'from_store_id',
         'mast_work_station_id',
         'user_id',
         'is_parsial',

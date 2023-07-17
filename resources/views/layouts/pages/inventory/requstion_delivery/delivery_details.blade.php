@@ -86,7 +86,7 @@
                     </button>
                 </div>
                 <div class="modal-body pt-2">
-                    <label class=col-form-label>Please Upload CSV in Given <a href="#" class="text-danger">Format</a></label>
+                    <label class="col-form-label">Please Upload CSV in Given <a href="#" class="text-danger">Format</a></label>
                     <div class="row">
                         <label class="col-md-4 col-form-label">Upload Excel File</label>
                         <div class="col-md-8">
@@ -113,62 +113,71 @@
                     @csrf
                     <div class="modal-body py-2">
                         <div class="row" id="main-row-data">
-                            <div class="col-md-6">
-                                <div class="form-group row">
-                                    <label class="col-md-5 col-form-label px-0"><strong>Invoice No.</strong> </label>
-                                    <div class="col-md-7">
-                                        <label class=col-form-label id="inv_no"></label>
+                            <div class="col-md-7">
+                                <div class="form-group row mb-0">
+                                    <label class="col-md-6 col-form-label px-0"><strong>Inv. No.</strong> </label>
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" id="inv_no"></label>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group row">
-                                    <label class="col-md-5 col-form-label px-0"><strong>Invoice Date</strong></label>
+                            <div class="col-md-5">
+                                <div class="form-group row mb-0">
+                                    <label class="col-md-5 col-form-label px-0"><strong>Inv. Date</strong></label>
                                     <div class="col-md-7">
-                                        <label class=col-form-label id="inv_date"></label>
+                                        <label class="col-form-label" id="inv_date"></label>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group row">
-                                    <label class="col-md-5 col-form-label px-0"><strong>Invoice Type</strong></label>
-                                    <div class="col-md-7">
-                                        <label class=col-form-label id="inv_type"></label>
+                            <div class="col-md-7">
+                                <div class="form-group row mb-0">
+                                    <label class="col-md-6 col-form-label px-0"><strong>Invoice Type</strong></label>
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" id="inv_type"></label>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group row">
-                                    <label class="col-md-5 col-form-label px-0"><strong>Customer</strong></label>
-                                    <div class="col-md-7">
-                                        <label class=col-form-label id="mast_work_station_id"></label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group row">
+                            <div class="col-md-5">
+                                <div class="form-group row mb-0">
                                     <label class="col-md-5 col-form-label px-0"><strong>Part No.</strong></label>
                                     <div class="col-md-7">
-                                        <label class=col-form-label id="getPartNo"></label>
+                                        <label class="col-form-label" id="getPartNo"></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group row mb-0">
+                                    <label class="col-md-3 col-form-label px-0"><strong>To Store</strong></label>
+                                    <div class="col-md-9">
+                                        <label class="col-form-label pl-3" id="mast_work_station_id"></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group row mb-0">
+                                    <label class="col-md-3 col-form-label px-0"><strong>From Store</strong></label>
+                                    <div class="col-md-9">
+                                        <label class="col-form-label pl-3" id="from_store_id"></label>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group row">
-                                    <label class="col-md-2 col-form-label px-0"><strong>Remarks</strong></label>
-                                    <div class="col-md-10">
+                                    <label class="col-md-3 col-form-label px-0"><strong>Remarks</strong></label>
+                                    <div class="col-md-9">
                                         <textarea class="form-control" id="remarks" disabled></textarea>
                                     </div>
                                 </div>
                             </div> 
-                            <input type="hidden" id="workStationId" name="mast_work_station_id" value="{{ Auth::user()->mast_work_station_id }}">
                             
-                            <input type="hidden" id="itemRegisterId" name="item_register_id">
+                            <input type="hidden" id="invCheckItem" value="{{Auth::user()->mast_work_station_id}}">
                             <input type="hidden" id="getDeliQty">
                             <input type="hidden" id="qty">
                             <input type="hidden" id="deliQty" name="deli_qty">
+                            <input type="hidden" id="itemRegisterId" name="item_register_id">
                             <input type="hidden" id="storeTransferId" name="store_transfer_id">
                             <input type="hidden" id="storeTransferDetailsId" name="store_transfer_details_id">
+                            <input type="hidden" id="fromStoreId" name="mast_work_station_id">
                         </div>
 
                         <div class="row">
@@ -214,7 +223,8 @@
                 $('#inv_no').html(response.inv_no);
                 $("#inv_type").html(response.cat_name);
                 $("#inv_date").html(response.inv_date);
-                $("#mast_work_station_id").html(response.store_name);
+                $("#mast_work_station_id").html(response.to_store_name);
+                $("#from_store_id").html(response.from_store_name);
                 $('#remarks').html(response.remarks);
 
                 //---SetUp
@@ -225,9 +235,9 @@
                 $('#getPartNo').html(response.part_no);
                 $('#storeTransferId').val(response.store_transfer_id);
                 $('#storeTransferDetailsId').val(response.id);
+                $("#fromStoreId").val(response.from_store_id);
 
-                var storeId= $('#workStationId').val();
-
+                var storeId = $("#invCheckItem").val();
                 getSlNo(response.item_register_id, storeId);
             },
             error: function(response) {
@@ -350,7 +360,7 @@
                 addRow(count);
                 //--------------------
                 var valItemRegisterId = parseInt($('#itemRegisterId').val());
-                var storeId= $('#workStationId').val();
+                var storeId = $("#invCheckItem").val();
                 getSlNo(valItemRegisterId, storeId);
                 //--------------------
                 var qtyResult = checkDeliQty + rowCount;
@@ -370,7 +380,7 @@
     function addRow(i){
         var rowCount = parseInt($('#items-table tbody tr').length) + 1;
         var newRow = $('<tr>' +
-            '<td><label class=col-form-label>'+rowCount+'</label></td>' +
+            '<td><label class="col-form-label">'+rowCount+'</label></td>' +
             '<td><select id="serialNumber" name="moreFile['+i+'][serial_no]" class="form-control dropdwon_select val_serial_no"></select></td>' +
             '<td class="text-center">' +
                 '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs add-row"><span class="fa fa-plus"></span></button>' +

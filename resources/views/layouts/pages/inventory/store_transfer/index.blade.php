@@ -46,18 +46,18 @@
                                         <span class="badge light badge-warning">
                                             <i class="fa fa-circle text-warning mr-1"></i>Pending
                                         </span>
-                                        @elseif($row->status == 1)
-                                        <span class="badge light badge-success">
-                                            <i class="fa fa-circle text-success mr-1"></i>Successful
-                                        </span>
                                         @elseif($row->status == 2)
                                         <span class="badge light badge-danger">
                                             <i class="fa fa-circle text-danger mr-1"></i>Canceled
                                         </span>
+                                        @else
+                                        <span class="badge light badge-success">
+                                            <i class="fa fa-circle text-success mr-1"></i>Successful
+                                        </span>
                                         @endif
                                     </td>
                                     <td style="width:210px">
-                                        <button type="button" class="btn btn-sm btn-success p-1 px-2" id="edit_data" data-id="{{ $row->id }}"><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button>
+                                        <button type="button" class="btn btn-sm btn-success p-1 px-2" id="edit_data" data-id="{{ $row->id }}" {{$row->status !=0 ? 'disabled':''}}><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button>
                                         <button type="button" class="btn btn-sm btn-info p-1 px-2" id="view_data" data-id="{{ $row->id }}"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</button>
                                     </td>
                                 </tr>
@@ -93,7 +93,7 @@
                                         <span class="text-danger">*</span>
                                     </label>
                                     <div class="col-md-7">
-                                        <select name="form_store" class="form-control dropdwon_select">
+                                        <select name="from_store_id" class="form-control dropdwon_select">
                                             @foreach ($store as $item)
                                                 <option value="{{$item->id}}">{{$item->store_name}}</option>
                                             @endforeach

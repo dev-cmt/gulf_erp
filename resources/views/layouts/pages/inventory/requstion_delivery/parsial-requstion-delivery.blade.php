@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="row mb-4">
         <div class="col-lg-12">
-            <a href="{{ route('requstion-delivery.index') }}" class="btn btn-sm btn-primary"><i class="fa fa-reply"></i><span class="btn-icon-add"></span>Back</a>
+            <a href="{{ url()->previous() }}" class="btn btn-sm btn-primary float-right"><i class="fa fa-reply"></i><span class="btn-icon-add"></span>Back</a>
         </div>
     </div>
 
