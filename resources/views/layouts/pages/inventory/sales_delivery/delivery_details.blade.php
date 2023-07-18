@@ -255,11 +255,12 @@
     //-----Get Serial Number
     function getSlNo(item_register_id, storeId) {
         var currentRow = $('#items-table tbody').find("tr:last");
+        var dataArray = [1, 3];
         $.ajax({
             url:'{{ route('get-serial-no')}}',
             method:'GET',
             dataType:"JSON",
-            data:{'item_register_id':item_register_id, 'storeId':storeId},
+            data:{'mast_item_register_id':item_register_id, 'mast_work_station_id':storeId, 'reference_type_id':dataArray, 'status': 1},
             success:function(response){
                 //--Get Serial Number
                 var data_sl = response.data;

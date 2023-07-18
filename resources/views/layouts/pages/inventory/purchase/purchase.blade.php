@@ -24,7 +24,7 @@
                                 <th>Store Location</th>
                                 <th>Total</th>
                                 <th>Status</th>
-                                <th class="text-center">Action</th>
+                                <th class="text-right">Action</th>
                             </tr>
                             </thead>
                             <tbody id="purchase_tbody">
@@ -57,7 +57,7 @@
                                         </span>
                                         @endif
                                     </td>
-                                    <td style="width:210px">
+                                    <td style="width:210px;text-align:right">
                                         <button type="button" class="btn btn-sm btn-success p-1 px-2" id="edit_data" data-id="{{ $row->id }}" {{$row->status !=0 ? 'disabled':''}}><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button>
                                         <button type="button" class="btn btn-sm btn-info p-1 px-2" id="view_data" data-id="{{ $row->id }}"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</button>
                                     </td>

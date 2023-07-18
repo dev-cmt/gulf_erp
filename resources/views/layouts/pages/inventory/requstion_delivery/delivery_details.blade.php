@@ -264,7 +264,7 @@
             url:'{{ route('get-serial-no')}}',
             method:'GET',
             dataType:"JSON",
-            data:{'item_register_id':item_register_id, 'storeId':storeId},
+            data:{'mast_item_register_id':item_register_id, 'mast_work_station_id':storeId, 'reference_type_id':[1, 3], 'status': 1},
             success:function(response){
                 //--Get Serial Number
                 var data_sl = response.data;
@@ -419,8 +419,8 @@
             $(this).val('');
 
             // Fetch new data for the current row
-            var valItemRegisterId = parseInt($('#itemRegisterId').val());
-            var storeId= $('#workStationId').val();
+            var item_register_id = parseInt($('#itemRegisterId').val());
+            var storeId = $("#invCheckItem").val();
             var currentRow = $(this).closest('tr');
             var serialNumberDropdown = currentRow.find('.dropdwon_select.val_serial_no');
             serialNumberDropdown.empty();
@@ -428,7 +428,7 @@
                 url: '{{ route('get-serial-no')}}',
                 method: 'GET',
                 dataType: "JSON",
-                data:{'item_register_id':valItemRegisterId, 'storeId':storeId},
+                data:{'mast_item_register_id':item_register_id, 'mast_work_station_id':storeId, 'reference_type_id': [1, 3], 'status': 1},
                 success: function(response) {
                     var data_sl = response.data;
                     serialNumberDropdown. append('<option selected>--Select--</option>');

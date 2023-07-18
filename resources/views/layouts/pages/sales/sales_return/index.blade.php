@@ -27,7 +27,7 @@
                                         $item = 0;
                                         foreach ($row->salesDetails as $key=> $value) {
                                             $total += $value->qty * $value->price;
-                                            $item += $key;
+                                            $item += 1;
                                         }
                                     @endphp
                                     <tr>
@@ -45,7 +45,7 @@
                                             </span>
                                             @endif
                                         </td>
-                                        <td class="text-center">{{$item !=0 ? $item : '1'}}</td>
+                                        <td class="text-center">{{$item}}</td>
                                         <td class="text-right">{{$total}}</td>
                                         <td class="text-right">
                                             <button id="details_data" data-id="{{ $row->id }}" class="btn btn-sm btn-info p-1 px-2"><i class="fa fa-info"></i></i><span class="btn-icon-add"></span>Details</button>
@@ -62,66 +62,78 @@
 
             <!--============//Show Modal Data//================-->
             <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
-                <div class="modal-dialog modal-xl">
+                <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Sales Details</h5>
                             <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                         </div>
-                        <div class="card-body pt-2">
-                            <div class="row">
-                                <div class="col-md-3 col-sm-12 pr-0">
-                                    <div class="row">
-                                        <label class="col-5 col-form-label"><strong> Invoice No :</strong></label>
-                                        <label class="col-7 col-form-label" id="inv_no"></label>
+                        <form class="form-valide" data-action="{{ route('sales-return.store') }}" method="POST" enctype="multipart/form-data" id="add-user-form">
+                            @csrf
+                            <div class="card-body pt-2">
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-12">
+                                        <div class="row">
+                                            <label class="col-6 col-form-label"><strong> Invoice No :</strong></label>
+                                            <label class="col-6 col-form-label" id="inv_no"></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12">
+                                        <div class="row">
+                                            <label class="col-6 col-form-label"><strong>Invoice Date :</strong></label>
+                                            <label class="col-6 col-form-label" id="inv_date"></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12">
+                                        <div class="row">
+                                            <label class="col-6 col-form-label"><strong>Customer Name :</strong></label>
+                                            <label class="col-6 col-form-label" id="mast_customers"></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12">
+                                        <div class="row">
+                                            <label class="col-6 col-form-label"><strong>Store Name :</strong></label>
+                                            <label class="col-6 col-form-label" id="store_name"></label>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3 col-sm-12 px-0">
-                                    <div class="row">
-                                        <label class="col-6 col-form-label"><strong>Invoice Date :</strong></label>
-                                        <label class="col-6 col-form-label" id="inv_date"></label>
+                                <br>
+                                <div class="table-responsive">
+                                    <table id="items-table" class="table table-bordered">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th width="5%"></th>
+                                                <th width="15%">Type</th>
+                                                <th width="20%">Group</th>
+                                                <th width="15%">Part No.</th>
+                                                <th width="10%">Price</th>
+                                                <th width="5%">Qty</th>
+                                                <th width="15%">Rec. Qty</th>
+                                                <th width="15%">Subtotal</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="table-body"></tbody>
+                                    </table>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 pt-2">
+                                        <div class="float-right">
+                                            <h6>Total <span style="border: 1px solid #2222;padding: 10px 40px;margin-left:10px" id="total">0.00</span></h6>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3 col-sm-12 px-0">
-                                    <div class="row">
-                                        <label class="col-6 col-form-label"><strong>Customer Name :</strong></label>
-                                        <label class="col-6 col-form-label" id="mast_customers"></label>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 col-sm-12 pl-0">
-                                    <div class="row">
-                                        <label class="col-5 col-form-label"><strong>Store Name :</strong></label>
-                                        <label class="col-7 col-form-label" id="store_name"></label>
+                                <div class="row pt-2">
+                                    <label class="col-md-2 col-form-label"><strong>Remarks</strong></label>
+                                    <div class="col-md-10">
+                                        <textarea class="form-control" name="remarks"></textarea>
                                     </div>
                                 </div>
                             </div>
-                            <br>
-                            <div class="table-responsive">
-                                <table id="items-table" class="table table-bordered mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th>SL#</th>
-                                            <th>Category</th>
-                                            <th>Group Name</th>
-                                            <th>Part No.</th>
-                                            <th>Price</th>
-                                            <th>Qty</th>
-                                            <th>Deli. Qty</th>
-                                            <th>Sub Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="table-body"></tbody>
-                                </table>
+                            <div class="modal-footer" style="height:50px">
+                                <button type="button" class="btn btn-sm btn-danger light" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-sm btn-primary submit_btn">Submit</button>
                             </div>
-                            <div class="row">
-                                <div class="col-md-12 pt-4">
-                                    <div class="float-right">
-                                        <h6>Total <span style="border: 1px solid #2222;padding: 10px 40px;margin-left:10px" id="total">0.00</span></h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
+                        </form>
                     </div>
                 </div>
             </div>
@@ -134,9 +146,8 @@
 <script>
     /*=======//View Details Add Modal//=========*/
     $(document).on('click', '#details_data', function() {
-    var id = $(this).data('id');
-    alert(id);
-    $('#table-body').empty();
+        var id = $(this).data('id');
+        $('#table-body').empty();
         $.ajax({
             url: '{{ route('get_sales_delivery_details')}}',
             method: 'GET',
@@ -149,25 +160,42 @@
                 $("#inv_date").html(dataMast.inv_date);
                 $("#mast_customers").html(dataMast.name);
                 $("#store_name").html(response.store);
-                $('#remarks').html(response.remarks);
+                // $('#remarks').html(response.remarks);
 
                 var dataDetails = response.data;
-                var total = 0; // Variable to hold the total value
+                var i = 0;
+                var total = 0;
                 $.each(dataDetails, function(index, item) {
-                    var subtotal = item.qty * item.price;
-                    var row = '<tr id="row_todo_'+ item.id + '">';
-                    row += '<td>' + (index + 1) + '</td>'; // Add SL# column
-                    row += '<td>' + item.cat_name + '</td>'; // Add Category column
-                    row += '<td>' + item.part_name + '</td>'; // Add Group Name column
+                    var subtotal = item.deli_qty * item.price;
+                    var row = '<tr>';
+                    row += '<input type="hidden" name="sales_id" value="' + dataMast.id + '">';
+                    row += '<input type="hidden" name="moreFile[' + i + '][price]" value="' + item.price + '">';
+                    row += '<input type="hidden" name="moreFile[' + i + '][mast_item_register_id]" value="' + item.mast_item_register_id + '">';
+                    // row += '<td>' + (index + 1) + '</td>';
+                    row += '<td><input type="checkbox" name="" class="checkbox-enable-disable" value="1"></td>';
+                    row += '<td>' + item.cat_name + '</td>';
+                    row += '<td>' + item.part_name + '</td>';
                     row += '<td>' + item.part_no + '</td>';
                     row += '<td>' + item.price + '</td>';
-                    row += '<td>' + item.qty + '</td>';
                     row += '<td>' + item.deli_qty + '</td>';
+                    row += '<td><input type="text" name="moreFile[' + i + '][qty]" class="form-control" value="' + item.deli_qty + '" disabled></td>';
                     row += '<td>' + subtotal + '</td>';
                     row += '</tr>';
-                    $('#table-body').append(row);
 
+                    ++i;
+                    $('#table-body').append(row);
                     total += subtotal;
+                });
+
+                // Move the event listener outside the loop
+                $(".checkbox-enable-disable").on("change", function() {
+                    var quantityInput = $(this).closest("tr").find("input[name^='moreFile'][name$='[qty]']");
+
+                    if ($(this).is(":checked")) {
+                        quantityInput.prop("disabled", false);
+                    } else {
+                        quantityInput.prop("disabled", true);
+                    }
                 });
                 // Update the total value in the HTML
                 $('#total').html(total.toFixed(2));
@@ -177,6 +205,43 @@
             }
         });
         $(".bd-example-modal-lg").modal('show');
+    });
+
+    /*===========// Save Data//===========*/
+    var form = '#add-user-form';
+    $(form).on('submit', function(event){
+        event.preventDefault();
+        var url = $(this).attr('data-action');
+        $.ajax({
+            url: url,
+            method: 'POST',
+            data: new FormData(this),
+            dataType: 'JSON',
+            contentType: false,
+            cache: false,
+            processData: false,
+            success:function(response)
+            {
+                $("#modalGrid").modal('hide');
+                swal("Your data save successfully", "Well done, you pressed a button", "success")
+                .then(function() {
+                    location.reload();
+                });
+            },
+            error: function (xhr) {
+                var errors = xhr.responseJSON.errors;
+                var errorHtml = '';
+                $.each(errors, function(key, value) {
+                    errorHtml += '<li style="color:red">' + value + '</li>';
+                });
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    html: '<ul>' + errorHtml + '</ul>',
+                    text: 'All input values are not null or empty.',
+                });
+            }
+        });
     });
 
 </script>

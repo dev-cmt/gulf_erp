@@ -145,6 +145,7 @@ Route::group(['middleware' => ['auth']], function(){
     
     Route::get('inv/sales-delivery-parsial/{id}/details', [MovementController::class, 'parsialSalesDeliveryDetails'])->name('sales-delivery-details-parsial');
     Route::get('inv/get-serial-no', [MovementController::class,'getSerialNumber'])->name('get-serial-no');
+    Route::get('get-sales-delivery/slno', [MovementController::class,'getSalesDeliverySlNo'])->name('get-sales-delivery-slno');
     Route::get('report/sales-delivery/{id}/pdf/download', [MovementController::class, 'generateSalesDeliver'])->name('report-sales-delivery-parsial.download');
     /**______________________________________________________________________________________________
      * Inventory => Requstion Delivery
@@ -219,6 +220,8 @@ Route::group(['middleware' => ['auth']], function(){
      Route::get('sales/sales-return/index',[SalesReturnController::class,'salesReturnIndex'])->name('sales-return.index');
      Route::get('sales/get-sales-delivery/details',[SalesReturnController::class,'getSalesDeliveryDetails'])->name('get_sales_delivery_details');     
      Route::get('sales/sales-return/details/{id}', [SalesReturnController::class, 'salesReturnDetails'])->name('sales-return-details');
+     Route::post('sales/sales-return/store', [SalesReturnController::class, 'salesReturnStore'])->name('sales-return.store');
+
 });
 
 Route::group(['middleware' => ['auth']], function(){

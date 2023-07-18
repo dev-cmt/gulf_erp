@@ -15,7 +15,7 @@
                                     <th>Invoice No</th>
                                     <th>Invoice Date</th>
                                     <th>Customer Name</th>
-                                    <th>Invoice Type</th>
+                                    <th>Type</th>
                                     <th>Item</th>
                                     {{-- <th>Qty</th> --}}
                                     <th>Total</th>
@@ -24,7 +24,7 @@
                                 </tr>
                             </thead>
                             <tbody id="sales_tbody">
-                                @foreach ($sales as $key=> $row)
+                                @foreach ($data as $key=> $row)
                                 @php
                                     $total = 0;
                                     $qty = 0;

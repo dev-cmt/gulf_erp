@@ -326,7 +326,24 @@ class MovementController extends Controller
 
     public function getSerialNumber(Request $request){
         //--Use Sales Delivery Page Or Store Transfer
-        $data = SlMovement::where('mast_item_register_id', $request->item_register_id)->where('mast_work_station_id', $request->storeId)->whereIn('reference_type_id', [1,3])->where('status', 1)->get();
+        $data = SlMovement::where('mast_item_register_id', $request->mast_item_register_id)
+        ->where('mast_work_station_id', $request->mast_work_station_id)
+        ->whereIn('reference_type_id', $request->reference_type_id)
+        ->where('status', $request->status)->get();
+
+        return response()->json(['data' => $data]);
+    }
+    public function getSalesDeliverySlNo(Request $request){
+        //--Use Sales Return Page 
+        $data = SlMovement::where('mast_item_register_id', $request->mast_item_register_id)
+        ->where('mast_work_station_id', $request->mast_work_station_id)
+        ->where('reference_id', $request->reference_id)
+        ->whereIn('reference_type_id', $request->reference_type_id)
+        ->where('status', $request->status)
+        ->join('mast_item_registers', 'mast_item_registers.id', 'sl_movements.mast_item_register_id')
+        ->select('sl_movements.*','mast_item_registers.part_no')
+        ->get();
+
         return response()->json(['data' => $data]);
     }
 

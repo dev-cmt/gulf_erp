@@ -13,10 +13,14 @@ use App\Models\Master\MastWorkStation;
 use App\Models\Master\MastCustomer;
 use App\Models\Sales\Sales;
 use App\Models\Sales\SalesDetails;
+use App\Models\Sales\SalesReturn;
+use App\Models\Sales\SalesReturnDetails;
+use App\Models\SlMovement;
+
 class SalesReturnController extends Controller
 {
     function salesReturnIndex() {
-        $data = Sales::whereIn('status', [3])->whereIn('is_parsial', [0,1])->orderBy('id', 'asc')->get();
+        $data = Sales::whereIn('status', [3,4])->whereIn('is_parsial', [0,1])->orderBy('id', 'asc')->get();
         return view('layouts.pages.sales.sales_return.index', compact('data'));
     }
     public function salesReturnDetails($id)
@@ -32,6 +36,43 @@ class SalesReturnController extends Controller
         ->get();
         
         return view('layouts.pages.sales.sales_return.return_details', compact('data','sales','store'));
+    }
+    public function salesReturnStore(Request $request)
+    {
+        // $validator = Validator::make($request->all(), [
+        //     'inv_date' => 'required',
+        //     'mast_customer_id' => 'required',
+        // ]);
+        // if ($validator->fails()) {
+        //     return response()->json(['errors' => $validator->errors()], 422);
+        // }
+        $salesReturn = new SalesReturn();
+        $salesReturn->return_date = date('Y-m-d');
+        $salesReturn->remarks = $request->remarks;
+        $salesReturn->sales_id = $request->sales_id;
+        $salesReturn->mast_work_station_id = Auth::user()->mast_work_station_id;
+        $salesReturn->status = 0;
+        $salesReturn->user_id = Auth::user()->id;
+        $salesReturn->save();
+
+        if (isset($request->moreFile[0]['qty']) && !empty($request->moreFile[0]['qty'])) {
+            foreach($request->moreFile as $item){
+                $data = new SalesReturnDetails();
+                $data->sales_return_id = $salesReturn->id;
+                $data->price = $item['price'];
+                $data->qty = $item['qty'];
+                $data->rcv_qty = 0;
+                $data->mast_item_register_id = $item['mast_item_register_id'];
+                $data->status = 1;
+                $data->user_id = Auth::user()->id;
+                $data->save();
+            }
+        }
+
+        return response()->json([
+            'salesReturn' => $salesReturn,
+            'data' => $data
+        ]);
     }
     /**___________________________________________________________________
      * Ajax Get Data & Show
