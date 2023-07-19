@@ -15,7 +15,7 @@
                                     <th>Customer Info.</th>
                                     <th>Category</th>
                                     <th>Deli. Type</th>
-                                    <th>Item</th>
+                                    <th class="text-center">Item</th>
                                     <th>Total</th>
                                     <th class="text-center">Action</th>
                                 </tr>
@@ -34,7 +34,7 @@
                                         <td>{{++$keys}}</td>
                                         <td><strong>No: </strong>{{$row->inv_no}}<br><strong>Date: </strong>{{date("j F, Y", strtotime($row->inv_date))}}</td>
                                         <td><strong>Name: </strong>{{$row->mastCustomer->name ?? 'NULL'}}<br><strong>Phone: </strong>{{$row->mastCustomer->phone ?? 'NULL'}}</td>
-                                        <td class="text-center">{{$row->mastItemCategory->cat_name ?? 'NULL'}}</td>
+                                        <td>{{$row->mastItemCategory->cat_name ?? 'NULL'}}</td>
                                         <td>@if($row->is_parsial == 0)
                                             <span class="badge light badge-success">
                                                 <i class="fa fa-circle text-success mr-1"></i>Complete

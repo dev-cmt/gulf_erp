@@ -144,10 +144,9 @@
                                     <table id="items-table" class="table table-bordered">
                                         <thead class="thead-light">
                                             <tr>
-                                                <th width="5%"></th>
-                                                <th width="35%">Serial No.</th>
-                                                <th width="35%">Part No.</th>
-                                                <th width="25%">Delivery</th>
+                                                <th width="10%">SL#</th>
+                                                <th width="65%">Serial No.</th>
+                                                <th width="25%" class="text-center">Date</th>
                                             </tr>
                                         </thead>
                                         <tbody id="table-body"></tbody>
@@ -184,10 +183,8 @@
             dataType:"JSON",
             data:{'id': id},
             success:function(response){
-                alert('hi');
-                
-                $("#modalGrid").modal('show');
 
+                $("#modalGrid").modal('show');
 
                 var dataMast = response.data;
                 $('#return_no').html(dataMast.return_no);
@@ -206,7 +203,6 @@
                 $('#storeTransferDetailsId').val(response.id);
 
                 var storeId= $('#workStationId').val();
-
                 getSlNo(response.item_register_id, storeId);
             },
             error: function(response) {
@@ -219,46 +215,67 @@
                 dropdownParent: $(this).parent()
             });
         });
+        var tbody = $('#table-body');
+        tbody.empty();
+        // addRow(0);
     });
 
-    
-     /*=======// UGet Serial Number //=========*/
+    /*===========// Get Data //===========*/
     function getSlNo(item_register_id, storeId) {
-        var currentRow = $('#items-table tbody').find("tr:last");
         $.ajax({
-            url:'{{ route('get-sales-delivery-slno')}}',
-            method:'GET',
-            dataType:"JSON",
-            // data:{'mast_item_register_id':item_register_id, 'mast_work_station_id':storeId, 'reference_type_id': [1, 3], 'status': 1},
-            data:{'reference_id': 3,'mast_item_register_id': 2, 'mast_work_station_id': 1, 'reference_type_id': [2], 'status': 0},
-            success:function(response){
-                //--Tabel Sales Delivery
+            url: '{{ route('get-serial-no')}}',
+            method: 'GET',
+            data: {
+                'mast_item_register_id': 1,
+                'mast_work_station_id': 1,
+                'reference_type_id': [1, 3],
+                'status': 1
+            },
+            success: function (response) {
+                var data_sl = response.data;
                 var tableBody = $('#table-body');
                 tableBody.empty();
-                var data_sl = response.data;
-                var i = 0;
-                $.each(data_sl, function(index, item) {
+
+                for (var i = 0; i < 3; i++) {
                     var newRow = $('<tr>' +
-                        '<input type="hidden" name="moreFile['+i+'][sl_movement_id]" class="form-control" value="' + item.id + '">' +
+                        '<input type="hidden" name="moreFile[' + i + '][sl_movement_id]" class="form-control" value="' + data_sl[i].id + '">' +
                         '<td><input type="checkbox" name="" value="1"></td>' +
-                        '<td>' + item.serial_no + '</td>' +
-                        '<td>' + item.part_no + '</td>' +
-                        '<td>' + formatDate(item.created_at) + '</td>' +
-                    '</tr>');
+                        '<td><select name="moreFile[' + i + '][serial_no]" class="form-control dropdwon_select val_serial_no"></select></td>' +
+                        '<td>' + formatDate(data_sl[i].created_at) + '</td>' +
+                        '</tr>');
 
                     tableBody.append(newRow);
-                });
-                function formatDate(dateString) {
-                    const options = { year: "numeric", month: "long", day: "numeric" };
-                    return new Date(dateString).toLocaleDateString(undefined, options);
                 }
+
+                var serial_number_dr = $('#items-table tbody').find(".val_serial_no");
+
+                serial_number_dr.empty();
+                serial_number_dr.append('<option selected>--Select--</option>');
+
+                $.each(data_sl, function (index, option) {
+                    serial_number_dr.append('<option value="' + option.id + '">' + option.serial_no + '</option>');
+                });
+
+                $("#modalGrid").modal('show');
+                //--Dropdwon Search Fix
+                $('.dropdwon_select').each(function () {
+                    $(this).select2({
+                        dropdownParent: $(this).parent()
+                    });
+                });
             },
-            error:function(){
+            error: function () {
                 alert('Fail');
             }
         });
     }
-    
+
+    function formatDate(dateString) {
+        const options = { year: "numeric", month: "long", day: "numeric" };
+        return new Date(dateString).toLocaleDateString(undefined, options);
+    }
+
+
     /*===========// Save Data//===========*/
     var form = '#add-user-form';
     $(form).on('submit', function(event){
@@ -296,6 +313,117 @@
         });
     });
 </script>
+<script type="text/javascript">
+    //======Add ROW
+    var count = 0;
+    $('#items-table').on('click', '.add-row', function() {
+        var allValuesNotNull = true;
+        $('.val_serial_no').each(function() {
+            var value = $(this).val();
+            if (value === null || value === '') {
+                allValuesNotNull = false;
+                return false;
+            }
+        });
+        if (allValuesNotNull) {
+            
+            var qty = parseInt($('#qty').val());
+            var checkDeliQty = parseInt($('#getDeliQty').val());
+            var checkQty = qty - checkDeliQty;
+            var rowCount = parseInt($('#items-table tbody tr').length) + 1;
+            if(checkQty >= rowCount){
+                ++count;
+                addRow(count);
+                //--------------------
+                var valItemRegisterId = parseInt($('#itemRegisterId').val());
+                var storeId= $('#workStationId').val();
+                getSlNo(valItemRegisterId, storeId);
+                //--------------------
+                var qtyResult = checkDeliQty + rowCount;
+                $('#deliQty').val(qtyResult);
+            }else{
+                Swal.fire(
+                    'Done',
+                    'Your already fill up all data!',
+                    'question'
+                )
+            }
+        } else {
+            swal("Error!", "All input values are not null or empty.", "error");
+        }
+    });
+
+    function addRow(i){
+        var rowCount = parseInt($('#items-table tbody tr').length) + 1;
+        var newRow = $('<tr>' +
+            '<td><label class=col-form-label>'+rowCount+'</label></td>' +
+            '<td><select id="serialNumber" name="moreFile['+i+'][serial_no]" class="form-control dropdwon_select val_serial_no"></select></td>' +
+            '<td class="text-center">' +
+                '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs add-row"><span class="fa fa-plus"></span></button>' +
+                '<button type="button" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0 remove-row"><span class="fa fa-trash"></span></button>' +
+            '</td>'+
+        '</tr>');
+    
+        $('#items-table tbody').append(newRow);
+        //--Dropdwon Search Fix
+        newRow.find('.dropdwon_select').each(function () {
+            $(this).select2({
+                dropdownParent: $(this).parent()
+            });
+        });
+    }
+    //======Remove ROW
+    $('#items-table').on('click', '.remove-row', function() {
+        $(this).closest('tr').remove();
+        var removeDeliQty= $('#deliQty').val(); 
+        $('#deliQty').val(removeDeliQty - 1);
+    });
+    //======Duplicates Part Number Validation
+    $(document).on('change','.val_serial_no', function() {
+        var dropdownValues = $('.val_serial_no').map(function() {
+            return $(this).val();
+        }).get();
+
+        var hasDuplicates = new Set(dropdownValues).size !== dropdownValues.length;
+        if (hasDuplicates) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Duplicate Values',
+                text: 'Duplicate values are not allowed in the partNumber dropdown.',
+            });
+            //--Reset Option 
+            $(this).val('');
+
+            // Fetch new data for the current row
+            var valItemRegisterId = parseInt($('#itemRegisterId').val());
+            var storeId= $('#workStationId').val();
+            var currentRow = $(this).closest('tr');
+            var serialNumberDropdown = currentRow.find('.dropdwon_select.val_serial_no');
+            serialNumberDropdown.empty();
+            $.ajax({
+                url: '{{ route('get-serial-no')}}',
+                method: 'GET',
+                dataType: "JSON",
+                data:{'item_register_id':valItemRegisterId, 'storeId':storeId},
+                data:{'mast_item_register_id':valItemRegisterId, 'mast_work_station_id':storeId, 'reference_type_id':[1, 3], 'status': 1},
+                success: function(response) {
+                    var data_sl = response.data;
+                    serialNumberDropdown. append('<option selected>--Select--</option>');
+                    $.each(data_sl, function(index, option) {
+                        serialNumberDropdown.append('<option value="' + option.id + '">' + option.serial_no + '</option>');
+                    });
+                },
+                error: function() {
+                    alert('Failed to fetch data.');
+                }
+            }); 
+            
+        }
+    });
+    
+
+</script>
+
 
 
 

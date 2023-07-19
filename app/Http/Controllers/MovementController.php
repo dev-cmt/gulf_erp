@@ -448,10 +448,11 @@ class MovementController extends Controller
         $data = SalesReturnDetails::where('sales_return_details.status', 1)->where('sales_return_details.id', $request->id)
         ->join('sales_returns', 'sales_returns.id', 'sales_return_details.sales_return_id')
         ->join('sales', 'sales.id', 'sales_returns.sales_id')
+        ->join('mast_customers', 'mast_customers.id', 'sales.mast_customer_id')
         ->join('mast_item_registers', 'mast_item_registers.id', 'sales_return_details.mast_item_register_id')
         ->join('mast_item_groups', 'mast_item_groups.id', 'mast_item_registers.mast_item_group_id')
         ->join('mast_item_categories', 'mast_item_categories.id', 'sales.mast_item_category_id')
-        ->select('sales_return_details.*','sales_returns.return_no','sales_returns.return_date','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
+        ->select('sales_return_details.*','sales_returns.return_no','sales_returns.return_date','mast_customers.name','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
         ->first();
 
         return response()->json([ 'data'=>$data]);
@@ -475,8 +476,7 @@ class MovementController extends Controller
         ->where('reference_id', $request->reference_id)
         ->whereIn('reference_type_id', $request->reference_type_id)
         ->where('status', $request->status)
-        ->join('mast_item_registers', 'mast_item_registers.id', 'sl_movements.mast_item_register_id')
-        ->select('sl_movements.*','mast_item_registers.part_no')
+        ->select('sl_movements.*')
         ->get();
 
         return response()->json(['data' => $data]);

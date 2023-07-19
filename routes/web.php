@@ -226,7 +226,7 @@ Route::group(['middleware' => ['auth']], function(){
      */
      Route::get('sales/sales-receive/index',[MovementController::class,'salesReceiveIndex'])->name('sales-receive.index');
      Route::get('sales/sales-receive/details/{id}',[MovementController::class,'salesReceiveDetails'])->name('sales-receive-details');
-     Route::post('sales/sales-receive/store', [MovementController::class, 'salesReceiveStore'])->name('sales-return.store');
+     Route::post('sales/sales-receive/store', [MovementController::class, 'salesReceiveStore'])->name('sales-receive.store');
 
      Route::get('sales/get-sales-return/details', [MovementController::class, 'getSalesReturnDetails'])->name('get_sales_return_details'); 
      Route::get('sales/get-sales-receive-page/details', [MovementController::class, 'getSalesReceivePage'])->name('get-sales-receive-page'); 
