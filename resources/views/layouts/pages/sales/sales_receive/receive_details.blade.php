@@ -3,28 +3,34 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Sales Delivery Details</h4>
+                    <h4 class="card-title">Sales Receive Details</h4>
                     <a href="{{ route('sales-return.index') }}" class="btn btn-sm btn-primary"><i class="fa fa-reply"></i><span class="btn-icon-add"></span>Back</a>
                 </div>
 
                 <div class="card-body pt-2">
                     <div class="row">
-                        <div class="col-md-4 col-sm-12">
+                        <div class="col-md-3 col-sm-12">
                             <div class="row">
-                                <label class="col-6 col-form-label"><strong> Invoice No :</strong></label>
-                                <label class="col-6 col-form-label">{{$sales->inv_no}}</label>
+                                <label class="col-6 col-form-label"><strong> Return No :</strong></label>
+                                <label class="col-6 col-form-label">{{$mastData->return_no}}</label>
                             </div>
                         </div>
-                        <div class="col-md-4 col-sm-12">
+                        <div class="col-md-3 col-sm-12">
                             <div class="row">
-                                <label class="col-6 col-form-label"><strong>Invoice Date :</strong></label>
-                                <label class="col-6 col-form-label">{{date("j F, Y", strtotime($sales->inv_date))}}</label>
+                                <label class="col-6 col-form-label"><strong>Return Date :</strong></label>
+                                <label class="col-6 col-form-label">{{date("j F, Y", strtotime($mastData->return_date))}}</label>
                             </div>
                         </div>
-                        <div class="col-md-4 col-sm-12">
+                        <div class="col-md-3 col-sm-12">
+                            <div class="row">
+                                <label class="col-6 col-form-label"><strong>Customer Name :</strong></label>
+                                <label class="col-6 col-form-label">{{$mastData->name}}</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-12">
                             <div class="row">
                                 <label class="col-6 col-form-label"><strong>Store Name :</strong></label>
-                                <label class="col-6 col-form-label">{{$store->store_name}}</label>
+                                <label class="col-6 col-form-label">{{$mastData->mastWorkStation->store_name}}</label>
                             </div>
                         </div>
                     </div>
@@ -39,7 +45,7 @@
                                 <th>Part No.</th>
                                 <th>Price</th>
                                 <th>Qty</th>
-                                <th>Deli. Qty</th>
+                                <th>Rcv. Qty</th>
                                 <th>Total</th>
                                 <th class="text-right">Action</th>
                             </tr>
@@ -83,17 +89,17 @@
                         <div class="row" id="main-row-data">
                             <div class="col-md-6">
                                 <div class="form-group row">
-                                    <label class="col-md-5 col-form-label px-0"><strong>Invoice No.</strong> </label>
+                                    <label class="col-md-5 col-form-label px-0"><strong>Return No.</strong> </label>
                                     <div class="col-md-7">
-                                        <label class=col-form-label id="inv_no"></label>
+                                        <label class=col-form-label id="return_no"></label>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group row">
-                                    <label class="col-md-5 col-form-label px-0"><strong>Invoice Date</strong></label>
+                                    <label class="col-md-5 col-form-label px-0"><strong>Return Date</strong></label>
                                     <div class="col-md-7">
-                                        <label class=col-form-label id="inv_date"></label>
+                                        <label class=col-form-label id="return_date"></label>
                                     </div>
                                 </div>
                             </div>
@@ -109,7 +115,7 @@
                                 <div class="form-group row">
                                     <label class="col-md-5 col-form-label px-0"><strong>Part No.</strong></label>
                                     <div class="col-md-7">
-                                        <label class=col-form-label id="getPartNo"></label>
+                                        <label class=col-form-label id="part_no"></label>
                                     </div>
                                 </div>
                             </div>
@@ -173,16 +179,22 @@
     $(document).on('click','#edit_data', function(){
         var id = $(this).data('id');
         $.ajax({
-            url:'{{ route('get_sales_details')}}',
+            url:'{{ route('get-sales-receive-page')}}',
             method:'GET',
             dataType:"JSON",
             data:{'id': id},
             success:function(response){
-                $('#inv_no').html(response.inv_no);
-                $("#inv_type").html(response.cat_name);
-                $("#inv_date").html(response.inv_date);
-                $("#mast_customer_id").html(response.name);
-                $('#remarks').html(response.remarks);
+                alert('hi');
+                
+                $("#modalGrid").modal('show');
+
+
+                var dataMast = response.data;
+                $('#return_no').html(dataMast.return_no);
+                $("#return_date").html(dataMast.return_date);
+                $("#mast_customer_id").html(dataMast.name);
+                $("#store_name").html(dataMast.store_name);
+                $('#part_no').html(dataMast.part_no);
 
                 //---SetUp
                 $('#itemRegisterId').val(response.item_register_id);
@@ -235,7 +247,6 @@
                     '</tr>');
 
                     tableBody.append(newRow);
-                    $("#modalGrid").modal('show');
                 });
                 function formatDate(dateString) {
                     const options = { year: "numeric", month: "long", day: "numeric" };

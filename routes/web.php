@@ -217,11 +217,19 @@ Route::group(['middleware' => ['auth']], function(){
      * Sales => Sales Return
      * ______________________________________________________________________________________________
      */
-     Route::get('sales/sales-return/index',[SalesReturnController::class,'salesReturnIndex'])->name('sales-return.index');
-     Route::get('sales/get-sales-delivery/details',[SalesReturnController::class,'getSalesDeliveryDetails'])->name('get_sales_delivery_details');     
-     Route::get('sales/sales-return/details/{id}', [SalesReturnController::class, 'salesReturnDetails'])->name('sales-return-details');
-     Route::post('sales/sales-return/store', [SalesReturnController::class, 'salesReturnStore'])->name('sales-return.store');
+     Route::get('sales/sales-return/index',[SalesReturnController::class,'index'])->name('sales-return.index');
+     Route::post('sales/sales-return/store', [SalesReturnController::class, 'store'])->name('sales-return.store');
+     Route::get('sales/get/sales-delivery/details',[SalesReturnController::class,'getSalesDeliveryDetails'])->name('get_sales_delivery_details');     
+    /**______________________________________________________________________________________________
+     * Sales => Sales Receive
+     * ______________________________________________________________________________________________
+     */
+     Route::get('sales/sales-receive/index',[MovementController::class,'salesReceiveIndex'])->name('sales-receive.index');
+     Route::get('sales/sales-receive/details/{id}',[MovementController::class,'salesReceiveDetails'])->name('sales-receive-details');
+     Route::post('sales/sales-receive/store', [MovementController::class, 'salesReceiveStore'])->name('sales-return.store');
 
+     Route::get('sales/get-sales-return/details', [MovementController::class, 'getSalesReturnDetails'])->name('get_sales_return_details'); 
+     Route::get('sales/get-sales-receive-page/details', [MovementController::class, 'getSalesReceivePage'])->name('get-sales-receive-page'); 
 });
 
 Route::group(['middleware' => ['auth']], function(){

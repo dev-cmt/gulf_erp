@@ -12,6 +12,7 @@ class SalesReturn extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'return_no',
         'return_date',
         'remarks',
         'status',

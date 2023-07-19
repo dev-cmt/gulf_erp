@@ -425,6 +425,7 @@
                 method: 'GET',
                 dataType: "JSON",
                 data:{'item_register_id':valItemRegisterId, 'storeId':storeId},
+                data:{'mast_item_register_id':valItemRegisterId, 'mast_work_station_id':storeId, 'reference_type_id':[1, 3], 'status': 1},
                 success: function(response) {
                     var data_sl = response.data;
                     serialNumberDropdown. append('<option selected>--Select--</option>');

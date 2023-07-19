@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('sales_returns', function (Blueprint $table) {
             $table->id();
+            $table->string('return_no')->nullable();
             $table->date('return_date')->nullable();
             $table->tinyInteger('status')->default(false);
             $table->text('remarks')->nullable();

@@ -21,14 +21,13 @@ class SalesController extends Controller
 {
     public function index($type)
     {   
-
         $item_group = MastItemGroup::where('mast_item_category_id', $type)->orderBy('part_name', 'asc')->get();
         $customer = MastCustomer::where('status', 1)->where('mast_customer_type_id', $type)->get();
         $customer_type = MastCustomerType::where('status', 1)->get();
         $item_category = MastItemCategory::where('status', 1)->get();
         
         $data=Sales::where('mast_item_category_id', $type)->with('salesDetails','mastCustomer','mastItemCategory')->orderBy('id', 'desc')->latest()->get();
-        return view('layouts.pages.sales.sales',compact('type','data','item_group','customer','customer_type','item_category'));
+        return view('layouts.pages.sales.sales.index',compact('type','data','item_group','customer','customer_type','item_category'));
     }
     public function store(Request $request, $type)
     {
@@ -157,7 +156,7 @@ class SalesController extends Controller
      */
     function sales_approve_list () {
         $data=Sales::where('status', 0)->orderBy('id', 'desc')->latest()->get();
-        return view('layouts.pages.sales.sales_approve',compact('data'));
+        return view('layouts.pages.sales.sales.sales_approve',compact('data'));
     }
     public function getSalesApproveDetails(Request $request)
     {
@@ -248,7 +247,7 @@ class SalesController extends Controller
     public function getCustomerData(Request $request)
     {
         $data = MastCustomer::where('status', 1)->where('mast_customer_type_id', $request->part_id)->get();
-        return view('layouts.pages.sales.load-customer',compact('data'));
+        return view('layouts.pages.sales.sales.load-customer',compact('data'));
     }
     public function getDeleteMaster(Request $request)
     {

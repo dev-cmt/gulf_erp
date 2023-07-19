@@ -48,8 +48,7 @@
                                         <td class="text-center">{{$item}}</td>
                                         <td class="text-right">{{$total}}</td>
                                         <td class="text-right">
-                                            <button id="details_data" data-id="{{ $row->id }}" class="btn btn-sm btn-info p-1 px-2"><i class="fa fa-info"></i></i><span class="btn-icon-add"></span>Details</button>
-                                            <a href="{{ route('sales-return-details', $row->id) }}" class="btn btn-secondary p-1 px-2"><i class="fa fa-plus"></i></i><span class="btn-icon-add"></span>Return</a>
+                                            <button id="details_data" data-id="{{ $row->id }}" class="btn btn-secondary p-1 px-2"><i class="fa fa-plus"></i></i><span class="btn-icon-add"></span>Return</button>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -65,7 +64,7 @@
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Sales Details</h5>
+                            <h5 class="modal-title">Sales Return</h5>
                             <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                         </div>
                         <form class="form-valide" data-action="{{ route('sales-return.store') }}" method="POST" enctype="multipart/form-data" id="add-user-form">
@@ -177,8 +176,8 @@
                     row += '<td>' + item.part_name + '</td>';
                     row += '<td>' + item.part_no + '</td>';
                     row += '<td>' + item.price + '</td>';
-                    row += '<td>' + item.deli_qty + '</td>';
-                    row += '<td><input type="text" name="moreFile[' + i + '][qty]" class="form-control" value="' + item.deli_qty + '" disabled></td>';
+                    row += '<td id="deli_qty">' + item.deli_qty + '</td>';
+                    row += '<td><input type="number" name="moreFile[' + i + '][qty]" class="form-control checkbox-qty" value="' + item.deli_qty + '" disabled></td>';
                     row += '<td>' + subtotal + '</td>';
                     row += '</tr>';
 
@@ -187,7 +186,6 @@
                     total += subtotal;
                 });
 
-                // Move the event listener outside the loop
                 $(".checkbox-enable-disable").on("change", function() {
                     var quantityInput = $(this).closest("tr").find("input[name^='moreFile'][name$='[qty]']");
 
@@ -195,9 +193,27 @@
                         quantityInput.prop("disabled", false);
                     } else {
                         quantityInput.prop("disabled", true);
+                        // Reset the quantity input value when disabling
+                        quantityInput.val(parseFloat(quantityInput.data('original-value')));
+                        quantityInput.removeClass('text-danger');
                     }
                 });
-                // Update the total value in the HTML
+
+                $(".checkbox-qty").on("change", function() {
+                    var quantityInput = $(this);
+                    var deliQtyCell = quantityInput.closest("tr").find("#deli_qty");
+                    var deliQty = parseFloat(deliQtyCell.text());
+                    var enteredQty = parseFloat(quantityInput.val());
+
+                    if (enteredQty > deliQty) {
+                        quantityInput.addClass('text-danger');
+                        $(".submit_btn").prop("disabled", true);
+                    } else {
+                        quantityInput.removeClass('text-danger');
+                        $(".submit_btn").prop("disabled", false);
+                    }
+                });
+
                 $('#total').html(total.toFixed(2));
             },
             error: function(response) {
@@ -222,23 +238,19 @@
             processData: false,
             success:function(response)
             {
-                $("#modalGrid").modal('hide');
-                swal("Your data save successfully", "Well done, you pressed a button", "success")
-                .then(function() {
-                    location.reload();
-                });
+                $(".bd-example-modal-lg").modal('hide');
+                swal("Your data save successfully", "Well done, you pressed a button", "success");
+                // .then(function() {
+                //     location.reload();
+                // });
             },
-            error: function (xhr) {
-                var errors = xhr.responseJSON.errors;
-                var errorHtml = '';
-                $.each(errors, function(key, value) {
-                    errorHtml += '<li style="color:red">' + value + '</li>';
-                });
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    html: '<ul>' + errorHtml + '</ul>',
-                    text: 'All input values are not null or empty.',
+            error: function(response) {
+                swal({
+                    title: "No Data Found",
+                    text: "There are no details available for this item.",
+                    icon: "warning",
+                    button: "OK",
+                    dangerMode: true,
                 });
             }
         });

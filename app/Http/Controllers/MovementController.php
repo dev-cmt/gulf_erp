@@ -26,6 +26,8 @@ use App\Models\Inventory\StoreTransfer;
 use App\Models\Inventory\StoreTransferDetails;
 use App\Models\Sales\Sales;
 use App\Models\Sales\SalesDetails;
+use App\Models\Sales\SalesReturn;
+use App\Models\Sales\SalesReturnDetails;
 use App\Models\SlMovement;
 use App\Models\User;
 use App\Helpers\Helper;
@@ -284,6 +286,101 @@ class MovementController extends Controller
         ->orderBy('id', 'asc')->get();
         return view('layouts.pages.inventory.requstion_delivery.parsial-requstion-delivery',compact('storeTransfer','data'));
     }
+    /**___________________________________________________________________
+     * Sales Receive
+     * ___________________________________________________________________
+     */
+    public function salesReceiveIndex()
+    {
+        $data= SalesReturn::where('sales_returns.status', 1)
+        ->join('sales', 'sales.id', 'sales_returns.sales_id')
+        ->join('mast_item_categories', 'mast_item_categories.id', 'sales.mast_item_category_id')
+        ->join('mast_customers', 'mast_customers.id', 'sales.mast_customer_id')
+        ->select('sales_returns.*','mast_customers.name','mast_item_categories.cat_name')
+        ->orderBy('id', 'asc')->get();
+        return view('layouts.pages.sales.sales_receive.index',compact('data'));
+    }
+    public function salesReceiveDetails($id)
+    {
+        $mastData = SalesReturn::where('sales_returns.id', $id)
+        ->join('sales', 'sales.id', 'sales_returns.sales_id')
+        ->join('mast_customers', 'mast_customers.id', 'sales.mast_customer_id')
+        ->select('sales_returns.*','mast_customers.name')
+        ->first();
+        $data = SalesReturnDetails::where('sales_return_details.status', 1)->where('sales_return_id', $id)
+        ->join('sales_returns', 'sales_returns.id', 'sales_return_details.sales_return_id')
+        ->join('sales', 'sales.id', 'sales_returns.sales_id')
+        ->join('mast_item_registers', 'mast_item_registers.id', 'sales_return_details.mast_item_register_id')
+        ->join('mast_item_groups', 'mast_item_groups.id', 'mast_item_registers.mast_item_group_id')
+        ->join('mast_item_categories', 'mast_item_categories.id', 'sales.mast_item_category_id')
+        ->select('sales_return_details.*','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
+        ->get();
+        
+        return view('layouts.pages.sales.sales_receive.receive_details', compact('data','mastData'));
+    }
+    function salesReceiveStore(Request $request) 
+    {
+        $storeTransferDetails = StoreTransferDetails::findOrFail($request->store_transfer_details_id);
+        $storeTransferDetails->deli_qty = $request->deli_qty;
+        $storeTransferDetails->save();
+        
+        if (isset($request->moreFile[0]['serial_no']) && !empty($request->moreFile[0]['serial_no'])) {
+            foreach($request->moreFile as $item){
+                $dataUpdate = SlMovement::findOrFail($item['serial_no']);
+                $dataUpdate->status = 0;
+                $dataUpdate->out_date = date('Y-m-d');
+                $dataUpdate->save();
+                $data = new SlMovement();
+                $data->serial_no = $dataUpdate->serial_no;
+                $data->reference_id = $request->store_transfer_id;
+                $data->reference_type_id = 3; //1=> Purchase || 2=> Sales || 3=> Store Transfer || 4=> Return
+                $data->status = 1;
+                $data->mast_item_register_id = $request->item_register_id;
+                $data->mast_work_station_id = $request->mast_work_station_id;
+                $data->user_id = Auth::user()->id;
+                $data->save();
+            }
+        }
+        //___________ Store Transfer Status Update
+        $checkStoreTransfer = StoreTransferDetails::where('store_transfer_id', $storeTransferDetails->store_transfer_id)->get();
+        $allTrue = true;
+        foreach ($checkStoreTransfer as $key => $value) {
+            if ($value->qty != $value->deli_qty) {
+                $allTrue = false;
+                break;
+            }
+        }
+        if ($allTrue){
+            $storeTransferUpdate = StoreTransfer::findOrFail($storeTransferDetails->store_transfer_id);
+            $storeTransferUpdate->status = 4; // Pendding => 0 || Success => 1 || Cencel => 2 || Parsial => 3 || Complete => 4
+            $variable = SlMovement::where('reference_id', $storeTransferDetails->store_transfer_id)->where('reference_type_id', 1)
+                    ->whereDate('created_at', '!=', date('Y-m-d'))->where('status', 3)->count();
+            if($variable){
+                $storeTransferUpdate->is_parsial = 1;
+            }else{
+                $storeTransferUpdate->is_parsial = 0;
+            }
+            $storeTransferUpdate->save();
+        }else{
+            $storeTransferUpdate = StoreTransfer::findOrFail($storeTransferDetails->store_transfer_id);
+            $storeTransferUpdate->status = 3; // Pendding => 0 || Success => 1 || Cencel => 2 || Parsial => 3 || Complete => 4
+            $storeTransferUpdate->is_parsial = 1;
+            $storeTransferUpdate->save();
+        }
+        return response()->json('success');
+    }
+    // function parsialRequstionDeliveryDetails($id) { 
+    //     $storeTransfer = StoreTransfer::where('id', $id)->orderBy('id', 'asc')->first();
+        
+    //     $data = SlMovement::where('sl_movements.reference_id', $id)->where('sl_movements.reference_type_id', 3)
+    //     ->join('store_transfers', 'store_transfers.id', 'sl_movements.reference_id')
+    //     ->join('mast_item_registers', 'mast_item_registers.id', 'sl_movements.mast_item_register_id')
+    //     ->join('mast_item_groups', 'mast_item_groups.id', 'mast_item_registers.mast_item_group_id')
+    //     ->join('mast_item_categories', 'mast_item_categories.id', 'mast_item_groups.mast_item_category_id')
+    //     ->select('sl_movements.*','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
+    //     ->orderBy('id', 'asc')->get();
+    //     return view('layouts.pages.inventory.requstion_delivery.parsial-requstion-delivery',compact('storeTransfer','data'));
+    // }
 
     /**___________________________________________________________________
      * Ajax Call
@@ -323,7 +420,45 @@ class MovementController extends Controller
         ->first();
         return response()->json($data);
     }
+    public function getSalesReturnDetails(Request $request)
+    {
+        $data = SalesReturnDetails::where('sales_return_details.sales_return_id', $request->id)
+        ->join('sales_returns', 'sales_returns.id', 'sales_return_details.sales_return_id')
+        ->join('sales', 'sales.id', 'sales_returns.sales_id')
+        ->join('mast_item_registers', 'mast_item_registers.id', 'sales_return_details.mast_item_register_id')
+        ->join('mast_item_groups', 'mast_item_groups.id', 'mast_item_registers.mast_item_group_id')
+        ->join('mast_item_categories', 'mast_item_categories.id', 'sales.mast_item_category_id')
+        ->select('sales_return_details.*','sales_returns.return_no','sales_returns.return_date','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
+        ->get();
 
+        $sales = SalesReturn::where('sales_returns.id', $request->id)
+        ->join('sales', 'sales.id', 'sales_returns.sales_id')
+        ->join('mast_customers', 'mast_customers.id', 'sales.mast_customer_id')
+        ->join('mast_work_stations', 'mast_work_stations.id', 'sales_returns.mast_work_station_id')
+        ->select('sales_returns.*','mast_customers.name','mast_work_stations.store_name')
+        ->first();
+
+        return response()->json([
+            'data' => $data,
+            'sales' => $sales,
+        ]);
+    }
+    public function getSalesReceivePage(Request $request)
+    {
+        $data = SalesReturnDetails::where('sales_return_details.status', 1)->where('sales_return_details.id', $request->id)
+        ->join('sales_returns', 'sales_returns.id', 'sales_return_details.sales_return_id')
+        ->join('sales', 'sales.id', 'sales_returns.sales_id')
+        ->join('mast_item_registers', 'mast_item_registers.id', 'sales_return_details.mast_item_register_id')
+        ->join('mast_item_groups', 'mast_item_groups.id', 'mast_item_registers.mast_item_group_id')
+        ->join('mast_item_categories', 'mast_item_categories.id', 'sales.mast_item_category_id')
+        ->select('sales_return_details.*','sales_returns.return_no','sales_returns.return_date','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
+        ->first();
+
+        return response()->json([ 'data'=>$data]);
+    }
+    
+
+    //--------SlMovement Tabel Data Use
     public function getSerialNumber(Request $request){
         //--Use Sales Delivery Page Or Store Transfer
         $data = SlMovement::where('mast_item_register_id', $request->mast_item_register_id)
