@@ -3,7 +3,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Sales Delivery (<span class="text-success">New</span>)</h4>
+                    <h4 class="card-title">Sales Receive</h4>
                     <a href="#" class="btn btn-sm btn-secondary p-1 px-2"><i class="fa fa-print"></i></i><span class="btn-icon-add"></span>Print</a>
                 </div>
 
@@ -13,10 +13,10 @@
                             <thead>
                                 <tr>
                                     <th>SL#</th>
-                                    <th>Invoice No</th>
-                                    <th>Invoice Date</th>
+                                    <th>Return No</th>
+                                    <th>Return Date</th>
                                     <th>Customer Name</th>
-                                    <th>Invoice Type</th>
+                                    <th>Return Type</th>
                                     <th>Item</th>
                                     {{-- <th>Qty</th> --}}
                                     <th>Total</th>
@@ -60,7 +60,7 @@
                 <div class="modal-dialog modal-xl">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Sales Details</h5>
+                            <h5 class="modal-title">Sales Return Details</h5>
                             <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                         </div>
                         <div class="card-body pt-2">

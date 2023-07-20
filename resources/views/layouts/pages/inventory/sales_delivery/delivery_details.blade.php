@@ -266,7 +266,7 @@
                 var data_sl = response.data;
                 var serial_number_dr = $('#items-table tbody').find("tr:last #serialNumber")
                 serial_number_dr.empty();
-                serial_number_dr.append('<option selected>--Select--</option>');
+                serial_number_dr.append('<option selected disabled>--Select--</option>');
                 $.each(data_sl, function(index, option) {
                     serial_number_dr.append('<option value="' + option.id + '">' + option.serial_no + '</option>');
                 });

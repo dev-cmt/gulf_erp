@@ -17,8 +17,9 @@ return new class extends Migration
             $table->id();
             $table->string('return_no')->nullable();
             $table->date('return_date')->nullable();
-            $table->tinyInteger('status')->default(false);
             $table->text('remarks')->nullable();
+            $table->tinyInteger('status')->default(false);
+            $table->tinyInteger('is_parsial')->default(false);
             $table->text('from_store')->nullable();
 
             $table->unsignedBigInteger('mast_work_station_id');

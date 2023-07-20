@@ -21,7 +21,7 @@ class LeaveApplicationController extends Controller
     {
         $leave_type =MastLeave::where('status', 1)->get();
         $employee =User::where('status', 1)->get();
-        return view('layouts.pages.admin.leave.index',compact('leave_type','employee','data'));
+        return view('layouts.pages.admin.leave.index',compact('leave_type','employee'));
     }
     public function leave_application()
     {

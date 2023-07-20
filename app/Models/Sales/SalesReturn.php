@@ -15,6 +15,7 @@ class SalesReturn extends Model
         'return_no',
         'return_date',
         'remarks',
+        'is_parsial',
         'status',
         'from_store',
         'mast_work_station_id',

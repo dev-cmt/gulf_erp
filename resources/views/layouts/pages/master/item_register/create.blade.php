@@ -168,14 +168,16 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <div class="row">
-                                            <label class="col-md-4 col-form-label">Warranty</label>
+                                            <label class="col-md-4 col-form-label">Warranty
+                                                <span class="text-danger">*</span>
+                                            </label>
                                             <div class="col-md-8">
                                                 <select name="warranty" class="form-control default-select @error('warranty') is-invalid @enderror">
-                                                    <option selected="">Choose...</option>
-                                                    <option value="1">One Mounth</option>
-                                                    <option value="2">Two Mounth</option>
-                                                    <option value="3">Three Mounth</option>
-                                                    <option value="6">Six Mounth</option>
+                                                    <option selected disabled>Choose...</option>
+                                                    <option value="1">One Month</option>
+                                                    <option value="2">Two Month</option>
+                                                    <option value="3">Three Month</option>
+                                                    <option value="6">Six Month</option>
                                                     <option value="12">1 Years</option>
                                                     <option value="24">2 Years</option>
                                                     <option value="36">3 Years</option>

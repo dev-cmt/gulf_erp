@@ -258,8 +258,8 @@ class MovementController extends Controller
         if ($allTrue){
             $storeTransferUpdate = StoreTransfer::findOrFail($storeTransferDetails->store_transfer_id);
             $storeTransferUpdate->status = 4; // Pendding => 0 || Success => 1 || Cencel => 2 || Parsial => 3 || Complete => 4
-            $variable = SlMovement::where('reference_id', $storeTransferDetails->store_transfer_id)->where('reference_type_id', 1)
-                    ->whereDate('created_at', '!=', date('Y-m-d'))->where('status', 3)->count();
+            $variable = SlMovement::where('reference_id', $storeTransferDetails->store_transfer_id)->where('reference_type_id', 3)
+                    ->whereDate('created_at', '!=', date('Y-m-d'))->where('status', 1)->count();
             if($variable){
                 $storeTransferUpdate->is_parsial = 1;
             }else{
@@ -320,20 +320,16 @@ class MovementController extends Controller
     }
     function salesReceiveStore(Request $request) 
     {
-        $storeTransferDetails = StoreTransferDetails::findOrFail($request->store_transfer_details_id);
-        $storeTransferDetails->deli_qty = $request->deli_qty;
-        $storeTransferDetails->save();
+        $salesReturnDetails = SalesReturnDetails::findOrFail($request->sales_return_details_id);
+        $salesReturnDetails->rcv_qty = $request->rcv_qty;
+        $salesReturnDetails->save();
         
         if (isset($request->moreFile[0]['serial_no']) && !empty($request->moreFile[0]['serial_no'])) {
             foreach($request->moreFile as $item){
-                $dataUpdate = SlMovement::findOrFail($item['serial_no']);
-                $dataUpdate->status = 0;
-                $dataUpdate->out_date = date('Y-m-d');
-                $dataUpdate->save();
                 $data = new SlMovement();
-                $data->serial_no = $dataUpdate->serial_no;
-                $data->reference_id = $request->store_transfer_id;
-                $data->reference_type_id = 3; //1=> Purchase || 2=> Sales || 3=> Store Transfer || 4=> Return
+                $data->serial_no = $item['serial_no'];
+                $data->reference_id = $request->sales_return_id;
+                $data->reference_type_id = 4; //1=> Purchase || 2=> Sales || 3=> Store Transfer || 4=> Return
                 $data->status = 1;
                 $data->mast_item_register_id = $request->item_register_id;
                 $data->mast_work_station_id = $request->mast_work_station_id;
@@ -342,30 +338,30 @@ class MovementController extends Controller
             }
         }
         //___________ Store Transfer Status Update
-        $checkStoreTransfer = StoreTransferDetails::where('store_transfer_id', $storeTransferDetails->store_transfer_id)->get();
+        $checkStoreTransfer = SalesReturnDetails::where('sales_return_id', $salesReturnDetails->sales_return_id)->get();
         $allTrue = true;
         foreach ($checkStoreTransfer as $key => $value) {
-            if ($value->qty != $value->deli_qty) {
+            if ($value->qty != $value->rcv_qty) {
                 $allTrue = false;
                 break;
             }
         }
         if ($allTrue){
-            $storeTransferUpdate = StoreTransfer::findOrFail($storeTransferDetails->store_transfer_id);
-            $storeTransferUpdate->status = 4; // Pendding => 0 || Success => 1 || Cencel => 2 || Parsial => 3 || Complete => 4
-            $variable = SlMovement::where('reference_id', $storeTransferDetails->store_transfer_id)->where('reference_type_id', 1)
-                    ->whereDate('created_at', '!=', date('Y-m-d'))->where('status', 3)->count();
+            $salesReturnUpdate = SalesReturn::findOrFail($salesReturnDetails->sales_return_id);
+            $salesReturnUpdate->status = 4; // Pendding => 0 || Success => 1 || Cencel => 2 || Parsial => 3 || Complete => 4
+            $variable = SlMovement::where('reference_id', $salesReturnDetails->sales_return_id)->where('reference_type_id', 4)
+                    ->whereDate('created_at', '!=', date('Y-m-d'))->where('status', 1)->count();
             if($variable){
-                $storeTransferUpdate->is_parsial = 1;
+                $salesReturnUpdate->is_parsial = 1;
             }else{
-                $storeTransferUpdate->is_parsial = 0;
+                $salesReturnUpdate->is_parsial = 0;
             }
-            $storeTransferUpdate->save();
+            $salesReturnUpdate->save();
         }else{
-            $storeTransferUpdate = StoreTransfer::findOrFail($storeTransferDetails->store_transfer_id);
-            $storeTransferUpdate->status = 3; // Pendding => 0 || Success => 1 || Cencel => 2 || Parsial => 3 || Complete => 4
-            $storeTransferUpdate->is_parsial = 1;
-            $storeTransferUpdate->save();
+            $salesReturnUpdate = SalesReturn::findOrFail($salesReturnDetails->sales_return_id);
+            $salesReturnUpdate->status = 3; // Pendding => 0 || Success => 1 || Cencel => 2 || Parsial => 3 || Complete => 4
+            $salesReturnUpdate->is_parsial = 1;
+            $salesReturnUpdate->save();
         }
         return response()->json('success');
     }
@@ -452,10 +448,10 @@ class MovementController extends Controller
         ->join('mast_item_registers', 'mast_item_registers.id', 'sales_return_details.mast_item_register_id')
         ->join('mast_item_groups', 'mast_item_groups.id', 'mast_item_registers.mast_item_group_id')
         ->join('mast_item_categories', 'mast_item_categories.id', 'sales.mast_item_category_id')
-        ->select('sales_return_details.*','sales_returns.return_no','sales_returns.return_date','mast_customers.name','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
+        ->select('sales_return_details.*','sales_returns.return_no','sales_returns.return_date','mast_customers.name','mast_item_registers.part_no','mast_item_registers.id as mast_item_register_id','mast_item_groups.part_name','mast_item_categories.cat_name')
         ->first();
 
-        return response()->json([ 'data'=>$data]);
+        return response()->json([ 'data'=> $data]);
     }
     
 

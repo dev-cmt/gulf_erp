@@ -59,10 +59,10 @@
                                     <td>{{$row->part_no}}</td>
                                     <td>{{$row->price}}</td>
                                     <td>{{$row->qty}}</td>
-                                    <td>{{$row->deli_qty ?? '0' }}</td>
+                                    <td>{{$row->rcv_qty ?? '0' }}</td>
                                     <td>{{$row->qty * $row->price}}</td>
                                     <td class="text-right">
-                                        <button type="button" class="btn btn-sm btn-success p-1 px-2" id="edit_data" data-id="{{ $row->id }}"><i class="fa fa-plus"></i></i><span class="btn-icon-add"></span>Add</button>
+                                        <button type="button" class="btn btn-sm btn-success p-1 px-2" id="edit_data" data-id="{{ $row->id }}"><i class="fa fa-plus"></i></i><span class="btn-icon-add"></span>Add New</button>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -83,7 +83,7 @@
                     <h5 class="modal-title">Add Sales Return </h5>
                     <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                 </div>
-                <form class="form-valide" data-action="{{ route('sales-return.store') }}" method="POST" enctype="multipart/form-data" id="add-user-form">
+                <form class="form-valide" data-action="{{ route('sales-receive.store') }}" method="POST" enctype="multipart/form-data" id="add-user-form">
                     @csrf
                     <div class="modal-body py-2">
                         <div class="row" id="main-row-data">
@@ -119,22 +119,14 @@
                                     </div>
                                 </div>
                             </div>
-                            {{-- <div class="col-md-12">
-                                <div class="form-group row">
-                                    <label class="col-md-2 col-form-label px-0"><strong>Remarks</strong></label>
-                                    <div class="col-md-10">
-                                        <textarea class="form-control" name="remarks" id="remarks"></textarea>
-                                    </div>
-                                </div>
-                            </div>  --}}
                             <input type="hidden" id="workStationId" name="mast_work_station_id" value="{{ Auth::user()->mast_work_station_id }}">
                             
                             <input type="hidden" id="itemRegisterId" name="item_register_id">
-                            <input type="hidden" id="getDeliQty">
+                            <input type="hidden" id="getRcvQty">
                             <input type="hidden" id="qty">
-                            <input type="hidden" id="deliQty" name="deli_qty">
-                            <input type="hidden" id="storeTransferId" name="store_transfer_id">
-                            <input type="hidden" id="storeTransferDetailsId" name="store_transfer_details_id">
+                            <input type="hidden" id="rcvQty" name="rcv_qty">
+                            <input type="hidden" id="salesReturnId" name="sales_return_id">
+                            <input type="hidden" id="salesReturnDetailsId" name="sales_return_details_id">
                         </div>
 
                         <div class="row">
@@ -146,18 +138,12 @@
                                             <tr>
                                                 <th width="10%">SL#</th>
                                                 <th width="65%">Serial No.</th>
-                                                <th width="25%" class="text-center">Date</th>
+                                                <th width="25%" class="text-center">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody id="table-body"></tbody>
                                     </table>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-md-2 col-form-label px-0"><strong>Remarks</strong></label>
-                            <div class="col-md-10">
-                                <textarea class="form-control" name="remarks"></textarea>
                             </div>
                         </div>
 
@@ -191,19 +177,18 @@
                 $("#return_date").html(dataMast.return_date);
                 $("#mast_customer_id").html(dataMast.name);
                 $("#store_name").html(dataMast.store_name);
-                $('#part_no').html(dataMast.part_no);
-
+                
                 //---SetUp
-                $('#itemRegisterId').val(response.item_register_id);
-                $('#qty').val(response.qty);
-                $('#getDeliQty').val(response.deli_qty);
-                $('#deliQty').val(response.deli_qty + 1);
-                $('#getPartNo').html(response.part_no);
-                $('#storeTransferId').val(response.store_transfer_id);
-                $('#storeTransferDetailsId').val(response.id);
+                $('#itemRegisterId').val(dataMast.mast_item_register_id);
+                $('#qty').val(dataMast.qty);
+                $('#getRcvQty').val(dataMast.rcv_qty);
+                $('#rcvQty').val(dataMast.rcv_qty + 1);
+                $('#part_no').html(dataMast.part_no);
+                $('#salesReturnId').val(dataMast.sales_return_id);
+                $('#salesReturnDetailsId').val(dataMast.id);
 
                 var storeId= $('#workStationId').val();
-                getSlNo(response.item_register_id, storeId);
+                getSlNo(dataMast.mast_item_register_id, storeId);
             },
             error: function(response) {
                 swal("Error!", "All input values are not null or empty.", "error");
@@ -217,102 +202,84 @@
         });
         var tbody = $('#table-body');
         tbody.empty();
-        // addRow(0);
+        addRow(0);
     });
 
-    /*===========// Get Data //===========*/
+    /*=========// Get Serial Number //=========*/
     function getSlNo(item_register_id, storeId) {
+        var currentRow = $('#items-table tbody').find("tr:last");
         $.ajax({
-            url: '{{ route('get-serial-no')}}',
-            method: 'GET',
-            data: {
-                'mast_item_register_id': 1,
-                'mast_work_station_id': 1,
-                'reference_type_id': [1, 3],
-                'status': 1
-            },
-            success: function (response) {
+            url:'{{ route('get-serial-no')}}',
+            method:'GET',
+            dataType:"JSON",
+            data:{'mast_item_register_id':item_register_id, 'mast_work_station_id':storeId, 'reference_type_id':[2], 'status': 0},
+            success:function(response){
+                //--Get Serial Number
                 var data_sl = response.data;
-                var tableBody = $('#table-body');
-                tableBody.empty();
-
-                for (var i = 0; i < 3; i++) {
-                    var newRow = $('<tr>' +
-                        '<input type="hidden" name="moreFile[' + i + '][sl_movement_id]" class="form-control" value="' + data_sl[i].id + '">' +
-                        '<td><input type="checkbox" name="" value="1"></td>' +
-                        '<td><select name="moreFile[' + i + '][serial_no]" class="form-control dropdwon_select val_serial_no"></select></td>' +
-                        '<td>' + formatDate(data_sl[i].created_at) + '</td>' +
-                        '</tr>');
-
-                    tableBody.append(newRow);
-                }
-
-                var serial_number_dr = $('#items-table tbody').find(".val_serial_no");
-
+                var serial_number_dr = $('#items-table tbody').find("tr:last #serialNumber")
                 serial_number_dr.empty();
-                serial_number_dr.append('<option selected>--Select--</option>');
-
-                $.each(data_sl, function (index, option) {
+                serial_number_dr.append('<option selected disabled>--Select--</option>');
+                $.each(data_sl, function(index, option) {
                     serial_number_dr.append('<option value="' + option.id + '">' + option.serial_no + '</option>');
                 });
 
-                $("#modalGrid").modal('show');
-                //--Dropdwon Search Fix
-                $('.dropdwon_select').each(function () {
-                    $(this).select2({
-                        dropdownParent: $(this).parent()
-                    });
-                });
             },
-            error: function () {
+            error:function(){
                 alert('Fail');
             }
         });
     }
-
-    function formatDate(dateString) {
-        const options = { year: "numeric", month: "long", day: "numeric" };
-        return new Date(dateString).toLocaleDateString(undefined, options);
-    }
-
 
     /*===========// Save Data//===========*/
     var form = '#add-user-form';
     $(form).on('submit', function(event){
         event.preventDefault();
         var url = $(this).attr('data-action');
-        $.ajax({
-            url: url,
-            method: 'POST',
-            data: new FormData(this),
-            dataType: 'JSON',
-            contentType: false,
-            cache: false,
-            processData: false,
-            success:function(response)
-            {
-                $("#modalGrid").modal('hide');
-                swal("Your data save successfully", "Well done, you pressed a button", "success")
-                .then(function() {
-                    location.reload();
-                });
-            },
-            error: function (xhr) {
-                var errors = xhr.responseJSON.errors;
-                var errorHtml = '';
-                $.each(errors, function(key, value) {
-                    errorHtml += '<li style="color:red">' + value + '</li>';
-                });
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    html: '<ul>' + errorHtml + '</ul>',
-                    text: 'All input values are not null or empty.',
-                });
+
+        //--Validation then save
+        var allValuesNotNull = true;
+        $('.val_serial_no').each(function() {
+            var value = $(this).val();
+            if (value === null || value === '') {
+                allValuesNotNull = false;
+                return false;
             }
         });
+        if (allValuesNotNull) {
+            $.ajax({
+                url: url,
+                method: 'POST',
+                data: new FormData(this),
+                dataType: 'JSON',
+                contentType: false,
+                cache: false,
+                processData: false,
+                success:function(response)
+                {
+                    $("#modalGrid").modal('hide');
+                    swal("Your data save successfully", "Well done, you pressed a button", "success")
+                    .then(function() {
+                        location.reload();
+                    });
+                },
+                error: function (xhr) {
+                    swal({
+                        title: "No Data Found",
+                        text: "There are no details available for this item.",
+                        icon: "warning",
+                        button: "OK",
+                        dangerMode: true,
+                    });
+                }
+            });
+        } else {
+            swal("Error!", "All input values are not null or empty.", "error");
+        }
     });
 </script>
+
+
+
 <script type="text/javascript">
     //======Add ROW
     var count = 0;
@@ -323,61 +290,63 @@
             if (value === null || value === '') {
                 allValuesNotNull = false;
                 return false;
+                alert('hi');
             }
         });
         if (allValuesNotNull) {
-            
             var qty = parseInt($('#qty').val());
-            var checkDeliQty = parseInt($('#getDeliQty').val());
+            var checkDeliQty = parseInt($('#getRcvQty').val());
             var checkQty = qty - checkDeliQty;
             var rowCount = parseInt($('#items-table tbody tr').length) + 1;
-            if(checkQty >= rowCount){
+            if (checkQty >= rowCount) {
                 ++count;
                 addRow(count);
                 //--------------------
                 var valItemRegisterId = parseInt($('#itemRegisterId').val());
-                var storeId= $('#workStationId').val();
+                var storeId = $('#workStationId').val();
                 getSlNo(valItemRegisterId, storeId);
                 //--------------------
                 var qtyResult = checkDeliQty + rowCount;
-                $('#deliQty').val(qtyResult);
-            }else{
+                $('#rcvQty').val(qtyResult);
+            } else {
                 Swal.fire(
                     'Done',
-                    'Your already fill up all data!',
+                    'You have already filled up all data!',
                     'question'
-                )
+                );
             }
         } else {
-            swal("Error!", "All input values are not null or empty.", "error");
+            Swal.fire('Error!', 'All input values are not null or empty.', 'error');
         }
     });
 
-    function addRow(i){
+    function addRow(i) {
         var rowCount = parseInt($('#items-table tbody tr').length) + 1;
         var newRow = $('<tr>' +
-            '<td><label class=col-form-label>'+rowCount+'</label></td>' +
-            '<td><select id="serialNumber" name="moreFile['+i+'][serial_no]" class="form-control dropdwon_select val_serial_no"></select></td>' +
+            '<td><label class="col-form-label">' + rowCount + '</label></td>' +
+            '<td><select id="serialNumber" name="moreFile[' + i + '][serial_no]" class="form-control dropdwon_select val_serial_no"></select></td>' +
             '<td class="text-center">' +
-                '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs add-row"><span class="fa fa-plus"></span></button>' +
-                '<button type="button" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0 remove-row"><span class="fa fa-trash"></span></button>' +
-            '</td>'+
-        '</tr>');
-    
+            '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs add-row"><span class="fa fa-plus"></span></button>' +
+            '<button type="button" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0 remove-row"><span class="fa fa-trash"></span></button>' +
+            '</td>' +
+            '</tr>');
+
         $('#items-table tbody').append(newRow);
         //--Dropdwon Search Fix
-        newRow.find('.dropdwon_select').each(function () {
+        newRow.find('.dropdwon_select').each(function() {
             $(this).select2({
                 dropdownParent: $(this).parent()
             });
         });
     }
+
     //======Remove ROW
     $('#items-table').on('click', '.remove-row', function() {
         $(this).closest('tr').remove();
-        var removeDeliQty= $('#deliQty').val(); 
-        $('#deliQty').val(removeDeliQty - 1);
+        var removeDeliQty= $('#rcvQty').val(); 
+        $('#rcvQty').val(removeDeliQty - 1);
     });
+
     //======Duplicates Part Number Validation
     $(document).on('change','.val_serial_no', function() {
         var dropdownValues = $('.val_serial_no').map(function() {
@@ -404,13 +373,12 @@
                 url: '{{ route('get-serial-no')}}',
                 method: 'GET',
                 dataType: "JSON",
-                data:{'item_register_id':valItemRegisterId, 'storeId':storeId},
-                data:{'mast_item_register_id':valItemRegisterId, 'mast_work_station_id':storeId, 'reference_type_id':[1, 3], 'status': 1},
+                data:{'mast_item_register_id':valItemRegisterId, 'mast_work_station_id':storeId, 'reference_type_id':[2], 'status': 0},
                 success: function(response) {
                     var data_sl = response.data;
                     serialNumberDropdown. append('<option selected>--Select--</option>');
                     $.each(data_sl, function(index, option) {
-                        serialNumberDropdown.append('<option value="' + option.id + '">' + option.serial_no + '</option>');
+                        serialNumberDropdown.append('<option value="' + option.serial_no + '">' + option.serial_no + '</option>');
                     });
                 },
                 error: function() {
@@ -423,6 +391,7 @@
     
 
 </script>
+
 
 
 
