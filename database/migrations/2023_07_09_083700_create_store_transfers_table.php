@@ -17,8 +17,6 @@ return new class extends Migration
             $table->id();
             $table->date('inv_date')->nullable();
             $table->string('inv_no')->nullable();
-            $table->integer('vat')->nullable();
-            $table->integer('tax')->nullable();
             $table->text('remarks')->nullable();
             $table->text('from_store_id')->nullable();
 

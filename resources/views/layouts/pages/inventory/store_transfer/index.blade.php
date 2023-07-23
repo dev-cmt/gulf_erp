@@ -22,7 +22,7 @@
                                 <th>Invoice Date</th>
                                 <th>Customer Name</th>
                                 <th>Invoice Type</th>
-                                <th>Total</th>
+                                <th>Item</th>
                                 <th>Status</th>
                                 <th class="text-center">Action</th>
                             </tr>
@@ -30,9 +30,9 @@
                             <tbody id="sales_tbody">
                                 @foreach ($data as $key=> $row)
                                 @php
-                                    $total = 0;
+                                    $qty = 0;
                                     foreach ($row->storeTransferDetails as $key => $value) {
-                                        $total += $value->qty * $value->price;
+                                        $qty += 1;
                                     }
                                 @endphp
                                 <tr id="row_master_table_{{ $row->id}}">
@@ -41,7 +41,7 @@
                                     <td>{{$row->inv_date}}</td>
                                     <td>{{$row->mastWorkStation->store_name ?? 'NULL'}}</td>
                                     <td>{{$row->mastItemCategory->cat_name ?? 'NULL'}}</td>
-                                    <td>{{$total }}</td>
+                                    <td>{{$qty }}</td>
                                     <td>@if($row->status == 0)
                                         <span class="badge light badge-warning">
                                             <i class="fa fa-circle text-warning mr-1"></i>Pending
@@ -71,7 +71,7 @@
     </div>
 
     <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">
@@ -126,14 +126,6 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group row">
-                                    <label class="col-md-5 col-form-label">VAT</label>
-                                    <div class="col-md-7">
-                                        <input type="number" name="vat" id="vat" class="form-control" value="{{ old('vat') ? old('vat'): ''}}" placeholder="0.00">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group row">
                                     <label class="col-md-5 col-form-label">Invoice Type</label>
                                     <div class="col-md-7">
                                         <select name="mast_item_category_id" id="mast_item_category_id" class="form-control dropdwon_select" disabled>
@@ -142,14 +134,6 @@
                                                 <option value="{{$row->id}}" {{$row->id == $type ? 'selected': '' }}>{{$row->cat_name}}</option>
                                             @endforeach
                                         </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group row">
-                                    <label class="col-md-5 col-form-label">TAX</label>
-                                    <div class="col-md-7">
-                                        <input type="number" name="tax" id="tax" class="form-control" value="{{ old('tax') ? old('tax'): '' }}" placeholder="0.00">
                                     </div>
                                 </div>
                             </div>
@@ -170,14 +154,12 @@
                                     <table id="items-table" class="table table-bordered mb-0">
                                         <thead class="thead-primary">
                                             <tr>
-                                                <th width="20%">Part Name</th>
-                                                <th width="15%">Part No</th>
-                                                <th width="10%">Pkg. Qty.</th>
-                                                <th width="10%">Unit</th>
+                                                <th width="23%">Part Name</th>
+                                                <th width="20%">Part No</th>
+                                                <th width="15%">Pkg. Qty.</th>
+                                                <th width="15%">Unit</th>
                                                 <th width="10%">Qty</th>
-                                                <th width="12%">Price</th>
-                                                <th width="13%">Subtotal</th>
-                                                <th width="10%" class="text-center table_action">Action</th>
+                                                <th width="12%" class="text-center table_action">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody id="table-body"></tbody>
@@ -187,11 +169,6 @@
                             <div class="col-md-12" id="edit_add_show" style="display: none">
                                 <div class="d-flex justify-content-end">
                                     <button type="button" class="btn btn-sm btn-success rounded-0" onClick="addRow(0)"><span class="fa fa-plus mr-1"></span> ADD ITEM</button>
-                                </div>
-                            </div>
-                            <div class="col-md-12 pt-4">
-                                <div class="d-flex justify-content-end">
-                                    <h6>Total <span style="border: 1px solid #2222;padding: 10px 40px;margin-left:10px" id="total">0.00</span></h6>
                                 </div>
                             </div>
                         </div>
@@ -233,7 +210,6 @@
         $('#remarks').prop("disabled", false);
         $('#mast_work_station_id').prop("disabled", false);
         $('#mast_work_station_id').html(getWorkStation);
-        $('#total').text("0.00");
 
         $(".modal-title").html('@if($type == 1) Add AC Requsition @elseif($type == 2) Add AC Spare Parts Requsition @else Add Car Spare Parts Requsition @endif');
         $(".bd-example-modal-lg").modal('show');
@@ -291,7 +267,7 @@
                         row += '<td>' + add_mastRow.inv_date + '</td>';
                         row += '<td>' + response.mastWorkStation.store_name + '</td>';
                         row += '<td>' + response.mastItemCategory.cat_name + '</td>';
-                        row += '<td>' + response.total + '</td>';
+                        row += '<td>' + response.qty + '</td>';
                         row += '<td>';
                         if(add_mastRow.status == 0)
                             row += '<span class="badge light badge-warning"><i class="fa fa-circle text-warning mr-1"></i>Pending</span>';
@@ -438,8 +414,6 @@
                     '<td><input type="text" name="" readonly id="packageSize" class="form-control" value="' + item.box_qty + '"></td>' +
                     '<td><input type="text" name="" readonly id="unit" class="form-control" value="' + item.unit_name + '"></td>' +
                     '<td><input type="number" name="editFile['+i+'][qty]" id="" class="form-control quantity val_quantity" placeholder="0.00" value="'+ item.qty +'"></td>' +
-                    '<td><input type="number" name="editFile['+i+'][price]" id="price" class="form-control price val_price" placeholder="0.00" value="'+ item.price +'"></td>' +
-                    '<td class="subtotal">'+ subtotal +'</td>' +
                     '<td class="text-center countTdData">' +
                         '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs edit_add_hide" onClick="addRow(0)"><span class="fa fa-plus"></span></button>' +
                         '<button type="button" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0" id="delete_data" data-id="' + item.id +'"><span class="fa fa-trash"></span></button>' +
@@ -494,8 +468,6 @@
                 row += '<td>' + item.box_qty + '</td>';
                 row += '<td>' + item.unit_name + '</td>';
                 row += '<td>' + item.qty + '</td>';
-                row += '<td>' + item.price + '</td>';
-                row += '<td>'+ subtotal +'</td>';
                 row += '</tr>';
                 tableBody.prepend(row);
 
@@ -627,8 +599,6 @@
             '<td><input type="text" name="" readonly id="packageSize" class="form-control"></td>' +
             '<td><input type="text" name="" readonly id="unit" class="form-control"></td>' +
             '<td><input type="number" name="moreFile['+i+'][qty]" id="" class="form-control quantity val_quantity" placeholder="0.00"></td>' +
-            '<td><input type="number" name="moreFile['+i+'][price]" id="price" class="form-control price val_price" placeholder="0.00"></td>' +
-            '<td class="subtotal">0.00</td>' +
             '<td class="text-center">' +
                 '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs add-row"><span class="fa fa-plus"></span></button>' +
                 '<button type="button" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0 remove-row"><span class="fa fa-trash"></span></button>' +

@@ -63,6 +63,7 @@ class SalesController extends Controller
                 $data->mast_item_register_id = $item['item_id'];
                 $data->qty = $item['qty'];
                 $data->deli_qty = 0;
+                $data->status = 0;
                 $data->price = $item['price'];
                 
                 $data->status = 1;
@@ -83,7 +84,7 @@ class SalesController extends Controller
                 $data->qty = $item['qty'];
                 $data->deli_qty = 0;
                 $data->price = $item['price'];
-                $data->status = 1;
+                $data->status = 0;
                 if(isset($sal_id)){
                     $data->sales_id = $sal_id;
                 }else{

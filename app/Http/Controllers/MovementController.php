@@ -138,11 +138,12 @@ class MovementController extends Controller
     }
     function salesDeliveryStore(Request $request) {
         
-        $salesDetails = SalesDetails::findOrFail($request->sales_details_id);
-        $salesDetails->deli_qty = $request->deli_qty;
-        $salesDetails->save();
-        
         if (isset($request->moreFile[0]['serial_no']) && !empty($request->moreFile[0]['serial_no'])) {
+            $salesDetails = SalesDetails::findOrFail($request->sales_details_id);
+            $salesDetails->deli_qty = $request->deli_qty;
+            $salesDetails->status = 1;
+            $salesDetails->save();
+            
             foreach($request->moreFile as $item){
                 $dataUpdate = SlMovement::findOrFail($item['serial_no']);
                 $dataUpdate->status = 0;
@@ -287,7 +288,7 @@ class MovementController extends Controller
         return view('layouts.pages.inventory.requstion_delivery.parsial-requstion-delivery',compact('storeTransfer','data'));
     }
     /**___________________________________________________________________
-     * Sales Receive
+     * Return Receive
      * ___________________________________________________________________
      */
     public function salesReceiveIndex()
@@ -323,11 +324,24 @@ class MovementController extends Controller
         $salesReturnDetails = SalesReturnDetails::findOrFail($request->sales_return_details_id);
         $salesReturnDetails->rcv_qty = $request->rcv_qty;
         $salesReturnDetails->save();
+
+        //___________ Sales Details Status Update
+        $findSalesId = SalesReturn::findOrFail($salesReturnDetails->sales_return_id);
+        $salesDetails = SalesDetails::where('sales_id', $findSalesId->sales_id)->where('mast_item_register_id', $request->item_register_id)->first();
+        $salesDetails->deli_qty = $salesDetails->deli_qty - $request->rcv_qty;
+        if($salesDetails->deli_qty <= 0 ){
+            $salesDetails->status = 0;
+            $salesDetails->deli_qty = 0;
+        }
+        $salesDetails->save();
         
         if (isset($request->moreFile[0]['serial_no']) && !empty($request->moreFile[0]['serial_no'])) {
             foreach($request->moreFile as $item){
+                $dataUpdate = SlMovement::findOrFail($item['serial_no']);
+                $dataUpdate->status = 4;
+                $dataUpdate->save();
                 $data = new SlMovement();
-                $data->serial_no = $item['serial_no'];
+                $data->serial_no = $dataUpdate->serial_no;
                 $data->reference_id = $request->sales_return_id;
                 $data->reference_type_id = 4; //1=> Purchase || 2=> Sales || 3=> Store Transfer || 4=> Return
                 $data->status = 1;
@@ -337,6 +351,7 @@ class MovementController extends Controller
                 $data->save();
             }
         }
+
         //___________ Store Transfer Status Update
         $checkStoreTransfer = SalesReturnDetails::where('sales_return_id', $salesReturnDetails->sales_return_id)->get();
         $allTrue = true;

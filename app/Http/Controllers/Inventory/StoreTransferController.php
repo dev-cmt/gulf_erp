@@ -48,8 +48,6 @@ class StoreTransferController extends Controller
             $transferStore->inv_no = $invoice_codes;
         }
         $transferStore->inv_date = $request->inv_date;
-        $transferStore->vat = $request->vat;
-        $transferStore->tax = $request->tax;
         $transferStore->remarks = $request->remarks;
         $transferStore->status = 0; // 1 => Approve || 2 => Cancel || 3 => ReceiveDone
         $transferStore->mast_item_category_id = $type;
@@ -65,7 +63,6 @@ class StoreTransferController extends Controller
                 $data->mast_item_register_id = $item['item_id'];
                 $data->qty = $item['qty'];
                 $data->deli_qty = 0;
-                $data->price = $item['price'];
                 
                 $data->status = 1;
                 if(isset($storeTransferId)){
@@ -84,7 +81,6 @@ class StoreTransferController extends Controller
                 $data->mast_item_register_id = $item['item_id'];
                 $data->qty = $item['qty'];
                 $data->deli_qty = 0;
-                $data->price = $item['price'];
                 $data->status = 1;
                 if(isset($storeTransferId)){
                     $data->store_transfer_id = $storeTransferId;
@@ -105,16 +101,18 @@ class StoreTransferController extends Controller
         $mastItemCategory = $new_sales->mastItemCategory;
         $storeTransferDetails = $new_sales->storeTransferDetails;
 
-        $total = 0;
+        // $total = 0;
+        $qty = 0;
         foreach ($storeTransferDetails as $key => $value) {
-            $total += $value->qty * $value->price;
+            // $total += $value->qty * $value->price;
+            $qty += 1;
         }
 
         return response()->json([
             'transferStore' => $transferStore,
             'mastWorkStation' => $mastWorkStation,
             'mastItemCategory' => $mastItemCategory,
-            'total' => $total,
+            'qty' => $qty,
         ]);
     }
     public function edit(Request $request)

@@ -378,7 +378,7 @@
                     var data_sl = response.data;
                     serialNumberDropdown. append('<option selected>--Select--</option>');
                     $.each(data_sl, function(index, option) {
-                        serialNumberDropdown.append('<option value="' + option.serial_no + '">' + option.serial_no + '</option>');
+                        serialNumberDropdown.append('<option value="' + option.id + '">' + option.serial_no + '</option>');
                     });
                 },
                 error: function() {

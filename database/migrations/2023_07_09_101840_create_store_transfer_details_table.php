@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('store_transfer_details', function (Blueprint $table) {
             $table->id();
             $table->integer('qty')->nullable();
-            $table->decimal('price')->nullable();
             $table->integer('deli_qty')->nullable();
             $table->bigInteger('cat_id')->nullable();
             $table->tinyInteger('status')->default(true);
