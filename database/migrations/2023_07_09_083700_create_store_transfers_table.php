@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('inv_date')->nullable();
             $table->string('inv_no')->nullable();
             $table->text('remarks')->nullable();
-            $table->text('from_store_id')->nullable();
+            $table->integer('from_store_id')->nullable();
 
             $table->unsignedBigInteger('mast_work_station_id');
             $table->foreign('mast_work_station_id')->references('id')->on('mast_work_stations')->onDelete('cascade');

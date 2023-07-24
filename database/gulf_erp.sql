@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 19, 2023 at 07:24 PM
+-- Generation Time: Jul 24, 2023 at 11:32 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -20,6 +20,61 @@ SET time_zone = "+00:00";
 --
 -- Database: `gulf_erp`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `complaints`
+--
+
+CREATE TABLE `complaints` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `issue_date` date DEFAULT NULL,
+  `issue_no` varchar(255) DEFAULT NULL,
+  `remarks` text DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 0,
+  `mast_customer_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `complaint_details`
+--
+
+CREATE TABLE `complaint_details` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 0,
+  `delivery_id` int(11) DEFAULT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `deliveries`
+--
+
+CREATE TABLE `deliveries` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `serial_no` varchar(255) DEFAULT NULL,
+  `deli_date` date DEFAULT NULL,
+  `warranty` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `price` decimal(8,2) DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 0,
+  `from_store` int(11) DEFAULT NULL,
+  `sales_id` bigint(20) UNSIGNED NOT NULL,
+  `mast_work_station_id` bigint(20) UNSIGNED NOT NULL,
+  `mast_item_register_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -319,7 +374,7 @@ CREATE TABLE `info_personals` (
 --
 
 INSERT INTO `info_personals` (`id`, `date_of_birth`, `employee_gender`, `nid_no`, `blood_group`, `number_official`, `email_official`, `joining_date`, `service_length`, `gross_salary`, `reporting_boss`, `is_reporting_boss`, `division_present`, `district_present`, `upazila_present`, `union_present`, `thana_present`, `post_code_present`, `address_present`, `division_permanent`, `district_permanent`, `upazila_permanent`, `union_permanent`, `thana_permanent`, `post_code_permanent`, `address_permanent`, `passport_no`, `driving_license`, `marital_status`, `house_phone`, `father_name`, `mother_name`, `birth_certificate_no`, `emg_person_name`, `emg_phone_number`, `emg_relationship`, `emg_address`, `status`, `created_at`, `updated_at`, `mast_department_id`, `mast_designation_id`, `mast_employee_type_id`, `mast_work_station_id`, `user_id`, `emp_id`) VALUES
-(1, '2002-01-01', 0, '25745545458', 3, '0195275932', 'motiur@gulf.com', '2022-11-01', 2, 15000, 0, 1, 6, 42, 322, 2887, NULL, NULL, 'Khilgoan, Domshar, Shariatpur', 6, 42, 322, 2887, NULL, NULL, 'Khilgoan, Domshar, Shariatpur', 1185344689, 415441482, 0, '01922437143', 'Mosharraf Khan', 'Shilpy Begum', 20222145678938, 'Sagour', '01995275933', 'Brother', 'Shariatpur', 1, '2023-07-19 11:22:47', '2023-07-19 11:22:47', 1, 5, 2, 2, 1, 1);
+(1, '2002-01-01', 0, '25745545458', 3, '0195275932', 'motiur@gulf.com', '2022-11-01', 2, 15000, 0, 1, 6, 42, 322, 2887, NULL, NULL, 'Khilgoan, Domshar, Shariatpur', 6, 42, 322, 2887, NULL, NULL, 'Khilgoan, Domshar, Shariatpur', 1185344689, 415441482, 0, '01922437143', 'Mosharraf Khan', 'Shilpy Begum', 20222145678938, 'Sagour', '01995275933', 'Brother', 'Shariatpur', 1, '2023-07-24 03:22:54', '2023-07-24 03:22:54', 1, 5, 2, 2, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -372,11 +427,11 @@ CREATE TABLE `mast_customers` (
 --
 
 INSERT INTO `mast_customers` (`id`, `name`, `email`, `phone`, `address`, `cont_person`, `cont_designation`, `cont_phone`, `cont_email`, `web_address`, `credit_limit`, `remarks`, `status`, `mast_customer_type_id`, `user_id`, `created_at`, `updated_at`) VALUES
-(1, 'Motiur Rahman', 'tayfa@gmail.com', '01913954378', 'Shariatpur', 'Sagour Khan', 'Teacher', '01922437143', 'sagour@gmail.com', '', 1000000, 'Test Only', 1, 1, 1, '2023-07-19 11:22:46', '2023-07-19 11:22:46'),
-(2, 'Sabbir', 'tayfa@gmail.com', '01913954378', 'Shariatpur', 'Alam Khan', 'Teacher', '01922437143', 'sagour@gmail.com', '', 1000000, 'Test Only', 1, 1, 1, '2023-07-19 11:22:47', '2023-07-19 11:22:47'),
-(3, 'Minhaz', 'tayfa@gmail.com', '01913954378', 'Shariatpur', 'Sagour Khan', 'Teacher', '01922437143', 'tamim@gmail.com', '', 1000000, 'Test Only', 1, 1, 1, '2023-07-19 11:22:47', '2023-07-19 11:22:47'),
-(4, 'Tamim', 'tayfa@gmail.com', '01913954378', 'Shariatpur', 'Motiur Khan', 'Teacher', '01922437143', 'sagour@gmail.com', '', 1000000, 'Test Only', 1, 2, 1, '2023-07-19 11:22:47', '2023-07-19 11:22:47'),
-(5, 'Tayfa Islam', 'tayfa@gmail.com', '01913954378', 'Shariatpur', 'Sagour Khan', 'Teacher', '01922437143', 'koli@gmail.com', '', 1000000, 'Test Only', 1, 3, 1, '2023-07-19 11:22:47', '2023-07-19 11:22:47');
+(1, 'Motiur Rahman', 'tayfa@gmail.com', '01913954378', 'Shariatpur', 'Sagour Khan', 'Teacher', '01922437143', 'sagour@gmail.com', '', 1000000, 'Test Only', 1, 1, 1, '2023-07-24 03:22:54', '2023-07-24 03:22:54'),
+(2, 'Sabbir', 'tayfa@gmail.com', '01913954378', 'Shariatpur', 'Alam Khan', 'Teacher', '01922437143', 'sagour@gmail.com', '', 1000000, 'Test Only', 1, 1, 1, '2023-07-24 03:22:54', '2023-07-24 03:22:54'),
+(3, 'Minhaz', 'tayfa@gmail.com', '01913954378', 'Shariatpur', 'Sagour Khan', 'Teacher', '01922437143', 'tamim@gmail.com', '', 1000000, 'Test Only', 1, 1, 1, '2023-07-24 03:22:54', '2023-07-24 03:22:54'),
+(4, 'Tamim', 'tayfa@gmail.com', '01913954378', 'Shariatpur', 'Motiur Khan', 'Teacher', '01922437143', 'sagour@gmail.com', '', 1000000, 'Test Only', 1, 2, 1, '2023-07-24 03:22:54', '2023-07-24 03:22:54'),
+(5, 'Tayfa Islam', 'tayfa@gmail.com', '01913954378', 'Shariatpur', 'Sagour Khan', 'Teacher', '01922437143', 'koli@gmail.com', '', 1000000, 'Test Only', 1, 3, 1, '2023-07-24 03:22:54', '2023-07-24 03:22:54');
 
 -- --------------------------------------------------------
 
@@ -397,9 +452,9 @@ CREATE TABLE `mast_customer_types` (
 --
 
 INSERT INTO `mast_customer_types` (`id`, `name`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Corporate', 1, '2023-07-19 11:22:46', '2023-07-19 11:22:46'),
-(2, 'Distributer', 1, '2023-07-19 11:22:46', '2023-07-19 11:22:46'),
-(3, 'Retailer', 1, '2023-07-19 11:22:46', '2023-07-19 11:22:46');
+(1, 'Corporate', 1, '2023-07-24 03:22:53', '2023-07-24 03:22:53'),
+(2, 'Distributer', 1, '2023-07-24 03:22:53', '2023-07-24 03:22:53'),
+(3, 'Retailer', 1, '2023-07-24 03:22:54', '2023-07-24 03:22:54');
 
 -- --------------------------------------------------------
 
@@ -409,9 +464,9 @@ INSERT INTO `mast_customer_types` (`id`, `name`, `status`, `created_at`, `update
 
 CREATE TABLE `mast_departments` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `dept_name` varchar(255) NOT NULL,
+  `dept_name` varchar(255) DEFAULT NULL,
   `dept_head` int(11) NOT NULL DEFAULT 0,
-  `description` text NOT NULL,
+  `description` text DEFAULT NULL,
   `status` int(11) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -423,9 +478,9 @@ CREATE TABLE `mast_departments` (
 --
 
 INSERT INTO `mast_departments` (`id`, `dept_name`, `dept_head`, `description`, `status`, `created_at`, `updated_at`, `user_id`) VALUES
-(1, 'AC', 1, 'A department is one section or part of a larger group.', 1, '2023-07-19 11:22:40', '2023-07-19 11:22:40', 1),
-(2, 'AC Spare Parts', 1, 'A department is one section or part of a larger group.', 1, '2023-07-19 11:22:40', '2023-07-19 11:22:40', 1),
-(3, 'Car Spare Parts', 1, 'A department is one section or part of a larger group.', 1, '2023-07-19 11:22:40', '2023-07-19 11:22:40', 1);
+(1, 'AC', 1, 'A department is one section or part of a larger group.', 1, '2023-07-24 03:22:44', '2023-07-24 03:22:44', 1),
+(2, 'AC Spare Parts', 1, 'A department is one section or part of a larger group.', 1, '2023-07-24 03:22:44', '2023-07-24 03:22:44', 1),
+(3, 'Car Spare Parts', 1, 'A department is one section or part of a larger group.', 1, '2023-07-24 03:22:44', '2023-07-24 03:22:44', 1);
 
 -- --------------------------------------------------------
 
@@ -435,8 +490,8 @@ INSERT INTO `mast_departments` (`id`, `dept_name`, `dept_head`, `description`, `
 
 CREATE TABLE `mast_designations` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `desig_name` varchar(255) NOT NULL,
-  `description` text NOT NULL,
+  `desig_name` varchar(255) DEFAULT NULL,
+  `description` text DEFAULT NULL,
   `status` int(11) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -448,18 +503,18 @@ CREATE TABLE `mast_designations` (
 --
 
 INSERT INTO `mast_designations` (`id`, `desig_name`, `description`, `status`, `created_at`, `updated_at`, `user_id`) VALUES
-(1, 'CEO (Chief Executive Officer)', 'The highest-ranking officer in a company who is responsible for making major corporate decisions, managing the overall operations and resources of the company, and acting as the main point of communication between the board of directors and the companys management team.', 1, '2023-07-19 11:22:40', '2023-07-19 11:22:40', 1),
-(2, 'GM (General Manager)', 'The person in charge of managing a specific business unit or division within the company.', 1, '2023-07-19 11:22:40', '2023-07-19 11:22:40', 1),
-(3, 'Director', 'An executive-level position that oversees a particular department or function within the company.', 1, '2023-07-19 11:22:40', '2023-07-19 11:22:40', 1),
-(4, 'HR Manager', 'Developing and implementing HR policies and procedures that align with the company goals and objectives', 1, '2023-07-19 11:22:40', '2023-07-19 11:22:40', 1),
-(5, 'Sales Manager', 'A Sales Manager is an executive-level position responsible for managing the sales department of a company. They oversee the company sales policies and procedures, including sales strategies, customer relationships, sales forecasting, and revenue generation.', 1, '2023-07-19 11:22:41', '2023-07-19 11:22:41', 1),
-(6, 'Store Manager', 'A Store Manager is a mid-level position responsible for managing the day-to-day operations of a retail store. They oversee the store policies and procedures, including customer service, inventory management, sales, and staff management.', 1, '2023-07-19 11:22:41', '2023-07-19 11:22:41', 1),
-(7, 'Marketing Manager', 'A Marketing Manager is an executive-level position responsible for managing a company marketing strategies and initiatives. They oversee the marketing department, including advertising, promotions, market research, and brand management.', 1, '2023-07-19 11:22:41', '2023-07-19 11:22:41', 1),
-(8, 'Supervisor', 'A lower-level position that is responsible for overseeing a small team or group of employees.', 1, '2023-07-19 11:22:41', '2023-07-19 11:22:41', 1),
-(9, 'Service Technician', 'A Service Technician, also known as a Field Service Technician, is a skilled worker who provides technical support and maintenance services to customers. They typically work in industries such as information technology, telecommunications, healthcare, and manufacturing.', 1, '2023-07-19 11:22:41', '2023-07-19 11:22:41', 1),
-(10, 'Installation Technician', '\r\n            An Installation Technician is a skilled worker who is responsible for installing and setting up various types of equipment and systems. They work in a variety of industries, including telecommunications, information technology, healthcare, and manufacturing.', 1, '2023-07-19 11:22:41', '2023-07-19 11:22:41', 1),
-(11, 'Customer Service', 'Customer service is the support and assistance provided to customers before, during, and after they purchase a product or service. It involves a range of activities designed to enhance the customer experience, increase customer satisfaction, and promote customer loyalty.', 1, '2023-07-19 11:22:41', '2023-07-19 11:22:41', 1),
-(12, 'Staff', 'An entry-level position that typically involves performing administrative or support duties.', 1, '2023-07-19 11:22:41', '2023-07-19 11:22:41', 1);
+(1, 'CEO (Chief Executive Officer)', 'The highest-ranking officer in a company who is responsible for making major corporate decisions, managing the overall operations and resources of the company, and acting as the main point of communication between the board of directors and the companys management team.', 1, '2023-07-24 03:22:44', '2023-07-24 03:22:44', 1),
+(2, 'GM (General Manager)', 'The person in charge of managing a specific business unit or division within the company.', 1, '2023-07-24 03:22:44', '2023-07-24 03:22:44', 1),
+(3, 'Director', 'An executive-level position that oversees a particular department or function within the company.', 1, '2023-07-24 03:22:44', '2023-07-24 03:22:44', 1),
+(4, 'HR Manager', 'Developing and implementing HR policies and procedures that align with the company goals and objectives', 1, '2023-07-24 03:22:44', '2023-07-24 03:22:44', 1),
+(5, 'Sales Manager', 'A Sales Manager is an executive-level position responsible for managing the sales department of a company. They oversee the company sales policies and procedures, including sales strategies, customer relationships, sales forecasting, and revenue generation.', 1, '2023-07-24 03:22:44', '2023-07-24 03:22:44', 1),
+(6, 'Store Manager', 'A Store Manager is a mid-level position responsible for managing the day-to-day operations of a retail store. They oversee the store policies and procedures, including customer service, inventory management, sales, and staff management.', 1, '2023-07-24 03:22:44', '2023-07-24 03:22:44', 1),
+(7, 'Marketing Manager', 'A Marketing Manager is an executive-level position responsible for managing a company marketing strategies and initiatives. They oversee the marketing department, including advertising, promotions, market research, and brand management.', 1, '2023-07-24 03:22:45', '2023-07-24 03:22:45', 1),
+(8, 'Supervisor', 'A lower-level position that is responsible for overseeing a small team or group of employees.', 1, '2023-07-24 03:22:45', '2023-07-24 03:22:45', 1),
+(9, 'Service Technician', 'A Service Technician, also known as a Field Service Technician, is a skilled worker who provides technical support and maintenance services to customers. They typically work in industries such as information technology, telecommunications, healthcare, and manufacturing.', 1, '2023-07-24 03:22:45', '2023-07-24 03:22:45', 1),
+(10, 'Installation Technician', '\r\n            An Installation Technician is a skilled worker who is responsible for installing and setting up various types of equipment and systems. They work in a variety of industries, including telecommunications, information technology, healthcare, and manufacturing.', 1, '2023-07-24 03:22:45', '2023-07-24 03:22:45', 1),
+(11, 'Customer Service', 'Customer service is the support and assistance provided to customers before, during, and after they purchase a product or service. It involves a range of activities designed to enhance the customer experience, increase customer satisfaction, and promote customer loyalty.', 1, '2023-07-24 03:22:45', '2023-07-24 03:22:45', 1),
+(12, 'Staff', 'An entry-level position that typically involves performing administrative or support duties.', 1, '2023-07-24 03:22:45', '2023-07-24 03:22:45', 1);
 
 -- --------------------------------------------------------
 
@@ -469,9 +524,9 @@ INSERT INTO `mast_designations` (`id`, `desig_name`, `description`, `status`, `c
 
 CREATE TABLE `mast_employee_types` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `cat_name` varchar(255) NOT NULL,
-  `cat_type` varchar(255) NOT NULL,
-  `description` text NOT NULL,
+  `cat_name` varchar(255) DEFAULT NULL,
+  `cat_type` varchar(255) DEFAULT NULL,
+  `description` text DEFAULT NULL,
   `status` int(11) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -483,12 +538,12 @@ CREATE TABLE `mast_employee_types` (
 --
 
 INSERT INTO `mast_employee_types` (`id`, `cat_name`, `cat_type`, `description`, `status`, `created_at`, `updated_at`, `user_id`) VALUES
-(1, 'Full-Time Employees', '1', 'These are employees who work for the company on a regular basis and are typically paid a salary or an hourly wage. They may be eligible for benefits such as health insurance, retirement plans, and paid time off.', 1, '2023-07-19 11:22:41', '2023-07-19 11:22:41', 1),
-(2, 'Part-Time Employees', '1', 'These are employees who work for the company on a part-time basis, usually less than 40 hours per week. They may be paid an hourly wage and may or may not be eligible for benefits depending on the company policies.', 1, '2023-07-19 11:22:41', '2023-07-19 11:22:41', 1),
-(3, 'Contract Employees', '1', 'These are individuals who work for the company on a temporary basis and are usually hired to perform a specific job or task. They may be paid a flat fee or an hourly rate and are typically not eligible for benefits.', 1, '2023-07-19 11:22:41', '2023-07-19 11:22:41', 1),
-(4, 'Interns', '1', 'These are students or recent graduates who work for the company on a temporary basis to gain work experience and develop skills. They may be paid a stipend or may work for free, and are typically not eligible for benefits.', 1, '2023-07-19 11:22:41', '2023-07-19 11:22:41', 1),
-(5, 'Consultants', '1', 'These are individuals or firms who are hired by the company to provide specialized expertise or services on a project basis. They may be paid a flat fee or an hourly rate and are typically not eligible for benefits.', 1, '2023-07-19 11:22:41', '2023-07-19 11:22:41', 1),
-(6, 'Seasonal Employees', '1', 'These are employees who work for the company during specific times of the year when there is a higher demand for the companys products or services. They may be paid an hourly wage and may or may not be eligible for benefits depending on the companys policies.', 1, '2023-07-19 11:22:41', '2023-07-19 11:22:41', 1);
+(1, 'Full-Time Employees', '1', 'These are employees who work for the company on a regular basis and are typically paid a salary or an hourly wage. They may be eligible for benefits such as health insurance, retirement plans, and paid time off.', 1, '2023-07-24 03:22:45', '2023-07-24 03:22:45', 1),
+(2, 'Part-Time Employees', '1', 'These are employees who work for the company on a part-time basis, usually less than 40 hours per week. They may be paid an hourly wage and may or may not be eligible for benefits depending on the company policies.', 1, '2023-07-24 03:22:45', '2023-07-24 03:22:45', 1),
+(3, 'Contract Employees', '1', 'These are individuals who work for the company on a temporary basis and are usually hired to perform a specific job or task. They may be paid a flat fee or an hourly rate and are typically not eligible for benefits.', 1, '2023-07-24 03:22:45', '2023-07-24 03:22:45', 1),
+(4, 'Interns', '1', 'These are students or recent graduates who work for the company on a temporary basis to gain work experience and develop skills. They may be paid a stipend or may work for free, and are typically not eligible for benefits.', 1, '2023-07-24 03:22:46', '2023-07-24 03:22:46', 1),
+(5, 'Consultants', '1', 'These are individuals or firms who are hired by the company to provide specialized expertise or services on a project basis. They may be paid a flat fee or an hourly rate and are typically not eligible for benefits.', 1, '2023-07-24 03:22:46', '2023-07-24 03:22:46', 1),
+(6, 'Seasonal Employees', '1', 'These are employees who work for the company during specific times of the year when there is a higher demand for the companys products or services. They may be paid an hourly wage and may or may not be eligible for benefits depending on the companys policies.', 1, '2023-07-24 03:22:46', '2023-07-24 03:22:46', 1);
 
 -- --------------------------------------------------------
 
@@ -511,9 +566,9 @@ CREATE TABLE `mast_item_categories` (
 --
 
 INSERT INTO `mast_item_categories` (`id`, `cat_name`, `description`, `status`, `created_at`, `updated_at`, `user_id`) VALUES
-(1, 'AC', '', 1, '2023-07-19 11:22:44', '2023-07-19 11:22:44', 1),
-(2, 'AC Spare Parts', '', 1, '2023-07-19 11:22:44', '2023-07-19 11:22:44', 1),
-(3, 'Car Spare Parts', '', 1, '2023-07-19 11:22:44', '2023-07-19 11:22:44', 1);
+(1, 'AC', '', 1, '2023-07-24 03:22:51', '2023-07-24 03:22:51', 1),
+(2, 'AC Spare Parts', '', 1, '2023-07-24 03:22:51', '2023-07-24 03:22:51', 1),
+(3, 'Car Spare Parts', '', 1, '2023-07-24 03:22:51', '2023-07-24 03:22:51', 1);
 
 -- --------------------------------------------------------
 
@@ -537,17 +592,17 @@ CREATE TABLE `mast_item_groups` (
 --
 
 INSERT INTO `mast_item_groups` (`id`, `part_name`, `description`, `status`, `created_at`, `updated_at`, `user_id`, `mast_item_category_id`) VALUES
-(1, 'Window Air Conditioners', '', 1, '2023-07-19 11:22:45', '2023-07-19 11:22:45', 1, 1),
-(2, 'Split Air Conditioners', '', 1, '2023-07-19 11:22:45', '2023-07-19 11:22:45', 1, 1),
-(3, 'Central Air Conditioning', '', 1, '2023-07-19 11:22:45', '2023-07-19 11:22:45', 1, 1),
-(4, 'ARM BUSHING', '', 1, '2023-07-19 11:22:45', '2023-07-19 11:22:45', 1, 3),
-(5, 'SUSPENSION BUSH', '', 1, '2023-07-19 11:22:45', '2023-07-19 11:22:45', 1, 3),
-(6, 'REAR SUSPENSION BUSH', '', 1, '2023-07-19 11:22:45', '2023-07-19 11:22:45', 1, 3),
-(7, 'SPRIN SHACKLE BUSH', '', 1, '2023-07-19 11:22:45', '2023-07-19 11:22:45', 1, 3),
-(8, 'SHOCK ABSORBER BUSH', '', 1, '2023-07-19 11:22:45', '2023-07-19 11:22:45', 1, 3),
-(9, 'SUPRING SHACKLE RUBBER', '', 1, '2023-07-19 11:22:45', '2023-07-19 11:22:45', 1, 3),
-(10, 'UP ARM BUSHING', '', 1, '2023-07-19 11:22:45', '2023-07-19 11:22:45', 1, 3),
-(11, 'FONT LOWER ARM BUSH', '', 1, '2023-07-19 11:22:45', '2023-07-19 11:22:45', 1, 3);
+(1, 'Window Air Conditioners', '', 1, '2023-07-24 03:22:51', '2023-07-24 03:22:51', 1, 1),
+(2, 'Split Air Conditioners', '', 1, '2023-07-24 03:22:51', '2023-07-24 03:22:51', 1, 1),
+(3, 'Central Air Conditioning', '', 1, '2023-07-24 03:22:51', '2023-07-24 03:22:51', 1, 1),
+(4, 'ARM BUSHING', '', 1, '2023-07-24 03:22:52', '2023-07-24 03:22:52', 1, 3),
+(5, 'SUSPENSION BUSH', '', 1, '2023-07-24 03:22:52', '2023-07-24 03:22:52', 1, 3),
+(6, 'REAR SUSPENSION BUSH', '', 1, '2023-07-24 03:22:52', '2023-07-24 03:22:52', 1, 3),
+(7, 'SPRIN SHACKLE BUSH', '', 1, '2023-07-24 03:22:52', '2023-07-24 03:22:52', 1, 3),
+(8, 'SHOCK ABSORBER BUSH', '', 1, '2023-07-24 03:22:52', '2023-07-24 03:22:52', 1, 3),
+(9, 'SUPRING SHACKLE RUBBER', '', 1, '2023-07-24 03:22:52', '2023-07-24 03:22:52', 1, 3),
+(10, 'UP ARM BUSHING', '', 1, '2023-07-24 03:22:52', '2023-07-24 03:22:52', 1, 3),
+(11, 'FONT LOWER ARM BUSH', '', 1, '2023-07-24 03:22:52', '2023-07-24 03:22:52', 1, 3);
 
 -- --------------------------------------------------------
 
@@ -579,9 +634,9 @@ CREATE TABLE `mast_item_registers` (
 --
 
 INSERT INTO `mast_item_registers` (`id`, `box_code`, `gulf_code`, `part_no`, `description`, `box_qty`, `price`, `image`, `warranty`, `cat_id`, `bar_code`, `created_at`, `updated_at`, `user_id`, `mast_item_group_id`, `unit_id`) VALUES
-(1, 5, 2, '1178598', 'Test Only1', 12, '7500.00', '', 12, 1, '97049180517', '2023-07-19 11:22:45', '2023-07-19 11:22:45', 1, 1, 6),
-(2, 5, 2, '1278598', 'Test Only2', 12, '9500.00', '', 12, 1, '97049180517', '2023-07-19 11:22:46', '2023-07-19 11:22:46', 1, 1, 6),
-(3, 9, 7, '1078598', 'Test Only3', 16, '10000.00', '', 12, 2, '98049180517', '2023-07-19 11:22:46', '2023-07-19 11:22:46', 1, 2, 8);
+(1, 5, 2, '1178598', 'Test Only1', 12, '7500.00', '', 12, 1, '97049180517', '2023-07-24 03:22:52', '2023-07-24 03:22:52', 1, 1, 6),
+(2, 5, 2, '1278598', 'Test Only2', 12, '9500.00', '', 12, 1, '97049180517', '2023-07-24 03:22:52', '2023-07-24 03:22:52', 1, 1, 6),
+(3, 9, 7, '1078598', 'Test Only3', 16, '10000.00', '', 12, 2, '98049180517', '2023-07-24 03:22:52', '2023-07-24 03:22:52', 1, 2, 8);
 
 -- --------------------------------------------------------
 
@@ -591,11 +646,11 @@ INSERT INTO `mast_item_registers` (`id`, `box_code`, `gulf_code`, `part_no`, `de
 
 CREATE TABLE `mast_leaves` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `leave_name` varchar(255) NOT NULL,
-  `leave_code` varchar(255) NOT NULL,
-  `max_limit` int(11) NOT NULL,
-  `yearly_limit` int(11) NOT NULL,
-  `description` text NOT NULL,
+  `leave_name` varchar(255) DEFAULT NULL,
+  `leave_code` varchar(255) DEFAULT NULL,
+  `max_limit` int(11) DEFAULT NULL,
+  `yearly_limit` int(11) DEFAULT NULL,
+  `description` text DEFAULT NULL,
   `status` int(11) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -607,13 +662,13 @@ CREATE TABLE `mast_leaves` (
 --
 
 INSERT INTO `mast_leaves` (`id`, `leave_name`, `leave_code`, `max_limit`, `yearly_limit`, `description`, `status`, `created_at`, `updated_at`, `user_id`) VALUES
-(1, 'Vacation Leave', 'LV-0001', 1, 3, 'This is time off that an employee can take for rest, relaxation, or personal reasons. Vacation leave is usually earned based on the length of time the employee has worked for the company.', 1, '2023-07-19 11:22:41', '2023-07-19 11:22:41', 1),
-(2, 'Sick Leave', 'LV-0002', 1, 3, 'This is time off that an employee can take when they are ill or injured. Sick leave may be paid or unpaid, depending on the companys policies.', 1, '2023-07-19 11:22:41', '2023-07-19 11:22:41', 1),
-(3, 'Personal Leave', 'LV-0003', 1, 3, 'This is time off that an employee can take for personal reasons, such as attending to family matters or dealing with a personal emergency.', 1, '2023-07-19 11:22:41', '2023-07-19 11:22:41', 1),
-(4, 'Parental Leave', 'LV-0004', 1, 3, 'This is time off that an employee can take when they become a parent, either through childbirth or adoption. Parental leave may be paid or unpaid, depending on the company policies.', 1, '2023-07-19 11:22:41', '2023-07-19 11:22:41', 1),
-(5, 'Bereavement Leave', 'LV-0005', 1, 3, 'This is time off that an employee can take when a close family member dies. Bereavement leave is usually paid and the amount of time off may vary depending on the company policies.', 1, '2023-07-19 11:22:41', '2023-07-19 11:22:41', 1),
-(6, 'Maternity Leave', 'LV-0006', 1, 3, 'This is time off that a female employee can take before and after childbirth. Maternity leave may be paid or unpaid, depending on the company policies.', 1, '2023-07-19 11:22:42', '2023-07-19 11:22:42', 1),
-(7, 'Maternity Leave', 'LV-0006', 1, 3, 'This is time off that a female employee can take before and after childbirth. Maternity leave may be paid or unpaid, depending on the company policies.', 1, '2023-07-19 11:22:42', '2023-07-19 11:22:42', 1);
+(1, 'Vacation Leave', 'LV-0001', 1, 3, 'This is time off that an employee can take for rest, relaxation, or personal reasons. Vacation leave is usually earned based on the length of time the employee has worked for the company.', 1, '2023-07-24 03:22:46', '2023-07-24 03:22:46', 1),
+(2, 'Sick Leave', 'LV-0002', 1, 3, 'This is time off that an employee can take when they are ill or injured. Sick leave may be paid or unpaid, depending on the companys policies.', 1, '2023-07-24 03:22:46', '2023-07-24 03:22:46', 1),
+(3, 'Personal Leave', 'LV-0003', 1, 3, 'This is time off that an employee can take for personal reasons, such as attending to family matters or dealing with a personal emergency.', 1, '2023-07-24 03:22:46', '2023-07-24 03:22:46', 1),
+(4, 'Parental Leave', 'LV-0004', 1, 3, 'This is time off that an employee can take when they become a parent, either through childbirth or adoption. Parental leave may be paid or unpaid, depending on the company policies.', 1, '2023-07-24 03:22:46', '2023-07-24 03:22:46', 1),
+(5, 'Bereavement Leave', 'LV-0005', 1, 3, 'This is time off that an employee can take when a close family member dies. Bereavement leave is usually paid and the amount of time off may vary depending on the company policies.', 1, '2023-07-24 03:22:47', '2023-07-24 03:22:47', 1),
+(6, 'Maternity Leave', 'LV-0006', 1, 3, 'This is time off that a female employee can take before and after childbirth. Maternity leave may be paid or unpaid, depending on the company policies.', 1, '2023-07-24 03:22:47', '2023-07-24 03:22:47', 1),
+(7, 'Maternity Leave', 'LV-0006', 1, 3, 'This is time off that a female employee can take before and after childbirth. Maternity leave may be paid or unpaid, depending on the company policies.', 1, '2023-07-24 03:22:47', '2023-07-24 03:22:47', 1);
 
 -- --------------------------------------------------------
 
@@ -637,17 +692,17 @@ CREATE TABLE `mast_packages` (
 --
 
 INSERT INTO `mast_packages` (`id`, `pkg_name`, `pkg_size`, `description`, `status`, `created_at`, `updated_at`, `user_id`) VALUES
-(1, '1 X 1', 1, '', 1, '2023-07-19 11:22:42', '2023-07-19 11:22:42', 1),
-(2, '1 X 4', 4, '', 1, '2023-07-19 11:22:42', '2023-07-19 11:22:42', 1),
-(3, '1 X 6', 6, '', 1, '2023-07-19 11:22:42', '2023-07-19 11:22:42', 1),
-(4, '1 X 8', 8, '', 1, '2023-07-19 11:22:42', '2023-07-19 11:22:42', 1),
-(5, '1 X 10', 10, '', 1, '2023-07-19 11:22:42', '2023-07-19 11:22:42', 1),
-(6, '1 X 12', 12, '', 1, '2023-07-19 11:22:43', '2023-07-19 11:22:43', 1),
-(7, '1 X 16', 16, '', 1, '2023-07-19 11:22:43', '2023-07-19 11:22:43', 1),
-(8, '1 X 20', 20, '', 1, '2023-07-19 11:22:43', '2023-07-19 11:22:43', 1),
-(9, '1 X 24', 24, '', 1, '2023-07-19 11:22:43', '2023-07-19 11:22:43', 1),
-(10, '1 X 36', 36, '', 1, '2023-07-19 11:22:43', '2023-07-19 11:22:43', 1),
-(11, '1 X 48', 48, '', 1, '2023-07-19 11:22:43', '2023-07-19 11:22:43', 1);
+(1, '1 X 1', 1, '', 1, '2023-07-24 03:22:48', '2023-07-24 03:22:48', 1),
+(2, '1 X 4', 4, '', 1, '2023-07-24 03:22:48', '2023-07-24 03:22:48', 1),
+(3, '1 X 6', 6, '', 1, '2023-07-24 03:22:48', '2023-07-24 03:22:48', 1),
+(4, '1 X 8', 8, '', 1, '2023-07-24 03:22:48', '2023-07-24 03:22:48', 1),
+(5, '1 X 10', 10, '', 1, '2023-07-24 03:22:48', '2023-07-24 03:22:48', 1),
+(6, '1 X 12', 12, '', 1, '2023-07-24 03:22:48', '2023-07-24 03:22:48', 1),
+(7, '1 X 16', 16, '', 1, '2023-07-24 03:22:48', '2023-07-24 03:22:48', 1),
+(8, '1 X 20', 20, '', 1, '2023-07-24 03:22:49', '2023-07-24 03:22:49', 1),
+(9, '1 X 24', 24, '', 1, '2023-07-24 03:22:49', '2023-07-24 03:22:49', 1),
+(10, '1 X 36', 36, '', 1, '2023-07-24 03:22:49', '2023-07-24 03:22:49', 1),
+(11, '1 X 48', 48, '', 1, '2023-07-24 03:22:49', '2023-07-24 03:22:49', 1);
 
 -- --------------------------------------------------------
 
@@ -673,9 +728,9 @@ CREATE TABLE `mast_suppliers` (
 --
 
 INSERT INTO `mast_suppliers` (`id`, `supplier_name`, `contact_person`, `email`, `phone_number`, `address`, `status`, `created_at`, `updated_at`, `user_id`) VALUES
-(1, 'Alam', 'Sagour Khan', 'alam@gmail.com', '01995275933', 'Shariatpur', 1, '2023-07-19 11:22:46', '2023-07-19 11:22:46', 1),
-(2, 'Sabbir', 'Sagour Khan', 'sabbir@gmail.com', '01995275933', 'Shariatpur', 1, '2023-07-19 11:22:46', '2023-07-19 11:22:46', 1),
-(3, 'Minhaz', 'Sagour Khan', 'minhaz@gmail.com', '01995275933', 'Shariatpur', 1, '2023-07-19 11:22:46', '2023-07-19 11:22:46', 1);
+(1, 'Alam', 'Sagour Khan', 'alam@gmail.com', '01995275933', 'Shariatpur', 1, '2023-07-24 03:22:53', '2023-07-24 03:22:53', 1),
+(2, 'Sabbir', 'Sagour Khan', 'sabbir@gmail.com', '01995275933', 'Shariatpur', 1, '2023-07-24 03:22:53', '2023-07-24 03:22:53', 1),
+(3, 'Minhaz', 'Sagour Khan', 'minhaz@gmail.com', '01995275933', 'Shariatpur', 1, '2023-07-24 03:22:53', '2023-07-24 03:22:53', 1);
 
 -- --------------------------------------------------------
 
@@ -699,29 +754,29 @@ CREATE TABLE `mast_units` (
 --
 
 INSERT INTO `mast_units` (`id`, `unit_name`, `description`, `mast_item_category_id`, `status`, `created_at`, `updated_at`, `user_id`) VALUES
-(1, 'Cubic Meter', ' This is a unit of volume commonly used to measure the capacity of a box or container. ', 1, 1, '2023-07-19 11:22:43', '2023-07-19 11:22:43', 1),
-(2, 'Carton', ' In some cases, \"box\" may be used interchangeably with \"carton\" to refer to a specific packaging unit.', 1, 1, '2023-07-19 11:22:43', '2023-07-19 11:22:43', 1),
-(3, 'Crate', 'A crate is a rigid container, typically made of wood or plastic, used for shipping or storing goods.', 2, 1, '2023-07-19 11:22:43', '2023-07-19 11:22:43', 1),
-(4, 'Packaging ', 'In the context of retail or wholesale, products may be packaged in specific units, such as a certain number of items per box or package. ', 2, 1, '2023-07-19 11:22:43', '2023-07-19 11:22:43', 1),
-(5, 'Window Air', 'These units are self-contained and designed to be installed in a window or a specially made opening in a wall. They provide cooling for individual rooms or small spaces.', 2, 1, '2023-07-19 11:22:43', '2023-07-19 11:22:43', 1),
-(6, 'Split Air', 'Split AC units consist of two main components: an indoor unit and an outdoor unit. The indoor unit is installed inside the room, while the outdoor unit is placed outside the building. ', 2, 1, '2023-07-19 11:22:43', '2023-07-19 11:22:43', 1),
-(7, 'Central Air', 'Central AC units are designed to cool entire buildings or large areas. They consist of a centralized cooling unit that distributes cool air through a network of ducts and vents. ', 2, 1, '2023-07-19 11:22:43', '2023-07-19 11:22:43', 1),
-(8, 'Portable Air', ' These units are freestanding and can be moved from room to room as needed. Portable AC units typically include a venting kit that allows hot air to be exhausted through a window or vent.', 2, 1, '2023-07-19 11:22:43', '2023-07-19 11:22:43', 1),
-(9, 'Ductless Mini-Split Air', 'Similar to split AC units, ductless mini-split systems consist of an indoor unit and an outdoor unit. However, they do not require ductwork for air distribution. They are ideal for cooling individual rooms or specific zones within a building.', 2, 1, '2023-07-19 11:22:43', '2023-07-19 11:22:43', 1),
-(10, 'Spark plugs', 'Sold as individual units.', 3, 1, '2023-07-19 11:22:43', '2023-07-19 11:22:43', 1),
-(11, 'Brake pads', 'Sold as a set for each wheel (usually 2 or 4 pads per set).', 3, 1, '2023-07-19 11:22:44', '2023-07-19 11:22:44', 1),
-(12, 'Air filters', 'Sold as individual units.', 3, 1, '2023-07-19 11:22:44', '2023-07-19 11:22:44', 1),
-(13, 'Oil filters', 'Sold as individual units.', 3, 1, '2023-07-19 11:22:44', '2023-07-19 11:22:44', 1),
-(14, 'Headlights', 'Sold as individual units (left and right headlights)', 3, 1, '2023-07-19 11:22:44', '2023-07-19 11:22:44', 1),
-(15, 'Taillights', 'Sold as individual units (left and right taillights).', 3, 1, '2023-07-19 11:22:44', '2023-07-19 11:22:44', 1),
-(16, 'Brake discs/rotors', 'Sold as individual units (typically per wheel).', 3, 1, '2023-07-19 11:22:44', '2023-07-19 11:22:44', 1),
-(17, 'Timing belts', 'Sold as individual units.', 3, 1, '2023-07-19 11:22:44', '2023-07-19 11:22:44', 1),
-(18, 'Fuel filters', 'Sold as individual units.', 3, 1, '2023-07-19 11:22:44', '2023-07-19 11:22:44', 1),
-(19, 'Water pumps', 'Sold as individual units.', 3, 1, '2023-07-19 11:22:44', '2023-07-19 11:22:44', 1),
-(20, 'Radiators', 'Sold as individual units.', 3, 1, '2023-07-19 11:22:44', '2023-07-19 11:22:44', 1),
-(21, 'Shock absorbers', 'Sold as individual units (per wheel).', 3, 1, '2023-07-19 11:22:44', '2023-07-19 11:22:44', 1),
-(22, 'Control arms', 'Sold as individual units (per wheel).', 3, 1, '2023-07-19 11:22:44', '2023-07-19 11:22:44', 1),
-(23, 'Ball joints', 'Sold as individual units (per wheel).', 3, 1, '2023-07-19 11:22:44', '2023-07-19 11:22:44', 1);
+(1, 'Cubic Meter', ' This is a unit of volume commonly used to measure the capacity of a box or container. ', 1, 1, '2023-07-24 03:22:49', '2023-07-24 03:22:49', 1),
+(2, 'Carton', ' In some cases, \"box\" may be used interchangeably with \"carton\" to refer to a specific packaging unit.', 1, 1, '2023-07-24 03:22:49', '2023-07-24 03:22:49', 1),
+(3, 'Crate', 'A crate is a rigid container, typically made of wood or plastic, used for shipping or storing goods.', 2, 1, '2023-07-24 03:22:49', '2023-07-24 03:22:49', 1),
+(4, 'Packaging ', 'In the context of retail or wholesale, products may be packaged in specific units, such as a certain number of items per box or package. ', 2, 1, '2023-07-24 03:22:49', '2023-07-24 03:22:49', 1),
+(5, 'Window Air', 'These units are self-contained and designed to be installed in a window or a specially made opening in a wall. They provide cooling for individual rooms or small spaces.', 2, 1, '2023-07-24 03:22:49', '2023-07-24 03:22:49', 1),
+(6, 'Split Air', 'Split AC units consist of two main components: an indoor unit and an outdoor unit. The indoor unit is installed inside the room, while the outdoor unit is placed outside the building. ', 2, 1, '2023-07-24 03:22:49', '2023-07-24 03:22:49', 1),
+(7, 'Central Air', 'Central AC units are designed to cool entire buildings or large areas. They consist of a centralized cooling unit that distributes cool air through a network of ducts and vents. ', 2, 1, '2023-07-24 03:22:49', '2023-07-24 03:22:49', 1),
+(8, 'Portable Air', ' These units are freestanding and can be moved from room to room as needed. Portable AC units typically include a venting kit that allows hot air to be exhausted through a window or vent.', 2, 1, '2023-07-24 03:22:49', '2023-07-24 03:22:49', 1),
+(9, 'Ductless Mini-Split Air', 'Similar to split AC units, ductless mini-split systems consist of an indoor unit and an outdoor unit. However, they do not require ductwork for air distribution. They are ideal for cooling individual rooms or specific zones within a building.', 2, 1, '2023-07-24 03:22:50', '2023-07-24 03:22:50', 1),
+(10, 'Spark plugs', 'Sold as individual units.', 3, 1, '2023-07-24 03:22:50', '2023-07-24 03:22:50', 1),
+(11, 'Brake pads', 'Sold as a set for each wheel (usually 2 or 4 pads per set).', 3, 1, '2023-07-24 03:22:50', '2023-07-24 03:22:50', 1),
+(12, 'Air filters', 'Sold as individual units.', 3, 1, '2023-07-24 03:22:50', '2023-07-24 03:22:50', 1),
+(13, 'Oil filters', 'Sold as individual units.', 3, 1, '2023-07-24 03:22:50', '2023-07-24 03:22:50', 1),
+(14, 'Headlights', 'Sold as individual units (left and right headlights)', 3, 1, '2023-07-24 03:22:50', '2023-07-24 03:22:50', 1),
+(15, 'Taillights', 'Sold as individual units (left and right taillights).', 3, 1, '2023-07-24 03:22:50', '2023-07-24 03:22:50', 1),
+(16, 'Brake discs/rotors', 'Sold as individual units (typically per wheel).', 3, 1, '2023-07-24 03:22:50', '2023-07-24 03:22:50', 1),
+(17, 'Timing belts', 'Sold as individual units.', 3, 1, '2023-07-24 03:22:50', '2023-07-24 03:22:50', 1),
+(18, 'Fuel filters', 'Sold as individual units.', 3, 1, '2023-07-24 03:22:50', '2023-07-24 03:22:50', 1),
+(19, 'Water pumps', 'Sold as individual units.', 3, 1, '2023-07-24 03:22:50', '2023-07-24 03:22:50', 1),
+(20, 'Radiators', 'Sold as individual units.', 3, 1, '2023-07-24 03:22:50', '2023-07-24 03:22:50', 1),
+(21, 'Shock absorbers', 'Sold as individual units (per wheel).', 3, 1, '2023-07-24 03:22:50', '2023-07-24 03:22:50', 1),
+(22, 'Control arms', 'Sold as individual units (per wheel).', 3, 1, '2023-07-24 03:22:51', '2023-07-24 03:22:51', 1),
+(23, 'Ball joints', 'Sold as individual units (per wheel).', 3, 1, '2023-07-24 03:22:51', '2023-07-24 03:22:51', 1);
 
 -- --------------------------------------------------------
 
@@ -746,9 +801,9 @@ CREATE TABLE `mast_work_stations` (
 --
 
 INSERT INTO `mast_work_stations` (`id`, `store_name`, `contact_number`, `location`, `description`, `status`, `created_at`, `updated_at`, `user_id`) VALUES
-(1, 'Central Storehouse', '01995275933', 'Gulshan', 'This is time off that a female employee can take before and after childbirth. Maternity leave may be paid or unpaid, depending on the company policies.', 1, '2023-07-19 11:22:42', '2023-07-19 11:22:42', 1),
-(2, 'Gulf international associates ltd.', '01995275933', 'Gulshan', 'This is time off that a female employee can take before and after childbirth. Maternity leave may be paid or unpaid, depending on the company policies.', 1, '2023-07-19 11:22:42', '2023-07-19 11:22:42', 1),
-(3, 'Icon information Systems ltd.', '01995275933', 'Mirpur', 'This is time off that a female employee can take before and after childbirth. Maternity leave may be paid or unpaid, depending on the company policies.', 1, '2023-07-19 11:22:42', '2023-07-19 11:22:42', 1);
+(1, 'Central Storehouse', '01995275933', 'Gulshan', 'This is time off that a female employee can take before and after childbirth. Maternity leave may be paid or unpaid, depending on the company policies.', 1, '2023-07-24 03:22:47', '2023-07-24 03:22:47', 1),
+(2, 'Gulf international associates ltd.', '01995275933', 'Gulshan', 'This is time off that a female employee can take before and after childbirth. Maternity leave may be paid or unpaid, depending on the company policies.', 1, '2023-07-24 03:22:47', '2023-07-24 03:22:47', 1),
+(3, 'Icon information Systems ltd.', '01995275933', 'Mirpur', 'This is time off that a female employee can take before and after childbirth. Maternity leave may be paid or unpaid, depending on the company policies.', 1, '2023-07-24 03:22:47', '2023-07-24 03:22:47', 1);
 
 -- --------------------------------------------------------
 
@@ -797,14 +852,19 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (28, '2023_05_07_045208_create_hr_attendances_table', 1),
 (29, '2023_05_15_052417_create_purchases_table', 1),
 (30, '2023_05_17_053821_create_purchase_details_table', 1),
-(31, '2023_06_05_104851_create_sales_table', 1),
-(32, '2023_06_05_115459_create_sales_details_table', 1),
-(33, '2023_07_09_083700_create_store_transfers_table', 1),
-(34, '2023_07_09_101840_create_store_transfer_details_table', 1),
-(35, '2023_07_16_083217_create_sales_returns_table', 1),
-(36, '2023_07_16_093835_create_sales_return_details_table', 1),
-(37, '2023_08_08_062121_create_reference_types_table', 1),
-(38, '2023_08_09_052658_create_sl_movements_table', 1);
+(31, '2023_06_05_104849_create_quotations_table', 1),
+(32, '2023_06_05_104850_create_quotation_details_table', 1),
+(33, '2023_06_05_104851_create_sales_table', 1),
+(34, '2023_06_05_115459_create_sales_details_table', 1),
+(35, '2023_07_09_083700_create_store_transfers_table', 1),
+(36, '2023_07_09_101840_create_store_transfer_details_table', 1),
+(37, '2023_07_09_101841_create_deliveries_table', 1),
+(38, '2023_07_16_083217_create_sales_returns_table', 1),
+(39, '2023_07_16_093835_create_sales_return_details_table', 1),
+(40, '2023_07_24_085305_create_complaints_table', 1),
+(41, '2023_07_24_091704_create_complaint_details_table', 1),
+(42, '2023_08_08_062121_create_reference_types_table', 1),
+(43, '2023_08_09_052658_create_sl_movements_table', 1);
 
 -- --------------------------------------------------------
 
@@ -868,25 +928,25 @@ CREATE TABLE `permissions` (
 --
 
 INSERT INTO `permissions` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VALUES
-(1, 'Setting access', 'web', '2023-07-19 11:22:38', '2023-07-19 11:22:38'),
-(2, 'Pages access', 'web', '2023-07-19 11:22:38', '2023-07-19 11:22:38'),
-(3, 'Gallery access', 'web', '2023-07-19 11:22:38', '2023-07-19 11:22:38'),
-(4, 'Gallery create', 'web', '2023-07-19 11:22:38', '2023-07-19 11:22:38'),
-(5, 'Gallery edit', 'web', '2023-07-19 11:22:38', '2023-07-19 11:22:38'),
-(6, 'Gallery delete', 'web', '2023-07-19 11:22:38', '2023-07-19 11:22:38'),
-(7, 'Member access', 'web', '2023-07-19 11:22:38', '2023-07-19 11:22:38'),
-(8, 'Approve Member', 'web', '2023-07-19 11:22:38', '2023-07-19 11:22:38'),
-(9, 'Member create', 'web', '2023-07-19 11:22:38', '2023-07-19 11:22:38'),
-(10, 'Member edit', 'web', '2023-07-19 11:22:38', '2023-07-19 11:22:38'),
-(11, 'Member delete', 'web', '2023-07-19 11:22:38', '2023-07-19 11:22:38'),
-(12, 'User access', 'web', '2023-07-19 11:22:39', '2023-07-19 11:22:39'),
-(13, 'User create', 'web', '2023-07-19 11:22:39', '2023-07-19 11:22:39'),
-(14, 'User edit', 'web', '2023-07-19 11:22:39', '2023-07-19 11:22:39'),
-(15, 'User delete', 'web', '2023-07-19 11:22:39', '2023-07-19 11:22:39'),
-(16, 'Role access', 'web', '2023-07-19 11:22:39', '2023-07-19 11:22:39'),
-(17, 'Role create', 'web', '2023-07-19 11:22:39', '2023-07-19 11:22:39'),
-(18, 'Role edit', 'web', '2023-07-19 11:22:39', '2023-07-19 11:22:39'),
-(19, 'Role delete', 'web', '2023-07-19 11:22:39', '2023-07-19 11:22:39');
+(1, 'Setting access', 'web', '2023-07-24 03:22:39', '2023-07-24 03:22:39'),
+(2, 'Pages access', 'web', '2023-07-24 03:22:39', '2023-07-24 03:22:39'),
+(3, 'Gallery access', 'web', '2023-07-24 03:22:39', '2023-07-24 03:22:39'),
+(4, 'Gallery create', 'web', '2023-07-24 03:22:40', '2023-07-24 03:22:40'),
+(5, 'Gallery edit', 'web', '2023-07-24 03:22:40', '2023-07-24 03:22:40'),
+(6, 'Gallery delete', 'web', '2023-07-24 03:22:40', '2023-07-24 03:22:40'),
+(7, 'Member access', 'web', '2023-07-24 03:22:40', '2023-07-24 03:22:40'),
+(8, 'Approve Member', 'web', '2023-07-24 03:22:40', '2023-07-24 03:22:40'),
+(9, 'Member create', 'web', '2023-07-24 03:22:40', '2023-07-24 03:22:40'),
+(10, 'Member edit', 'web', '2023-07-24 03:22:40', '2023-07-24 03:22:40'),
+(11, 'Member delete', 'web', '2023-07-24 03:22:41', '2023-07-24 03:22:41'),
+(12, 'User access', 'web', '2023-07-24 03:22:41', '2023-07-24 03:22:41'),
+(13, 'User create', 'web', '2023-07-24 03:22:41', '2023-07-24 03:22:41'),
+(14, 'User edit', 'web', '2023-07-24 03:22:41', '2023-07-24 03:22:41'),
+(15, 'User delete', 'web', '2023-07-24 03:22:41', '2023-07-24 03:22:41'),
+(16, 'Role access', 'web', '2023-07-24 03:22:42', '2023-07-24 03:22:42'),
+(17, 'Role create', 'web', '2023-07-24 03:22:42', '2023-07-24 03:22:42'),
+(18, 'Role edit', 'web', '2023-07-24 03:22:42', '2023-07-24 03:22:42'),
+(19, 'Role delete', 'web', '2023-07-24 03:22:42', '2023-07-24 03:22:42');
 
 -- --------------------------------------------------------
 
@@ -917,6 +977,9 @@ CREATE TABLE `purchases` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `inv_date` date DEFAULT NULL,
   `inv_no` varchar(255) DEFAULT NULL,
+  `lc_no` varchar(255) DEFAULT NULL,
+  `vat` double(8,2) DEFAULT 0.00,
+  `tax` double(8,2) DEFAULT 0.00,
   `remarks` text DEFAULT NULL,
   `mast_item_category_id` int(11) DEFAULT NULL,
   `status` tinyint(4) NOT NULL DEFAULT 0,
@@ -951,6 +1014,47 @@ CREATE TABLE `purchase_details` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `quotations`
+--
+
+CREATE TABLE `quotations` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `offer_date` date DEFAULT NULL,
+  `ref_no` varchar(255) DEFAULT NULL,
+  `order_no` varchar(255) DEFAULT NULL,
+  `order_date` date DEFAULT NULL,
+  `vat` double(8,2) DEFAULT 0.00,
+  `tax` double(8,2) DEFAULT 0.00,
+  `remarks` text DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 0,
+  `mast_item_category_id` bigint(20) UNSIGNED NOT NULL,
+  `mast_customer_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `quotation_details`
+--
+
+CREATE TABLE `quotation_details` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `qty` int(11) DEFAULT NULL,
+  `price` decimal(8,2) DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 1,
+  `quotation_id` bigint(20) UNSIGNED NOT NULL,
+  `mast_item_register_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `reference_types`
 --
 
@@ -967,10 +1071,10 @@ CREATE TABLE `reference_types` (
 --
 
 INSERT INTO `reference_types` (`id`, `name`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Purchase', 1, '2023-07-19 11:22:42', '2023-07-19 11:22:42'),
-(2, 'Sales', 1, '2023-07-19 11:22:42', '2023-07-19 11:22:42'),
-(3, 'Store Transfer', 1, '2023-07-19 11:22:42', '2023-07-19 11:22:42'),
-(4, 'Sales Return', 1, '2023-07-19 11:22:42', '2023-07-19 11:22:42');
+(1, 'Purchase', 1, '2023-07-24 03:22:47', '2023-07-24 03:22:47'),
+(2, 'Sales', 1, '2023-07-24 03:22:47', '2023-07-24 03:22:47'),
+(3, 'Store Transfer', 1, '2023-07-24 03:22:47', '2023-07-24 03:22:47'),
+(4, 'Sales Return', 1, '2023-07-24 03:22:48', '2023-07-24 03:22:48');
 
 -- --------------------------------------------------------
 
@@ -991,9 +1095,9 @@ CREATE TABLE `roles` (
 --
 
 INSERT INTO `roles` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VALUES
-(1, 'Supper-Admin', 'web', '2023-07-19 11:22:37', '2023-07-19 11:22:37'),
-(2, 'Admin', 'web', '2023-07-19 11:22:38', '2023-07-19 11:22:38'),
-(3, 'Member', 'web', '2023-07-19 11:22:38', '2023-07-19 11:22:38');
+(1, 'Supper-Admin', 'web', '2023-07-24 03:22:38', '2023-07-24 03:22:38'),
+(2, 'Admin', 'web', '2023-07-24 03:22:38', '2023-07-24 03:22:38'),
+(3, 'Member', 'web', '2023-07-24 03:22:39', '2023-07-24 03:22:39');
 
 -- --------------------------------------------------------
 
@@ -1042,11 +1146,13 @@ CREATE TABLE `sales` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `inv_date` date DEFAULT NULL,
   `inv_no` varchar(255) DEFAULT NULL,
-  `vat` int(11) DEFAULT NULL,
-  `tax` int(11) DEFAULT NULL,
+  `vat` double(8,2) DEFAULT 0.00,
+  `tax` double(8,2) DEFAULT 0.00,
   `remarks` text DEFAULT NULL,
   `status` tinyint(4) NOT NULL DEFAULT 0,
   `is_parsial` tinyint(4) NOT NULL DEFAULT 0,
+  `is_return` tinyint(4) NOT NULL DEFAULT 0,
+  `quotation_id` int(11) DEFAULT NULL,
   `mast_item_category_id` bigint(20) UNSIGNED NOT NULL,
   `mast_customer_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
@@ -1084,9 +1190,10 @@ CREATE TABLE `sales_returns` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `return_no` varchar(255) DEFAULT NULL,
   `return_date` date DEFAULT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 0,
   `remarks` text DEFAULT NULL,
-  `from_store` text DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 0,
+  `is_parsial` tinyint(4) NOT NULL DEFAULT 0,
+  `from_store_id` int(11) DEFAULT NULL,
   `mast_work_station_id` bigint(20) UNSIGNED NOT NULL,
   `sales_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
@@ -1158,10 +1265,8 @@ CREATE TABLE `store_transfers` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `inv_date` date DEFAULT NULL,
   `inv_no` varchar(255) DEFAULT NULL,
-  `vat` int(11) DEFAULT NULL,
-  `tax` int(11) DEFAULT NULL,
   `remarks` text DEFAULT NULL,
-  `from_store_id` text DEFAULT NULL,
+  `from_store_id` int(11) DEFAULT NULL,
   `mast_work_station_id` bigint(20) UNSIGNED NOT NULL,
   `mast_item_category_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
@@ -1180,7 +1285,6 @@ CREATE TABLE `store_transfers` (
 CREATE TABLE `store_transfer_details` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `qty` int(11) DEFAULT NULL,
-  `price` decimal(8,2) DEFAULT NULL,
   `deli_qty` int(11) DEFAULT NULL,
   `cat_id` bigint(20) DEFAULT NULL,
   `status` tinyint(4) NOT NULL DEFAULT 1,
@@ -6361,11 +6465,36 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `contact_number`, `employee_code`, `email_verified_at`, `password`, `two_factor_secret`, `two_factor_recovery_codes`, `two_factor_confirmed_at`, `remember_token`, `current_team_id`, `profile_photo_path`, `status`, `is_admin`, `attendance_id`, `created_at`, `updated_at`, `mast_work_station_id`) VALUES
-(1, 'Gulf-ERP', 'admin@gmail.com', '01909302126', 'GF-00000', '2023-12-31 18:00:00', '$2y$10$g/dI95wemZCYeCljgTYeqOn031bqCzXk3L/EcKm0Z1YZLf4bRP6Tq', NULL, NULL, NULL, NULL, NULL, 'fix/admin.jpg', 1, 0, NULL, '2023-07-19 11:22:37', '2023-07-19 11:22:37', 1);
+(1, 'Gulf-ERP', 'admin@gmail.com', '01909302126', 'GF-00000', '2023-12-31 18:00:00', '$2y$10$98cE5HFHRgFPXBcNlHp7VOSRPh3VXy7D8HmHYQTOP43UVtnRjME9i', NULL, NULL, NULL, NULL, NULL, 'fix/admin.jpg', 1, 0, NULL, '2023-07-24 03:22:38', '2023-07-24 03:22:38', 1);
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `complaints`
+--
+ALTER TABLE `complaints`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `complaints_mast_customer_id_foreign` (`mast_customer_id`),
+  ADD KEY `complaints_user_id_foreign` (`user_id`);
+
+--
+-- Indexes for table `complaint_details`
+--
+ALTER TABLE `complaint_details`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `complaint_details_user_id_foreign` (`user_id`);
+
+--
+-- Indexes for table `deliveries`
+--
+ALTER TABLE `deliveries`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `deliveries_sales_id_foreign` (`sales_id`),
+  ADD KEY `deliveries_mast_work_station_id_foreign` (`mast_work_station_id`),
+  ADD KEY `deliveries_mast_item_register_id_foreign` (`mast_item_register_id`),
+  ADD KEY `deliveries_user_id_foreign` (`user_id`);
 
 --
 -- Indexes for table `districts`
@@ -6600,6 +6729,24 @@ ALTER TABLE `purchase_details`
   ADD KEY `purchase_details_user_id_foreign` (`user_id`);
 
 --
+-- Indexes for table `quotations`
+--
+ALTER TABLE `quotations`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `quotations_mast_item_category_id_foreign` (`mast_item_category_id`),
+  ADD KEY `quotations_mast_customer_id_foreign` (`mast_customer_id`),
+  ADD KEY `quotations_user_id_foreign` (`user_id`);
+
+--
+-- Indexes for table `quotation_details`
+--
+ALTER TABLE `quotation_details`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `quotation_details_quotation_id_foreign` (`quotation_id`),
+  ADD KEY `quotation_details_mast_item_register_id_foreign` (`mast_item_register_id`),
+  ADD KEY `quotation_details_user_id_foreign` (`user_id`);
+
+--
 -- Indexes for table `reference_types`
 --
 ALTER TABLE `reference_types`
@@ -6719,6 +6866,24 @@ ALTER TABLE `users`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `complaints`
+--
+ALTER TABLE `complaints`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `complaint_details`
+--
+ALTER TABLE `complaint_details`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `deliveries`
+--
+ALTER TABLE `deliveries`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `districts`
@@ -6862,7 +7027,7 @@ ALTER TABLE `mast_work_stations`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT for table `permissions`
@@ -6886,6 +7051,18 @@ ALTER TABLE `purchases`
 -- AUTO_INCREMENT for table `purchase_details`
 --
 ALTER TABLE `purchase_details`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `quotations`
+--
+ALTER TABLE `quotations`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `quotation_details`
+--
+ALTER TABLE `quotation_details`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
@@ -6969,6 +7146,28 @@ ALTER TABLE `users`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `complaints`
+--
+ALTER TABLE `complaints`
+  ADD CONSTRAINT `complaints_mast_customer_id_foreign` FOREIGN KEY (`mast_customer_id`) REFERENCES `mast_customers` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `complaints_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `complaint_details`
+--
+ALTER TABLE `complaint_details`
+  ADD CONSTRAINT `complaint_details_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `deliveries`
+--
+ALTER TABLE `deliveries`
+  ADD CONSTRAINT `deliveries_mast_item_register_id_foreign` FOREIGN KEY (`mast_item_register_id`) REFERENCES `mast_item_registers` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `deliveries_mast_work_station_id_foreign` FOREIGN KEY (`mast_work_station_id`) REFERENCES `mast_work_stations` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `deliveries_sales_id_foreign` FOREIGN KEY (`sales_id`) REFERENCES `sales` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `deliveries_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `hr_attendances`
@@ -7126,6 +7325,22 @@ ALTER TABLE `purchase_details`
   ADD CONSTRAINT `purchase_details_mast_item_register_id_foreign` FOREIGN KEY (`mast_item_register_id`) REFERENCES `mast_item_registers` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `purchase_details_purchase_id_foreign` FOREIGN KEY (`purchase_id`) REFERENCES `purchases` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `purchase_details_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `quotations`
+--
+ALTER TABLE `quotations`
+  ADD CONSTRAINT `quotations_mast_customer_id_foreign` FOREIGN KEY (`mast_customer_id`) REFERENCES `mast_customers` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `quotations_mast_item_category_id_foreign` FOREIGN KEY (`mast_item_category_id`) REFERENCES `mast_item_categories` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `quotations_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `quotation_details`
+--
+ALTER TABLE `quotation_details`
+  ADD CONSTRAINT `quotation_details_mast_item_register_id_foreign` FOREIGN KEY (`mast_item_register_id`) REFERENCES `mast_item_registers` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `quotation_details_quotation_id_foreign` FOREIGN KEY (`quotation_id`) REFERENCES `quotations` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `quotation_details_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `role_has_permissions`

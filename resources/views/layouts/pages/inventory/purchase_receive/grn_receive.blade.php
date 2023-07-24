@@ -192,7 +192,7 @@
                 
             </div>
         </div>
-    </div>
+    </div><span id="serial_no_error" class="text-danger"></span>
 </x-app-layout>
 
 <script type="text/javascript">
@@ -269,22 +269,23 @@
                         location.reload();
                     });
                 },
-                error: function (xhr) {
-                    var errors = xhr.responseJSON.errors;
-                    var errorHtml = '';
-                    $.each(errors, function(key, value) {
-                        errorHtml += '<li style="color:red">' + value + '</li>';
-                    });
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        html: '<ul>' + errorHtml + '</ul>',
-                        text: 'All input values are not null or empty.',
-                    });
+                error: function(xhr) {
+                    if (xhr.status === 422 && xhr.responseJSON.hasOwnProperty('error')) {
+                        
+                        swal({
+                            title: "Error occurred!",
+                            text: xhr.responseJSON.error,
+                            icon: "warning",
+                            button: "OK",
+                            dangerMode: true,
+                        });
+                    } else {
+                        swal("Error!", "Unknown error occurred.", "error");
+                    }
                 }
             });
         } else {
-            swal("Error!", "All input values are not null or empty.", "error");
+            swal("Error!", "The serial number field is required.", "error");
         }
     });
 </script>
@@ -342,6 +343,31 @@
                 dropdownParent: $(this).parent()
             });
         });
+
+        //--Serial number already exists
+        newRow.find('.val_serial_no').on('change', function () {
+            var serialNumber = $(this).val();
+            var currentRow = $(this).closest('tr');
+            var serialInput = $(this);
+
+            $.ajax({
+                url: '{{ route('checkSerialNumber') }}',
+                method:'GET',
+                dataType:"JSON",
+                data: { serial_no: serialNumber },
+                success: function (response) {
+                    if (response.exists) {
+                        alert('Serial number already exists.');
+                        serialInput.val('');
+                    } else {
+                        currentRow.find('.serial_no_error').text('');
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.error(errorThrown);
+                }
+            });
+        });
     }
     //======Remove ROW
     $('#items-table').on('click', '.remove-row', function() {
@@ -349,6 +375,7 @@
         var rec_qty= $('#rcvQty').val();
         $('#rcvQty').val(rec_qty-1);
     });
+
 </script>
 
 

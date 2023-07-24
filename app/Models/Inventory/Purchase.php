@@ -14,6 +14,8 @@ class Purchase extends Model
     protected $fillable=[
         'inv_date',
         'inv_no',
+        'vat',
+        'tax',
         'mast_supplier_id',
         'mast_item_category_id',
         'mast_work_station_id',

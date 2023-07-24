@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('mast_employee_types', function (Blueprint $table) {
             $table->id();
-            $table->string('cat_name')->nullabale();
-            $table->string('cat_type')->nullabale();
-            $table->text('description')->nullabale();
+            $table->string('cat_name')->nullable();
+            $table->string('cat_type')->nullable();
+            $table->text('description')->nullable();
             $table->integer('status')->default(true);
             $table->timestamps();
             

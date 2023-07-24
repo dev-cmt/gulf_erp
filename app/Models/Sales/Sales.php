@@ -18,7 +18,9 @@ class Sales extends Model
         'tax',
         'status',
         'is_parsial',
+        'is_return',
         'remarks',
+        'quotation_id',
         'mast_item_category_id',
         'mast_customer_id',
         'user_id'

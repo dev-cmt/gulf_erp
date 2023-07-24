@@ -131,7 +131,8 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('inv/grn-purchase/details/{id}', [MovementController::class, 'grnPurchaseDetails'])->name('grn-purchase-details');
     Route::post('inv/grn/purchase/store', [MovementController::class, 'grnPurchaseStore'])->name('grn-purchase.store');
     Route::get('inv/get-purchase/details', [MovementController::class, 'getPurchaseDetails'])->name('get_purchase_details');
-    
+
+    Route::get('inv/check-serial-number', [MovementController::class, 'checkSerialNumber'])->name('checkSerialNumber');
     Route::get('inv/purchase-parsial/{id}/details', [MovementController::class, 'parsialPurchaseDetails'])->name('purchase-details-parsial');
     Route::get('report/purchase-receive/{id}/pdf/download', [MovementController::class, 'generatePurchaseReceive'])->name('report-purchase-receive-parsial.download');
     /**______________________________________________________________________________________________
@@ -173,7 +174,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::PATCH('inv_purchase/approve/{id}', [PurchaseController::class, 'approve_purchase'])->name('inv_purchase.approve');
     Route::PATCH('inv_purchase/canceled/{id}', [PurchaseController::class, 'decline'])->name('inv_purchase.canceled');
     Route::get('inv/get-purchase/approve/details', [PurchaseController::class, 'getPurchaseApproveDetails'])->name('get_purchase_approve_details');
-
+    
     Route::get('/get-part-id',[PurchaseController::class,'getPartNumber'])->name('get-part-id');
     Route::get('/get-part-number',[PurchaseController::class,'getPartNo'])->name('get-part-number');
     Route::get('get/edit-part-id',[PurchaseController::class,'getEditPartNo'])->name('edit-part-id');

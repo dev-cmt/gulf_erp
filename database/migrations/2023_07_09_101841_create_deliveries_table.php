@@ -13,21 +13,21 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('purchases', function (Blueprint $table) {
+        Schema::create('deliveries', function (Blueprint $table) {
             $table->id();
-            $table->date('inv_date')->nullable();
-            $table->string('inv_no')->nullable();
-            $table->float('vat')->default(0.00)->nullable();
-            $table->float('tax')->default(0.00)->nullable();
-            $table->text('remarks')->nullable();
-            $table->integer('mast_item_category_id')->nullable();
+            $table->string('serial_no')->nullable();
+            $table->date('deli_date')->nullable();
+            $table->unsignedInteger('warranty')->default(0);
+            $table->decimal('price')->nullable();
             $table->tinyInteger('status')->default(false);
-            $table->tinyInteger('is_parsial')->default(false);
+            $table->integer('from_store')->nullable();
 
+            $table->unsignedBigInteger('sales_id');
+            $table->foreign('sales_id')->references('id')->on('sales')->onDelete('cascade');
             $table->unsignedBigInteger('mast_work_station_id');
             $table->foreign('mast_work_station_id')->references('id')->on('mast_work_stations')->onDelete('cascade');
-            $table->unsignedBigInteger('mast_supplier_id');
-            $table->foreign('mast_supplier_id')->references('id')->on('mast_suppliers')->onDelete('cascade');
+            $table->unsignedBigInteger('mast_item_register_id');
+            $table->foreign('mast_item_register_id')->references('id')->on('mast_item_registers')->onDelete('cascade');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
@@ -41,7 +41,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('purchases');
-
+        Schema::dropIfExists('deliveries');
     }
 };

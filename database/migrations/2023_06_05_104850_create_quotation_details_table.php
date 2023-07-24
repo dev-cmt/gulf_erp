@@ -13,20 +13,19 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('info_educationals', function (Blueprint $table) {
+        Schema::create('quotation_details', function (Blueprint $table) {
             $table->id();
-            $table->integer('qualification')->nullable();
-            $table->string('institute_name')->nullable();
-            $table->date('passing_year')->nullable();
-            $table->integer('out_of')->nullable();
-            $table->float('grade')->default(0.00)->nullable();
+            $table->integer('qty')->nullable();
+            $table->decimal('price')->nullable();
             $table->tinyInteger('status')->default(true);
-            $table->timestamps();
-            
+
+            $table->unsignedBigInteger('quotation_id');
+            $table->foreign('quotation_id')->references('id')->on('quotations')->onDelete('cascade');
+            $table->unsignedBigInteger('mast_item_register_id');
+            $table->foreign('mast_item_register_id')->references('id')->on('mast_item_registers')->onDelete('cascade');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->unsignedBigInteger('emp_id');
-            $table->foreign('emp_id')->references('id')->on('users')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
@@ -37,6 +36,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('info_educationals');
+        Schema::dropIfExists('quotation_details');
     }
 };

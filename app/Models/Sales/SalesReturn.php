@@ -17,7 +17,7 @@ class SalesReturn extends Model
         'remarks',
         'is_parsial',
         'status',
-        'from_store',
+        'from_store_id',
         'mast_work_station_id',
         'sales_id',
         'user_id',

@@ -13,15 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('mast_designations', function (Blueprint $table) {
+        Schema::create('complaint_details', function (Blueprint $table) {
             $table->id();
-            $table->string('desig_name')->nullable();
-            $table->text('description')->nullable();
-            $table->integer('status')->default(true);
-            $table->timestamps();
-            
+            $table->tinyInteger('status')->default(false);
+            $table->integer('delivery_id')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
@@ -32,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mast_designations');
+        Schema::dropIfExists('complaint_details');
     }
 };

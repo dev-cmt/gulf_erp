@@ -20,6 +20,7 @@ use App\Models\Master\MastWorkStation;
 use App\Models\Master\MastItemRegister;
 use App\Models\Master\MastUnit;
 use App\Models\Master\MastSupplier;
+use App\Models\Inventory\Delivery;
 use App\Models\Inventory\Purchase;
 use App\Models\Inventory\PurchaseDetails;
 use App\Models\Inventory\StoreTransfer;
@@ -54,13 +55,17 @@ class MovementController extends Controller
         return view('layouts.pages.inventory.purchase_receive.grn_receive',compact('data','purchase'));
     }
     function grnPurchaseStore(Request $request) {
-        
-        $purchaseDetails = PurchaseDetails::findOrFail($request->purchase_details_id);
-        $purchaseDetails->rcv_qty = $request->rcv_qty;
-        $purchaseDetails->save();
 
         if (isset($request->moreFile[0]['serial_no']) && !empty($request->moreFile[0]['serial_no'])) {
-            foreach($request->moreFile as $item){
+            foreach ($request->moreFile as $item) {
+                $serialNumber = $item['serial_no'];
+                $exists = SlMovement::where('serial_no', $serialNumber)->exists();
+                if ($exists) {
+                    return response()->json(['error' => 'Serial number already exists.'], 422);
+                }
+            }
+    
+            foreach ($request->moreFile as $item) {
                 $data = new SlMovement();
                 $data->serial_no = $item['serial_no'];
                 $data->reference_id = $request->purchase_id;
@@ -71,35 +76,39 @@ class MovementController extends Controller
                 $data->user_id = Auth::user()->id;
                 $data->save();
             }
-        }
-        //___________Purchase Update
-        $checkPurchase = PurchaseDetails::where('purchase_id', $purchaseDetails->purchase_id)->get();
-        $allTrue = true;
-        foreach ($checkPurchase as $key => $value) {
-            if ($value->qty != $value->rcv_qty) {
-                $allTrue = false;
-                break;
+
+            //___________Purchase Update
+            $purchaseDetails = PurchaseDetails::findOrFail($request->purchase_details_id);
+            $purchaseDetails->rcv_qty = $request->rcv_qty;
+            $purchaseDetails->save();
+            
+            $checkPurchase = PurchaseDetails::where('purchase_id', $purchaseDetails->purchase_id)->get();
+            $allTrue = true;
+            foreach ($checkPurchase as $key => $value) {
+                if ($value->qty != $value->rcv_qty) {
+                    $allTrue = false;
+                    break;
+                }
             }
-        }
-        if ($allTrue){
-            $purchaseUpdate = Purchase::findOrFail($purchaseDetails->purchase_id);
-            $purchaseUpdate->status = 4; // Pendding => 0 || Success => 1 || Cencel => 2 || Parsial => 3 || Complete => 4
-            $variable = SlMovement::where('reference_id', $purchaseDetails->purchase_id)->where('reference_type_id', 1)
-                    ->whereDate('created_at', '!=', date('Y-m-d'))->where('status', 1)->count();
-            if($variable){
-                $purchaseUpdate->is_parsial = 1;
+            if ($allTrue){
+                $purchaseUpdate = Purchase::findOrFail($purchaseDetails->purchase_id);
+                $purchaseUpdate->status = 4; // Pendding => 0 || Success => 1 || Cencel => 2 || Parsial => 3 || Complete => 4
+                $variable = SlMovement::where('reference_id', $purchaseDetails->purchase_id)->where('reference_type_id', 1)
+                        ->whereDate('created_at', '!=', date('Y-m-d'))->where('status', 1)->count();
+                if($variable){
+                    $purchaseUpdate->is_parsial = 1;
+                }else{
+                    $purchaseUpdate->is_parsial = 0;
+                }
+                $purchaseUpdate->save();
             }else{
-                $purchaseUpdate->is_parsial = 0;
+                $purchaseUpdate = Purchase::findOrFail($purchaseDetails->purchase_id);
+                $purchaseUpdate->status = 3; // Pendding => 0 || Success => 1 || Cencel => 2 || Parsial => 3 || Complete => 4
+                $purchaseUpdate->is_parsial = 1;
+                $purchaseUpdate->save();
             }
-            $purchaseUpdate->save();
-        }else{
-            $purchaseUpdate = Purchase::findOrFail($purchaseDetails->purchase_id);
-            $purchaseUpdate->status = 3; // Pendding => 0 || Success => 1 || Cencel => 2 || Parsial => 3 || Complete => 4
-            $purchaseUpdate->is_parsial = 1;
-            $purchaseUpdate->save();
+            return response()->json(['success' => 'Data saved successfully.']);
         }
-        
-        return response()->json('success');
     }
     function parsialPurchaseDetails($id) { 
         $purchase = Purchase::where('id', $id)->orderBy('id', 'asc')->first();
@@ -113,12 +122,18 @@ class MovementController extends Controller
         ->orderBy('id', 'asc')->get();
         return view('layouts.pages.inventory.purchase_receive.parsial-purchase-receive',compact('purchase','data'));
     }
+    public function checkSerialNumber(Request $request){
+        $serialNumber = $request->input('serial_no');
+        $exists = SlMovement::where('serial_no', $serialNumber)->exists(); //Serial number already exists
+        return response()->json(['exists' => $exists]);
+    }
     /**___________________________________________________________________
      * Sales Delivery
      * ___________________________________________________________________
      */
     public function salesDeliveryIndex()
     {
+        //MastItemRegister
         $data= Sales::where('status', 1)->orderBy('id', 'asc')->get();
         $dataParsial = Sales::whereIn('status', [3, 4])->where('is_parsial', 1)->orderBy('id', 'asc')->get();
         return view('layouts.pages.inventory.sales_delivery.index',compact('data','dataParsial'));
@@ -158,6 +173,19 @@ class MovementController extends Controller
                 $data->mast_work_station_id = Auth::user()->id;
                 $data->user_id = Auth::user()->id;
                 $data->save();
+
+                //______Delivery Save Data
+                $delivery = new Delivery();
+                $delivery->serial_no = $dataUpdate->serial_no;
+                $delivery->deli_date = date('Y-m-d');
+                $delivery->warranty = 6; //--
+                $delivery->price = 7500; //--
+                $delivery->status = 1;
+                $delivery->mast_work_station_id = Auth::user()->mast_work_station_id;
+                $delivery->sales_id = $request->sales_id;
+                $delivery->mast_item_register_id = $request->item_register_id;
+                $delivery->user_id = Auth::user()->id;
+                $delivery->save();
             }
         }
         //___________ Sales Status Update

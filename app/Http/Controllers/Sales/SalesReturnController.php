@@ -50,6 +50,10 @@ class SalesReturnController extends Controller
             $salesReturn->status = 1;
             $salesReturn->user_id = Auth::user()->id;
             $salesReturn->save();
+            
+            $salesUpdate = Sales::findOrFail($request->sales_id);
+            $salesUpdate->is_return = 1;
+            $salesUpdate->save();
             try {
                 foreach ($request->moreFile as $item) {
                     if (isset($item['qty']) && is_numeric($item['qty'])) {

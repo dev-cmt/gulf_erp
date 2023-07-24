@@ -13,21 +13,21 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('purchases', function (Blueprint $table) {
+        Schema::create('quotations', function (Blueprint $table) {
             $table->id();
-            $table->date('inv_date')->nullable();
-            $table->string('inv_no')->nullable();
+            $table->date('offer_date')->nullable();
+            $table->string('ref_no')->nullable();
+            $table->string('order_no')->nullable();
+            $table->date('order_date')->nullable();
             $table->float('vat')->default(0.00)->nullable();
             $table->float('tax')->default(0.00)->nullable();
             $table->text('remarks')->nullable();
-            $table->integer('mast_item_category_id')->nullable();
             $table->tinyInteger('status')->default(false);
-            $table->tinyInteger('is_parsial')->default(false);
 
-            $table->unsignedBigInteger('mast_work_station_id');
-            $table->foreign('mast_work_station_id')->references('id')->on('mast_work_stations')->onDelete('cascade');
-            $table->unsignedBigInteger('mast_supplier_id');
-            $table->foreign('mast_supplier_id')->references('id')->on('mast_suppliers')->onDelete('cascade');
+            $table->unsignedBigInteger('mast_item_category_id');
+            $table->foreign('mast_item_category_id')->references('id')->on('mast_item_categories')->onDelete('cascade');
+            $table->unsignedBigInteger('mast_customer_id');
+            $table->foreign('mast_customer_id')->references('id')->on('mast_customers')->onDelete('cascade');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
@@ -41,7 +41,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('purchases');
-
+        Schema::dropIfExists('quotations');
     }
 };

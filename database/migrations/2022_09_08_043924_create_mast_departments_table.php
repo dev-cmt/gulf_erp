@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('mast_departments', function (Blueprint $table) {
             $table->id();
-            $table->string('dept_name')->nullabale();
+            $table->string('dept_name')->nullable();
             $table->integer('dept_head')->default(false);
-            $table->text('description')->nullabale();
+            $table->text('description')->nullable();
             $table->integer('status')->default(true);
             $table->timestamps();
 

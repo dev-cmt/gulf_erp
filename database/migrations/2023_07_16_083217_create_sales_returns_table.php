@@ -20,7 +20,7 @@ return new class extends Migration
             $table->text('remarks')->nullable();
             $table->tinyInteger('status')->default(false);
             $table->tinyInteger('is_parsial')->default(false);
-            $table->text('from_store')->nullable();
+            $table->integer('from_store_id')->nullable();
 
             $table->unsignedBigInteger('mast_work_station_id');
             $table->foreign('mast_work_station_id')->references('id')->on('mast_work_stations')->onDelete('cascade');
