@@ -17,8 +17,12 @@ return new class extends Migration
             $table->id();
             $table->date('issue_date')->nullable();
             $table->string('issue_no')->nullable();
+            $table->tinyInteger('with_warranty')->default(false);
+            $table->text('note')->nullable();
             $table->text('remarks')->nullable();
             $table->tinyInteger('status')->default(false);
+            $table->unsignedBigInteger('mast_complaint_type_id');
+            $table->foreign('mast_complaint_type_id')->references('id')->on('mast_complaint_types')->onDelete('cascade');
             $table->unsignedBigInteger('mast_customer_id');
             $table->foreign('mast_customer_id')->references('id')->on('mast_customers')->onDelete('cascade');
             $table->unsignedBigInteger('user_id');

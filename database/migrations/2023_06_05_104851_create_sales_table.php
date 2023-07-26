@@ -17,14 +17,17 @@ return new class extends Migration
             $table->id();
             $table->date('inv_date')->nullable();
             $table->string('inv_no')->nullable();
+            $table->date('ref_date')->nullable();
+            $table->string('ref_name')->nullable();
             $table->float('vat')->default(0.00)->nullable();
             $table->float('tax')->default(0.00)->nullable();
             $table->text('remarks')->nullable();
             $table->tinyInteger('status')->default(false);
+            $table->decimal('total')->nullable();
             $table->tinyInteger('is_parsial')->default(false);
             $table->tinyInteger('is_return')->default(false);
-
             $table->integer('quotation_id')->nullable();
+            
             $table->unsignedBigInteger('mast_item_category_id');
             $table->foreign('mast_item_category_id')->references('id')->on('mast_item_categories')->onDelete('cascade');
             $table->unsignedBigInteger('mast_customer_id');

@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\ManualAttendanceController;
 use App\Http\Controllers\Inventory\PurchaseController;
 use App\Http\Controllers\Inventory\StoreTransferController;
 //--Sales
+use App\Http\Controllers\Sales\SalesQuotationController;
 use App\Http\Controllers\Sales\SalesController;
 use App\Http\Controllers\Sales\SalesReturnController;
 //--Master Data
@@ -201,6 +202,23 @@ Route::group(['middleware' => ['auth']], function(){
      Route::get('report-sales/delivery',[ReportsController::class,'salesDelivery'])->name('report-sales-delivery');
      Route::get('report-requstion/delivery',[ReportsController::class,'requstionDelivery'])->name('report-requstion-delivery');
     /**______________________________________________________________________________________________
+     * Sales => Sales Quotation
+     * ______________________________________________________________________________________________
+     */
+     Route::get('sales_quotation/cat_id={cat_id}',[SalesQuotationController::class,'index'])->name('sales_quotation.index');
+     Route::post('sales_quotation/store/cat_id={cat_id}', [SalesQuotationController::class, 'store'])->name('sales_quotation.store');
+     Route::get('sales_quotation/edit',[SalesQuotationController::class,'edit'])->name('sales_quotation.edit');
+     Route::delete('sales_quotation/destroy/{id}', [SalesQuotationController::class, 'sales_destroy'])->name('sales_quotation.destroy');
+     Route::get('/get-delete-master/sales_quotation',[SalesQuotationController::class,'getDeleteMaster'])->name('getDelete-master-sales_quotation');
+     //--Sales Approve
+    Route::get('sales_quotation/approve_list', [SalesQuotationController::class, 'sales_approve_list'])->name('sales_quotation_approve.create');
+    Route::PATCH('sales_quotation/approve/{id}', [SalesQuotationController::class, 'approve'])->name('sales_quotation.approve');
+    Route::PATCH('sales_quotation/canceled/{id}', [SalesQuotationController::class, 'decline'])->name('sales_quotation.canceled');
+    Route::get('sales_quotation/get-sales/approve/details', [SalesQuotationController::class, 'getSalesApproveDetails'])->name('get_sales_quotation_approve_details');
+    //--Get Data
+    Route::get('get-customer/data',[SalesQuotationController::class,'getCustomerData'])->name('get-customer-data');
+
+    /**______________________________________________________________________________________________
      * Sales => Sales
      * ______________________________________________________________________________________________
      */
@@ -261,7 +279,6 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('customer/cat_id={cat_id}',[SalesController::class,'indexCustomer'])->name('customer.index');
     Route::get('customer/create/cat_id={cat_id}',[SalesController::class,'createCustomer'])->name('customer.create');
     Route::post('customer/store',[SalesController::class,'storeCustomer'])->name('customer.store');
-    Route::get('get-customer/data',[SalesController::class,'getCustomerData'])->name('get-customer-data');
 });
 /**______________________________________________________________________________________________
  * Dwonload File => PDF, EXCEL ETC

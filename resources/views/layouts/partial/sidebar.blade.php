@@ -113,6 +113,14 @@
                         <span class="nav-text">Sales</span>
                     </a>
                     <ul aria-expanded="false">
+                        <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Sales Quotation</a>
+                            <ul aria-expanded="false">
+                                <li><a href="{{ route('sales_quotation.index',['cat_id' => 1]) }}">AC Sales</a></li>
+                                <li><a href="{{ route('sales_quotation.index',['cat_id' => 2]) }}">AC Spare Parts</a></li>
+                                <li><a href="{{ route('sales_quotation.index',['cat_id' => 3]) }}">Car Spare Parts</a></li>
+                                <li><a href="{{ route('sales_quotation_approve.create')}}">Approve Sales </a></li>
+                            </ul>
+                        </li>
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Sales</a>
                             <ul aria-expanded="false">
                                 <li><a href="{{ route('sales.index',['cat_id' => 1]) }}">AC Sales</a></li>

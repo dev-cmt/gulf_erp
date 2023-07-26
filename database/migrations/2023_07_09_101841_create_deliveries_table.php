@@ -20,7 +20,6 @@ return new class extends Migration
             $table->unsignedInteger('warranty')->default(0);
             $table->decimal('price')->nullable();
             $table->tinyInteger('status')->default(false);
-            $table->integer('from_store')->nullable();
 
             $table->unsignedBigInteger('sales_id');
             $table->foreign('sales_id')->references('id')->on('sales')->onDelete('cascade');

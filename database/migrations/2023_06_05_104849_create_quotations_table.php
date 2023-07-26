@@ -15,14 +15,13 @@ return new class extends Migration
     {
         Schema::create('quotations', function (Blueprint $table) {
             $table->id();
-            $table->date('offer_date')->nullable();
-            $table->string('ref_no')->nullable();
-            $table->string('order_no')->nullable();
-            $table->date('order_date')->nullable();
+            $table->date('quot_date')->nullable();
+            $table->string('quot_no')->nullable();
             $table->float('vat')->default(0.00)->nullable();
             $table->float('tax')->default(0.00)->nullable();
             $table->text('remarks')->nullable();
             $table->tinyInteger('status')->default(false);
+            $table->tinyInteger('is_sales')->default(false);
 
             $table->unsignedBigInteger('mast_item_category_id');
             $table->foreign('mast_item_category_id')->references('id')->on('mast_item_categories')->onDelete('cascade');

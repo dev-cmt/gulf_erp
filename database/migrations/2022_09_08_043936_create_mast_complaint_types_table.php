@@ -13,16 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('complaint_details', function (Blueprint $table) {
+        Schema::create('mast_complaint_types', function (Blueprint $table) {
             $table->id();
-            $table->string('task_name')->nullable();
-            $table->date('task_date')->nullable();
-            $table->tinyInteger('next_date')->default(false);
-            $table->text('observe')->nullable();
-            $table->text('remarks')->nullable();
+            $table->string('name')->nullable();
+            $table->text('description')->nullable();
             $table->tinyInteger('status')->default(false);
-            $table->unsignedBigInteger('emp_id');
-            $table->foreign('emp_id')->references('id')->on('users')->onDelete('cascade');
+            
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
@@ -36,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('complaint_details');
+        Schema::dropIfExists('mast_complaint_types');
     }
 };
