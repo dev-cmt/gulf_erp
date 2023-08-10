@@ -183,6 +183,7 @@ class MovementController extends Controller
                 $delivery->status = 1;
                 $delivery->mast_work_station_id = Auth::user()->mast_work_station_id;
                 $delivery->sales_id = $request->sales_id;
+                $delivery->mast_customer_id = $request->mast_customer_id;
                 $delivery->mast_item_register_id = $request->item_register_id;
                 $delivery->user_id = Auth::user()->id;
                 $delivery->save();
@@ -443,7 +444,7 @@ class MovementController extends Controller
         ->join('mast_item_categories', 'mast_item_categories.id', 'sales.mast_item_category_id')
         ->join('mast_item_registers', 'mast_item_registers.id', 'sales_details.mast_item_register_id')
         ->join('mast_customers', 'mast_customers.id', 'sales.mast_customer_id')
-        ->select('sales_details.*','sales.inv_no','sales.inv_date','sales.remarks','mast_item_categories.cat_name','mast_item_registers.id as item_register_id','mast_item_registers.part_no','mast_customers.name')
+        ->select('sales_details.*','sales.inv_no','sales.inv_date','sales.remarks','mast_item_categories.cat_name','mast_item_registers.id as item_register_id','mast_item_registers.part_no','mast_customers.name','mast_customers.id as mast_customer_id')
         ->first();
         return response()->json($data);
     }

@@ -23,9 +23,9 @@
                     </div>
                     <div class="form-group">
                         <label class="mb-1"><strong>Password</strong></label>
-                        <div class="field space">
+                        <div style="position: relative;">
                             <input type="password" name="password" id="password" class="form-control pass-key" placeholder="Password" required autocomplete="current-password">
-                            <span class="show_password">SHOW</span>
+                            <span style="position: absolute;right: 10px;top: 10px;cursor: pointer;" class="show_password">SHOW</span>
                         </div>
                     </div>
                     <div class="form-row d-flex justify-content-between mt-4 mb-2">

@@ -4,6 +4,7 @@ namespace App\Models\Master;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Master\MastCustomerType;
 
 class MastCustomer extends Model
 {
@@ -24,4 +25,8 @@ class MastCustomer extends Model
         'mast_customer_type_id',
         'user_id',
     ];
+    public function mastCustomerType()
+    {
+        return $this->belongsTo(MastCustomerType::class);
+    }
 }

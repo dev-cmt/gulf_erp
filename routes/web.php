@@ -19,6 +19,11 @@ use App\Http\Controllers\Inventory\StoreTransferController;
 use App\Http\Controllers\Sales\SalesQuotationController;
 use App\Http\Controllers\Sales\SalesController;
 use App\Http\Controllers\Sales\SalesReturnController;
+//--Warranty
+use App\Http\Controllers\Warranty\ComplaintIssueController;
+use App\Http\Controllers\Warranty\RequisitionController;
+use App\Http\Controllers\Warranty\ServiceBillController;
+
 //--Master Data
 use App\Http\Controllers\Master\MastDepartmentController;
 use App\Http\Controllers\Master\MastDesignationController;
@@ -30,6 +35,8 @@ use App\Http\Controllers\Master\MastItemCategoryController;
 use App\Http\Controllers\Master\MastItemGroupController;
 use App\Http\Controllers\Master\MastItemRegisterController;
 
+use App\Http\Controllers\Master\MastCompliantTypeController;
+use App\Http\Controllers\Master\MastTechnicianController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -164,13 +171,13 @@ Route::group(['middleware' => ['auth']], function(){
      * Inventory => Purchase
      * ______________________________________________________________________________________________
      */
-     Route::get('/purchase/cat_id={cat_id}',[PurchaseController::class,'index'])->name('inv_purchase.index');
-     Route::post('/purchase/store/cat_id={cat_id}', [PurchaseController::class, 'store'])->name('inv_purchase.store');
-     Route::get('purchase/edit',[PurchaseController::class,'edit'])->name('inv_purchase_edit');
-     Route::delete('inv_purchase/destroy/{id}', [PurchaseController::class, 'inv_purchase_destroy'])->name('inv_purchase.destroy');
-     Route::delete('inv_approve_purchase/{id}', [PurchaseController::class, 'approve_purchase'])->name('inv_approve_purchase');
-     Route::get('/get-delete-master/purchase',[PurchaseController::class,'getDeleteMaster'])->name('getDelete-master-purchase');
-     //--Purchase Approve
+    Route::get('/purchase/cat_id={cat_id}',[PurchaseController::class,'index'])->name('inv_purchase.index');
+    Route::post('/purchase/store/cat_id={cat_id}', [PurchaseController::class, 'store'])->name('inv_purchase.store');
+    Route::get('purchase/edit',[PurchaseController::class,'edit'])->name('inv_purchase_edit');
+    Route::delete('inv_purchase/destroy/{id}', [PurchaseController::class, 'inv_purchase_destroy'])->name('inv_purchase.destroy');
+    Route::delete('inv_approve_purchase/{id}', [PurchaseController::class, 'approve_purchase'])->name('inv_approve_purchase');
+    Route::get('/get-delete-master/purchase',[PurchaseController::class,'getDeleteMaster'])->name('getDelete-master-purchase');
+    //--Purchase Approve
     Route::get('inv_purchase/approve_list', [PurchaseController::class, 'purchase_approve_list'])->name('inv_purchase_approve.create');
     Route::PATCH('inv_purchase/approve/{id}', [PurchaseController::class, 'approve_purchase'])->name('inv_purchase.approve');
     Route::PATCH('inv_purchase/canceled/{id}', [PurchaseController::class, 'decline'])->name('inv_purchase.canceled');
@@ -205,12 +212,12 @@ Route::group(['middleware' => ['auth']], function(){
      * Sales => Sales Quotation
      * ______________________________________________________________________________________________
      */
-     Route::get('sales_quotation/cat_id={cat_id}',[SalesQuotationController::class,'index'])->name('sales_quotation.index');
-     Route::post('sales_quotation/store/cat_id={cat_id}', [SalesQuotationController::class, 'store'])->name('sales_quotation.store');
-     Route::get('sales_quotation/edit',[SalesQuotationController::class,'edit'])->name('sales_quotation.edit');
-     Route::delete('sales_quotation/destroy/{id}', [SalesQuotationController::class, 'sales_destroy'])->name('sales_quotation.destroy');
-     Route::get('/get-delete-master/sales_quotation',[SalesQuotationController::class,'getDeleteMaster'])->name('getDelete-master-sales_quotation');
-     //--Sales Approve
+    Route::get('sales_quotation/cat_id={cat_id}',[SalesQuotationController::class,'index'])->name('sales_quotation.index');
+    Route::post('sales_quotation/store/cat_id={cat_id}', [SalesQuotationController::class, 'store'])->name('sales_quotation.store');
+    Route::get('sales_quotation/edit',[SalesQuotationController::class,'edit'])->name('sales_quotation.edit');
+    Route::delete('sales_quotation/destroy/{id}', [SalesQuotationController::class, 'sales_destroy'])->name('sales_quotation.destroy');
+    Route::get('/get-delete-master/sales_quotation',[SalesQuotationController::class,'getDeleteMaster'])->name('getDelete-master-sales_quotation');
+    //--Sales Approve
     Route::get('sales_quotation/approve_list', [SalesQuotationController::class, 'sales_approve_list'])->name('sales_quotation_approve.create');
     Route::PATCH('sales_quotation/approve/{id}', [SalesQuotationController::class, 'approve'])->name('sales_quotation.approve');
     Route::PATCH('sales_quotation/canceled/{id}', [SalesQuotationController::class, 'decline'])->name('sales_quotation.canceled');
@@ -249,6 +256,53 @@ Route::group(['middleware' => ['auth']], function(){
 
      Route::get('sales/get-sales-return/details', [MovementController::class, 'getSalesReturnDetails'])->name('get_sales_return_details'); 
      Route::get('sales/get-sales-receive-page/details', [MovementController::class, 'getSalesReceivePage'])->name('get-sales-receive-page'); 
+    /**______________________________________________________________________________________________
+     * Warranty & Service => Complaint issue
+     * ______________________________________________________________________________________________
+     */
+    Route::get('warranty/complaint-issue/index',[ComplaintIssueController::class,'index'])->name('warranty-complaint.index');
+    Route::get('warranty/customer-list/show',[ComplaintIssueController::class,'showCustomerList'])->name('warranty-customer-list.show');
+    Route::post('warranty/complaint-issue/store',[ComplaintIssueController::class,'store'])->name('warranty-complaint.store');
+
+    Route::get('get/warranty/complaint-issue/show',[ComplaintIssueController::class,'getCompliantData'])->name('get-compliant-show');
+    Route::get('get/warranty/customer-details',[ComplaintIssueController::class,'getCustomerDetails'])->name('get-customer-details');
+    /**______________________________________________________________________________________________
+     * Warranty & Service => Job Card
+     * ______________________________________________________________________________________________
+     */
+    Route::get('job_card',[JobCardController::class,'movementIndex'])->name('job_card');
+    Route::get('technician_add',[JobCardController::class,'technicianAdd'])->name('technician.add');
+    /**______________________________________________________________________________________________
+     * Warranty & Service => Technician Movement
+     * ______________________________________________________________________________________________
+     */
+    Route::get('warranty/technician-movement/index ',[TechnicianMovementController::class,'movementIndex'])->name('technician-movement.index');
+
+    /**______________________________________________________________________________________________
+     * Warranty & Service => Tools Requisition
+     * ______________________________________________________________________________________________
+     */
+    Route::get('warranty/tools-requisition/index',[RequisitionController::class,'indexTools'])->name('tools-requisition.index');
+    Route::post('warranty/tools-requisition/store', [RequisitionController::class, 'storeTools'])->name('tools-requisition.store');
+
+    Route::get('requisition/edit',[RequisitionController::class,'edit'])->name('inv_requisition_edit');
+    Route::delete('inv_purchase/destroy/{id}', [RequisitionController::class, 'inv_purchase_destroy'])->name('inv_purchase.destroy');
+
+    /**______________________________________________________________________________________________
+     * Warranty & Service => Spare Part Requisition
+     * ______________________________________________________________________________________________
+     */
+    Route::get('warranty/sparepart-requisition/index',[RequisitionController::class,'indexSparePart'])->name('spare-parts-requisition.index');
+    Route::post('warranty/sparepart-requisition/store', [RequisitionController::class, 'storeTools'])->name('sparepart-requisition.store');
+    /**______________________________________________________________________________________________
+     * Warranty & Service => Service Bill
+     * ______________________________________________________________________________________________
+     */
+    Route::get('warranty/service-bill/index',[ServiceBillController::class,'index'])->name('service-bill.index');
+
+    Route::get('/get_bill',[ServiceBillController::class,'getBill'])->name('get-bill');
+    Route::get('get/selse-edit-part-id',[ServiceBillController::class,'getSalesDetails'])->name('selse-edit-part-id');
+
 });
 
 Route::group(['middleware' => ['auth']], function(){
@@ -279,6 +333,20 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('customer/cat_id={cat_id}',[SalesController::class,'indexCustomer'])->name('customer.index');
     Route::get('customer/create/cat_id={cat_id}',[SalesController::class,'createCustomer'])->name('customer.create');
     Route::post('customer/store',[SalesController::class,'storeCustomer'])->name('customer.store');
+    /**______________________________________________________________________________________________
+     * WARRENTY MASTER
+     * ______________________________________________________________________________________________
+     */
+    Route::resource('mast_compliant_type', MastCompliantTypeController::class);
+    // Setup Technician
+
+    // Technician Update
+    Route::get('technician.index',[MastTechnicianController::class,'technicianInformation'])->name('tecnician.index');
+    Route::get('get-designation-Name',[MastTechnicianController::class,'getDesignation'])->name('get-designation-Name');
+    Route::post('submit.technician',[MastTechnicianController::class,'updateDesignation'])->name('submit.technician');
+    Route::get('technician.edit',[MastTechnicianController::class,'technicianEdit'])->name('technician.edit');
+    Route::post('update.designation',[MastTechnicianController::class,'updateTechnician'])->name('update.designation');
+    
 });
 /**______________________________________________________________________________________________
  * Dwonload File => PDF, EXCEL ETC

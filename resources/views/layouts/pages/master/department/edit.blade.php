@@ -5,7 +5,7 @@
                 <!-- card header -->
                 <div class="card-header">
                     <h4 class="card-title">Department Edit</h4>
-                    <a href="{{ route('mast_department.index') }}" class="btn btn-sm btn-primary"><i class="fa fa-reply"></i><span class="btn-icon-add"></span>Back</a>
+                    <a href="{{ route('mast_compliant_type.index') }}" class="btn btn-sm btn-primary"><i class="fa fa-reply"></i><span class="btn-icon-add"></span>Back</a>
                 </div>
 
                 <!-- card body -->

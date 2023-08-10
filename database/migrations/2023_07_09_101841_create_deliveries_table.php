@@ -23,6 +23,8 @@ return new class extends Migration
 
             $table->unsignedBigInteger('sales_id');
             $table->foreign('sales_id')->references('id')->on('sales')->onDelete('cascade');
+            $table->unsignedBigInteger('mast_customer_id');
+            $table->foreign('mast_customer_id')->references('id')->on('mast_customers')->onDelete('cascade');
             $table->unsignedBigInteger('mast_work_station_id');
             $table->foreign('mast_work_station_id')->references('id')->on('mast_work_stations')->onDelete('cascade');
             $table->unsignedBigInteger('mast_item_register_id');

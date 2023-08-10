@@ -1,17 +1,16 @@
 <?php
 
-namespace App\Models\Master;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class MastComplaintType extends Model
+class Setup extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name',
-        'status',
-        'description',
-        'user_id',
+        'install_technician',
+        'services_technician',
     ];
+
 }

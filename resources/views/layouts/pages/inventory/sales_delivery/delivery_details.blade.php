@@ -168,6 +168,7 @@
                             <input type="hidden" id="qty">
                             <input type="hidden" id="deliQty" name="deli_qty">
                             <input type="hidden" id="salesId" name="sales_id">
+                            <input type="hidden" id="mastCustomerId" name="mast_customer_id">
                             <input type="hidden" id="salesDetailsId" name="sales_details_id">
                         </div>
 
@@ -224,6 +225,7 @@
                 $('#deliQty').val(response.deli_qty + 1);
                 $('#getPartNo').html(response.part_no);
                 $('#salesId').val(response.sales_id);
+                $('#mastCustomerId').val(response.mast_customer_id);
                 $('#salesDetailsId').val(response.id);
 
                 var storeId= $('#workStationId').val();

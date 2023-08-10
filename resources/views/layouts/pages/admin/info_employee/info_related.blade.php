@@ -82,7 +82,7 @@
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <div class="col-lg-7">
-                                                    <input type="number" class="form-control @error('grade') is-invalid @enderror" id="grade" name="grade" placeholder="" value="{{old('grade')}}">                                     
+                                                    <input type="text" class="form-control @error('grade') is-invalid @enderror" id="grade" name="grade" placeholder="" value="{{old('grade')}}">                                     
                                                     @error('grade')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>

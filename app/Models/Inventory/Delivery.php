@@ -17,6 +17,7 @@ class Delivery extends Model
         'from_store',
         'mast_work_station_id',
         'sales_id',
+        'mast_customer_id',
         'mast_item_register_id',
         'user_id',
     ];

@@ -146,12 +146,25 @@
                         <span class="nav-text">Warrenty & Service</span>
                     </a>
                     <ul aria-expanded="false">
-                        <li><a href="#">Complaint / Issue</a></li>
-                        <li><a href="#">Prepare Job Card</a></li>
-                        <li><a href="#">Tachnician Movement</a></li>
-                        <li><a href="#">Spare Parts Requsition</a></li>
-                        <li><a href="#">Tools Requsition</a></li>
-                        <li><a href="#">Tools Requsition</a></li>
+                        <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Complaint & Issue</a>
+                            <ul aria-expanded="false">
+                                <li><a href="{{ route('warranty-complaint.index') }}">Complaint List</a></li>
+                                <li><a href="{{ route('warranty-customer-list.show') }}">New Complaint</a></li>
+
+                            </ul>
+                        </li>
+                        <li><a href="{{ route('job_card') }}">Prepare Job Card</a></li>
+                        <li><a href="{{route('technician-movement.index')}}">Tachnician Movement</a></li>
+                        <li><a href="{{ route('tools-requisition.index')}}">Tools Requsition</a></li>
+                        <li><a href="{{ route('spare-parts-requisition.index')}}">Spare Parts Requsition</a></li>
+                        <li><a href="{{ route('service-bill.index')}}">Service Bill</a></li>
+                        <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Data Setting</a>
+                            <ul aria-expanded="false">
+                                <li><a href="{{ route('tecnician.index') }}">Info. Technician</a></li>
+                                <li><a href="{{ route('mast_compliant_type.index') }}">Compliant Type</a></li>
+
+                            </ul>
+                        </li>
                     </ul>
                 </li>
                 <li class="nav-label">Apps</li>

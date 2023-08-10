@@ -534,6 +534,18 @@ class ImportSeeder extends Seeder
             'status'=>'1',
             'user_id'=>'1'
         ]);
+        MastItemCategory::create([
+            'cat_name'=>'Tools Requisition',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1'
+        ]);
+        MastItemCategory::create([
+            'cat_name'=>'Spare Part Requisition',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1'
+        ]);
         //____________________________________//
         MastItemGroup::create([
             'part_name'=>'Window Air Conditioners',
