@@ -43,6 +43,13 @@
             <div class="sk-child sk-bounce3"></div>
         </div>
     </div>
+    <div id='loading' style="background-color:#252525cc;display:none">
+        <div id='loading-loader'>
+            <span class='loading-loader'>
+                <span class='loading-inner'></span>
+            </span>
+        </div>
+    </div>
     <!--*******************
         Preloader end
     ********************-->
