@@ -18,14 +18,13 @@ return new class extends Migration
             $table->integer('qty')->nullable();
             $table->decimal('price')->nullable();
             $table->integer('rcv_qty')->nullable();
-            $table->tinyInteger('status')->default(true);
-
             $table->unsignedBigInteger('sales_return_id');
             $table->foreign('sales_return_id')->references('id')->on('sales_returns')->onDelete('cascade');
             $table->unsignedBigInteger('mast_item_register_id');
             $table->foreign('mast_item_register_id')->references('id')->on('mast_item_registers')->onDelete('cascade');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->tinyInteger('status')->default(true);
             $table->timestamps();
         });
     }

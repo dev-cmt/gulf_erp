@@ -192,191 +192,194 @@
                 
             </div>
         </div>
-    </div><span id="serial_no_error" class="text-danger"></span>
-</x-app-layout>
+    </div>
 
-<script type="text/javascript">
-    /*=======//GRN Purchase Add Modal//=========*/
-    $(document).on('click','#edit_data', function(){
-        var id = $(this).data('id');
-        $.ajax({
-            url:'{{ route('get_purchase_details')}}',
-            method:'GET',
-            dataType:"JSON",
-            data:{'id': id},
-            success:function(response){
-                $('#inv_no').html(response.inv_no);
-                $("#inv_date").html(response.inv_date);
-                $("#mast_supplier_id").html(response.supplier_name);
-                $("#mast_work_station_id").html(response.store_name);
-                $('#remarks').html(response.remarks);
+    @push('script')
+    <!--____________// CURD OPARATION \\____________-->
+    <script type="text/javascript">
+        /*=======//GRN Purchase Add Modal//=========*/
+        $(document).on('click','#edit_data', function(){
+            var id = $(this).data('id');
+            $.ajax({
+                url:'{{ route('get_purchase_details')}}',
+                method:'GET',
+                dataType:"JSON",
+                data:{'id': id},
+                success:function(response){
+                    $('#inv_no').html(response.inv_no);
+                    $("#inv_date").html(response.inv_date);
+                    $("#mast_supplier_id").html(response.supplier_name);
+                    $("#mast_work_station_id").html(response.store_name);
+                    $('#remarks').html(response.remarks);
 
-                //---SetUp
-                $('#purDetailsId').val(response.id);
-                $('#purchaseId').val(response.purchase_id);
-                $('#workStationId').val(response.work_station_id);
-                $('#itemRegisterId').val(response.item_register_id);
-                $('#qty').val(response.qty);
-                $('#getRcvQty').val(response.rcv_qty);
-                $('#rcvQty').val(response.rcv_qty + 1);
-                $('#getPartNo').val(response.part_no);
-                $('.part_number').html(response.part_no);
-                
-            },
-            error: function(response) {
+                    //---SetUp
+                    $('#purDetailsId').val(response.id);
+                    $('#purchaseId').val(response.purchase_id);
+                    $('#workStationId').val(response.work_station_id);
+                    $('#itemRegisterId').val(response.item_register_id);
+                    $('#qty').val(response.qty);
+                    $('#getRcvQty').val(response.rcv_qty);
+                    $('#rcvQty').val(response.rcv_qty + 1);
+                    $('#getPartNo').val(response.part_no);
+                    $('.part_number').html(response.part_no);
+                    
+                },
+                error: function(response) {
+                    swal("Error!", "All input values are not null or empty.", "error");
+                }
+            });
+            $("#modalGrid").modal('show');
+            var tbody = $('#table-body');
+            tbody.empty();
+            addRow(0);
+        });
+        /*=======//GRN Purchase Upload Modal//=========*/
+        $(document).on('click','#upload_excel', function(){
+            var id = $(this).data('id');
+            $("#exampleModalCenter").modal('show');
+        });
+        /*=======//GRN Purchase Save Data//=========*/
+        var form = '#add-user-form';
+        $(form).on('submit', function(event){
+            event.preventDefault();
+            var url = $(this).attr('data-action');
+            $('#loading').show();
+
+            //--Validation then save
+            var allValuesNotNull = true;
+            $('.val_serial_no').each(function() {
+                var value = $(this).val();
+                if (value === null || value === '') {
+                    allValuesNotNull = false;
+                    return false;
+                }
+            });
+            if (allValuesNotNull) {
+                $.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: new FormData(this),
+                    dataType: 'JSON',
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    success:function(response)
+                    {
+                        $("#modalGrid").modal('hide');
+                        $('#loading').hide();
+                        swal("Your data save successfully", "Well done, you pressed a button", "success")
+                        .then(function() {
+                            location.reload();
+                        });
+                    },
+                    error: function(xhr) {
+                        $('#loading').hide();
+                        if (xhr.status === 422 && xhr.responseJSON.hasOwnProperty('error')) {
+                            swal({
+                                title: "Error occurred!",
+                                text: xhr.responseJSON.error,
+                                icon: "warning",
+                                button: "OK",
+                                dangerMode: true,
+                            });
+                        } else {
+                            swal("Error!", "Unknown error occurred.", "error");
+                        }
+                    }
+                });
+            } else {
+                swal("Error!", "The serial number field is required.", "error");
+            }
+        });
+    </script>
+    <!--____________// ADD ROW \\____________-->
+    <script type="text/javascript">
+        var count = 0;
+        $('#items-table').on('click', '.add-row', function() {
+            var allValuesNotNull = true;
+            $('.val_serial_no').each(function() {
+                var value = $(this).val();
+                if (value === null || value === '') {
+                    allValuesNotNull = false;
+                    return false;
+                }
+            });
+            if (allValuesNotNull) {
+                var qty = parseInt($('#qty').val());
+                var rcvQty = parseInt($('#getRcvQty').val());
+                var checkQty = qty - rcvQty;
+                var rowCount = parseInt($('#items-table tbody tr').length) + 1;
+                if(checkQty >= rowCount){
+                    ++count;
+                    addRow(count);
+                    var qtyResult = rcvQty + rowCount;
+                    $('#rcvQty').val(qtyResult);
+                }else{
+                    Swal.fire(
+                        'Done',
+                        'Your already fill up all data!',
+                        'question'
+                    )
+                }
+            } else {
                 swal("Error!", "All input values are not null or empty.", "error");
             }
         });
-        $("#modalGrid").modal('show');
-        var tbody = $('#table-body');
-        tbody.empty();
-        addRow(0);
-    });
-    /*=======//GRN Purchase Upload Modal//=========*/
-    $(document).on('click','#upload_excel', function(){
-        var id = $(this).data('id');
-        $("#exampleModalCenter").modal('show');
-    });
-    /*=======//GRN Purchase Save Data//=========*/
-    var form = '#add-user-form';
-    $(form).on('submit', function(event){
-        event.preventDefault();
-        var url = $(this).attr('data-action');
 
-        //--Validation then save
-        var allValuesNotNull = true;
-        $('.val_serial_no').each(function() {
-            var value = $(this).val();
-            if (value === null || value === '') {
-                allValuesNotNull = false;
-                return false;
-            }
-        });
-        if (allValuesNotNull) {
-            $.ajax({
-                url: url,
-                method: 'POST',
-                data: new FormData(this),
-                dataType: 'JSON',
-                contentType: false,
-                cache: false,
-                processData: false,
-                success:function(response)
-                {
-                    $("#modalGrid").modal('hide');
-                    swal("Your data save successfully", "Well done, you pressed a button", "success")
-                    .then(function() {
-                        location.reload();
-                    });
-                },
-                error: function(xhr) {
-                    if (xhr.status === 422 && xhr.responseJSON.hasOwnProperty('error')) {
-                        
-                        swal({
-                            title: "Error occurred!",
-                            text: xhr.responseJSON.error,
-                            icon: "warning",
-                            button: "OK",
-                            dangerMode: true,
-                        });
-                    } else {
-                        swal("Error!", "Unknown error occurred.", "error");
-                    }
-                }
-            });
-        } else {
-            swal("Error!", "The serial number field is required.", "error");
-        }
-    });
-</script>
-<script type="text/javascript">
-    //======Add ROW
-    var count = 0;
-    $('#items-table').on('click', '.add-row', function() {
-        var allValuesNotNull = true;
-        $('.val_serial_no').each(function() {
-            var value = $(this).val();
-            if (value === null || value === '') {
-                allValuesNotNull = false;
-                return false;
-            }
-        });
-        if (allValuesNotNull) {
-            var qty = parseInt($('#qty').val());
-            var rcvQty = parseInt($('#getRcvQty').val());
-            var checkQty = qty - rcvQty;
+        function addRow(i){
             var rowCount = parseInt($('#items-table tbody tr').length) + 1;
-            if(checkQty >= rowCount){
-                ++count;
-                addRow(count);
-                var qtyResult = rcvQty + rowCount;
-                $('#rcvQty').val(qtyResult);
-            }else{
-                Swal.fire(
-                    'Done',
-                    'Your already fill up all data!',
-                    'question'
-                )
-            }
-        } else {
-            swal("Error!", "All input values are not null or empty.", "error");
-        }
-    });
-
-    function addRow(i){
-        var rowCount = parseInt($('#items-table tbody tr').length) + 1;
-        var partNumber = $('#getPartNo').val();
-        var newRow = $('<tr>' +
-            '<td><label class="form-label">'+rowCount+'</label></td>' +
-            '<td><label class="form-label part_number">'+partNumber+'</label></td>' +
-            '<td><input type="text" name="moreFile['+i+'][serial_no]" id="serial_no" class="form-control val_serial_no" placeholder="XXXXXXXXXX"></td>' +
-            '<td class="text-center">' +
-                '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs add-row"><span class="fa fa-plus"></span></button>' +
-                '<button type="button" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0 remove-row"><span class="fa fa-trash"></span></button>' +
-            '</td>'+
-        '</tr>');
-    
-        $('#items-table tbody').append(newRow);
-        //--Dropdwon Search Fix
-        newRow.find('.dropdwon_select').each(function () {
-            $(this).select2({
-                dropdownParent: $(this).parent()
+            var partNumber = $('#getPartNo').val();
+            var newRow = $('<tr>' +
+                '<td><label class="form-label">'+rowCount+'</label></td>' +
+                '<td><label class="form-label part_number">'+partNumber+'</label></td>' +
+                '<td><input type="text" name="moreFile['+i+'][serial_no]" id="serial_no" class="form-control val_serial_no" placeholder="XXXXXXXXXX"></td>' +
+                '<td class="text-center">' +
+                    '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs add-row"><span class="fa fa-plus"></span></button>' +
+                    '<button type="button" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0 remove-row"><span class="fa fa-trash"></span></button>' +
+                '</td>'+
+            '</tr>');
+        
+            $('#items-table tbody').append(newRow);
+            //--Dropdwon Search Fix
+            newRow.find('.dropdwon_select').each(function () {
+                $(this).select2({
+                    dropdownParent: $(this).parent()
+                });
             });
-        });
 
-        //--Serial number already exists
-        newRow.find('.val_serial_no').on('change', function () {
-            var serialNumber = $(this).val();
-            var currentRow = $(this).closest('tr');
-            var serialInput = $(this);
+            //--Serial number already exists
+            newRow.find('.val_serial_no').on('change', function () {
+                var serialNumber = $(this).val();
+                var currentRow = $(this).closest('tr');
+                var serialInput = $(this);
 
-            $.ajax({
-                url: '{{ route('checkSerialNumber') }}',
-                method:'GET',
-                dataType:"JSON",
-                data: { serial_no: serialNumber },
-                success: function (response) {
-                    if (response.exists) {
-                        alert('Serial number already exists.');
-                        serialInput.val('');
-                    } else {
-                        currentRow.find('.serial_no_error').text('');
+                $.ajax({
+                    url: '{{ route('checkSerialNumber') }}',
+                    method:'GET',
+                    dataType:"JSON",
+                    data: { serial_no: serialNumber },
+                    success: function (response) {
+                        if (response.exists) {
+                            alert('Serial number already exists.');
+                            serialInput.val('');
+                        } else {
+                            currentRow.find('.serial_no_error').text('');
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.error(errorThrown);
                     }
-                },
-                error: function (xhr, textStatus, errorThrown) {
-                    console.error(errorThrown);
-                }
+                });
             });
+        }
+        //======Remove ROW
+        $('#items-table').on('click', '.remove-row', function() {
+            $(this).closest('tr').remove();
+            var rec_qty= $('#rcvQty').val();
+            $('#rcvQty').val(rec_qty-1);
         });
-    }
-    //======Remove ROW
-    $('#items-table').on('click', '.remove-row', function() {
-        $(this).closest('tr').remove();
-        var rec_qty= $('#rcvQty').val();
-        $('#rcvQty').val(rec_qty-1);
-    });
 
-</script>
+    </script>
+    @endpush
 
-
-
+</x-app-layout>

@@ -14,16 +14,19 @@ class Sales extends Model
     protected $fillable = [
         'inv_date',
         'inv_no',
+        'ref_date',
+        'ref_no',
         'vat',
         'tax',
-        'status',
-        'is_parsial',
-        'is_return',
+        'total',
         'remarks',
         'quotation_id',
         'mast_item_category_id',
         'mast_customer_id',
-        'user_id'
+        'user_id',
+        'is_parsial',
+        'is_return',
+        'status',
     ];
     public function mastCustomer()
     {

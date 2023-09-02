@@ -26,12 +26,11 @@ return new class extends Migration
             $table->text('web_address')->nullable();
             $table->integer('credit_limit')->nullable();
             $table->text('remarks')->nullable();
-            $table->tinyInteger('status')->default(false);
-            
             $table->unsignedBigInteger('mast_customer_type_id');
             $table->foreign('mast_customer_type_id')->references('id')->on('mast_customer_types')->onDelete('cascade');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->tinyInteger('status')->default(false);
             $table->timestamps();
         });
     }

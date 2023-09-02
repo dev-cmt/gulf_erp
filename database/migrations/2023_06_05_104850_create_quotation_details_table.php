@@ -17,14 +17,14 @@ return new class extends Migration
             $table->id();
             $table->integer('qty')->nullable();
             $table->decimal('price')->nullable();
-            $table->tinyInteger('status')->default(true);
-
+            $table->unsignedBigInteger('mast_item_category_id')->nullable();
             $table->unsignedBigInteger('quotation_id');
             $table->foreign('quotation_id')->references('id')->on('quotations')->onDelete('cascade');
             $table->unsignedBigInteger('mast_item_register_id');
             $table->foreign('mast_item_register_id')->references('id')->on('mast_item_registers')->onDelete('cascade');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->tinyInteger('status')->default(true);
             $table->timestamps();
         });
     }

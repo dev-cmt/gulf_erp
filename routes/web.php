@@ -215,13 +215,13 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('sales_quotation/cat_id={cat_id}',[SalesQuotationController::class,'index'])->name('sales_quotation.index');
     Route::post('sales_quotation/store/cat_id={cat_id}', [SalesQuotationController::class, 'store'])->name('sales_quotation.store');
     Route::get('sales_quotation/edit',[SalesQuotationController::class,'edit'])->name('sales_quotation.edit');
-    Route::delete('sales_quotation/destroy/{id}', [SalesQuotationController::class, 'sales_destroy'])->name('sales_quotation.destroy');
+    Route::delete('sales_quotation/destroy/{id}', [SalesQuotationController::class, 'quotation_destroy'])->name('sales_quotation.destroy');
     Route::get('/get-delete-master/sales_quotation',[SalesQuotationController::class,'getDeleteMaster'])->name('getDelete-master-sales_quotation');
     //--Sales Approve
-    Route::get('sales_quotation/approve_list', [SalesQuotationController::class, 'sales_approve_list'])->name('sales_quotation_approve.create');
-    Route::PATCH('sales_quotation/approve/{id}', [SalesQuotationController::class, 'approve'])->name('sales_quotation.approve');
+    Route::get('sales_quotation/approve_list', [SalesQuotationController::class, 'quotation_approve_list'])->name('sales_quotation_approve.create');
+    Route::post('sales_quotation/approve', [SalesQuotationController::class, 'approve'])->name('sales_quotation.approve');
     Route::PATCH('sales_quotation/canceled/{id}', [SalesQuotationController::class, 'decline'])->name('sales_quotation.canceled');
-    Route::get('sales_quotation/get-sales/approve/details', [SalesQuotationController::class, 'getSalesApproveDetails'])->name('get_sales_quotation_approve_details');
+    Route::get('get/sales-quotation/details', [SalesQuotationController::class, 'getQuotationDetails'])->name('get_quotation_details');
     //--Get Data
     Route::get('get-customer/data',[SalesQuotationController::class,'getCustomerData'])->name('get-customer-data');
 

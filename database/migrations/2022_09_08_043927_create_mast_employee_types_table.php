@@ -18,11 +18,10 @@ return new class extends Migration
             $table->string('cat_name')->nullable();
             $table->string('cat_type')->nullable();
             $table->text('description')->nullable();
-            $table->integer('status')->default(true);
-            $table->timestamps();
-            
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->integer('status')->default(true);
+            $table->timestamps();
         });
     }
 

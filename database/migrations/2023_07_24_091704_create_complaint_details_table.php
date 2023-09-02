@@ -20,11 +20,11 @@ return new class extends Migration
             $table->tinyInteger('next_date')->default(false);
             $table->text('observe')->nullable();
             $table->text('remarks')->nullable();
-            $table->tinyInteger('status')->default(false);
             $table->unsignedBigInteger('emp_id');
             $table->foreign('emp_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->tinyInteger('status')->default(false);
             $table->timestamps();
         });
     }

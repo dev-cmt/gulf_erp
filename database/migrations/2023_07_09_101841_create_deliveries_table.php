@@ -19,8 +19,6 @@ return new class extends Migration
             $table->date('deli_date')->nullable();
             $table->unsignedInteger('warranty')->default(0);
             $table->decimal('price')->nullable();
-            $table->tinyInteger('status')->default(false);
-
             $table->unsignedBigInteger('sales_id');
             $table->foreign('sales_id')->references('id')->on('sales')->onDelete('cascade');
             $table->unsignedBigInteger('mast_customer_id');
@@ -31,6 +29,7 @@ return new class extends Migration
             $table->foreign('mast_item_register_id')->references('id')->on('mast_item_registers')->onDelete('cascade');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->tinyInteger('status')->default(false);
             $table->timestamps();
         });
     }

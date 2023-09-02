@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\ReferenceType;
 use App\Models\Setup;
 
 class SetupSeeder extends Seeder
@@ -21,5 +20,6 @@ class SetupSeeder extends Seeder
             'install_technician'=> 10,
             'services_technician'=> 9,
         ]);
+        
     }
 }

@@ -18,11 +18,10 @@ return new class extends Migration
             $table->string('pkg_name')->nullable();
             $table->integer('pkg_size')->nullable();
             $table->text('description')->nullable();
-            $table->tinyInteger('status')->default(false);
-            $table->timestamps();
-            
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->tinyInteger('status')->default(false);
+            $table->timestamps();
         });
     }
 

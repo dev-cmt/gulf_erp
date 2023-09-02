@@ -20,15 +20,14 @@ return new class extends Migration
             $table->float('vat')->default(0.00)->nullable();
             $table->float('tax')->default(0.00)->nullable();
             $table->text('remarks')->nullable();
-            $table->tinyInteger('status')->default(false);
-            $table->tinyInteger('is_sales')->default(false);
-
             $table->unsignedBigInteger('mast_item_category_id');
             $table->foreign('mast_item_category_id')->references('id')->on('mast_item_categories')->onDelete('cascade');
             $table->unsignedBigInteger('mast_customer_id');
             $table->foreign('mast_customer_id')->references('id')->on('mast_customers')->onDelete('cascade');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->tinyInteger('is_sales')->default(false);
+            $table->tinyInteger('status')->default(false);
             $table->timestamps();
         });
     }

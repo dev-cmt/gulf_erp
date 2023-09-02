@@ -17,12 +17,11 @@ return new class extends Migration
             $table->id();
             $table->string('unit_name')->nullable();
             $table->text('description')->nullable();
-            $table->integer('mast_item_category_id')->nullable();
-            $table->tinyInteger('status')->default(false);
-            $table->timestamps();
-
+            $table->unsignedBigInteger('mast_item_category_id')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->tinyInteger('status')->default(false);
+            $table->timestamps();
         });
     }
 

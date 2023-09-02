@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('reference_types', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
+            $table->string('name')->nullable(); // Use SL Movements
             $table->tinyInteger('status')->default(true);
             $table->timestamps();
         });

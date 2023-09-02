@@ -183,53 +183,56 @@
             </div>
         </div>
     </div>
+    
+    @push('script')
+    <!--____________// VIEw DETAILS \\____________-->
+    <script type="text/javascript">
+        $(document).on('click', '#details_data', function() {
+            var id = $(this).data('id');
+            $('#loading').show();
+            $('#table-body').empty();
+            $.ajax({
+                url: '{{ route('get_purchase_approve_details')}}',
+                method: 'GET',
+                dataType: "JSON",
+                data: {'id': id},
+                success: function(response) {
+                    var dataMast = response.purchase;
+                    $('#inv_no').html(dataMast.inv_no);
+                    $("#inv_date").html(dataMast.inv_date);
+                    $("#supplier_name").html(dataMast.supplier_name);
+                    $("#store_name").html(dataMast.store_name);
+                    $('#remarks').html(response.remarks);
+
+                    var dataDetails = response.data;
+                    var total = 0; // Variable to hold the total value
+                    $.each(dataDetails, function(index, item) {
+                        var subtotal = item.qty * item.price;
+                        var row = '<tr id="row_todo_'+ item.id + '">';
+                        row += '<td>' + (index + 1) + '</td>'; // Add SL# column
+                        row += '<td>' + item.cat_name + '</td>'; // Add Category column
+                        row += '<td>' + item.part_name + '</td>'; // Add Group Name column
+                        row += '<td>' + item.part_no + '</td>';
+                        row += '<td>' + item.price + '</td>';
+                        row += '<td>' + item.qty + '</td>';
+                        row += '<td>' + subtotal + '</td>';
+                        row += '</tr>';
+                        $('#table-body').append(row);
+
+                        total += subtotal;
+                    });
+                    // Update the total value in the HTML
+                    $('#total').html(total.toFixed(2));
+                    
+                    $('#loading').hide();
+                    $(".bd-example-modal-lg").modal('show');
+                },
+                error: function(response) {
+                    swal("Error!", "All input values are not null or empty.", "error");
+                }
+            });
+        });
+    </script>
+    @endpush
 
 </x-app-layout>
-
-<script>
-    /*=======//View Details Add Modal//=========*/
-    $(document).on('click', '#details_data', function() {
-    var id = $(this).data('id');
-    $('#table-body').empty();
-        $.ajax({
-            url: '{{ route('get_purchase_approve_details')}}',
-            method: 'GET',
-            dataType: "JSON",
-            data: {'id': id},
-            success: function(response) {
-                var dataMast = response.purchase;
-
-                $('#inv_no').html(dataMast.inv_no);
-                $("#inv_date").html(dataMast.inv_date);
-                $("#supplier_name").html(dataMast.supplier_name);
-                $("#store_name").html(dataMast.store_name);
-                $('#remarks').html(response.remarks);
-
-                var dataDetails = response.data;
-                var total = 0; // Variable to hold the total value
-                $.each(dataDetails, function(index, item) {
-                    var subtotal = item.qty * item.price;
-                    var row = '<tr id="row_todo_'+ item.id + '">';
-                    row += '<td>' + (index + 1) + '</td>'; // Add SL# column
-                    row += '<td>' + item.cat_name + '</td>'; // Add Category column
-                    row += '<td>' + item.part_name + '</td>'; // Add Group Name column
-                    row += '<td>' + item.part_no + '</td>';
-                    row += '<td>' + item.price + '</td>';
-                    row += '<td>' + item.qty + '</td>';
-                    row += '<td>' + subtotal + '</td>';
-                    row += '</tr>';
-                    $('#table-body').append(row);
-
-                    total += subtotal;
-                });
-                // Update the total value in the HTML
-                $('#total').html(total.toFixed(2));
-            },
-            error: function(response) {
-                swal("Error!", "All input values are not null or empty.", "error");
-            }
-        });
-        $(".bd-example-modal-lg").modal('show');
-    });
-
-</script>

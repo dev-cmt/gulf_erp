@@ -21,15 +21,11 @@
     <link rel="stylesheet" href="{{asset('public/backend')}}/vendor/select2/css/select2.min.css">
     <!-- Gallery -->
     <link rel="stylesheet" href="{{asset('public/backend')}}/vendor/lightgallery/css/lightgallery.min.css">
-    <!-- Form step -->
-    {{-- <link href="{{asset('public/backend')}}/vendor/jquery-smartwizard/dist/css/smart_wizard.min.css" rel="stylesheet"> --}}
     <!-- Custom Stylesheet -->
 	<link href="{{asset('public/backend')}}/vendor/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet">
     <link href="{{asset('public/backend')}}/css/style.css" rel="stylesheet">
     
-    <!-- Jquery -->
-    <script src="{{asset('public/backend')}}/js/jquery-3.5.1.min.js"></script>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('style')
 </head>
 <body>
 
@@ -99,6 +95,9 @@
         Scripts
     ***********************************-->
 
+    <!-- Jquery -->
+    <script src="{{asset('public/backend')}}/js/jquery-3.5.1.min.js"></script>
+    <script src="{{asset('public/backend')}}/js/imask-6.0.7.min.js"></script>
     <!-- Required vendors -->
     <script src="{{asset('public/backend')}}/vendor/global/global.min.js"></script>
 	<script src="{{asset('public/backend')}}/vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
@@ -123,9 +122,6 @@
 
     <!-- Light Gallery -->
     <script src="{{asset('public/backend')}}/vendor/lightgallery/js/lightgallery-all.min.js"></script>
-    
-    <!-- Form Steps -->
-	{{-- <script src="{{asset('public/backend')}}/vendor/jquery-smartwizard/dist/js/jquery.smartWizard.js"></script> --}}
 
     <!-- Start Toaster & Sweetalert -->
     <script src="{{asset('public/backend')}}/vendor/toaster/js/toastr.min.js"></script>

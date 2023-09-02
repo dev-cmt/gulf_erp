@@ -18,16 +18,15 @@ return new class extends Migration
             $table->string('return_no')->nullable();
             $table->date('return_date')->nullable();
             $table->text('remarks')->nullable();
-            $table->tinyInteger('status')->default(false);
-            $table->tinyInteger('is_parsial')->default(false);
             $table->integer('from_store_id')->nullable();
-
             $table->unsignedBigInteger('mast_work_station_id');
             $table->foreign('mast_work_station_id')->references('id')->on('mast_work_stations')->onDelete('cascade');
             $table->unsignedBigInteger('sales_id');
             $table->foreign('sales_id')->references('id')->on('sales')->onDelete('cascade');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->tinyInteger('is_parsial')->default(false);
+            $table->tinyInteger('status')->default(false);
             $table->timestamps();
         });
     }

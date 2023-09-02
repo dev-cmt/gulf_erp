@@ -14,6 +14,7 @@ use App\Models\Master\MastWorkStation;
 use App\Models\Master\MastCustomer;
 use App\Models\Master\MastCustomerType;
 use App\Models\Sales\Sales;
+use App\Models\Sales\SalesDetails;
 use App\Models\Sales\Quotation;
 use App\Models\Sales\QuotationDetails;
 use App\Helpers\Helper;
@@ -63,6 +64,7 @@ class SalesQuotationController extends Controller
             foreach($request->moreFile as $item){
                 $data = new QuotationDetails();
                 $data->mast_item_register_id = $item['item_id'];
+                $data->mast_item_category_id = $sales->mast_item_category_id;
                 $data->qty = $item['qty'];
                 $data->status = 0;
                 $data->price = $item['price'];
@@ -82,6 +84,7 @@ class SalesQuotationController extends Controller
                 $data = QuotationDetails::findOrFail($item['id']);
 
                 $data->mast_item_register_id = $item['item_id'];
+                $data->mast_item_category_id = $sales->mast_item_category_id;
                 $data->qty = $item['qty'];
                 $data->price = $item['price'];
                 $data->status = 0;
@@ -143,7 +146,7 @@ class SalesQuotationController extends Controller
             'sales_details' => $sales_details,
         ]);
     }
-    public function sales_destroy($id)
+    public function quotation_destroy($id)
     {
         $data=Quotation::find($id);
         // $subTotal = $data->qty*$data->price;
@@ -155,41 +158,78 @@ class SalesQuotationController extends Controller
      *   Approve Sales
      *=====================================
      */
-    function sales_approve_list () {
+    function quotation_approve_list () {
         $data= Quotation::where('status', 0)->orderBy('id', 'desc')->latest()->get();
-        return view('layouts.pages.sales.sales_quotation.sales_approve',compact('data'));
+        return view('layouts.pages.sales.sales_quotation.quotation_approve',compact('data'));
     }
-    public function getSalesApproveDetails(Request $request)
+    public function getQuotationDetails(Request $request)
     {
-        $data = QuotationDetails::all();
-        // $data = QuotationDetails::where('quotation_details.quotation_id', $request->id)
-        // ->join('quotations', 'quotations.id', 'quotation_details.quotation_id')
-        // ->join('mast_item_registers', 'mast_item_registers.id', 'quotation_details.mast_item_register_id')
-        // ->join('mast_item_groups', 'mast_item_groups.id', 'mast_item_registers.mast_item_group_id')
-        // ->join('mast_item_categories', 'mast_item_categories.id', 'sales.mast_item_category_id')
-        // ->select('quotation_details.*','quotations.quot_no','quotations.quot_date','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
-        // ->get();
+        $data = QuotationDetails::where('quotation_details.quotation_id', $request->id)
+        ->join('quotations', 'quotations.id', 'quotation_details.quotation_id')
+        ->join('mast_item_registers', 'mast_item_registers.id', 'quotation_details.mast_item_register_id')
+        ->join('mast_item_groups', 'mast_item_groups.id', 'mast_item_registers.mast_item_group_id')
+        ->join('mast_item_categories', 'mast_item_categories.id', 'quotations.mast_item_category_id')
+        ->select('quotation_details.*','quotations.quot_no','quotations.quot_date','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
+        ->get();
 
         $store = MastWorkStation::where('id', Auth::user()->id)->first();
-        $sales = Quotation::where('quotations.id', $request->id)
+        $quotation = Quotation::where('quotations.id', $request->id)
         ->join('mast_customers', 'mast_customers.id', 'quotations.mast_customer_id')
         ->select('quotations.*','mast_customers.name')
         ->first();
         return response()->json([
             'data' => $data,
-            'sales' => $sales,
+            'quotation' => $quotation,
             'store' => $store->store_name,
         ]);
     }
-    public function approve($id)
+    public function approve(Request $request)
     {
-        $data = Quotation::findOrFail($id);
+        $validator = Validator::make($request->all(), [
+            'ref_date' => 'required',
+            'ref_no' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $data = Quotation::findOrFail($request->set_id);
+        $data->is_sales = 1;
         $data->status = 1;
         $data->save();
 
-        $notification=array('messege'=>'Leave approve successfully!','alert-type'=>'success');
-        return redirect()->back()->with($notification);
+        $sales = new Sales();
+        $sales->inv_date = date('Y-m-d');
+        $sales->inv_no = $data->quot_no;
+        $sales->ref_date = $request->ref_date;
+        $sales->ref_no = $request->ref_no;
+        $sales->vat = $data->vat;
+        $sales->tax = $data->tax;
+        $sales->remarks = $data->remarks;
+        $sales->quotation_id = $data->id;
+        $sales->mast_item_category_id = $data->mast_item_category_id;
+        $sales->mast_customer_id = $data->mast_customer_id;
+        $sales->user_id = Auth::user()->id;
+        $sales->status = 1;
+        $sales->save();
+
+        $salesDetails = QuotationDetails::where('quotation_id', $request->set_id)->get();
+        foreach ($salesDetails as $item) {
+            $data = new SalesDetails();
+            $data->mast_item_register_id = $item['mast_item_register_id'];
+            $data->mast_item_category_id = $sales->mast_item_category_id;
+            $data->price = $item['price'];
+            $data->qty = $item['qty'];
+            $data->deli_qty = 0;
+            $data->status = 1;
+            $data->sales_id = $sales->id;
+            $data->user_id = Auth::user()->id;
+            $data->save();
+        }
+
+        return response()->json($data);
     }
+
 
     public function decline($id){
         $data = Quotation::findOrFail($id);

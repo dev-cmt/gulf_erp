@@ -18,17 +18,22 @@
                         <span class="nav-text">Dashboard</span>
                     </a>
                 </li>
+                @canany(['Super-Admin', 'Admin', 'HR', 'Hr access', 'Employee access', 'Leave access', 'Attendance access', 'Salary access', 'Hr setting access'])
                 <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
                         <i class="flaticon-152-followers"></i>
                         <span class="nav-text">HR & Admin</span>
                     </a>
                     <ul aria-expanded="false">
+                        @canany(['Super-Admin', 'Admin', 'HR', 'Employee access'])
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Employee</a>
                             <ul aria-expanded="false">
                                 <li><a href="{{route('info_employee.list')}}">Employee List</a></li>
                                 <li><a href="{{route('employee_register.create')}}">Employee Register</a></li>
                             </ul>
                         </li>
+                        @endcanany
+
+                        @canany(['Super-Admin', 'Admin', 'HR','Leave access'])
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Leave</a>
                             <ul aria-expanded="false">
                                 <li><a href="{{ route('emergency_leave.create') }}">Emergency Leave</a></li>
@@ -37,6 +42,9 @@
                                 <li><a href="{{ route('hr_approve_list.create') }}">HR Approve</a></li>
                             </ul>
                         </li>
+                        @endcanany
+
+                        @canany(['Super-Admin', 'Admin', 'HR','Attendance access'])
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Attendance</a>
                             <ul aria-expanded="false">
                                 <li><a href="{{ route('manual_attendances.index') }}">Attendance List</a></li>
@@ -44,6 +52,9 @@
                                 <li><a href="{{route('attendance.import')}}">Upload Attendance</a></li>
                             </ul>
                         </li>
+                        @endcanany
+
+                        @canany(['Super-Admin', 'Admin', 'HR', 'Salary access'])
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Salary</a>
                             <ul aria-expanded="false">
                                 <li><a href="#">Process Salary</a></li>
@@ -51,6 +62,9 @@
                                 <li><a href="#">Salary Sheet</a></li>
                             </ul>
                         </li>
+                        @endcanany
+
+                        @canany(['Hr setting access'])
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Data Setting</a>
                             <ul aria-expanded="false">
                                 <li><a href="{{route('mast_department.index')}}">Depertment</a></li>
@@ -59,8 +73,12 @@
                                 <li><a href="{{route('must_employee_category.index')}}">Employee Category</a></li>
                             </ul>
                         </li>
+                        @endcanany
                     </ul>
                 </li>
+                @endcanany
+
+                @canany(['Super-Admin', 'Admin', 'Inventory access'])
                 <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
                         <i class="flaticon-381-home"></i>
                         <span class="nav-text">Inventory</span>
@@ -108,6 +126,9 @@
                         </li>
                     </ul>
                 </li>
+                @endcanany
+
+                @canany(['Super-Admin', 'Admin', 'Sales access'])
                 <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
                         <i class="flaticon-381-layer-1"></i>
                         <span class="nav-text">Sales</span>
@@ -118,7 +139,7 @@
                                 <li><a href="{{ route('sales_quotation.index',['cat_id' => 1]) }}">AC Sales</a></li>
                                 <li><a href="{{ route('sales_quotation.index',['cat_id' => 2]) }}">AC Spare Parts</a></li>
                                 <li><a href="{{ route('sales_quotation.index',['cat_id' => 3]) }}">Car Spare Parts</a></li>
-                                <li><a href="{{ route('sales_quotation_approve.create')}}">Approve Sales </a></li>
+                                <li><a href="{{ route('sales_quotation_approve.create')}}">Approve Quotation </a></li>
                             </ul>
                         </li>
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Sales</a>
@@ -141,6 +162,9 @@
                         </li>
                     </ul>
                 </li>
+                @endcanany
+
+                @canany(['Super-Admin', 'Admin', 'Warrenty access'])
                 <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
                         <i class="flaticon-149-diagram"></i>
                         <span class="nav-text">Warrenty & Service</span>
@@ -167,6 +191,9 @@
                         </li>
                     </ul>
                 </li>
+                @endcanany
+
+                @canany(['Super-Admin'])
                 <li class="nav-label">Apps</li>
                 <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
                         <i class="flaticon-077-menu-1"></i>
@@ -208,18 +235,19 @@
                         <li><a href="{{route('mast_unit.index')}}">Unit Details</a></li>
                     </ul> --}}
                 </li>
-                @canany('Setting access')
+                @endcanany
+                @canany('Super-Admin', 'User access','User create','User edit','User delete', 'Role access', 'Role create','Role edit','Role delete')
                 <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
                         <i class="flaticon-381-settings-2"></i>
                         <span class="nav-text">Setting</span>
                     </a>
                     <ul aria-expanded="false">
-                        @canany('Role access','Role add','Role edit','Role delete')
-                            <li><a href="{{ route('roles.index') }}">Role</a></li>
+                        @canany('Role access', 'Role create','Role edit','Role delete')
+                            <li><a href="{{ route('roles.index') }}">Manage Role</a></li>
                         @endcanany
 
-                        @canany('User access','User add','User edit','User delete')
-                        <li><a href="{{ Route('users.index')}}">User</a></li>
+                        @canany('User access','User create','User edit','User delete')
+                        <li><a href="{{ Route('users.index')}}">Manage User</a></li>
                         @endcanany
                     </ul>
                 </li>
@@ -237,7 +265,7 @@
                     <a href="{{ asset('public/gulf.apk') }}"><img src="{{asset('public')}}/images/icon-android.png" style="width:60%;" alt=""></a>
                 </div>
                 <p><strong>Gulf ERP Admin Dashboard</strong> © 2023 All Rights Reserved</p>
-                <p class="fs-12">Made with <span class="heart"></span> by Icon ISL</p>
+                <p class="fs-12">Made with <span class="heart"></span> by ICON ISL</p>
             </div>
         {{-- </div> --}}
     </div>

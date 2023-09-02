@@ -214,6 +214,7 @@
     //======Get Master Customer Type
     $(document).on('change','#mast_customer_type',function(){
         var partId = $(this).val();
+        $('#loading').show();
         $.ajax({
             url:'{{ route('get-customer-data')}}',
             method:'GET',
@@ -221,9 +222,11 @@
             data:{'part_id':partId},
             success:function(data){
                 $('#mast_customer_id').html(data);
+                $('#loading').hide();
             },
             error:function(){
                 alert('Fail');
+                $('#loading').hide();
             }
         });
     });
@@ -289,6 +292,7 @@
                 }
             });
             if (allSubValuesNotNull) {
+                $('#loading').show();
                 $.ajax({
                     url: url,
                     method: 'POST',
@@ -302,6 +306,7 @@
                         $(form).trigger("reset");
                         swal("Success Message Title", "Well done, you pressed a button", "success")
                         $(".bd-example-modal-lg").modal('hide');
+                        $('#loading').hide();
 
                         var add_sales = response.sales;
 
@@ -351,6 +356,7 @@
     /*========//Edit Data//=========*/
     $(document).on('click', '#edit_data', function(){
         var id = $(this).data('id');
+        $('#loading').show();
         $.ajax({
             url:'{{ route('sales_quotation.edit')}}',
             method:'GET',
@@ -358,15 +364,18 @@
             data:{id:id},
             success:function(response){
                 showData(response, 1);
+                $('#loading').hide();
             },
             error: function(xhr, status, error) {
                 console.log(error);
+                $('#loading').hide();
             }
         });
     });
     /*========//View Data//=========*/
     $(document).on('click', '#view_data', function(){
         var id = $(this).data('id');
+        $('#loading').show();
         $.ajax({
             url:'{{ route('sales_quotation.edit')}}',
             method:'GET',
@@ -374,9 +383,11 @@
             data:{id:id},
             success:function(response){
                 showData(response, 2);
+                $('#loading').hide();
             },
             error: function(xhr, status, error) {
                 console.log(error);
+                $('#loading').hide();
             }
         });
     });
@@ -718,6 +729,7 @@
     $(document).on('change','#item_category',function(){
         var partId = $(this).val();
         var currentRow = $(this).closest("tr");
+        $('#loading').show();
         $.ajax({
             url:'{{ route('get-part-id')}}',
             method:'GET',
@@ -726,9 +738,11 @@
             success:function(data){
                 console.log(data)
                 currentRow.find('#partNumber').html(data);
+                $('#loading').hide();
             },
             error:function(){
                 alert('Fail');
+                $('#loading').hide();
             }
         });
     });
@@ -736,14 +750,14 @@
     $(document).on('change','#partNumber', function(){
         var partNumber_id = $(this).val();
         var currentRows = $(this).closest("tr"); 
-        
+        $('#loading').show();
         $.ajax({
             url:'{{ route('get-part-number')}}',
             method:'GET',
             dataType:"JSON",
             data:{'part_id':partNumber_id},
             success:function(data){
-                console.log(data)
+                $('#loading').hide();
                 currentRows.find('#packageSize').val(data.box_qty);
                 currentRows.find('#unit').val(data.unit.unit_name);
                 currentRows.find('#price').val(data.price);

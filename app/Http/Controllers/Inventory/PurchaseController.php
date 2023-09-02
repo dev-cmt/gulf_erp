@@ -62,7 +62,7 @@ class PurchaseController extends Controller
                 $data->qty = $item['qty'];
                 $data->rcv_qty = 0;
                 $data->price = $item['price'];
-                
+                $data->mast_item_category_id = $type;
                 $data->status = 1;
                 if(isset($pur_id)){
                     $data->purchase_id = $pur_id;
@@ -81,7 +81,7 @@ class PurchaseController extends Controller
                 $data->qty = $item['qty'];
                 $data->rcv_qty = 0;
                 $data->price = $item['price'];
-
+                $data->mast_item_category_id = $type;
                 $data->status = 1;
                 if(isset($pur_id)){
                     $data->purchase_id = $pur_id;
@@ -127,7 +127,6 @@ class PurchaseController extends Controller
         ->select('purchase_details.*','mast_item_registers.id as item_rg_id','mast_item_registers.part_no','mast_item_registers.box_qty','mast_units.unit_name','mast_item_groups.part_name','mast_item_groups.id as item_groups_id')
         ->get();
 
-        // $purchase_details =PurchaseDetails::with('mastItemRegister','purchase')->where('purchase_id', 1)->get();
         $data = Purchase::where('id', $request->id)->first();
         return response()->json([
             'data' => $data,
@@ -161,7 +160,6 @@ class PurchaseController extends Controller
         ->select('purchase_details.*','purchases.inv_no','purchases.inv_date','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
         ->get();
         
-
         $purchase = Purchase::where('purchases.id', $request->id)
         ->join('mast_suppliers', 'mast_suppliers.id', 'purchases.mast_supplier_id')
         ->join('mast_work_stations', 'mast_work_stations.id', 'purchases.mast_work_station_id')

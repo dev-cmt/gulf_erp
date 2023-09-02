@@ -1,4 +1,5 @@
 <x-app-layout>
+    @push('style')  
     <style>
         /*__________________Image Profile______________________*/
         .avatar-upload {
@@ -212,7 +213,7 @@
             background-color: #f04e23 !important;
         }
     </style>
-
+    @endpush
     <div class="row">
         <div class="col-xl-12 col-xxl-12">
             <div class="card">
@@ -340,11 +341,9 @@
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label">NID
-                                                <span class="text-danger">*</span>
-                                            </label>
+                                            <label class="col-lg-4 col-form-label">NID </label>
                                             <div class="col-lg-7">
-                                                <input type="number" name="nid_no" id="nid_no" class="form-control @error('nid_no') is-invalid @enderror" placeholder="" value="{{old('nid_no')}}"/>
+                                                <input type="tel" name="nid_no" id="nid_no" class="form-control @error('nid_no') is-invalid @enderror" placeholder="" value="{{old('nid_no')}}"/>
                                                 @error('nid_no')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -355,9 +354,7 @@
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label">Blood Group
-                                                <span class="text-danger">*</span>
-                                            </label>
+                                            <label class="col-lg-4 col-form-label">Blood Group </label>
                                             <div class="col-lg-7">
                                                 <select name="blood_group" id="blood_group" class="form-control default-select @error('blood_group') is-invalid @enderror" style="height: 40px;">
                                                     <option value="" selected>Select</option>
@@ -513,7 +510,7 @@
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <div class="col-lg-7">
-                                                <input type="number" name="gross_salary" id="gross_salary" class="form-control @error('gross_salary') is-invalid @enderror" placeholder="" value="{{old('gross_salary')}}" />
+                                                <input type="text" name="gross_salary" id="gross_salary" class="form-control @error('gross_salary') is-invalid @enderror" placeholder="" value="{{old('gross_salary')}}" />
                                                 @error('gross_salary')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -790,7 +787,7 @@
                                         <div class="form-group row">
                                             <label class="col-lg-4 col-form-label">Passport No.</label>
                                             <div class="col-lg-7">
-                                                <input type="number" name="passport_no" class="form-control @error('passport_no') is-invalid @enderror" placeholder="" value="{{old('passport_no')}}" />
+                                                <input type="text" id="passport_no" name="passport_no" class="form-control @error('passport_no') is-invalid @enderror" placeholder="" value="{{old('passport_no')}}" />
                                                 @error('passport_no')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -803,7 +800,7 @@
                                         <div class="form-group row">
                                             <label class="col-lg-4 col-form-label">Driving License No.</label>
                                             <div class="col-lg-7">
-                                                <input type="number" name="driving_license" class="form-control @error('driving_license') is-invalid @enderror" placeholder="" value="{{old('driving_license')}}" />
+                                                <input type="text" id="driving_license" name="driving_license" class="form-control @error('driving_license') is-invalid @enderror" placeholder="" value="{{old('driving_license')}}" />
                                                 @error('driving_license')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -847,7 +844,7 @@
                                         <div class="form-group row">
                                             <label class="col-lg-4 col-form-label">Birth Certificate No.</label>
                                             <div class="col-lg-7">
-                                                <input type="test" name="birth_certificate_no" class="form-control @error('birth_certificate_no') is-invalid @enderror" placeholder="" value="{{old('birth_certificate_no')}}" />
+                                                <input type="test" name="birth_certificate_no" id="birth_certificate_no" class="form-control @error('birth_certificate_no') is-invalid @enderror" placeholder="" value="{{old('birth_certificate_no')}}" />
                                                 @error('birth_certificate_no')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -958,6 +955,7 @@
         </div>
     </div>
     
+    @push('script')
     <!--Image Profile-->
     <script type="text/javascript">
         function readURL(input) {
@@ -1025,7 +1023,7 @@
                     var nidNo = document.getElementById("nid_no").value;
                     var bloodGroup = document.getElementById("blood_group").value;
                     
-                    if (dateOfBirth === "" || nidNo === "" || bloodGroup === "") {
+                    if (dateOfBirth === "") {
                         Swal.fire(
                             'Required data missing?',
                             'Is something wrong with your form data?',
@@ -1314,5 +1312,48 @@
             }
         });
     </script>
+
+    <!-- Mask Validation-->
+    <script type="text/javascript">
+        $(document).ready(function() {
+            const inputGS = $("#gross_salary");
+            const inputNID = $("#nid_no");
+            const inputBCN = $("#birth_certificate_no");
+            const inputDLN = $("#driving_license");
+            const inputPSN = $("#passport_no");
+            
+            const maskGS = new IMask(inputGS[0], { mask: "000000000" });
+            const maskNID = new IMask(inputNID[0], { mask: "0000000000000" });
+            const maskBCN = new IMask(inputBCN[0], { mask: "00000000000000000" });
+            const maskDLN = new IMask(inputDLN[0], {
+                mask: 'SSSSSSSSSSSSSSS',
+                blocks: {
+                    S: {
+                        mask: /^[A-Za-z0-9]$/i,
+                        uppercase: true,
+                    },
+                },
+            });
+            const maskPSN = new IMask(inputPSN[0], {
+                mask: 'SSSSSSSSS',
+                blocks: {
+                    S: {
+                        mask: /^[A-Za-z0-9]$/i,
+                        uppercase: true,
+                    },
+                },
+            });
+            inputDLN.on("input", function() {
+                inputDLN.val(inputDLN.val().toUpperCase());
+            });
+            inputPSN.on("input", function() {
+                inputPSN.val(inputPSN.val().toUpperCase());
+            });
+            // $(inputNID).on("change", function() {
+            //     maskNID.unmaskedValue;
+            // });
+        });
+    </script>
+    @endpush
 
 </x-app-layout>

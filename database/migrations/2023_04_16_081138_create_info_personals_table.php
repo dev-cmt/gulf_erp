@@ -42,8 +42,8 @@ return new class extends Migration
             $table->integer('post_code_permanent')->nullable();
             $table->string('address_permanent')->nullable();
 
-            $table->bigInteger('passport_no')->nullable();
-            $table->bigInteger('driving_license')->nullable();
+            $table->string('passport_no')->nullable();
+            $table->string('driving_license')->nullable();
             $table->integer('marital_status')->nullable();
             $table->string('house_phone')->nullable();
             $table->string('father_name')->nullable();
@@ -53,8 +53,6 @@ return new class extends Migration
             $table->string('emg_phone_number')->nullable();
             $table->string('emg_relationship')->nullable();
             $table->text('emg_address')->nullable();
-            $table->tinyInteger('status')->default(true);
-            $table->timestamps();
             
             $table->unsignedBigInteger('mast_department_id');
             $table->foreign('mast_department_id')->references('id')->on('mast_departments')->onDelete('cascade');
@@ -64,10 +62,12 @@ return new class extends Migration
             $table->foreign('mast_employee_type_id')->references('id')->on('mast_employee_types')->onDelete('cascade');
             $table->unsignedBigInteger('mast_work_station_id');
             $table->foreign('mast_work_station_id')->references('id')->on('mast_work_stations')->onDelete('cascade');
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('emp_id');
             $table->foreign('emp_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->tinyInteger('status')->default(true);
+            $table->timestamps();
         });
     }
 

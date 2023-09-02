@@ -1,5 +1,4 @@
 <x-app-layout>
-    <!-- row -->
     <div class="row">
 		<div class="col-xl-3 col-sm-6 m-t35">
 			<div class="card card-coin">
@@ -129,6 +128,7 @@
 			</div>
 		</div>
 	</div>
+    @canany(['Super-Admin'])
 	<div class="row">
 	    <div class="col-xl-3 col-xxl-4 col-lg-6 col-sm-6">
 			<div class="widget-stat card bg-danger">
@@ -404,5 +404,5 @@
             </div>
         </div>
     </div>
-    
+    @endcanany
 </x-app-layout>

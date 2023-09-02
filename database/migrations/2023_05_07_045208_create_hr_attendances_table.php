@@ -18,17 +18,16 @@ return new class extends Migration
             $table->date('date')->nullable();
             $table->time('in_time')->nullable();
             $table->time('out_time')->nullable();
-            $table->tinyInteger('attendance_type')->default(false);
             $table->text('location')->nullable();
             $table->text('description')->nullable();
-            $table->tinyInteger('status')->default(false);
-            $table->tinyInteger('late')->default(false);
+            $table->tinyInteger('attendance_type')->default(false);
             $table->string('user_name')->nullable();
             $table->integer('finger_id')->nullable();
-            $table->timestamps();
-            
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->tinyInteger('late')->default(false);
+            $table->tinyInteger('status')->default(false);
+            $table->timestamps();
         });
     }
 

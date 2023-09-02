@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
             $table->string('serial_no')->nullable();
             $table->integer('reference_id')->nullable();
-
             $table->unsignedBigInteger('reference_type_id');
             $table->foreign('reference_type_id')->references('id')->on('reference_types')->onDelete('cascade');
             $table->unsignedBigInteger('mast_item_register_id');
@@ -26,8 +25,8 @@ return new class extends Migration
             $table->foreign('mast_work_station_id')->references('id')->on('mast_work_stations')->onDelete('cascade');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->tinyInteger('status')->default(true);
             $table->date('out_date')->nullable();
+            $table->tinyInteger('status')->default(true);
             $table->timestamps();
         });
     }

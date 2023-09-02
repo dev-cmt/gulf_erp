@@ -538,9 +538,9 @@
             </div>
         </div>
     </div>
-
-
-    <script>
+    @push('script')
+    <!--____________// CURD OPARATION \\____________-->
+    <script type="text/javascript">
         $(document).ready(function(){
             //---Save Data
             var form = '#add-user-form';
@@ -741,5 +741,5 @@
             });
         });
     </script>
-
+    @endpush
 </x-app-layout>

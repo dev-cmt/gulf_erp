@@ -18,21 +18,22 @@ return new class extends Migration
             $table->integer('box_code')->nullable();
             $table->integer('gulf_code')->nullable();
             $table->string('part_no')->nullable();
-            $table->text('description')->nullable();
             $table->integer('box_qty')->nullable();
             $table->decimal('price', 8, 2)->nullable();
             $table->string('image')->nullable();
             $table->integer('warranty')->nullable();
             $table->integer('cat_id')->nullable();
             $table->string('bar_code')->nullable();
-            $table->timestamps();
+            $table->text('description')->nullable();
 
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('mast_item_group_id');
             $table->foreign('mast_item_group_id')->references('id')->on('mast_item_groups')->onDelete('cascade');
             $table->unsignedBigInteger('unit_id');
             $table->foreign('unit_id')->references('id')->on('mast_units')->onDelete('cascade');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->tinyInteger('status')->default(true);
+            $table->timestamps();
         });
     }
 

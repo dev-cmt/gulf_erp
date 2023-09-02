@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 4.9.7
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Aug 31, 2023 at 07:35 AM
--- Server version: 10.4.27-MariaDB
--- PHP Version: 8.1.12
+-- Host: localhost:3306
+-- Generation Time: Aug 31, 2023 at 01:34 AM
+-- Server version: 10.3.39-MariaDB-cll-lve
+-- PHP Version: 7.4.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -18,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `gulf_erp`
+-- Database: `erpiconisl_gulf`
 --
 
 -- --------------------------------------------------------
@@ -31,14 +32,10 @@ CREATE TABLE `complaints` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `issue_date` date DEFAULT NULL,
   `issue_no` varchar(255) DEFAULT NULL,
-  `with_warranty` tinyint(4) NOT NULL DEFAULT 0,
-  `note` text DEFAULT NULL,
   `remarks` text DEFAULT NULL,
-  `mast_complaint_type_id` bigint(20) UNSIGNED NOT NULL,
-  `delivery_id` bigint(20) UNSIGNED NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 0,
   `mast_customer_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -51,14 +48,9 @@ CREATE TABLE `complaints` (
 
 CREATE TABLE `complaint_details` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `task_name` varchar(255) DEFAULT NULL,
-  `task_date` date DEFAULT NULL,
-  `next_date` tinyint(4) NOT NULL DEFAULT 0,
-  `observe` text DEFAULT NULL,
-  `remarks` text DEFAULT NULL,
-  `emp_id` bigint(20) UNSIGNED NOT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
   `status` tinyint(4) NOT NULL DEFAULT 0,
+  `delivery_id` int(11) DEFAULT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -75,12 +67,12 @@ CREATE TABLE `deliveries` (
   `deli_date` date DEFAULT NULL,
   `warranty` int(10) UNSIGNED NOT NULL DEFAULT 0,
   `price` decimal(8,2) DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 0,
+  `from_store` int(11) DEFAULT NULL,
   `sales_id` bigint(20) UNSIGNED NOT NULL,
-  `mast_customer_id` bigint(20) UNSIGNED NOT NULL,
   `mast_work_station_id` bigint(20) UNSIGNED NOT NULL,
   `mast_item_register_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -229,16 +221,16 @@ CREATE TABLE `hr_attendances` (
   `date` date DEFAULT NULL,
   `in_time` time DEFAULT NULL,
   `out_time` time DEFAULT NULL,
+  `attendance_type` tinyint(4) NOT NULL DEFAULT 0,
   `location` text DEFAULT NULL,
   `description` text DEFAULT NULL,
-  `attendance_type` tinyint(4) NOT NULL DEFAULT 0,
+  `status` tinyint(4) NOT NULL DEFAULT 0,
+  `late` tinyint(4) NOT NULL DEFAULT 0,
   `user_name` varchar(255) DEFAULT NULL,
   `finger_id` int(11) DEFAULT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
-  `late` tinyint(4) NOT NULL DEFAULT 0,
-  `status` tinyint(4) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -249,17 +241,17 @@ CREATE TABLE `hr_attendances` (
 
 CREATE TABLE `hr_leave_applications` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `purpose` text DEFAULT NULL,
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
   `leave_contact` varchar(255) DEFAULT NULL,
   `leave_location` varchar(255) DEFAULT NULL,
-  `mast_leave_id` bigint(20) UNSIGNED NOT NULL,
-  `emp_id` bigint(20) UNSIGNED NOT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
-  `status` int(11) NOT NULL DEFAULT 0,
+  `purpose` text DEFAULT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `mast_leave_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `emp_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -275,11 +267,11 @@ CREATE TABLE `info_banks` (
   `acount_name` varchar(255) DEFAULT NULL,
   `acount_no` int(11) DEFAULT NULL,
   `acount_type` int(11) DEFAULT NULL,
-  `emp_id` bigint(20) UNSIGNED NOT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
   `status` tinyint(4) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `emp_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -295,23 +287,23 @@ CREATE TABLE `info_educationals` (
   `passing_year` date DEFAULT NULL,
   `out_of` int(11) DEFAULT NULL,
   `grade` double(8,2) DEFAULT 0.00,
-  `emp_id` bigint(20) UNSIGNED NOT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
   `status` tinyint(4) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `emp_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `info_educationals`
 --
 
-INSERT INTO `info_educationals` (`id`, `qualification`, `institute_name`, `passing_year`, `out_of`, `grade`, `emp_id`, `user_id`, `status`, `created_at`, `updated_at`) VALUES
-(1, 2, 'Valuka Govt. Collage', '2020-01-01', NULL, 4.00, 12, 1, 1, '2023-08-01 22:17:07', '2023-08-01 22:17:07'),
-(2, 4, 'World University of Bangladesh', '2014-01-01', NULL, 3.00, 13, 1, 1, '2023-08-05 02:22:30', '2023-08-05 02:22:30'),
-(3, 2, 'Gov. Shahid Suhrawardi College, Dhaka.', '2014-01-01', NULL, 3.40, 15, 1, 1, '2023-08-06 23:32:20', '2023-08-06 23:32:20'),
-(4, 2, 'Dhaka Udyan Gov. College', '2019-01-01', NULL, 3.00, 16, 1, 1, '2023-08-07 23:50:42', '2023-08-07 23:50:42'),
-(5, 4, 'Gov. Titumir College', '2013-01-01', NULL, 3.00, 17, 1, 1, '2023-08-08 00:03:56', '2023-08-08 00:03:56');
+INSERT INTO `info_educationals` (`id`, `qualification`, `institute_name`, `passing_year`, `out_of`, `grade`, `status`, `created_at`, `updated_at`, `user_id`, `emp_id`) VALUES
+(1, 2, 'Valuka Govt. Collage', '2020-01-01', NULL, 4.00, 1, '2023-08-02 10:17:07', '2023-08-02 10:17:07', 1, 5),
+(2, 4, 'World University of Bangladesh', '2014-01-01', NULL, 3.00, 1, '2023-08-05 14:22:30', '2023-08-05 14:22:30', 1, 6),
+(3, 2, 'Gov. Shahid Suhrawardi College, Dhaka.', '2014-01-01', NULL, 3.40, 1, '2023-08-07 11:32:20', '2023-08-07 11:32:20', 1, 9),
+(4, 2, 'Dhaka Udyan Gov. College', '2019-01-01', NULL, 3.00, 1, '2023-08-08 11:50:42', '2023-08-08 11:50:42', 1, 10),
+(5, 4, 'Gov. Titumir College', '2013-01-01', NULL, 3.00, 1, '2023-08-08 12:03:56', '2023-08-08 12:03:56', 1, 11);
 
 -- --------------------------------------------------------
 
@@ -327,11 +319,11 @@ CREATE TABLE `info_nominees` (
   `mobile_no` varchar(255) DEFAULT NULL,
   `nominee_percentage` int(11) DEFAULT NULL,
   `profile_image` varchar(255) DEFAULT NULL,
-  `emp_id` bigint(20) UNSIGNED NOT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
   `status` tinyint(4) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `emp_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -367,8 +359,8 @@ CREATE TABLE `info_personals` (
   `thana_permanent` varchar(255) DEFAULT NULL,
   `post_code_permanent` int(11) DEFAULT NULL,
   `address_permanent` varchar(255) DEFAULT NULL,
-  `passport_no` varchar(255) DEFAULT NULL,
-  `driving_license` varchar(255) DEFAULT NULL,
+  `passport_no` varchar(20) DEFAULT NULL,
+  `driving_license` varchar(20) DEFAULT NULL,
   `marital_status` int(11) DEFAULT NULL,
   `house_phone` varchar(255) DEFAULT NULL,
   `father_name` varchar(255) DEFAULT NULL,
@@ -378,29 +370,30 @@ CREATE TABLE `info_personals` (
   `emg_phone_number` varchar(255) DEFAULT NULL,
   `emg_relationship` varchar(255) DEFAULT NULL,
   `emg_address` text DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 1,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
   `mast_department_id` bigint(20) UNSIGNED NOT NULL,
   `mast_designation_id` bigint(20) UNSIGNED NOT NULL,
   `mast_employee_type_id` bigint(20) UNSIGNED NOT NULL,
   `mast_work_station_id` bigint(20) UNSIGNED NOT NULL,
-  `emp_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 1,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `emp_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `info_personals`
 --
 
-INSERT INTO `info_personals` (`id`, `date_of_birth`, `employee_gender`, `nid_no`, `blood_group`, `number_official`, `email_official`, `joining_date`, `service_length`, `gross_salary`, `reporting_boss`, `is_reporting_boss`, `division_present`, `district_present`, `upazila_present`, `union_present`, `thana_present`, `post_code_present`, `address_present`, `division_permanent`, `district_permanent`, `upazila_permanent`, `union_permanent`, `thana_permanent`, `post_code_permanent`, `address_permanent`, `passport_no`, `driving_license`, `marital_status`, `house_phone`, `father_name`, `mother_name`, `birth_certificate_no`, `emg_person_name`, `emg_phone_number`, `emg_relationship`, `emg_address`, `mast_department_id`, `mast_designation_id`, `mast_employee_type_id`, `mast_work_station_id`, `emp_id`, `user_id`, `status`, `created_at`, `updated_at`) VALUES
-(1, '2001-01-01', 0, '7363434569', 3, NULL, NULL, '2021-12-12', NULL, 12500, NULL, 1, 6, 47, 492, 4557, 'Badda', 1212, 'Shahid Hasan Uddin Road (Old Thana Road), North Badda, Badda.', 6, 44, 344, 3096, 'Dhanbari', 1997, 'Baroipara, Ukhariya Bari.', NULL, NULL, 0, NULL, 'Md. Rayhan Uddin', 'Sumi Khatun', NULL, 'MD.Rayhan Uddin', '01632618877', 'Father', NULL, 3, 20, 1, 1, 12, 1, 1, '2023-08-01 22:15:12', '2023-08-01 22:15:12'),
-(2, '1992-01-08', 0, '1497818664', 5, '01768227788', 'gulfservice121@gmail.com', '2017-12-05', NULL, 24000, NULL, 1, 6, 46, 360, 3231, 'Manikgonj', 1802, NULL, 6, 46, 360, 3231, 'Manikgonj', 1802, NULL, NULL, NULL, 1, NULL, 'Md. Malek Mia', 'Hajera Begum', NULL, 'Md. Emon', '01721406285', 'Elder Brother', 'Gultia, Mulzam, Manikgonj.', 2, 10, 1, 1, 13, 1, 1, '2023-08-05 02:20:41', '2023-08-05 02:20:41'),
-(3, '1995-11-25', 0, '2406520086', 5, NULL, NULL, '2007-05-01', NULL, 14000, NULL, 1, 6, 46, 361, 3241, 'Gior', 1800, 'Vill: East Kosonda, P.O: Pecharkanda.', 6, 47, 492, 4548, 'Gulshan', 1212, 'Gulf Staff Quotar', NULL, NULL, 1, NULL, 'Md. Tajomddin', 'Mrs. Mohila', NULL, 'Tahiya', '01922-595983', 'Daughter', NULL, 3, 21, 1, 1, 14, 1, 1, '2023-08-06 21:57:25', '2023-08-06 21:57:25'),
-(4, '1996-07-01', 0, '2840825307', 5, '01709927554', NULL, '2014-11-26', NULL, 14000, NULL, 1, 6, 51, 389, 3563, 'Batikmari', 8141, 'Holding- Shekh Bari, Vill- Batikmari', 6, 47, 492, 4548, 'Gulshan', 1212, 'Gulf Staff Quater', NULL, NULL, 0, NULL, 'Md. Jafor Shekh', 'Rojiya Begum', NULL, 'Md. Faruk Khondokar', '01711538759', 'Mothernel Unkel (Mama)', 'R-04, H-42, B-E, Banasree, Dhaka.', 2, 12, 1, 1, 15, 1, 1, '2023-08-06 23:31:24', '2023-08-06 23:31:24'),
-(5, '2001-11-05', 0, '6011975114', 5, NULL, NULL, '2022-01-01', NULL, 10000, NULL, 1, 6, 47, 365, 3282, 'Amin Bazar.', 1348, 'Vill- Begunbari, P.O- Aminbazar.', 6, 47, 492, 4548, 'Gulshan', 1212, 'GSQ', NULL, NULL, 0, NULL, 'Md. Humayon Kabir', 'Mrs. Taslima Begum', NULL, 'Md. Mosharraf', '01557304169', 'Brother (Contact No Confermation)', 'Begunbari, Aminbazar, Savar, Dhaka-1348', 4, 12, 1, 1, 16, 1, 1, '2023-08-07 23:49:55', '2023-08-07 23:49:55'),
-(6, '1989-12-31', 0, '19895614623172738', 3, NULL, NULL, '2009-01-01', NULL, 14000, NULL, 1, 1, 1, 9, 107, 'Muradnagar', 3545, 'Vill- kodalkata, P.O- Pak Gazipur.', 6, 47, 492, 4548, 'Gulshan', 1212, 'GSQ', NULL, NULL, 1, NULL, 'Joynal Abedin', 'Ranuara Begum', NULL, 'Abdul Alim', '01711843395', 'Brother', 'Gultiya, Muljan, Manikgonj.', 7, 12, 1, 1, 17, 1, 1, '2023-08-08 00:02:44', '2023-08-08 00:02:44'),
-(7, '2004-01-01', 0, '4214670061', NULL, NULL, NULL, '2022-02-26', NULL, 8500, NULL, 1, 1, 6, 56, 518, 'Motlab.', 3602, 'Holding- Hamid Ali Miji Bari, Vill- Digholdi, P.O- Munsirhat.', 6, 47, 492, 4548, 'Gulshan', 1212, 'GSQ', NULL, NULL, 0, NULL, 'Billal Hosen', 'Shahanara', NULL, 'Md. Riyad Hossain', '01886453570', 'Elder Brother', 'Hamid Ali Miji Bari, Motlab Dokkhin, Chandpur (Same as Permanent Address)', 2, 16, 1, 1, 18, 1, 1, '2023-08-08 00:51:33', '2023-08-08 00:51:33');
+INSERT INTO `info_personals` (`id`, `date_of_birth`, `employee_gender`, `nid_no`, `blood_group`, `number_official`, `email_official`, `joining_date`, `service_length`, `gross_salary`, `reporting_boss`, `is_reporting_boss`, `division_present`, `district_present`, `upazila_present`, `union_present`, `thana_present`, `post_code_present`, `address_present`, `division_permanent`, `district_permanent`, `upazila_permanent`, `union_permanent`, `thana_permanent`, `post_code_permanent`, `address_permanent`, `passport_no`, `driving_license`, `marital_status`, `house_phone`, `father_name`, `mother_name`, `birth_certificate_no`, `emg_person_name`, `emg_phone_number`, `emg_relationship`, `emg_address`, `status`, `created_at`, `updated_at`, `mast_department_id`, `mast_designation_id`, `mast_employee_type_id`, `mast_work_station_id`, `user_id`, `emp_id`) VALUES
+(1, '2002-01-01', 0, '25745545458', 3, '0195275932', 'motiur@gulf.com', '2022-11-01', 2, 15000, 0, 1, 6, 42, 322, 2887, NULL, NULL, 'Khilgoan, Domshar, Shariatpur', 6, 42, 322, 2887, NULL, NULL, 'Khilgoan, Domshar, Shariatpur', '1185344689', '415441482', 0, '01922437143', 'Mosharraf Khan', 'Shilpy Begum', 20222145678938, 'Sagour', '01995275933', 'Brother', 'Shariatpur', 1, '2023-07-24 03:22:54', '2023-07-24 03:22:54', 1, 5, 2, 2, 1, 1),
+(2, '2001-01-01', 0, '7363434569', 3, NULL, NULL, '2021-12-12', NULL, 12500, NULL, 1, 6, 47, 492, 4557, 'Badda', 1212, 'Shahid Hasan Uddin Road (Old Thana Road), North Badda, Badda.', 6, 44, 344, 3096, 'Dhanbari', 1997, 'Baroipara, Ukhariya Bari.', NULL, NULL, 0, NULL, 'Md. Rayhan Uddin', 'Sumi Khatun', NULL, 'MD.Rayhan Uddin', '01632618877', 'Father', NULL, 1, '2023-08-02 10:15:12', '2023-08-02 10:15:12', 3, 27, 1, 1, 1, 5),
+(3, '1992-01-08', 0, '1497818664', 5, '01768227788', 'gulfservice121@gmail.com', '2017-12-05', NULL, 24000, NULL, 1, 6, 46, 360, 3231, 'Manikgonj', 1802, NULL, 6, 46, 360, 3231, 'Manikgonj', 1802, NULL, NULL, NULL, 1, NULL, 'Md. Malek Mia', 'Hajera Begum', NULL, 'Md. Emon', '01721406285', 'Elder Brother', 'Gultia, Mulzam, Manikgonj.', 1, '2023-08-05 14:20:41', '2023-08-05 14:20:41', 2, 10, 1, 1, 1, 6),
+(4, '1995-11-25', 0, '2406520086', 5, NULL, NULL, '2007-05-01', NULL, 14000, NULL, 1, 6, 46, 361, 3241, 'Gior', 1800, 'Vill: East Kosonda, P.O: Pecharkanda.', 6, 47, 492, 4548, 'Gulshan', 1212, 'Gulf Staff Quotar', NULL, NULL, 1, NULL, 'Md. Tajomddin', 'Mrs. Mohila', NULL, 'Tahiya', '01922-595983', 'Daughter', NULL, 1, '2023-08-07 09:57:25', '2023-08-07 09:57:25', 3, 21, 1, 1, 1, 7),
+(5, '1996-07-01', 0, '2840825307', 5, '01709927554', NULL, '2014-11-26', NULL, 14000, NULL, 1, 6, 51, 389, 3563, 'Batikmari', 8141, 'Holding- Shekh Bari, Vill- Batikmari', 6, 47, 492, 4548, 'Gulshan', 1212, 'Gulf Staff Quater', NULL, NULL, 0, NULL, 'Md. Jafor Shekh', 'Rojiya Begum', NULL, 'Md. Faruk Khondokar', '01711538759', 'Mothernel Unkel (Mama)', 'R-04, H-42, B-E, Banasree, Dhaka.', 1, '2023-08-07 11:31:24', '2023-08-07 11:31:24', 2, 12, 1, 1, 1, 9),
+(6, '2001-11-05', 0, '6011975114', 5, NULL, NULL, '2022-01-01', NULL, 10000, NULL, 1, 6, 47, 365, 3282, 'Amin Bazar.', 1348, 'Vill- Begunbari, P.O- Aminbazar.', 6, 47, 492, 4548, 'Gulshan', 1212, 'GSQ', NULL, NULL, 0, NULL, 'Md. Humayon Kabir', 'Mrs. Taslima Begum', NULL, 'Md. Mosharraf', '01557304169', 'Brother (Contact No Confermation)', 'Begunbari, Aminbazar, Savar, Dhaka-1348', 1, '2023-08-08 11:49:55', '2023-08-08 11:49:55', 4, 12, 1, 1, 1, 10),
+(7, '1989-12-31', 0, '19895614623172738', 3, NULL, NULL, '2009-01-01', NULL, 14000, NULL, 1, 1, 1, 9, 107, 'Muradnagar', 3545, 'Vill- kodalkata, P.O- Pak Gazipur.', 6, 47, 492, 4548, 'Gulshan', 1212, 'GSQ', NULL, NULL, 1, NULL, 'Joynal Abedin', 'Ranuara Begum', NULL, 'Abdul Alim', '01711843395', 'Brother', 'Gultiya, Muljan, Manikgonj.', 1, '2023-08-08 12:02:44', '2023-08-08 12:02:44', 7, 12, 1, 1, 1, 11),
+(8, '2004-01-01', 0, '4214670061', NULL, NULL, NULL, '2022-02-26', NULL, 8500, NULL, 1, 1, 6, 56, 518, 'Motlab.', 3602, 'Holding- Hamid Ali Miji Bari, Vill- Digholdi, P.O- Munsirhat.', 6, 47, 492, 4548, 'Gulshan', 1212, 'GSQ', NULL, NULL, 0, NULL, 'Billal Hosen', 'Shahanara', NULL, 'Md. Riyad Hossain', '01886453570', 'Elder Brother', 'Hamid Ali Miji Bari, Motlab Dokkhin, Chandpur (Same as Permanent Address)', 1, '2023-08-08 12:51:33', '2023-08-08 12:51:33', 2, 16, 1, 1, 1, 12);
 
 -- --------------------------------------------------------
 
@@ -415,37 +408,21 @@ CREATE TABLE `info_work_experiences` (
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
   `job_description` text DEFAULT NULL,
-  `emp_id` bigint(20) UNSIGNED NOT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
   `status` tinyint(4) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `emp_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `info_work_experiences`
 --
 
-INSERT INTO `info_work_experiences` (`id`, `company_name`, `designation`, `start_date`, `end_date`, `job_description`, `emp_id`, `user_id`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Paramount Insurance Company ltd.', 'Underwriting Officer', '2018-04-01', '2021-11-24', NULL, 12, 1, 1, '2023-08-01 18:19:30', '2023-08-01 18:19:30'),
-(2, 'Prama Group', 'Production Engineer', '2014-05-01', '2017-01-01', NULL, 13, 1, 1, '2023-08-04 22:24:04', '2023-08-04 22:24:04'),
-(3, 'National Board Revinue (NBR)', 'Data Entry Officer', '2017-01-01', '2022-12-05', NULL, 16, 1, 1, '2023-08-07 19:51:41', '2023-08-07 19:51:41');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `mast_complaint_types`
---
-
-CREATE TABLE `mast_complaint_types` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `description` text DEFAULT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 0,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+INSERT INTO `info_work_experiences` (`id`, `company_name`, `designation`, `start_date`, `end_date`, `job_description`, `status`, `created_at`, `updated_at`, `user_id`, `emp_id`) VALUES
+(1, 'Paramount Insurance Company ltd.', 'Underwriting Officer', '2018-04-01', '2021-11-24', NULL, 1, '2023-08-02 10:19:30', '2023-08-02 10:19:30', 1, 5),
+(2, 'Prama Group', 'Production Engineer', '2014-05-01', '2017-01-01', NULL, 1, '2023-08-05 14:24:04', '2023-08-05 14:24:04', 1, 6),
+(3, 'National Board Revinue (NBR)', 'Data Entry Officer', '2017-01-01', '2022-12-05', NULL, 1, '2023-08-08 11:51:41', '2023-08-08 11:51:41', 1, 10);
 
 -- --------------------------------------------------------
 
@@ -466,23 +443,12 @@ CREATE TABLE `mast_customers` (
   `web_address` text DEFAULT NULL,
   `credit_limit` int(11) DEFAULT NULL,
   `remarks` text DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 0,
   `mast_customer_type_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `mast_customers`
---
-
-INSERT INTO `mast_customers` (`id`, `name`, `email`, `phone`, `address`, `cont_person`, `cont_designation`, `cont_phone`, `cont_email`, `web_address`, `credit_limit`, `remarks`, `mast_customer_type_id`, `user_id`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Motiur Rahman', 'tayfa@gmail.com', '01913954378', 'Shariatpur', 'Sagour Khan', 'Teacher', '01922437143', 'sagour@gmail.com', '', 1000000, 'Test Only', 1, 1, 1, '2023-08-30 23:16:05', '2023-08-30 23:16:05'),
-(2, 'Sabbir', 'tayfa@gmail.com', '01913954378', 'Shariatpur', 'Alam Khan', 'Teacher', '01922437143', 'sagour@gmail.com', '', 1000000, 'Test Only', 1, 1, 1, '2023-08-30 23:16:05', '2023-08-30 23:16:05'),
-(3, 'Minhaz', 'tayfa@gmail.com', '01913954378', 'Shariatpur', 'Sagour Khan', 'Teacher', '01922437143', 'tamim@gmail.com', '', 1000000, 'Test Only', 1, 1, 1, '2023-08-30 23:16:05', '2023-08-30 23:16:05'),
-(4, 'Tamim', 'tayfa@gmail.com', '01913954378', 'Shariatpur', 'Motiur Khan', 'Teacher', '01922437143', 'sagour@gmail.com', '', 1000000, 'Test Only', 2, 1, 1, '2023-08-30 23:16:06', '2023-08-30 23:16:06'),
-(5, 'Tayfa Islam', 'tayfa@gmail.com', '01913954378', 'Shariatpur', 'Sagour Khan', 'Teacher', '01922437143', 'koli@gmail.com', '', 1000000, 'Test Only', 3, 1, 1, '2023-08-30 23:16:06', '2023-08-30 23:16:06');
 
 -- --------------------------------------------------------
 
@@ -498,15 +464,6 @@ CREATE TABLE `mast_customer_types` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `mast_customer_types`
---
-
-INSERT INTO `mast_customer_types` (`id`, `name`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Corporate', 1, '2023-08-30 23:16:05', '2023-08-30 23:16:05'),
-(2, 'Distributer', 1, '2023-08-30 23:16:05', '2023-08-30 23:16:05'),
-(3, 'Retailer', 1, '2023-08-30 23:16:05', '2023-08-30 23:16:05');
-
 -- --------------------------------------------------------
 
 --
@@ -516,26 +473,26 @@ INSERT INTO `mast_customer_types` (`id`, `name`, `status`, `created_at`, `update
 CREATE TABLE `mast_departments` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `dept_name` varchar(255) DEFAULT NULL,
-  `dept_head` bigint(20) UNSIGNED DEFAULT NULL,
+  `dept_head` int(11) NOT NULL DEFAULT 0,
   `description` text DEFAULT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
   `status` int(11) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `mast_departments`
 --
 
-INSERT INTO `mast_departments` (`id`, `dept_name`, `dept_head`, `description`, `user_id`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Air Condition Sales', 1, NULL, 1, 1, '2023-08-30 23:15:54', '2023-08-30 23:15:54'),
-(2, 'Air Condition Service', 1, NULL, 1, 1, '2023-08-30 23:15:54', '2023-08-30 23:15:54'),
-(3, 'HR & Admin', 1, NULL, 1, 1, '2023-08-30 23:15:54', '2023-08-30 23:15:54'),
-(4, 'Car Spear Parts', 1, NULL, 1, 1, '2023-08-30 23:15:54', '2023-08-30 23:15:54'),
-(5, 'Store', 1, NULL, 1, 1, '2023-08-30 23:15:55', '2023-08-30 23:15:55'),
-(6, 'Wear House', 1, NULL, 1, 1, '2023-08-30 23:15:55', '2023-08-30 23:15:55'),
-(7, 'Accounts & Finnance', 1, NULL, 1, 1, '2023-08-30 23:15:55', '2023-08-30 23:15:55');
+INSERT INTO `mast_departments` (`id`, `dept_name`, `dept_head`, `description`, `status`, `created_at`, `updated_at`, `user_id`) VALUES
+(1, 'Air Condition Sales', 1, NULL, 1, '2023-07-30 11:22:09', '2023-07-30 11:22:09', 1),
+(2, 'Air Condition Service', 1, NULL, 1, '2023-07-30 11:23:19', '2023-07-30 11:23:19', 1),
+(3, 'HR & Admin', 1, NULL, 1, '2023-07-30 11:24:01', '2023-07-30 11:24:01', 1),
+(4, 'Car Spear Parts', 1, NULL, 1, '2023-07-30 11:24:41', '2023-07-30 11:24:41', 1),
+(5, 'Store', 1, NULL, 1, '2023-07-30 11:25:32', '2023-07-30 11:25:32', 1),
+(6, 'Wear House', 1, NULL, 1, '2023-07-30 11:26:07', '2023-07-30 11:26:07', 1),
+(7, 'Accounts & Finnance', 1, NULL, 1, '2023-07-30 11:27:41', '2023-07-30 11:27:41', 1);
 
 -- --------------------------------------------------------
 
@@ -547,42 +504,44 @@ CREATE TABLE `mast_designations` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `desig_name` varchar(255) DEFAULT NULL,
   `description` text DEFAULT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
   `status` int(11) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `mast_designations`
 --
 
-INSERT INTO `mast_designations` (`id`, `desig_name`, `description`, `user_id`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'G.M (Sales & Admin)', NULL, 1, 1, '2023-08-30 23:15:55', '2023-08-30 23:15:55'),
-(2, 'AGM Finance & Accounts', NULL, 1, 1, '2023-08-30 23:15:55', '2023-08-30 23:15:55'),
-(3, 'Jr. Manager', NULL, 1, 1, '2023-08-30 23:15:55', '2023-08-30 23:15:55'),
-(4, 'Executive Officer (Sales & Service)', NULL, 1, 1, '2023-08-30 23:15:55', '2023-08-30 23:15:55'),
-(5, 'Sales Excecutive', NULL, 1, 1, '2023-08-30 23:15:55', '2023-08-30 23:15:55'),
-(6, 'Manager Sales', NULL, 1, 1, '2023-08-30 23:15:55', '2023-08-30 23:15:55'),
-(7, 'Sr. Manager Sales', NULL, 1, 1, '2023-08-30 23:15:55', '2023-08-30 23:15:55'),
-(8, 'General Manager (Commercial Division)', NULL, 1, 1, '2023-08-30 23:15:56', '2023-08-30 23:15:56'),
-(9, 'Managing Director', NULL, 1, 1, '2023-08-30 23:15:56', '2023-08-30 23:15:56'),
-(10, 'Head of Engineer (Service Section)', NULL, 1, 1, '2023-08-30 23:15:56', '2023-08-30 23:15:56'),
-(11, 'A.G.M Sales', NULL, 1, 1, '2023-08-30 23:15:56', '2023-08-30 23:15:56'),
-(12, 'Excecutive (Accounts)', NULL, 1, 1, '2023-08-30 23:15:56', '2023-08-30 23:15:56'),
-(13, 'Tecnichian', NULL, 1, 1, '2023-08-30 23:15:56', '2023-08-30 23:15:56'),
-(14, 'Director', NULL, 1, 1, '2023-08-30 23:15:56', '2023-08-30 23:15:56'),
-(15, 'Store In-Charge', NULL, 1, 1, '2023-08-30 23:15:56', '2023-08-30 23:15:56'),
-(16, 'Helper', NULL, 1, 1, '2023-08-30 23:15:56', '2023-08-30 23:15:56'),
-(17, 'Security', NULL, 1, 1, '2023-08-30 23:15:56', '2023-08-30 23:15:56'),
-(18, 'Store Keper', NULL, 1, 1, '2023-08-30 23:15:56', '2023-08-30 23:15:56'),
-(19, 'Electronics Tec.', NULL, 1, 1, '2023-08-30 23:15:56', '2023-08-30 23:15:56'),
-(20, 'Service Supervisor (Sr. Tec)', NULL, 1, 1, '2023-08-30 23:15:56', '2023-08-30 23:15:56'),
-(21, 'Peon', NULL, 1, 1, '2023-08-30 23:15:56', '2023-08-30 23:15:56'),
-(22, 'Welding Technician', NULL, 1, 1, '2023-08-30 23:15:57', '2023-08-30 23:15:57'),
-(23, 'Driver', NULL, 1, 1, '2023-08-30 23:15:57', '2023-08-30 23:15:57'),
-(24, 'Security In-charge', NULL, 1, 1, '2023-08-30 23:15:57', '2023-08-30 23:15:57'),
-(25, 'Imam', NULL, 1, 1, '2023-08-30 23:15:57', '2023-08-30 23:15:57');
+INSERT INTO `mast_designations` (`id`, `desig_name`, `description`, `status`, `created_at`, `updated_at`, `user_id`) VALUES
+(1, 'G.M (Sales & Admin)', NULL, 1, '2023-07-30 11:34:10', '2023-07-30 11:34:10', 1),
+(2, 'AGM Finance & Accounts', NULL, 1, '2023-07-30 11:34:56', '2023-07-30 11:35:38', 1),
+(3, 'Jr. Manager', NULL, 1, '2023-07-30 11:36:06', '2023-07-30 11:36:06', 1),
+(4, 'Executive Officer (Sales & Service)', NULL, 1, '2023-07-30 11:36:55', '2023-07-30 11:37:19', 1),
+(5, 'Sales Excecutive', NULL, 1, '2023-07-30 11:39:00', '2023-07-30 11:39:00', 1),
+(6, 'Manager Sales', NULL, 1, '2023-07-30 11:40:30', '2023-07-30 11:40:30', 1),
+(7, 'Sr. Manager Sales', NULL, 1, '2023-07-30 11:41:16', '2023-07-30 11:41:16', 1),
+(8, 'General Manager (Commercial Division)', NULL, 1, '2023-07-30 11:41:44', '2023-07-30 11:41:44', 1),
+(9, 'Managing Director', NULL, 1, '2023-07-30 11:42:21', '2023-07-30 11:47:15', 1),
+(10, 'Head of Engineer (Service Section)', NULL, 1, '2023-07-30 11:42:22', '2023-07-30 11:42:22', 1),
+(11, 'A.G.M Sales', NULL, 1, '2023-07-30 11:42:57', '2023-07-30 11:42:57', 1),
+(12, 'Excecutive (Accounts)', NULL, 1, '2023-07-30 11:43:34', '2023-07-30 11:43:34', 1),
+(13, 'Tecnichian', NULL, 1, '2023-07-30 11:44:50', '2023-07-30 11:44:50', 1),
+(14, 'Director', NULL, 1, '2023-07-30 11:47:38', '2023-07-30 11:47:38', 1),
+(15, 'Store In-Charge', NULL, 1, '2023-07-30 11:48:08', '2023-07-30 11:48:08', 1),
+(16, 'Helper', NULL, 1, '2023-07-30 11:48:37', '2023-07-30 11:48:37', 1),
+(17, 'Security', NULL, 1, '2023-07-30 11:49:01', '2023-07-30 11:49:01', 1),
+(18, 'Store Keper', NULL, 1, '2023-07-30 11:51:26', '2023-07-30 11:51:26', 1),
+(19, 'Electronics Tec.', NULL, 1, '2023-07-30 11:51:46', '2023-07-30 11:51:46', 1),
+(20, 'Service Supervisor (Sr. Tec)', NULL, 1, '2023-07-30 11:52:11', '2023-07-30 11:52:11', 1),
+(21, 'Peon', NULL, 1, '2023-07-30 11:52:31', '2023-07-30 11:52:31', 1),
+(22, 'Welding Technician', NULL, 1, '2023-07-30 11:52:55', '2023-07-30 11:52:55', 1),
+(23, 'Driver', NULL, 1, '2023-07-30 11:53:20', '2023-07-30 11:53:20', 1),
+(24, 'Security In-charge', NULL, 1, '2023-07-30 11:53:59', '2023-07-30 11:53:59', 1),
+(25, 'Imam', NULL, 1, '2023-07-30 11:54:20', '2023-07-30 11:54:20', 1),
+(26, 'Chef', NULL, 1, '2023-07-30 11:56:49', '2023-07-30 11:56:49', 1),
+(27, 'Computer Oparetor', NULL, 1, '2023-07-30 11:57:35', '2023-07-30 11:57:35', 1);
 
 -- --------------------------------------------------------
 
@@ -595,23 +554,19 @@ CREATE TABLE `mast_employee_types` (
   `cat_name` varchar(255) DEFAULT NULL,
   `cat_type` varchar(255) DEFAULT NULL,
   `description` text DEFAULT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
   `status` int(11) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `mast_employee_types`
 --
 
-INSERT INTO `mast_employee_types` (`id`, `cat_name`, `cat_type`, `description`, `user_id`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Full-Time', '1', 'These are employees who work for the company on a regular basis and are typically paid a salary or an hourly wage. They may be eligible for benefits such as health insurance, retirement plans, and paid time off.', 1, 1, '2023-08-30 23:15:57', '2023-08-30 23:15:57'),
-(2, 'Half-Time', '1', 'These are employees who work for the company on a part-time basis, usually less than 40 hours per week. They may be paid an hourly wage and may or may not be eligible for benefits depending on the company policies.', 1, 1, '2023-08-30 23:15:57', '2023-08-30 23:15:57'),
-(3, 'Contract', '1', 'These are individuals who work for the company on a temporary basis and are usually hired to perform a specific job or task. They may be paid a flat fee or an hourly rate and are typically not eligible for benefits.', 1, 1, '2023-08-30 23:15:57', '2023-08-30 23:15:57'),
-(4, 'Interns', '1', 'These are students or recent graduates who work for the company on a temporary basis to gain work experience and develop skills. They may be paid a stipend or may work for free, and are typically not eligible for benefits.', 1, 1, '2023-08-30 23:15:57', '2023-08-30 23:15:57'),
-(5, 'Consultants', '1', 'These are individuals or firms who are hired by the company to provide specialized expertise or services on a project basis. They may be paid a flat fee or an hourly rate and are typically not eligible for benefits.', 1, 1, '2023-08-30 23:15:57', '2023-08-30 23:15:57'),
-(6, 'Seasonal Employees', '1', 'These are employees who work for the company during specific times of the year when there is a higher demand for the companys products or services. They may be paid an hourly wage and may or may not be eligible for benefits depending on the companys policies.', 1, 1, '2023-08-30 23:15:57', '2023-08-30 23:15:57');
+INSERT INTO `mast_employee_types` (`id`, `cat_name`, `cat_type`, `description`, `status`, `created_at`, `updated_at`, `user_id`) VALUES
+(1, 'Full-Time', '1', NULL, 1, '2023-07-30 12:14:08', '2023-07-30 12:14:08', 1),
+(2, 'Half-Time', '1', NULL, 1, '2023-07-30 12:14:33', '2023-07-30 12:14:33', 1);
 
 -- --------------------------------------------------------
 
@@ -623,21 +578,11 @@ CREATE TABLE `mast_item_categories` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `cat_name` varchar(255) DEFAULT NULL,
   `description` text DEFAULT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
   `status` tinyint(4) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `mast_item_categories`
---
-
-INSERT INTO `mast_item_categories` (`id`, `cat_name`, `description`, `user_id`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'AC', '', 1, 1, '2023-08-30 23:16:02', '2023-08-30 23:16:02'),
-(2, 'AC Spare Parts', '', 1, 1, '2023-08-30 23:16:02', '2023-08-30 23:16:02'),
-(3, 'Car Spare Parts', '', 1, 1, '2023-08-30 23:16:02', '2023-08-30 23:16:02'),
-(4, 'Tools Requisition', '', 1, 1, '2023-08-30 23:16:02', '2023-08-30 23:16:02');
 
 -- --------------------------------------------------------
 
@@ -649,29 +594,12 @@ CREATE TABLE `mast_item_groups` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `part_name` varchar(255) DEFAULT NULL,
   `description` text DEFAULT NULL,
-  `mast_item_category_id` bigint(20) UNSIGNED NOT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
   `status` tinyint(4) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `mast_item_category_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `mast_item_groups`
---
-
-INSERT INTO `mast_item_groups` (`id`, `part_name`, `description`, `mast_item_category_id`, `user_id`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Window Air Conditioners', '', 1, 1, 1, '2023-08-30 23:16:02', '2023-08-30 23:16:02'),
-(2, 'Split Air Conditioners', '', 1, 1, 1, '2023-08-30 23:16:02', '2023-08-30 23:16:02'),
-(3, 'Central Air Conditioning', '', 1, 1, 1, '2023-08-30 23:16:02', '2023-08-30 23:16:02'),
-(4, 'ARM BUSHING', '', 3, 1, 1, '2023-08-30 23:16:03', '2023-08-30 23:16:03'),
-(5, 'SUSPENSION BUSH', '', 3, 1, 1, '2023-08-30 23:16:03', '2023-08-30 23:16:03'),
-(6, 'REAR SUSPENSION BUSH', '', 3, 1, 1, '2023-08-30 23:16:03', '2023-08-30 23:16:03'),
-(7, 'SPRIN SHACKLE BUSH', '', 3, 1, 1, '2023-08-30 23:16:03', '2023-08-30 23:16:03'),
-(8, 'SHOCK ABSORBER BUSH', '', 3, 1, 1, '2023-08-30 23:16:03', '2023-08-30 23:16:03'),
-(9, 'SUPRING SHACKLE RUBBER', '', 3, 1, 1, '2023-08-30 23:16:03', '2023-08-30 23:16:03'),
-(10, 'UP ARM BUSHING', '', 3, 1, 1, '2023-08-30 23:16:04', '2023-08-30 23:16:04'),
-(11, 'FONT LOWER ARM BUSH', '', 3, 1, 1, '2023-08-30 23:16:04', '2023-08-30 23:16:04');
 
 -- --------------------------------------------------------
 
@@ -684,29 +612,19 @@ CREATE TABLE `mast_item_registers` (
   `box_code` int(11) DEFAULT NULL,
   `gulf_code` int(11) DEFAULT NULL,
   `part_no` varchar(255) DEFAULT NULL,
+  `description` text DEFAULT NULL,
   `box_qty` int(11) DEFAULT NULL,
   `price` decimal(8,2) DEFAULT NULL,
   `image` varchar(255) DEFAULT NULL,
   `warranty` int(11) DEFAULT NULL,
   `cat_id` int(11) DEFAULT NULL,
   `bar_code` varchar(255) DEFAULT NULL,
-  `description` text DEFAULT NULL,
-  `mast_item_group_id` bigint(20) UNSIGNED NOT NULL,
-  `unit_id` bigint(20) UNSIGNED NOT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `mast_item_group_id` bigint(20) UNSIGNED NOT NULL,
+  `unit_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `mast_item_registers`
---
-
-INSERT INTO `mast_item_registers` (`id`, `box_code`, `gulf_code`, `part_no`, `box_qty`, `price`, `image`, `warranty`, `cat_id`, `bar_code`, `description`, `mast_item_group_id`, `unit_id`, `user_id`, `status`, `created_at`, `updated_at`) VALUES
-(1, 5, 2, '1178598', 12, '7500.00', '', 12, 1, '97049180517', 'Test Only1', 1, 6, 1, 1, '2023-08-30 23:16:04', '2023-08-30 23:16:04'),
-(2, 5, 2, '1278598', 12, '9500.00', '', 12, 1, '97049180517', 'Test Only2', 1, 6, 1, 1, '2023-08-30 23:16:04', '2023-08-30 23:16:04'),
-(3, 9, 7, '1078598', 16, '10000.00', '', 12, 2, '98049180517', 'Test Only3', 2, 8, 1, 1, '2023-08-30 23:16:04', '2023-08-30 23:16:04');
 
 -- --------------------------------------------------------
 
@@ -721,23 +639,23 @@ CREATE TABLE `mast_leaves` (
   `max_limit` int(11) DEFAULT NULL,
   `yearly_limit` int(11) DEFAULT NULL,
   `description` text DEFAULT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
   `status` int(11) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `mast_leaves`
 --
 
-INSERT INTO `mast_leaves` (`id`, `leave_name`, `leave_code`, `max_limit`, `yearly_limit`, `description`, `user_id`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Personal Leave', '01', 5, 2, 'N/A', 1, 1, '2023-08-30 23:15:58', '2023-08-30 23:15:58'),
-(2, 'Sick Leave', '02', 20, 3, 'N/A', 1, 1, '2023-08-30 23:15:58', '2023-08-30 23:15:58'),
-(3, 'Casual', '03', 10, 2, 'N/A', 1, 1, '2023-08-30 23:15:58', '2023-08-30 23:15:58'),
-(4, 'Vacation leave (Annual leave)', '04', 6, 1, 'N/A', 1, 1, '2023-08-30 23:15:58', '2023-08-30 23:15:58'),
-(5, 'Unpaid leave (or leave without pay)', '05', 3, 5, 'N/A', 1, 1, '2023-08-30 23:15:58', '2023-08-30 23:15:58'),
-(6, 'Study leave', '06', 40, 2, 'N/A', 1, 1, '2023-08-30 23:15:58', '2023-08-30 23:15:58');
+INSERT INTO `mast_leaves` (`id`, `leave_name`, `leave_code`, `max_limit`, `yearly_limit`, `description`, `status`, `created_at`, `updated_at`, `user_id`) VALUES
+(1, 'Personal Reason', '01', 5, 2, NULL, 1, '2023-07-30 12:03:02', '2023-07-30 12:10:34', 1),
+(2, 'Sick', '02', 20, 3, NULL, 1, '2023-07-30 12:03:49', '2023-07-30 12:03:49', 1),
+(3, 'Casual', '03', 10, 2, NULL, 1, '2023-07-30 12:05:08', '2023-07-30 12:05:08', 1),
+(4, 'Vacation leave (Annual leave)', '04', 6, 1, NULL, 1, '2023-07-30 12:05:09', '2023-07-30 12:07:13', 1),
+(5, 'Unpaid leave (or leave without pay)', '05', 3, 5, NULL, 1, '2023-07-30 12:08:36', '2023-07-30 12:08:36', 1),
+(6, 'Study leave', '06', 40, 2, NULL, 1, '2023-07-30 12:09:56', '2023-07-30 12:09:56', 1);
 
 -- --------------------------------------------------------
 
@@ -750,28 +668,11 @@ CREATE TABLE `mast_packages` (
   `pkg_name` varchar(255) DEFAULT NULL,
   `pkg_size` int(11) DEFAULT NULL,
   `description` text DEFAULT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
   `status` tinyint(4) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `mast_packages`
---
-
-INSERT INTO `mast_packages` (`id`, `pkg_name`, `pkg_size`, `description`, `user_id`, `status`, `created_at`, `updated_at`) VALUES
-(1, '1 X 1', 1, '', 1, 1, '2023-08-30 23:15:59', '2023-08-30 23:15:59'),
-(2, '1 X 4', 4, '', 1, 1, '2023-08-30 23:15:59', '2023-08-30 23:15:59'),
-(3, '1 X 6', 6, '', 1, 1, '2023-08-30 23:15:59', '2023-08-30 23:15:59'),
-(4, '1 X 8', 8, '', 1, 1, '2023-08-30 23:15:59', '2023-08-30 23:15:59'),
-(5, '1 X 10', 10, '', 1, 1, '2023-08-30 23:15:59', '2023-08-30 23:15:59'),
-(6, '1 X 12', 12, '', 1, 1, '2023-08-30 23:15:59', '2023-08-30 23:15:59'),
-(7, '1 X 16', 16, '', 1, 1, '2023-08-30 23:15:59', '2023-08-30 23:15:59'),
-(8, '1 X 20', 20, '', 1, 1, '2023-08-30 23:15:59', '2023-08-30 23:15:59'),
-(9, '1 X 24', 24, '', 1, 1, '2023-08-30 23:15:59', '2023-08-30 23:15:59'),
-(10, '1 X 36', 36, '', 1, 1, '2023-08-30 23:16:00', '2023-08-30 23:16:00'),
-(11, '1 X 48', 48, '', 1, 1, '2023-08-30 23:16:00', '2023-08-30 23:16:00');
 
 -- --------------------------------------------------------
 
@@ -786,20 +687,11 @@ CREATE TABLE `mast_suppliers` (
   `email` varchar(255) DEFAULT NULL,
   `phone_number` varchar(255) DEFAULT NULL,
   `address` text DEFAULT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
   `status` tinyint(4) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `mast_suppliers`
---
-
-INSERT INTO `mast_suppliers` (`id`, `supplier_name`, `contact_person`, `email`, `phone_number`, `address`, `user_id`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Alam', 'Sagour Khan', 'alam@gmail.com', '01995275933', 'Shariatpur', 1, 1, '2023-08-30 23:16:04', '2023-08-30 23:16:04'),
-(2, 'Sabbir', 'Sagour Khan', 'sabbir@gmail.com', '01995275933', 'Shariatpur', 1, 1, '2023-08-30 23:16:04', '2023-08-30 23:16:04'),
-(3, 'Minhaz', 'Sagour Khan', 'minhaz@gmail.com', '01995275933', 'Shariatpur', 1, 1, '2023-08-30 23:16:04', '2023-08-30 23:16:04');
 
 -- --------------------------------------------------------
 
@@ -811,32 +703,12 @@ CREATE TABLE `mast_units` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `unit_name` varchar(255) DEFAULT NULL,
   `description` text DEFAULT NULL,
-  `mast_item_category_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `mast_item_category_id` int(11) DEFAULT NULL,
   `status` tinyint(4) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `mast_units`
---
-
-INSERT INTO `mast_units` (`id`, `unit_name`, `description`, `mast_item_category_id`, `user_id`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Milligram (mg)', 'Weight/Mass', 1, 1, 1, '2023-08-30 23:16:00', '2023-08-30 23:16:00'),
-(2, 'Gram (g)', 'Weight/Mass', 1, 1, 1, '2023-08-30 23:16:00', '2023-08-30 23:16:00'),
-(3, 'Kilogram (kg)', 'Weight/Mass', 1, 1, 1, '2023-08-30 23:16:00', '2023-08-30 23:16:00'),
-(4, 'Metric Ton (MT)', 'Weight/Mass', 1, 1, 1, '2023-08-30 23:16:00', '2023-08-30 23:16:00'),
-(5, 'Ounce (oz)', 'Weight/Mass', 1, 1, 1, '2023-08-30 23:16:01', '2023-08-30 23:16:01'),
-(6, 'Pound (lb)', 'Weight/Mass', 1, 1, 1, '2023-08-30 23:16:01', '2023-08-30 23:16:01'),
-(7, 'Square Meter (m²)', 'Area', 1, 1, 1, '2023-08-30 23:16:01', '2023-08-30 23:16:01'),
-(8, 'Square Foot (sq ft)', 'Area', 1, 1, 1, '2023-08-30 23:16:01', '2023-08-30 23:16:01'),
-(9, 'Acre (ac)', 'Area', 1, 1, 1, '2023-08-30 23:16:01', '2023-08-30 23:16:01'),
-(10, 'Square Kilometer (sq km)', 'Area', 1, 1, 1, '2023-08-30 23:16:01', '2023-08-30 23:16:01'),
-(11, 'Piece (pcs)', 'Count', 1, 1, 1, '2023-08-30 23:16:01', '2023-08-30 23:16:01'),
-(12, 'Dozen (doz)', 'Count', 1, 1, 1, '2023-08-30 23:16:01', '2023-08-30 23:16:01'),
-(13, 'Pack (pk)', 'Count', 1, 1, 1, '2023-08-30 23:16:01', '2023-08-30 23:16:01'),
-(14, 'Set (set)', 'Count', 1, 1, 1, '2023-08-30 23:16:01', '2023-08-30 23:16:01');
 
 -- --------------------------------------------------------
 
@@ -850,20 +722,18 @@ CREATE TABLE `mast_work_stations` (
   `contact_number` varchar(255) DEFAULT NULL,
   `location` text DEFAULT NULL,
   `description` text DEFAULT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
   `status` tinyint(4) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `mast_work_stations`
 --
 
-INSERT INTO `mast_work_stations` (`id`, `store_name`, `contact_number`, `location`, `description`, `user_id`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Central Storehouse', '01995275933', 'Gulshan', 'This is time off that a female employee can take before and after childbirth. Maternity leave may be paid or unpaid, depending on the company policies.', 1, 1, '2023-08-30 23:15:58', '2023-08-30 23:15:58'),
-(2, 'Gulf international associates ltd.', '01995275933', 'Gulshan', 'This is time off that a female employee can take before and after childbirth. Maternity leave may be paid or unpaid, depending on the company policies.', 1, 1, '2023-08-30 23:15:58', '2023-08-30 23:15:58'),
-(3, 'Icon information Systems ltd.', '01995275933', 'Mirpur', 'This is time off that a female employee can take before and after childbirth. Maternity leave may be paid or unpaid, depending on the company policies.', 1, 1, '2023-08-30 23:15:58', '2023-08-30 23:15:58');
+INSERT INTO `mast_work_stations` (`id`, `store_name`, `contact_number`, `location`, `description`, `status`, `created_at`, `updated_at`, `user_id`) VALUES
+(1, 'Central Storehouse', '01909302126', 'Gulshan', 'Test Only', 1, '2023-08-02 15:27:28', '2023-08-02 15:27:23', 1);
 
 -- --------------------------------------------------------
 
@@ -903,30 +773,28 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (19, '2022_09_08_043933_create_mast_suppliers_table', 1),
 (20, '2022_09_08_043934_create_mast_customer_types_table', 1),
 (21, '2022_09_08_043935_create_mast_customers_table', 1),
-(22, '2022_09_08_043936_create_mast_complaint_types_table', 1),
-(23, '2023_04_16_081138_create_info_personals_table', 1),
-(24, '2023_04_27_063610_create_info_educationals_table', 1),
-(25, '2023_04_27_063611_create_info_work_experiences_table', 1),
-(26, '2023_04_27_063612_create_info_banks_table', 1),
-(27, '2023_04_27_063613_create_info_nominees_table', 1),
-(28, '2023_04_30_034227_create_hr_leave_applications_table', 1),
-(29, '2023_05_07_045208_create_hr_attendances_table', 1),
-(30, '2023_05_15_052417_create_purchases_table', 1),
-(31, '2023_05_17_053821_create_purchase_details_table', 1),
-(32, '2023_06_05_104849_create_quotations_table', 1),
-(33, '2023_06_05_104850_create_quotation_details_table', 1),
-(34, '2023_06_05_104851_create_sales_table', 1),
-(35, '2023_06_05_115459_create_sales_details_table', 1),
-(36, '2023_07_09_083700_create_store_transfers_table', 1),
-(37, '2023_07_09_101840_create_store_transfer_details_table', 1),
-(38, '2023_07_09_101841_create_deliveries_table', 1),
-(39, '2023_07_16_083217_create_sales_returns_table', 1),
-(40, '2023_07_16_093835_create_sales_return_details_table', 1),
-(41, '2023_07_24_085305_create_complaints_table', 1),
-(42, '2023_07_24_091704_create_complaint_details_table', 1),
-(43, '2023_08_08_062121_create_reference_types_table', 1),
-(44, '2023_08_09_052658_create_sl_movements_table', 1),
-(45, '2023_08_10_063321_create_setups_table', 1);
+(22, '2023_04_16_081138_create_info_personals_table', 1),
+(23, '2023_04_27_063610_create_info_educationals_table', 1),
+(24, '2023_04_27_063611_create_info_work_experiences_table', 1),
+(25, '2023_04_27_063612_create_info_banks_table', 1),
+(26, '2023_04_27_063613_create_info_nominees_table', 1),
+(27, '2023_04_30_034227_create_hr_leave_applications_table', 1),
+(28, '2023_05_07_045208_create_hr_attendances_table', 1),
+(29, '2023_05_15_052417_create_purchases_table', 1),
+(30, '2023_05_17_053821_create_purchase_details_table', 1),
+(31, '2023_06_05_104849_create_quotations_table', 1),
+(32, '2023_06_05_104850_create_quotation_details_table', 1),
+(33, '2023_06_05_104851_create_sales_table', 1),
+(34, '2023_06_05_115459_create_sales_details_table', 1),
+(35, '2023_07_09_083700_create_store_transfers_table', 1),
+(36, '2023_07_09_101840_create_store_transfer_details_table', 1),
+(37, '2023_07_09_101841_create_deliveries_table', 1),
+(38, '2023_07_16_083217_create_sales_returns_table', 1),
+(39, '2023_07_16_093835_create_sales_return_details_table', 1),
+(40, '2023_07_24_085305_create_complaints_table', 1),
+(41, '2023_07_24_091704_create_complaint_details_table', 1),
+(42, '2023_08_08_062121_create_reference_types_table', 1),
+(43, '2023_08_09_052658_create_sl_movements_table', 1);
 
 -- --------------------------------------------------------
 
@@ -957,8 +825,7 @@ CREATE TABLE `model_has_roles` (
 --
 
 INSERT INTO `model_has_roles` (`role_id`, `model_type`, `model_id`) VALUES
-(1, 'App\\Models\\User', 1),
-(2, 'App\\Models\\User', 2);
+(1, 'App\\Models\\User', 1);
 
 -- --------------------------------------------------------
 
@@ -991,56 +858,25 @@ CREATE TABLE `permissions` (
 --
 
 INSERT INTO `permissions` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VALUES
-(1, 'Super-Admin', 'web', '2023-08-30 23:15:40', '2023-08-30 23:15:40'),
-(2, 'Admin', 'web', '2023-08-30 23:15:41', '2023-08-30 23:15:41'),
-(3, 'Moderator', 'web', '2023-08-30 23:15:41', '2023-08-30 23:15:41'),
-(4, 'Manager', 'web', '2023-08-30 23:15:41', '2023-08-30 23:15:41'),
-(5, 'Supervisor', 'web', '2023-08-30 23:15:41', '2023-08-30 23:15:41'),
-(6, 'Employee', 'web', '2023-08-30 23:15:41', '2023-08-30 23:15:41'),
-(7, 'Viewer', 'web', '2023-08-30 23:15:41', '2023-08-30 23:15:41'),
-(8, 'Editor', 'web', '2023-08-30 23:15:41', '2023-08-30 23:15:41'),
-(9, 'Customer', 'web', '2023-08-30 23:15:41', '2023-08-30 23:15:41'),
-(10, 'Sales', 'web', '2023-08-30 23:15:42', '2023-08-30 23:15:42'),
-(11, 'Support', 'web', '2023-08-30 23:15:42', '2023-08-30 23:15:42'),
-(12, 'Developer', 'web', '2023-08-30 23:15:42', '2023-08-30 23:15:42'),
-(13, 'Analyst', 'web', '2023-08-30 23:15:42', '2023-08-30 23:15:42'),
-(14, 'Tester', 'web', '2023-08-30 23:15:42', '2023-08-30 23:15:42'),
-(15, 'Guest', 'web', '2023-08-30 23:15:42', '2023-08-30 23:15:42'),
-(16, 'Marketing', 'web', '2023-08-30 23:15:42', '2023-08-30 23:15:42'),
-(17, 'Finance', 'web', '2023-08-30 23:15:43', '2023-08-30 23:15:43'),
-(18, 'HR', 'web', '2023-08-30 23:15:43', '2023-08-30 23:15:43'),
-(19, 'Hr access', 'web', '2023-08-30 23:15:43', '2023-08-30 23:15:43'),
-(20, 'Inventory access', 'web', '2023-08-30 23:15:43', '2023-08-30 23:15:43'),
-(21, 'Sales access', 'web', '2023-08-30 23:15:43', '2023-08-30 23:15:43'),
-(22, 'Warrenty access', 'web', '2023-08-30 23:15:43', '2023-08-30 23:15:43'),
-(23, 'Employee access', 'web', '2023-08-30 23:15:43', '2023-08-30 23:15:43'),
-(24, 'Employee create', 'web', '2023-08-30 23:15:44', '2023-08-30 23:15:44'),
-(25, 'Employee edit', 'web', '2023-08-30 23:15:44', '2023-08-30 23:15:44'),
-(26, 'Employee delete', 'web', '2023-08-30 23:15:44', '2023-08-30 23:15:44'),
-(27, 'Leave access', 'web', '2023-08-30 23:15:44', '2023-08-30 23:15:44'),
-(28, 'Leave create', 'web', '2023-08-30 23:15:44', '2023-08-30 23:15:44'),
-(29, 'Leave edit', 'web', '2023-08-30 23:15:45', '2023-08-30 23:15:45'),
-(30, 'Leave delete', 'web', '2023-08-30 23:15:45', '2023-08-30 23:15:45'),
-(31, 'Attendance access', 'web', '2023-08-30 23:15:45', '2023-08-30 23:15:45'),
-(32, 'Attendance create', 'web', '2023-08-30 23:15:45', '2023-08-30 23:15:45'),
-(33, 'Attendance edit', 'web', '2023-08-30 23:15:45', '2023-08-30 23:15:45'),
-(34, 'Attendance delete', 'web', '2023-08-30 23:15:45', '2023-08-30 23:15:45'),
-(35, 'Salary access', 'web', '2023-08-30 23:15:45', '2023-08-30 23:15:45'),
-(36, 'Salary create', 'web', '2023-08-30 23:15:45', '2023-08-30 23:15:45'),
-(37, 'Salary edit', 'web', '2023-08-30 23:15:46', '2023-08-30 23:15:46'),
-(38, 'Salary delete', 'web', '2023-08-30 23:15:46', '2023-08-30 23:15:46'),
-(39, 'Hr setting access', 'web', '2023-08-30 23:15:46', '2023-08-30 23:15:46'),
-(40, 'Inventory setting access', 'web', '2023-08-30 23:15:46', '2023-08-30 23:15:46'),
-(41, 'Sales setting access', 'web', '2023-08-30 23:15:47', '2023-08-30 23:15:47'),
-(42, 'Warrenty setting access', 'web', '2023-08-30 23:15:47', '2023-08-30 23:15:47'),
-(43, 'User access', 'web', '2023-08-30 23:15:47', '2023-08-30 23:15:47'),
-(44, 'User create', 'web', '2023-08-30 23:15:47', '2023-08-30 23:15:47'),
-(45, 'User edit', 'web', '2023-08-30 23:15:47', '2023-08-30 23:15:47'),
-(46, 'User delete', 'web', '2023-08-30 23:15:47', '2023-08-30 23:15:47'),
-(47, 'Role access', 'web', '2023-08-30 23:15:47', '2023-08-30 23:15:47'),
-(48, 'Role create', 'web', '2023-08-30 23:15:47', '2023-08-30 23:15:47'),
-(49, 'Role edit', 'web', '2023-08-30 23:15:47', '2023-08-30 23:15:47'),
-(50, 'Role delete', 'web', '2023-08-30 23:15:47', '2023-08-30 23:15:47');
+(1, 'Setting access', 'web', '2023-07-24 03:22:39', '2023-07-24 03:22:39'),
+(2, 'Pages access', 'web', '2023-07-24 03:22:39', '2023-07-24 03:22:39'),
+(3, 'Gallery access', 'web', '2023-07-24 03:22:39', '2023-07-24 03:22:39'),
+(4, 'Gallery create', 'web', '2023-07-24 03:22:40', '2023-07-24 03:22:40'),
+(5, 'Gallery edit', 'web', '2023-07-24 03:22:40', '2023-07-24 03:22:40'),
+(6, 'Gallery delete', 'web', '2023-07-24 03:22:40', '2023-07-24 03:22:40'),
+(7, 'Member access', 'web', '2023-07-24 03:22:40', '2023-07-24 03:22:40'),
+(8, 'Approve Member', 'web', '2023-07-24 03:22:40', '2023-07-24 03:22:40'),
+(9, 'Member create', 'web', '2023-07-24 03:22:40', '2023-07-24 03:22:40'),
+(10, 'Member edit', 'web', '2023-07-24 03:22:40', '2023-07-24 03:22:40'),
+(11, 'Member delete', 'web', '2023-07-24 03:22:41', '2023-07-24 03:22:41'),
+(12, 'User access', 'web', '2023-07-24 03:22:41', '2023-07-24 03:22:41'),
+(13, 'User create', 'web', '2023-07-24 03:22:41', '2023-07-24 03:22:41'),
+(14, 'User edit', 'web', '2023-07-24 03:22:41', '2023-07-24 03:22:41'),
+(15, 'User delete', 'web', '2023-07-24 03:22:41', '2023-07-24 03:22:41'),
+(16, 'Role access', 'web', '2023-07-24 03:22:42', '2023-07-24 03:22:42'),
+(17, 'Role create', 'web', '2023-07-24 03:22:42', '2023-07-24 03:22:42'),
+(18, 'Role edit', 'web', '2023-07-24 03:22:42', '2023-07-24 03:22:42'),
+(19, 'Role delete', 'web', '2023-07-24 03:22:42', '2023-07-24 03:22:42');
 
 -- --------------------------------------------------------
 
@@ -1071,15 +907,16 @@ CREATE TABLE `purchases` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `inv_date` date DEFAULT NULL,
   `inv_no` varchar(255) DEFAULT NULL,
+  `lc_no` varchar(255) DEFAULT NULL,
   `vat` double(8,2) DEFAULT 0.00,
   `tax` double(8,2) DEFAULT 0.00,
   `remarks` text DEFAULT NULL,
-  `mast_item_category_id` bigint(20) UNSIGNED NOT NULL,
+  `mast_item_category_id` int(11) DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 0,
+  `is_parsial` tinyint(4) NOT NULL DEFAULT 0,
   `mast_work_station_id` bigint(20) UNSIGNED NOT NULL,
   `mast_supplier_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `is_parsial` tinyint(4) NOT NULL DEFAULT 0,
-  `status` tinyint(4) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1095,11 +932,11 @@ CREATE TABLE `purchase_details` (
   `qty` int(11) DEFAULT NULL,
   `price` decimal(8,2) DEFAULT NULL,
   `rcv_qty` int(11) DEFAULT NULL,
-  `mast_item_category_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `cat_id` bigint(20) DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 1,
   `purchase_id` bigint(20) UNSIGNED NOT NULL,
   `mast_item_register_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1112,16 +949,17 @@ CREATE TABLE `purchase_details` (
 
 CREATE TABLE `quotations` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `quot_date` date DEFAULT NULL,
-  `quot_no` varchar(255) DEFAULT NULL,
+  `offer_date` date DEFAULT NULL,
+  `ref_no` varchar(255) DEFAULT NULL,
+  `order_no` varchar(255) DEFAULT NULL,
+  `order_date` date DEFAULT NULL,
   `vat` double(8,2) DEFAULT 0.00,
   `tax` double(8,2) DEFAULT 0.00,
   `remarks` text DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 0,
   `mast_item_category_id` bigint(20) UNSIGNED NOT NULL,
   `mast_customer_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `is_sales` tinyint(4) NOT NULL DEFAULT 0,
-  `status` tinyint(4) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1136,11 +974,10 @@ CREATE TABLE `quotation_details` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `qty` int(11) DEFAULT NULL,
   `price` decimal(8,2) DEFAULT NULL,
-  `mast_item_category_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 1,
   `quotation_id` bigint(20) UNSIGNED NOT NULL,
   `mast_item_register_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1164,10 +1001,10 @@ CREATE TABLE `reference_types` (
 --
 
 INSERT INTO `reference_types` (`id`, `name`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Purchase', 1, '2023-08-30 23:16:06', '2023-08-30 23:16:06'),
-(2, 'Sales', 1, '2023-08-30 23:16:06', '2023-08-30 23:16:06'),
-(3, 'Store Transfer', 1, '2023-08-30 23:16:06', '2023-08-30 23:16:06'),
-(4, 'Sales Return', 1, '2023-08-30 23:16:07', '2023-08-30 23:16:07');
+(1, 'Purchase', 1, '2023-07-24 03:22:47', '2023-07-24 03:22:47'),
+(2, 'Sales', 1, '2023-07-24 03:22:47', '2023-07-24 03:22:47'),
+(3, 'Store Transfer', 1, '2023-07-24 03:22:47', '2023-07-24 03:22:47'),
+(4, 'Sales Return', 1, '2023-07-24 03:22:48', '2023-07-24 03:22:48');
 
 -- --------------------------------------------------------
 
@@ -1188,8 +1025,9 @@ CREATE TABLE `roles` (
 --
 
 INSERT INTO `roles` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VALUES
-(1, 'Super-Admin', 'web', '2023-08-30 23:15:48', '2023-08-30 23:15:48'),
-(2, 'Admin', 'web', '2023-08-30 23:15:48', '2023-08-30 23:15:48');
+(1, 'Supper-Admin', 'web', '2023-07-24 03:22:38', '2023-07-24 03:22:38'),
+(2, 'Admin', 'web', '2023-07-24 03:22:38', '2023-07-24 03:22:38'),
+(3, 'Member', 'web', '2023-07-24 03:22:39', '2023-07-24 03:22:39');
 
 -- --------------------------------------------------------
 
@@ -1209,8 +1047,8 @@ CREATE TABLE `role_has_permissions` (
 INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
 (1, 1),
 (2, 1),
-(2, 2),
 (3, 1),
+(3, 3),
 (4, 1),
 (5, 1),
 (6, 1),
@@ -1226,38 +1064,7 @@ INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
 (16, 1),
 (17, 1),
 (18, 1),
-(19, 1),
-(20, 1),
-(21, 1),
-(22, 1),
-(23, 1),
-(24, 1),
-(25, 1),
-(26, 1),
-(27, 1),
-(28, 1),
-(29, 1),
-(30, 1),
-(31, 1),
-(32, 1),
-(33, 1),
-(34, 1),
-(35, 1),
-(36, 1),
-(37, 1),
-(38, 1),
-(39, 1),
-(40, 1),
-(41, 1),
-(42, 1),
-(43, 1),
-(44, 1),
-(45, 1),
-(46, 1),
-(47, 1),
-(48, 1),
-(49, 1),
-(50, 1);
+(19, 1);
 
 -- --------------------------------------------------------
 
@@ -1269,19 +1076,16 @@ CREATE TABLE `sales` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `inv_date` date DEFAULT NULL,
   `inv_no` varchar(255) DEFAULT NULL,
-  `ref_date` date DEFAULT NULL,
-  `ref_name` varchar(255) DEFAULT NULL,
   `vat` double(8,2) DEFAULT 0.00,
   `tax` double(8,2) DEFAULT 0.00,
-  `total` decimal(8,2) DEFAULT NULL,
   `remarks` text DEFAULT NULL,
-  `quotation_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 0,
+  `is_parsial` tinyint(4) NOT NULL DEFAULT 0,
+  `is_return` tinyint(4) NOT NULL DEFAULT 0,
+  `quotation_id` int(11) DEFAULT NULL,
   `mast_item_category_id` bigint(20) UNSIGNED NOT NULL,
   `mast_customer_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `is_parsial` tinyint(4) NOT NULL DEFAULT 0,
-  `is_return` tinyint(4) NOT NULL DEFAULT 0,
-  `status` tinyint(4) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1297,11 +1101,11 @@ CREATE TABLE `sales_details` (
   `qty` int(11) DEFAULT NULL,
   `price` decimal(8,2) DEFAULT NULL,
   `deli_qty` int(11) DEFAULT NULL,
-  `mast_item_category_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `cat_id` bigint(20) DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 1,
   `sales_id` bigint(20) UNSIGNED NOT NULL,
   `mast_item_register_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1317,12 +1121,12 @@ CREATE TABLE `sales_returns` (
   `return_no` varchar(255) DEFAULT NULL,
   `return_date` date DEFAULT NULL,
   `remarks` text DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 0,
+  `is_parsial` tinyint(4) NOT NULL DEFAULT 0,
   `from_store_id` int(11) DEFAULT NULL,
   `mast_work_station_id` bigint(20) UNSIGNED NOT NULL,
   `sales_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `is_parsial` tinyint(4) NOT NULL DEFAULT 0,
-  `status` tinyint(4) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1338,10 +1142,10 @@ CREATE TABLE `sales_return_details` (
   `qty` int(11) DEFAULT NULL,
   `price` decimal(8,2) DEFAULT NULL,
   `rcv_qty` int(11) DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 1,
   `sales_return_id` bigint(20) UNSIGNED NOT NULL,
   `mast_item_register_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1361,26 +1165,34 @@ CREATE TABLE `sessions` (
   `last_activity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- --------------------------------------------------------
-
 --
--- Table structure for table `setups`
+-- Dumping data for table `sessions`
 --
 
-CREATE TABLE `setups` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `install_technician` int(11) DEFAULT NULL,
-  `services_technician` int(11) DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `setups`
---
-
-INSERT INTO `setups` (`id`, `install_technician`, `services_technician`, `created_at`, `updated_at`) VALUES
-(1, 10, 9, '2023-08-30 23:16:06', '2023-08-30 23:16:06');
+INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
+('0tbStPnx6DkK4DiTtmVLefzvmn5uwDayU6yRMWUz', NULL, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', 'YToyOntzOjY6Il90b2tlbiI7czo0MDoiZjlSZWladUZYTTluRXkxQ0w5dXA0eUVWanp5a25KNU1rd1dLSVhDbCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1693286325),
+('2oNKvGdTPqVqIpEidhz9moGudDEEYbqNlapmoccp', NULL, '23.101.112.233', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiSzB2UlR1akkyWXdBMFNzU0h5VEJXeElOWGVCUWFVSXdseUR5MEtPOCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjI6Imh0dHA6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1693329024),
+('5yMGmj946eqpwVoAk9CMFZqBwoYUYOqyA83T4x2I', NULL, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', 'YToyOntzOjY6Il90b2tlbiI7czo0MDoid0JoS3oxNFRacWJsUUdEUUNOS20yaXlrMDNnT2E3UTlSRzNKOFU5TCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1693286284),
+('6tMNwXlxz5qswt8WWU90j7nHA62dFtuBKSgMgM1H', NULL, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', 'YToyOntzOjY6Il90b2tlbiI7czo0MDoid2lWNzYzSzVlcVYxWFFsc1JZVG9rQ2c3Z2J3VDFuckJldDVVQWg0biI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1693286194),
+('7cGnGbsCBLluYuyC2LKlRDqGi7fdfCvRchaIuEP2', NULL, '172.176.103.76', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiM29YTlFZS1ZRc25FaUlxSU1rMWlVc3V0dU9JZlpvaUZBeERaQ0J2UCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjI6Imh0dHA6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1693458065),
+('aSSZIJtApEqfTw1v5f2yJ2rb9HNP2qRaDt7s3yQG', NULL, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', 'YToyOntzOjY6Il90b2tlbiI7czo0MDoiQTdEajhoQ1lMWTdWYlc1VURDV2tDWXlXN0hqZXVzVmd1aGc3R0J6VSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1693286040),
+('eI3Hx6hr3rYAXAgIvYyqERGJb2ivs4tc29fB7VpL', NULL, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiaUt6OE1NVXlaYzhHak5JZVBZNHRIVEtKbXF1VlFKcURiSFhsbHJqeSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjg6Imh0dHA6Ly9lcnAuaWNvbmlzbC5jb20vbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1693286267),
+('f1eaIow6Khd59A6S2NxlSiXaXg5lm7ntmrz3mRnJ', NULL, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', 'YToyOntzOjY6Il90b2tlbiI7czo0MDoiWFg5RlZNN1RSOHFHUHgzc0pnZHU4dUw0SnVsdGpzTU9lMmlYbklhUSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1693286145),
+('HPQehri3tkpBEaFnU8YyUI2wIgj7WPRRxFWNAUCO', NULL, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiWjF2OVNNY3U2aVYxbGNySTBzRGk2eXpsTGhlRWNvazNINDhMa0dtYyI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czozMjoiaHR0cDovL2VycC5pY29uaXNsLmNvbS9kYXNoYm9hcmQiO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czozMjoiaHR0cDovL2VycC5pY29uaXNsLmNvbS9kYXNoYm9hcmQiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1693286188),
+('j1G5pAxkQAe5J7Q8IfSbwBPiZPUCS73L3YnSZiZB', NULL, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiOXFHRjdRR2RvVnJDTlFPaTV5bEt0Z0JpbWFUeEZmakNYcUZOdHQzRSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjg6Imh0dHA6Ly9lcnAuaWNvbmlzbC5jb20vbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1693286171),
+('O7BwiLuGGcD76asyMj6mDky6udcy3xb9jttEEbVh', NULL, '183.136.225.45', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoieXV1YVBpeDRDQUJscWhTN0tYY01qOENFQjlndkIxb2hQNGRZeXJMMSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjI6Imh0dHA6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1693418638),
+('qdqM3lFmKqS1srwrcbm8AEM9c2cOqAzZw84CgwnB', NULL, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiYmphNmxyY2ZPOTlCaWlOUkdCQ2pMVnE1RXF1TnNvcHdERVBKRDRvVCI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0NzoiaHR0cDovL2VycC5pY29uaXNsLmNvbS9lbXBsb3llZS9yZWdpc3Rlci9jcmVhdGUiO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czo0NzoiaHR0cDovL2VycC5pY29uaXNsLmNvbS9lbXBsb3llZS9yZWdpc3Rlci9jcmVhdGUiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1693286170),
+('re5xmGPqVBVfyznsr0n2KXneTtR4sgN3KUSqIh44', NULL, '173.249.27.178', 'Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:63.0) Gecko/20100101 Firefox/63.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiZUlaSmRxUGU1YjNBYVZacG93U0d3Y0ZzZmllcUtGdG9QVjVyMjF2biI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjI6Imh0dHA6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1693370212),
+('RkHNX0ZiuVEo67z61aie3oM89JH4zKnjwKLIHd8G', NULL, '43.250.82.231', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoidnlhcHhJMlNmcDF0S3N1SGJGN2lHRDA5WUo4UFRTVFVOVU5vMDQwViI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czozMjoiaHR0cDovL2VycC5pY29uaXNsLmNvbS9kYXNoYm9hcmQiO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czoyODoiaHR0cDovL2VycC5pY29uaXNsLmNvbS9sb2dpbiI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1693285841),
+('u9VMnSP4pZB06xEnQQI9NKIapJ202CnQhkQYE45a', NULL, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', 'YToyOntzOjY6Il90b2tlbiI7czo0MDoiZTRJdTVvSTdsVmJKbDdNS0huOGg3QjU3dmZERXNKWWY2bGxKSXRlYSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1693286179),
+('Ugki0BPdHKdzgDVDOA0mMKfvz7J2Ado5CejMxhBs', NULL, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiaURKaXNtcHI3WkdyYk4xQ1FXRVhRTkVXSmVQNmxzY3FqemExWTFqTSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjg6Imh0dHA6Ly9lcnAuaWNvbmlzbC5jb20vbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1693286189),
+('ULM2t7vzLuqIJ3NLlL6XHtImacjNroIixAxLtTsj', NULL, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiMWpoRXZsTnNLT3N5MXd1Z1dKQVFlaXZrdnA0aWJtZzlKNUgzS0V0ciI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjg6Imh0dHA6Ly9lcnAuaWNvbmlzbC5jb20vbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1693286203),
+('vvSUVkhSgsBYrUmAnpS6c35LvTeldnxoktlGPgZN', NULL, '103.15.42.197', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiV2IybXV5cWZKUkZwclFOaHhPYjhvWllXOTVKOGZIMmt5eWdkZU5XciI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjI6Imh0dHA6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1693286319),
+('W4hM9JxaE0PQgmKWNklmxCI4tJCN58z7rdyGvUoD', NULL, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', 'YToyOntzOjY6Il90b2tlbiI7czo0MDoiYmNMc2I1SWFLVnlJQ1VaV3ZYZGZKNmIxQm5pdlo5T2NtaWZ1aWpwSyI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1693286136),
+('wxtrq4McR04xMsMIn0P8qEd5xK3frwTPA2vNa1kZ', 1, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiR3RHVUJLOTdkZHhFTXh5M2FjRzA5cmxpVzhQMlJwMjV6VnRub0pnTyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NTQ6Imh0dHA6Ly9lcnAuaWNvbmlzbC5jb20vZW1wbG95ZWUvaW5mb19wcnNvbmFsL2NyZWF0ZS8xMyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7czoyMToicGFzc3dvcmRfaGFzaF9zYW5jdHVtIjtzOjYwOiIkMnkkMTAkOThjRTVIRkhSZ0ZQWEJjTmxIcDdWT1NSUGgzVlh5N0Q4SG1IWVFUT1A0M1VWdG5Sak1FOWkiO30=', 1693286410),
+('WzvlqvxKNNMRkYINdYU79PVAsKAk9CglnejAgQOm', NULL, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiRjAzMjd6SWZnQmlLYkI1cDN4TWFDdGV4ZkZNVGlsdHZLVkFIYkx6VCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjI6Imh0dHA6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1693286314),
+('x4yZm6xwWZbp5Buc5IfV3xSpNm3gqmwtzthsL1t0', NULL, '172.176.103.48', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiMmJrYUhOTnIwYXJSSHFSZGFNUFdNeGZRY2VRUlpPbkhzT2VIc3JScSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjI6Imh0dHA6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1693309761),
+('YHOufbt3m1SOkPNgF3cjHzG1xLxGgJGxcmLLltpd', 1, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoibjhsbzQ0S0ZWSUVWQTFpQVRRalZqTWJCU05remxkTUl6MjJ0a3R1bCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NTQ6Imh0dHBzOi8vZXJwLmljb25pc2wuY29tL2VtcGxveWVlL2luZm9fcHJzb25hbC9jcmVhdGUvMiI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7czoyMToicGFzc3dvcmRfaGFzaF9zYW5jdHVtIjtzOjYwOiIkMnkkMTAkOThjRTVIRkhSZ0ZQWEJjTmxIcDdWT1NSUGgzVlh5N0Q4SG1IWVFUT1A0M1VWdG5Sak1FOWkiO30=', 1693285940);
 
 -- --------------------------------------------------------
 
@@ -1396,8 +1208,8 @@ CREATE TABLE `sl_movements` (
   `mast_item_register_id` bigint(20) UNSIGNED NOT NULL,
   `mast_work_station_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `out_date` date DEFAULT NULL,
   `status` tinyint(4) NOT NULL DEFAULT 1,
+  `out_date` date DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1433,11 +1245,11 @@ CREATE TABLE `store_transfer_details` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `qty` int(11) DEFAULT NULL,
   `deli_qty` int(11) DEFAULT NULL,
-  `mast_item_category_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `cat_id` bigint(20) DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 1,
   `store_transfer_id` bigint(20) UNSIGNED NOT NULL,
   `mast_item_register_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -6599,28 +6411,27 @@ CREATE TABLE `users` (
   `remember_token` varchar(100) DEFAULT NULL,
   `current_team_id` bigint(20) UNSIGNED DEFAULT NULL,
   `profile_photo_path` varchar(255) DEFAULT NULL,
-  `mast_work_station_id` int(11) NOT NULL DEFAULT 1,
-  `attendance_id` int(11) DEFAULT NULL,
-  `is_admin` tinyint(1) NOT NULL DEFAULT 0,
   `status` tinyint(1) NOT NULL DEFAULT 0,
+  `is_admin` tinyint(1) NOT NULL DEFAULT 0,
+  `attendance_id` int(11) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `mast_work_station_id` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `contact_number`, `employee_code`, `email_verified_at`, `password`, `two_factor_secret`, `two_factor_recovery_codes`, `two_factor_confirmed_at`, `remember_token`, `current_team_id`, `profile_photo_path`, `mast_work_station_id`, `attendance_id`, `is_admin`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'SUPER-ERP', 'super@gmail.com', '01909302126', 'GF-00000', '2023-12-31 18:00:00', '$2y$10$61y3lx10SwyTESWuInTE9.5WwB9IhI1Ex2qqbbTpbZRkxBcSACLoy', NULL, NULL, NULL, NULL, NULL, 'fix/admin.jpg', 1, NULL, 1, 1, '2023-08-30 23:15:39', '2023-08-30 23:15:39'),
-(2, 'Gulf-ERP', 'admin@gmail.com', '01909302126', 'GF-00000', '2023-12-31 18:00:00', '$2y$10$36htTBRZGWTk7.yJJkdHdeYsJdIhAcnCw4q3TmKtqCZxdpeXVqcim', NULL, NULL, NULL, NULL, NULL, 'fix/admin.jpg', 1, NULL, 0, 1, '2023-08-30 23:15:39', '2023-08-30 23:15:39'),
-(12, 'Md. Rahim', 'mr.rahim247@gmail.com', '01880138998', 'GF-00001', '2022-12-31 12:00:00', '$2y$10$azvnuRUrS2q8ok6.ooLgPuKRI/sozTLu3t3U9BD0fJpGC3nbobS/O', NULL, NULL, NULL, NULL, NULL, 'rahim_1690956906.jpg', 1, NULL, 0, 1, '2023-08-01 17:59:20', '2023-08-01 18:29:08'),
-(13, 'MD. ROBIN MIA', 'robin39th@gmail.com', '01611157592', 'GF-00002', '2022-12-31 12:00:00', '$2y$10$XvX9kpzR0Da9xAil5dmb3uO1C6Io6JoBbWgkL/W14TbJoFRuCcfTO', NULL, NULL, NULL, NULL, NULL, 'Untitled-2_1691230835.jpg', 1, NULL, 0, 1, '2023-08-04 22:14:07', '2023-08-04 22:20:41'),
-(14, 'Md. Mohidur Rahman', 'gulf.mahidur@gmail.com', '01714307732', 'GF-00003', '2022-12-31 12:00:00', '$2y$10$CfiHLWXBAmvH7kp9v7W9Z.T8DPuvIBoh5R9csaQx6Dlb5zIZriNFi', NULL, NULL, NULL, NULL, NULL, '363867648_1418114079035642_302458779047196983_n_1691388949.jpg', 1, NULL, 0, 1, '2023-08-06 17:48:56', '2023-08-06 18:15:50'),
-(15, 'Md. Mehedi Hasan', 'mdmehedi8232@gmail.com', '01771958336', 'GF-00004', '2022-12-31 12:00:00', '$2y$10$fuFb1RTl57jbogmoqCDHFOSB9aDZpQpuIylsyT3cxClv/O1ADxwA2', NULL, NULL, NULL, NULL, NULL, 'Untitled-1_1691393481.jpg', 1, NULL, 0, 1, '2023-08-06 19:27:51', '2023-08-06 19:31:24'),
-(16, 'Md. Rayhan', 'md.rayhandewan05@gmail.com', '01996506006', 'GF-00005', '2022-12-31 12:00:00', '$2y$10$g/vHFX7GRI7A/ieWapZMweEeG7ufxm.8rwRwiJK4CuEMsIkf63Dy.', NULL, NULL, NULL, NULL, NULL, 'Alisha_1691480990.jpg', 1, NULL, 0, 1, '2023-08-07 19:39:13', '2023-08-07 19:49:55'),
-(17, 'Masum Miah', 'masommia1@gmail.com', '01715057173', 'GF-00006', '2022-12-31 12:00:00', '$2y$10$yLgsK.cMOt9dtvVyk58iyOQ6Kb1B4vOjQaepysAwa4S8f53lJNOdi', NULL, NULL, NULL, NULL, NULL, 'Masum_1691481763.jpg', 1, NULL, 0, 1, '2023-08-07 19:55:06', '2023-08-07 20:02:44'),
-(18, 'Rifat Hossain', 'demo@gmail.com', '01875767063', 'GF-00007', '2022-12-31 12:00:00', '$2y$10$q1Sp0c42BD17gSIWjBloGuGKt35LFquzHJdkLKb0yYLHqqS6arat2', NULL, NULL, NULL, NULL, NULL, 'Rifat_1691484688.jpg', 1, NULL, 0, 1, '2023-08-07 20:41:30', '2023-08-07 20:51:33');
+INSERT INTO `users` (`id`, `name`, `email`, `contact_number`, `employee_code`, `email_verified_at`, `password`, `two_factor_secret`, `two_factor_recovery_codes`, `two_factor_confirmed_at`, `remember_token`, `current_team_id`, `profile_photo_path`, `status`, `is_admin`, `attendance_id`, `created_at`, `updated_at`, `mast_work_station_id`) VALUES
+(1, 'Gulf-ERP', 'admin@gmail.com', '01909302126', 'GF-00000', '2023-12-31 18:00:00', '$2y$10$98cE5HFHRgFPXBcNlHp7VOSRPh3VXy7D8HmHYQTOP43UVtnRjME9i', NULL, NULL, NULL, NULL, NULL, 'fix/admin.jpg', 1, 0, NULL, '2023-07-24 03:22:38', '2023-07-24 03:22:38', 1),
+(5, 'Md. Rahim', 'mr.rahim247@gmail.com', '01880138998', 'GF-00001', '2023-01-01 05:00:00', '$2y$10$azvnuRUrS2q8ok6.ooLgPuKRI/sozTLu3t3U9BD0fJpGC3nbobS/O', NULL, NULL, NULL, NULL, NULL, 'rahim_1690956906.jpg', 1, 0, NULL, '2023-08-02 09:59:20', '2023-08-02 10:29:08', 1),
+(6, 'MD. ROBIN MIA', 'robin39th@gmail.com', '01611157592', 'GF-00002', '2023-01-01 05:00:00', '$2y$10$XvX9kpzR0Da9xAil5dmb3uO1C6Io6JoBbWgkL/W14TbJoFRuCcfTO', NULL, NULL, NULL, NULL, NULL, 'Untitled-2_1691230835.jpg', 1, 0, NULL, '2023-08-05 14:14:07', '2023-08-05 14:20:41', 1),
+(7, 'Md. Mohidur Rahman', 'gulf.mahidur@gmail.com', '01714307732', 'GF-00003', '2023-01-01 05:00:00', '$2y$10$CfiHLWXBAmvH7kp9v7W9Z.T8DPuvIBoh5R9csaQx6Dlb5zIZriNFi', NULL, NULL, NULL, NULL, NULL, '363867648_1418114079035642_302458779047196983_n_1691388949.jpg', 1, 0, NULL, '2023-08-07 09:48:56', '2023-08-07 10:15:50', 1),
+(9, 'Md. Mehedi Hasan', 'mdmehedi8232@gmail.com', '01771958336', 'GF-00004', '2023-01-01 05:00:00', '$2y$10$fuFb1RTl57jbogmoqCDHFOSB9aDZpQpuIylsyT3cxClv/O1ADxwA2', NULL, NULL, NULL, NULL, NULL, 'Untitled-1_1691393481.jpg', 1, 0, NULL, '2023-08-07 11:27:51', '2023-08-07 11:31:24', 1),
+(10, 'Md. Rayhan', 'md.rayhandewan05@gmail.com', '01996506006', 'GF-00005', '2023-01-01 05:00:00', '$2y$10$g/vHFX7GRI7A/ieWapZMweEeG7ufxm.8rwRwiJK4CuEMsIkf63Dy.', NULL, NULL, NULL, NULL, NULL, 'Alisha_1691480990.jpg', 1, 0, NULL, '2023-08-08 11:39:13', '2023-08-08 11:49:55', 1),
+(11, 'Masum Miah', 'masommia1@gmail.com', '01715057173', 'GF-00006', '2023-01-01 05:00:00', '$2y$10$yLgsK.cMOt9dtvVyk58iyOQ6Kb1B4vOjQaepysAwa4S8f53lJNOdi', NULL, NULL, NULL, NULL, NULL, 'Masum_1691481763.jpg', 1, 0, NULL, '2023-08-08 11:55:06', '2023-08-08 12:02:44', 1),
+(12, 'Rifat Hossain', 'demo@gmail.com', '01875767063', 'GF-00007', '2023-01-01 05:00:00', '$2y$10$q1Sp0c42BD17gSIWjBloGuGKt35LFquzHJdkLKb0yYLHqqS6arat2', NULL, NULL, NULL, NULL, NULL, 'Rifat_1691484688.jpg', 1, 0, NULL, '2023-08-08 12:41:30', '2023-08-08 12:51:33', 1);
 
 --
 -- Indexes for dumped tables
@@ -6631,8 +6442,6 @@ INSERT INTO `users` (`id`, `name`, `email`, `contact_number`, `employee_code`, `
 --
 ALTER TABLE `complaints`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `complaints_mast_complaint_type_id_foreign` (`mast_complaint_type_id`),
-  ADD KEY `complaints_delivery_id_foreign` (`delivery_id`),
   ADD KEY `complaints_mast_customer_id_foreign` (`mast_customer_id`),
   ADD KEY `complaints_user_id_foreign` (`user_id`);
 
@@ -6641,7 +6450,6 @@ ALTER TABLE `complaints`
 --
 ALTER TABLE `complaint_details`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `complaint_details_emp_id_foreign` (`emp_id`),
   ADD KEY `complaint_details_user_id_foreign` (`user_id`);
 
 --
@@ -6650,7 +6458,6 @@ ALTER TABLE `complaint_details`
 ALTER TABLE `deliveries`
   ADD PRIMARY KEY (`id`),
   ADD KEY `deliveries_sales_id_foreign` (`sales_id`),
-  ADD KEY `deliveries_mast_customer_id_foreign` (`mast_customer_id`),
   ADD KEY `deliveries_mast_work_station_id_foreign` (`mast_work_station_id`),
   ADD KEY `deliveries_mast_item_register_id_foreign` (`mast_item_register_id`),
   ADD KEY `deliveries_user_id_foreign` (`user_id`);
@@ -6687,32 +6494,32 @@ ALTER TABLE `hr_attendances`
 ALTER TABLE `hr_leave_applications`
   ADD PRIMARY KEY (`id`),
   ADD KEY `hr_leave_applications_mast_leave_id_foreign` (`mast_leave_id`),
-  ADD KEY `hr_leave_applications_emp_id_foreign` (`emp_id`),
-  ADD KEY `hr_leave_applications_user_id_foreign` (`user_id`);
+  ADD KEY `hr_leave_applications_user_id_foreign` (`user_id`),
+  ADD KEY `hr_leave_applications_emp_id_foreign` (`emp_id`);
 
 --
 -- Indexes for table `info_banks`
 --
 ALTER TABLE `info_banks`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `info_banks_emp_id_foreign` (`emp_id`),
-  ADD KEY `info_banks_user_id_foreign` (`user_id`);
+  ADD KEY `info_banks_user_id_foreign` (`user_id`),
+  ADD KEY `info_banks_emp_id_foreign` (`emp_id`);
 
 --
 -- Indexes for table `info_educationals`
 --
 ALTER TABLE `info_educationals`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `info_educationals_emp_id_foreign` (`emp_id`),
-  ADD KEY `info_educationals_user_id_foreign` (`user_id`);
+  ADD KEY `info_educationals_user_id_foreign` (`user_id`),
+  ADD KEY `info_educationals_emp_id_foreign` (`emp_id`);
 
 --
 -- Indexes for table `info_nominees`
 --
 ALTER TABLE `info_nominees`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `info_nominees_emp_id_foreign` (`emp_id`),
-  ADD KEY `info_nominees_user_id_foreign` (`user_id`);
+  ADD KEY `info_nominees_user_id_foreign` (`user_id`),
+  ADD KEY `info_nominees_emp_id_foreign` (`emp_id`);
 
 --
 -- Indexes for table `info_personals`
@@ -6723,23 +6530,16 @@ ALTER TABLE `info_personals`
   ADD KEY `info_personals_mast_designation_id_foreign` (`mast_designation_id`),
   ADD KEY `info_personals_mast_employee_type_id_foreign` (`mast_employee_type_id`),
   ADD KEY `info_personals_mast_work_station_id_foreign` (`mast_work_station_id`),
-  ADD KEY `info_personals_emp_id_foreign` (`emp_id`),
-  ADD KEY `info_personals_user_id_foreign` (`user_id`);
+  ADD KEY `info_personals_user_id_foreign` (`user_id`),
+  ADD KEY `info_personals_emp_id_foreign` (`emp_id`);
 
 --
 -- Indexes for table `info_work_experiences`
 --
 ALTER TABLE `info_work_experiences`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `info_work_experiences_emp_id_foreign` (`emp_id`),
-  ADD KEY `info_work_experiences_user_id_foreign` (`user_id`);
-
---
--- Indexes for table `mast_complaint_types`
---
-ALTER TABLE `mast_complaint_types`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `mast_complaint_types_user_id_foreign` (`user_id`);
+  ADD KEY `info_work_experiences_user_id_foreign` (`user_id`),
+  ADD KEY `info_work_experiences_emp_id_foreign` (`emp_id`);
 
 --
 -- Indexes for table `mast_customers`
@@ -6788,17 +6588,17 @@ ALTER TABLE `mast_item_categories`
 --
 ALTER TABLE `mast_item_groups`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `mast_item_groups_mast_item_category_id_foreign` (`mast_item_category_id`),
-  ADD KEY `mast_item_groups_user_id_foreign` (`user_id`);
+  ADD KEY `mast_item_groups_user_id_foreign` (`user_id`),
+  ADD KEY `mast_item_groups_mast_item_category_id_foreign` (`mast_item_category_id`);
 
 --
 -- Indexes for table `mast_item_registers`
 --
 ALTER TABLE `mast_item_registers`
   ADD PRIMARY KEY (`id`),
+  ADD KEY `mast_item_registers_user_id_foreign` (`user_id`),
   ADD KEY `mast_item_registers_mast_item_group_id_foreign` (`mast_item_group_id`),
-  ADD KEY `mast_item_registers_unit_id_foreign` (`unit_id`),
-  ADD KEY `mast_item_registers_user_id_foreign` (`user_id`);
+  ADD KEY `mast_item_registers_unit_id_foreign` (`unit_id`);
 
 --
 -- Indexes for table `mast_leaves`
@@ -6881,7 +6681,6 @@ ALTER TABLE `personal_access_tokens`
 --
 ALTER TABLE `purchases`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `purchases_mast_item_category_id_foreign` (`mast_item_category_id`),
   ADD KEY `purchases_mast_work_station_id_foreign` (`mast_work_station_id`),
   ADD KEY `purchases_mast_supplier_id_foreign` (`mast_supplier_id`),
   ADD KEY `purchases_user_id_foreign` (`user_id`);
@@ -6976,12 +6775,6 @@ ALTER TABLE `sessions`
   ADD PRIMARY KEY (`id`),
   ADD KEY `sessions_user_id_index` (`user_id`),
   ADD KEY `sessions_last_activity_index` (`last_activity`);
-
---
--- Indexes for table `setups`
---
-ALTER TABLE `setups`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `sl_movements`
@@ -7110,7 +6903,7 @@ ALTER TABLE `info_nominees`
 -- AUTO_INCREMENT for table `info_personals`
 --
 ALTER TABLE `info_personals`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `info_work_experiences`
@@ -7119,22 +6912,16 @@ ALTER TABLE `info_work_experiences`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `mast_complaint_types`
---
-ALTER TABLE `mast_complaint_types`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `mast_customers`
 --
 ALTER TABLE `mast_customers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `mast_customer_types`
 --
 ALTER TABLE `mast_customer_types`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `mast_departments`
@@ -7146,31 +6933,31 @@ ALTER TABLE `mast_departments`
 -- AUTO_INCREMENT for table `mast_designations`
 --
 ALTER TABLE `mast_designations`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `mast_employee_types`
 --
 ALTER TABLE `mast_employee_types`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `mast_item_categories`
 --
 ALTER TABLE `mast_item_categories`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `mast_item_groups`
 --
 ALTER TABLE `mast_item_groups`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `mast_item_registers`
 --
 ALTER TABLE `mast_item_registers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `mast_leaves`
@@ -7182,37 +6969,37 @@ ALTER TABLE `mast_leaves`
 -- AUTO_INCREMENT for table `mast_packages`
 --
 ALTER TABLE `mast_packages`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `mast_suppliers`
 --
 ALTER TABLE `mast_suppliers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `mast_units`
 --
 ALTER TABLE `mast_units`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `mast_work_stations`
 --
 ALTER TABLE `mast_work_stations`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT for table `permissions`
 --
 ALTER TABLE `permissions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
@@ -7254,7 +7041,7 @@ ALTER TABLE `reference_types`
 -- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `sales`
@@ -7279,12 +7066,6 @@ ALTER TABLE `sales_returns`
 --
 ALTER TABLE `sales_return_details`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `setups`
---
-ALTER TABLE `setups`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `sl_movements`
@@ -7326,7 +7107,7 @@ ALTER TABLE `upazilas`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- Constraints for dumped tables
@@ -7336,8 +7117,6 @@ ALTER TABLE `users`
 -- Constraints for table `complaints`
 --
 ALTER TABLE `complaints`
-  ADD CONSTRAINT `complaints_delivery_id_foreign` FOREIGN KEY (`delivery_id`) REFERENCES `deliveries` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `complaints_mast_complaint_type_id_foreign` FOREIGN KEY (`mast_complaint_type_id`) REFERENCES `mast_complaint_types` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `complaints_mast_customer_id_foreign` FOREIGN KEY (`mast_customer_id`) REFERENCES `mast_customers` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `complaints_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
@@ -7345,14 +7124,12 @@ ALTER TABLE `complaints`
 -- Constraints for table `complaint_details`
 --
 ALTER TABLE `complaint_details`
-  ADD CONSTRAINT `complaint_details_emp_id_foreign` FOREIGN KEY (`emp_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `complaint_details_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `deliveries`
 --
 ALTER TABLE `deliveries`
-  ADD CONSTRAINT `deliveries_mast_customer_id_foreign` FOREIGN KEY (`mast_customer_id`) REFERENCES `mast_customers` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `deliveries_mast_item_register_id_foreign` FOREIGN KEY (`mast_item_register_id`) REFERENCES `mast_item_registers` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `deliveries_mast_work_station_id_foreign` FOREIGN KEY (`mast_work_station_id`) REFERENCES `mast_work_stations` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `deliveries_sales_id_foreign` FOREIGN KEY (`sales_id`) REFERENCES `sales` (`id`) ON DELETE CASCADE,
@@ -7410,12 +7187,6 @@ ALTER TABLE `info_personals`
 ALTER TABLE `info_work_experiences`
   ADD CONSTRAINT `info_work_experiences_emp_id_foreign` FOREIGN KEY (`emp_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `info_work_experiences_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
-
---
--- Constraints for table `mast_complaint_types`
---
-ALTER TABLE `mast_complaint_types`
-  ADD CONSTRAINT `mast_complaint_types_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `mast_customers`
@@ -7509,7 +7280,6 @@ ALTER TABLE `model_has_roles`
 -- Constraints for table `purchases`
 --
 ALTER TABLE `purchases`
-  ADD CONSTRAINT `purchases_mast_item_category_id_foreign` FOREIGN KEY (`mast_item_category_id`) REFERENCES `mast_item_categories` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `purchases_mast_supplier_id_foreign` FOREIGN KEY (`mast_supplier_id`) REFERENCES `mast_suppliers` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `purchases_mast_work_station_id_foreign` FOREIGN KEY (`mast_work_station_id`) REFERENCES `mast_work_stations` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `purchases_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
