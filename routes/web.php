@@ -246,6 +246,7 @@ Route::group(['middleware' => ['auth']], function(){
      Route::get('sales/sales-return/index',[SalesReturnController::class,'index'])->name('sales-return.index');
      Route::post('sales/sales-return/store', [SalesReturnController::class, 'store'])->name('sales-return.store');
      Route::get('sales/get/sales-delivery/details',[SalesReturnController::class,'getSalesDeliveryDetails'])->name('get_sales_delivery_details');     
+     Route::get('sales/get/sales-return-details/check',[SalesReturnController::class,'getReturnDetailsCheck'])->name('get-retunr-details-check');     
     /**______________________________________________________________________________________________
      * Sales => Sales Receive
      * ______________________________________________________________________________________________

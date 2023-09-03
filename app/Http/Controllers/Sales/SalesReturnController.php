@@ -94,7 +94,7 @@ class SalesReturnController extends Controller
         ->join('mast_item_registers', 'mast_item_registers.id', 'sales_details.mast_item_register_id')
         ->join('mast_item_groups', 'mast_item_groups.id', 'mast_item_registers.mast_item_group_id')
         ->join('mast_item_categories', 'mast_item_categories.id', 'sales.mast_item_category_id')
-        ->select('sales_details.*','sales.inv_no','sales.inv_date','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
+        ->select('sales_details.*','sales.inv_no','sales.inv_date','mast_item_registers.part_no', 'mast_item_groups.part_name','mast_item_categories.cat_name')
         ->get();
 
         $store = MastWorkStation::where('id', Auth::user()->id)->first();
@@ -107,5 +107,13 @@ class SalesReturnController extends Controller
             'sales' => $sales,
             'store' => $store->store_name,
         ]);
+    }
+    function getReturnDetailsCheck(Request $request) {
+        $dataCheck = SalesReturnDetails::where('mast_item_register_id', $request->id)
+            ->where('sales_return_id', $request->sales_return_id)
+            // ->latest()
+            ->first();
+    
+        return response()->json($dataCheck);
     }
 }
