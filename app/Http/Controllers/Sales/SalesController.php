@@ -26,8 +26,9 @@ class SalesController extends Controller
         $customer_type = MastCustomerType::where('status', 1)->get();
         $item_category = MastItemCategory::where('status', 1)->get();
         
-        $data=Sales::where('mast_item_category_id', $type)->with('salesDetails','mastCustomer','mastItemCategory')->orderBy('id', 'desc')->latest()->get();
-        return view('layouts.pages.sales.sales.index',compact('type','data','item_group','customer','customer_type','item_category'));
+        $data=Sales::where('mast_item_category_id', $type)->where('quotation_id', null)->orderBy('id', 'desc')->latest()->get();
+        $quotation=Sales::where('mast_item_category_id', $type)->where('quotation_id', '!=', null)->orderBy('id', 'desc')->latest()->get();
+        return view('layouts.pages.sales.sales.index',compact('type','data', 'quotation','item_group','customer','customer_type','item_category'));
     }
     public function store(Request $request, $type)
     {
@@ -61,6 +62,7 @@ class SalesController extends Controller
             foreach($request->moreFile as $item){
                 $data = new SalesDetails();
                 $data->mast_item_register_id = $item['item_id'];
+                $data->mast_item_category_id = $sales->mast_item_category_id;
                 $data->qty = $item['qty'];
                 $data->deli_qty = 0;
                 $data->status = 0;
@@ -79,8 +81,8 @@ class SalesController extends Controller
         if (isset($request->editFile[0]['item_id']) && !empty($request->editFile[0]['item_id'])) {
             foreach($request->editFile as $item){
                 $data = SalesDetails::findOrFail($item['id']);
-
                 $data->mast_item_register_id = $item['item_id'];
+                $data->mast_item_category_id = $sales->mast_item_category_id;
                 $data->qty = $item['qty'];
                 $data->deli_qty = 0;
                 $data->price = $item['price'];

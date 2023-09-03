@@ -375,7 +375,7 @@ class MovementController extends Controller
                 $data->reference_type_id = 4; //1=> Purchase || 2=> Sales || 3=> Store Transfer || 4=> Return
                 $data->status = 1;
                 $data->mast_item_register_id = $request->item_register_id;
-                $data->mast_work_station_id = $request->mast_work_station_id;
+                $data->mast_work_station_id = $findSalesId->mast_work_station_id;
                 $data->user_id = Auth::user()->id;
                 $data->save();
             }

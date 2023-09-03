@@ -24,7 +24,7 @@
                                 <th>Invoice Type</th>
                                 <th>Total</th>
                                 <th>Status</th>
-                                <th class="text-center">Action</th>
+                                <th class="text-right">Action</th>
                             </tr>
                             </thead>
                             <tbody id="sales_tbody">
@@ -56,7 +56,73 @@
                                         </span>
                                         @endif
                                     </td>
-                                    <td style="width:210px;">
+                                    <td class="text-right" style="width:210px">
+                                        <button type="button" class="btn btn-sm btn-success p-1 px-2" id="edit_data" data-id="{{ $row->id }}"  {{$row->status !=0 ? 'disabled':''}}><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button>
+                                        <button type="button" class="btn btn-sm btn-info p-1 px-2" id="view_data" data-id="{{ $row->id }}"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</button>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Quotation Sales List</h4>
+                    <a href="{{route('sales_quotation_approve.index')}}" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i><span class="btn-icon-add"></span>Add New</a>
+                </div>
+
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="example3" class="display " style="min-width: 845px">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th>Invoice No</th>
+                                <th>Invoice Date</th>
+                                <th>Customer Name</th>
+                                <th>Invoice Type</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th class="text-right">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody id="sales_tbody">
+                                @foreach ($quotation as $key=> $row)
+                                @php
+                                    $total = 0;
+                                    foreach ($row->salesDetails as $key => $value) {
+                                        $total += $value->qty * $value->price;
+                                    }
+                                @endphp
+                                <tr id="row_master_table_{{ $row->id}}">
+                                    <td></td>
+                                    <td>{{$row->inv_no}}</td>
+                                    <td>{{$row->inv_date}}</td>
+                                    <td>{{$row->mastCustomer->name ?? 'NULL'}}</td>
+                                    <td>{{$row->mastItemCategory->cat_name ?? 'NULL'}}</td>
+                                    <td>{{$total }}</td>
+                                    <td>@if($row->status == 0)
+                                        <span class="badge light badge-warning">
+                                            <i class="fa fa-circle text-warning mr-1"></i>Pending
+                                        </span>
+                                        @elseif($row->status == 2)
+                                        <span class="badge light badge-danger">
+                                            <i class="fa fa-circle text-danger mr-1"></i>Canceled
+                                        </span>
+                                        @else
+                                        <span class="badge light badge-success">
+                                            <i class="fa fa-circle text-success mr-1"></i>Successful
+                                        </span>
+                                        @endif
+                                    </td>
+                                    <td class="text-right" style="width:210px">
                                         <button type="button" class="btn btn-sm btn-success p-1 px-2" id="edit_data" data-id="{{ $row->id }}"  {{$row->status !=0 ? 'disabled':''}}><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button>
                                         <button type="button" class="btn btn-sm btn-info p-1 px-2" id="view_data" data-id="{{ $row->id }}"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</button>
                                     </td>
@@ -320,7 +386,7 @@
                         else if(add_sales.status == 2)
                             row += '<span class="badge light badge-danger"><i class="fa fa-circle text-danger mr-1"></i>Canceled</span>';
                         row += '</td>';
-                        row += '<td style="width:210px"><button type="button" class="btn btn-sm btn-success p-1 px-2 mr-1" id="edit_data" data-id="'+add_sales.id+'"><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button><button type="button" class="btn btn-sm btn-info p-1 px-2" id="view_data" data-id="'+add_sales.id+'"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</button></td>';
+                        row += '<td class="text-right" style="width:210px"><button type="button" class="btn btn-sm btn-success p-1 px-2 mr-1" id="edit_data" data-id="'+add_sales.id+'"><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button><button type="button" class="btn btn-sm btn-info p-1 px-2" id="view_data" data-id="'+add_sales.id+'"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</button></td>';
 
                         if($("#sal_id").val()){
                             $("#row_master_table_" + add_sales.id).replaceWith(row);

@@ -29,6 +29,8 @@
                                             $total += $value->qty * $value->price;
                                             $item += 1;
                                         }
+
+                                        $returnCheck = DB::table('sales_returns')->where('sales_id', $row->id)->get();
                                     @endphp
                                     <tr>
                                         <td>{{++$keys}}</td>
@@ -48,6 +50,9 @@
                                         <td class="text-center">{{$item}}</td>
                                         <td class="text-right">{{$total}}</td>
                                         <td class="text-right">
+                                            @if (count($returnCheck) > 0)
+                                            <button id="edit_data" data-id="{{ $row->id }}" class="btn btn-success p-1 px-2"><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button>
+                                            @endif
                                             <button id="details_data" data-id="{{ $row->id }}" class="btn btn-secondary p-1 px-2"><i class="fa fa-plus"></i></i><span class="btn-icon-add"></span>Return</button>
                                         </td>
                                     </tr>

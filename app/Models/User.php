@@ -41,9 +41,11 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'employee_code',
-        'status',
         'profile_photo_path',
+        'mast_work_station_id',
+        'attendance_id',
         'is_admin',
+        'status',
     ];
     public function infoPersonal()
     {

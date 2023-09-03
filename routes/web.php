@@ -218,7 +218,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::delete('sales_quotation/destroy/{id}', [SalesQuotationController::class, 'quotation_destroy'])->name('sales_quotation.destroy');
     Route::get('/get-delete-master/sales_quotation',[SalesQuotationController::class,'getDeleteMaster'])->name('getDelete-master-sales_quotation');
     //--Sales Approve
-    Route::get('sales_quotation/approve_list', [SalesQuotationController::class, 'quotation_approve_list'])->name('sales_quotation_approve.create');
+    Route::get('sales_quotation/approve_list', [SalesQuotationController::class, 'quotation_approve_list'])->name('sales_quotation_approve.index');
     Route::post('sales_quotation/approve', [SalesQuotationController::class, 'approve'])->name('sales_quotation.approve');
     Route::PATCH('sales_quotation/canceled/{id}', [SalesQuotationController::class, 'decline'])->name('sales_quotation.canceled');
     Route::get('get/sales-quotation/details', [SalesQuotationController::class, 'getQuotationDetails'])->name('get_quotation_details');

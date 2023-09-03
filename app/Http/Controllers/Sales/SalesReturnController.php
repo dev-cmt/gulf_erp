@@ -89,7 +89,7 @@ class SalesReturnController extends Controller
      */
     function getSalesDeliveryDetails(Request $request) {
 
-        $data = SalesDetails::where('sales_details.sales_id', $request->id)
+        $data = SalesDetails::where('sales_details.sales_id', $request->id)->where('sales_details.deli_qty', '!=', 0)
         ->join('sales', 'sales.id', 'sales_details.sales_id')
         ->join('mast_item_registers', 'mast_item_registers.id', 'sales_details.mast_item_register_id')
         ->join('mast_item_groups', 'mast_item_groups.id', 'mast_item_registers.mast_item_group_id')

@@ -15,7 +15,7 @@
                                     <th>SL#</th>
                                     <th>Invoice No</th>
                                     <th>Invoice Date</th>
-                                    <th>Customer Name</th>
+                                    <th>Customer</th>
                                     <th>Invoice Type</th>
                                     <th>Item</th>
                                     {{-- <th>Qty</th> --}}
@@ -40,7 +40,7 @@
                                     <td>{{$row->inv_no}}</td>
                                     <td>{{$row->inv_date}}</td>
                                     <td>{{$row->mastCustomer->name ?? 'NULL'}}</td>
-                                    <td>{{$row->mastItemCategory->cat_name ?? 'NULL'}}</td>
+                                    <td>{{$row->mastItemCategory->cat_name ?? 'NULL'}}{{$row->quotation_id == null ? '':'/Quotation'}}</td>
                                     <td id="details_data" data-id="{{ $row->id }}"><span style="cursor: pointer" class="badge badge-pill badge-success badge-rounded">{{ $item }}</span></td>
                                     {{-- <td>{{$qty }}</td> --}}
                                     <td>{{$total }}</td>
@@ -72,7 +72,7 @@
                                     <th>SL#</th>
                                     <th>Invoice No</th>
                                     <th>Invoice Date</th>
-                                    <th>Customer Name</th>
+                                    <th>Customer</th>
                                     <th>Invoice Type</th>
                                     <th>Item</th>
                                     {{-- <th>Qty</th> --}}

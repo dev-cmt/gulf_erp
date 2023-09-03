@@ -139,7 +139,7 @@
                                 <li><a href="{{ route('sales_quotation.index',['cat_id' => 1]) }}">AC Sales</a></li>
                                 <li><a href="{{ route('sales_quotation.index',['cat_id' => 2]) }}">AC Spare Parts</a></li>
                                 <li><a href="{{ route('sales_quotation.index',['cat_id' => 3]) }}">Car Spare Parts</a></li>
-                                <li><a href="{{ route('sales_quotation_approve.create')}}">Approve Quotation </a></li>
+                                <li><a href="{{ route('sales_quotation_approve.index')}}">Approve Quotation </a></li>
                             </ul>
                         </li>
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Sales</a>

@@ -18,6 +18,8 @@ use App\Models\Sales\SalesDetails;
 use App\Models\Sales\Quotation;
 use App\Models\Sales\QuotationDetails;
 use App\Helpers\Helper;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\MemberApproved;
 
 class SalesQuotationController extends Controller
 {
@@ -226,6 +228,15 @@ class SalesQuotationController extends Controller
             $data->user_id = Auth::user()->id;
             $data->save();
         }
+
+        //Mail Send
+        // $user = MastCustomer::where('id', 1)->first();
+
+        // $mailData =[
+        //     'title' => 'Sales Quotation',
+        //     'body' => 'This Is body',
+        // ];
+        // Mail::to($user->email)->send(new MemberApproved($mailData));
 
         return response()->json($data);
     }
