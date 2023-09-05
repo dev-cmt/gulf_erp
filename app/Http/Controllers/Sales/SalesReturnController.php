@@ -38,51 +38,76 @@ class SalesReturnController extends Controller
         
         return view('layouts.pages.sales.sales_return.return_details', compact('data','sales','store'));
     }
-    public function store(Request $request){
-        if ($request->has('moreFile') && is_array($request->moreFile)) {
-            $return_no = Helper::IDGenerator(new SalesReturn, 'return_no', 5, 'RT-NO'); /* Generate id */
-            $salesReturn = new SalesReturn();
-            $salesReturn->return_no = $return_no;
-            $salesReturn->return_date = date('Y-m-d');
-            $salesReturn->remarks = $request->remarks;
-            $salesReturn->sales_id = $request->sales_id;
-            $salesReturn->mast_work_station_id = Auth::user()->mast_work_station_id;
-            $salesReturn->status = 1;
-            $salesReturn->user_id = Auth::user()->id;
-            $salesReturn->save();
-            
-            $salesUpdate = Sales::findOrFail($request->sales_id);
-            $salesUpdate->is_return = 1;
-            $salesUpdate->save();
-            try {
-                foreach ($request->moreFile as $item) {
-                    if (isset($item['qty']) && is_numeric($item['qty'])) {
-                        $data = new SalesReturnDetails();
-                        $data->sales_return_id = $salesReturn->id;
-                        $data->price = $item['price'];
-                        $data->qty = $item['qty'];
-                        $data->rcv_qty = 0;
-                        $data->mast_item_register_id = $item['mast_item_register_id'];
-                        $data->status = 1;
-                        $data->user_id = Auth::user()->id;
-                        $data->save();
+    public function store(Request $request)
+    {
+        try {
+            if ($request->has('moreFile') && is_array($request->moreFile) || $request->has('editFile') && is_array($request->editFile)) {
+                $return_no = Helper::IDGenerator(new SalesReturn, 'return_no', 5, 'RT-NO'); /* Generate id */
+
+                if ($request->sales_return_id) {
+                    $salesReturn = SalesReturn::findOrFail($request->sales_return_id);
+                } else {
+                    $salesReturn = new SalesReturn();
+                    $salesReturn->return_no = $return_no;
+                }
+                $salesReturn->return_date = date('Y-m-d');
+                $salesReturn->remarks = $request->remarks;
+                $salesReturn->sales_id = $request->sales_id;
+                $salesReturn->mast_work_station_id = Auth::user()->mast_work_station_id;
+                $salesReturn->status = 0;
+                $salesReturn->user_id = Auth::user()->id;
+                $salesReturn->save();
+
+                $salesUpdate = Sales::findOrFail($request->sales_id);
+                $salesUpdate->is_return = 1;
+                $salesUpdate->save();
+
+                if (!empty($request->moreFile) && is_array($request->moreFile)) {
+                    foreach ($request->moreFile as $item) {
+                        if (isset($item['qty']) && is_numeric($item['qty'])) {
+                            $data = new SalesReturnDetails();
+                            $data->sales_return_id = $salesReturn->id;
+                            $data->price = $item['price'];
+                            $data->qty = $item['qty'];
+                            $data->rcv_qty = 0;
+                            $data->mast_item_register_id = $item['mast_item_register_id'];
+                            $data->status = 1;
+                            $data->user_id = Auth::user()->id;
+                            $data->save();
+                        }
                     }
                 }
-    
-            } catch (\Exception $e) {
-                // Handle any exception that might occur during the save process.
-                return response()->json(['error' => 'An error occurred while saving the data.']);
-            }
-        } else {
-            // Handle empty or missing moreFile data, for example:
-            return response()->json(['error' => 'No data to save.']);
-        }
 
-        return response()->json([
-            'data' => $data,
-            'salesReturn' => $salesReturn,
-        ]);
+                if (!empty($request->editFile) && is_array($request->editFile)) {
+                    foreach ($request->editFile as $i => $item) {
+                        if (isset($item['qty']) && is_numeric($item['qty'])) {
+                            $data = SalesReturnDetails::find($item['id']);
+                            $data->sales_return_id = $salesReturn->id;
+                            $data->price = $item['price'];
+                            $data->qty = $item['qty'];
+                            $data->rcv_qty = 0;
+                            $data->mast_item_register_id = $item['mast_item_register_id'];
+                            $data->status = 1;
+                            $data->user_id = Auth::user()->id;
+                            $data->save();
+                        }
+                    }
+                }
+
+                return response()->json([
+                    'data' => $data,
+                    'salesReturn' => $salesReturn,
+                ]);
+            } else {
+                // Handle empty or missing moreFile data, for example:
+                return response()->json(['error' => 'No data to save.']);
+            }
+        } catch (\Exception $e) {
+            // Handle any exception that might occur during the save process.
+            return response()->json(['error' => 'An error occurred while saving the data.']);
+        }
     }
+
     /**___________________________________________________________________
      * Ajax Get Data & Show
      * ___________________________________________________________________
@@ -111,7 +136,6 @@ class SalesReturnController extends Controller
     function getReturnDetailsCheck(Request $request) {
         $dataCheck = SalesReturnDetails::where('mast_item_register_id', $request->id)
             ->where('sales_return_id', $request->sales_return_id)
-            // ->latest()
             ->first();
     
         return response()->json($dataCheck);
