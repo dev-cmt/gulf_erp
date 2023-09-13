@@ -322,7 +322,7 @@ class MovementController extends Controller
      */
     public function salesReceiveIndex()
     {
-        $data= SalesReturn::where('sales_returns.status', 1)
+        $data= SalesReturn::whereIn('sales_returns.status', [0, 3])
         ->join('sales', 'sales.id', 'sales_returns.sales_id')
         ->join('mast_item_categories', 'mast_item_categories.id', 'sales.mast_item_category_id')
         ->join('mast_customers', 'mast_customers.id', 'sales.mast_customer_id')
@@ -381,7 +381,7 @@ class MovementController extends Controller
             }
         }
 
-        //___________ Store Transfer Status Update
+        //___________ Sales Return Status Update
         $checkStoreTransfer = SalesReturnDetails::where('sales_return_id', $salesReturnDetails->sales_return_id)->get();
         $allTrue = true;
         foreach ($checkStoreTransfer as $key => $value) {
@@ -501,16 +501,16 @@ class MovementController extends Controller
 
     //--------SlMovement Tabel Data Use
     public function getSerialNumber(Request $request){
-        //--Use Sales Delivery Page Or Store Transfer
+        //--Use => Sales Delivery Page => Store Transfer Page
         $data = SlMovement::where('mast_item_register_id', $request->mast_item_register_id)
         ->where('mast_work_station_id', $request->mast_work_station_id)
-        ->whereIn('reference_type_id', $request->reference_type_id)
-        ->where('status', $request->status)->get();
+        ->whereIn('reference_type_id', $request->reference_type_id) //1=> Purchase || 2=> Sales || 3=> Store Transfer || 4=> Return
+        ->where('status', $request->status)->get(); 
 
         return response()->json(['data' => $data]);
     }
     public function getSalesDeliverySlNo(Request $request){
-        //--Use Sales Return Page 
+        //--Use => Sales Return Page 
         $data = SlMovement::where('mast_item_register_id', $request->mast_item_register_id)
         ->where('mast_work_station_id', $request->mast_work_station_id)
         ->where('reference_id', $request->reference_id)

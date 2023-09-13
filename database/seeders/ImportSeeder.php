@@ -721,7 +721,7 @@ class ImportSeeder extends Seeder
         //____________________________________//
         MastCustomer::create([
             'name'=>'Motiur Rahman',
-            'email'=>'tayfa@gmail.com',
+            'email'=>'motiur.cmt@gmail.com',
             'phone'=>'01913954378',
             'address'=>'Shariatpur',
             'cont_person'=>'Sagour Khan',

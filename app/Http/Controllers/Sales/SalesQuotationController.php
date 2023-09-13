@@ -35,92 +35,109 @@ class SalesQuotationController extends Controller
     }
     public function store(Request $request, $type)
     {
-        $invoice_codes = Helper::IDGenerator(new Quotation, 'quot_no', 5, 'GIAL'); /* Generate id */
-        
-        $sal_id=$request->sal_id;
-        if(isset($sal_id)){
-            $sales = Quotation::findOrFail($sal_id);
-        }else{
-            $validator = Validator::make($request->all(), [
-                'inv_date' => 'required',
-                'mast_customer_id' => 'required',
+        try {
+            $invoice_codes = Helper::IDGenerator(new Quotation, 'quot_no', 5, 'GIAL'); /* Generate id */
+
+            $sal_id = $request->sal_id;
+            if (isset($sal_id)) {
+                $sales = Quotation::findOrFail($sal_id);
+            } else {
+                $validator = Validator::make($request->all(), [
+                    'inv_date' => 'required',
+                    'mast_customer_id' => 'required',
+                ]);
+
+                if ($validator->fails()) {
+                    return response()->json(['errors' => $validator->errors()], 422);
+                }
+
+                $sales = new Quotation();
+                $sales->quot_no = $invoice_codes;
+            }
+
+            $sales->quot_date = $request->inv_date;
+            $sales->vat = $request->vat;
+            $sales->tax = $request->tax;
+            $sales->remarks = $request->remarks;
+            $sales->status = 0;
+            $sales->is_sales = 0;
+            $sales->mast_item_category_id = $type;
+            $sales->mast_customer_id = $request->mast_customer_id;
+            $sales->user_id = Auth::user()->id;
+            $sales->save();
+
+            if (isset($request->moreFile[0]['item_id']) && !empty($request->moreFile[0]['item_id'])) {
+                foreach ($request->moreFile as $item) {
+                    $data = new QuotationDetails();
+                    $data->mast_item_register_id = $item['item_id'];
+                    $data->mast_item_category_id = $sales->mast_item_category_id;
+                    $data->qty = $item['qty'];
+                    $data->status = 0;
+                    $data->price = $item['price'];
+
+                    $data->status = 1;
+                    if (isset($sal_id)) {
+                        $data->quotation_id = $sal_id;
+                    } else {
+                        $data->quotation_id = $sales->id;
+                    }
+                    $data->user_id = Auth::user()->id;
+                    $data->save();
+                }
+            }
+
+            if (isset($request->editFile[0]['item_id']) && !empty($request->editFile[0]['item_id'])) {
+                foreach ($request->editFile as $item) {
+                    $data = QuotationDetails::findOrFail($item['id']);
+
+                    $data->mast_item_register_id = $item['item_id'];
+                    $data->mast_item_category_id = $sales->mast_item_category_id;
+                    $data->qty = $item['qty'];
+                    $data->price = $item['price'];
+                    $data->status = 0;
+                    if (isset($sal_id)) {
+                        $data->quotation_id = $sal_id;
+                    } else {
+                        $data->quotation_id = $sales->id;
+                    }
+                    $data->user_id = Auth::user()->id;
+                    $data->save();
+                }
+            }
+
+            if (isset($sal_id)) {
+                $new_sales = Quotation::where('id', $sal_id)->first();
+            } else {
+                $new_sales = Quotation::where('id', $sales->id)->first();
+            }
+            $mastCustomer = $new_sales->mastCustomer;
+            $mastItemCategory = $new_sales->mastItemCategory;
+            $quotationDetails = $new_sales->quotationDetails;
+
+            $total = 0;
+            foreach ($quotationDetails as $key => $value) {
+                $total += $value->qty * $value->price;
+            }
+
+            // Mail Send
+            $mailData = [
+                'title' => 'Sales Quotation',
+                'body' => 'This Is body',
+            ];
+            Mail::to($new_sales->mastCustomer->email)->send(new MemberApproved($mailData));
+
+            return response()->json([
+                'sales' => $sales,
+                'mastCustomer' => $mastCustomer,
+                'mastItemCategory' => $mastItemCategory,
+                'total' => $total,
             ]);
-            if ($validator->fails()) {
-                return response()->json(['errors' => $validator->errors()], 422);
-            }
-            $sales = new Quotation();
-            $sales->quot_no = $invoice_codes;
+        } catch (\Exception $e) {
+            // Handle any unexpected exceptions here
+            return response()->json(['error' => 'An error occurred.'], 500);
         }
-        $sales->quot_date = $request->inv_date;
-        $sales->vat = $request->vat;
-        $sales->tax = $request->tax;
-        $sales->remarks = $request->remarks;
-        $sales->status = 0;
-        $sales->is_sales = 0;
-        $sales->mast_item_category_id = $type;
-        $sales->mast_customer_id = $request->mast_customer_id;
-        $sales->user_id = Auth::user()->id;
-        $sales->save();
-
-        if (isset($request->moreFile[0]['item_id']) && !empty($request->moreFile[0]['item_id'])) {
-            foreach($request->moreFile as $item){
-                $data = new QuotationDetails();
-                $data->mast_item_register_id = $item['item_id'];
-                $data->mast_item_category_id = $sales->mast_item_category_id;
-                $data->qty = $item['qty'];
-                $data->status = 0;
-                $data->price = $item['price'];
-                
-                $data->status = 1;
-                if(isset($sal_id)){
-                    $data->quotation_id = $sal_id;
-                }else{
-                    $data->quotation_id = $sales->id;
-                }
-                $data->user_id = Auth::user()->id;
-                $data->save();
-            }
-        }
-        if (isset($request->editFile[0]['item_id']) && !empty($request->editFile[0]['item_id'])) {
-            foreach($request->editFile as $item){
-                $data = QuotationDetails::findOrFail($item['id']);
-
-                $data->mast_item_register_id = $item['item_id'];
-                $data->mast_item_category_id = $sales->mast_item_category_id;
-                $data->qty = $item['qty'];
-                $data->price = $item['price'];
-                $data->status = 0;
-                if(isset($sal_id)){
-                    $data->quotation_id = $sal_id;
-                }else{
-                    $data->quotation_id = $sales->id;
-                }
-                $data->user_id = Auth::user()->id;
-                $data->save();
-            }
-        }
-
-        if(isset($sal_id)){
-            $new_sales = Quotation::where('id', $sal_id)->first();
-        }else{
-            $new_sales = Quotation::where('id', $sales->id)->first();
-        }
-        $mastCustomer = $new_sales->mastCustomer;
-        $mastItemCategory = $new_sales->mastItemCategory;
-        $quotationDetails = $new_sales->quotationDetails;
-
-        $total = 0;
-        foreach ($quotationDetails as $key => $value) {
-            $total += $value->qty * $value->price;
-        }
-
-        return response()->json([
-            'sales' => $sales,
-            'mastCustomer' => $mastCustomer,
-            'mastItemCategory' => $mastItemCategory,
-            'total' => $total,
-        ]);
     }
+
     public function edit(Request $request)
     {
         $sales_details = QuotationDetails::where('quotation_id', $request->id)
@@ -195,22 +212,22 @@ class SalesQuotationController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $data = Quotation::findOrFail($request->set_id);
-        $data->is_sales = 1;
-        $data->status = 1;
-        $data->save();
+        $quotation = Quotation::findOrFail($request->set_id);
+        $quotation->is_sales = 1;
+        $quotation->status = 1;
+        $quotation->save();
 
         $sales = new Sales();
         $sales->inv_date = date('Y-m-d');
-        $sales->inv_no = $data->quot_no;
+        $sales->inv_no = $quotation->quot_no;
         $sales->ref_date = $request->ref_date;
         $sales->ref_no = $request->ref_no;
-        $sales->vat = $data->vat;
-        $sales->tax = $data->tax;
-        $sales->remarks = $data->remarks;
-        $sales->quotation_id = $data->id;
-        $sales->mast_item_category_id = $data->mast_item_category_id;
-        $sales->mast_customer_id = $data->mast_customer_id;
+        $sales->vat = $quotation->vat;
+        $sales->tax = $quotation->tax;
+        $sales->remarks = $quotation->remarks;
+        $sales->quotation_id = $quotation->id;
+        $sales->mast_item_category_id = $quotation->mast_item_category_id;
+        $sales->mast_customer_id = $quotation->mast_customer_id;
         $sales->user_id = Auth::user()->id;
         $sales->status = 1;
         $sales->save();
@@ -230,15 +247,13 @@ class SalesQuotationController extends Controller
         }
 
         //Mail Send
-        // $user = MastCustomer::where('id', 1)->first();
+        $mailData =[
+            'title' => 'Your work order approve successfully',
+            'body' => 'This Is body',
+        ];
+        Mail::to($quotation->mastCustomer->email)->send(new MemberApproved($mailData));
 
-        // $mailData =[
-        //     'title' => 'Sales Quotation',
-        //     'body' => 'This Is body',
-        // ];
-        // Mail::to($user->email)->send(new MemberApproved($mailData));
-
-        return response()->json($data);
+        return response()->json($quotation);
     }
 
 

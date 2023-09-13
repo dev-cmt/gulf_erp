@@ -151,7 +151,7 @@
                             </ul>
                         </li>
                         <li><a href="{{route('sales-return.index')}}">Sales Return</a></li>
-                        <li><a href="{{route('sales-receive.index')}}">Sales Receive</a></li>
+                        <li><a href="{{route('sales-receive.index')}}">Return Receive</a></li>
                         <li><a href="#">Reports</a></li>
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Data Setting</a>
                             <ul aria-expanded="false">

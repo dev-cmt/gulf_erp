@@ -257,7 +257,7 @@
     //-----Get Serial Number
     function getSlNo(item_register_id, storeId) {
         var currentRow = $('#items-table tbody').find("tr:last");
-        var dataArray = [1, 3];
+        var dataArray = [1, 3, 4];
         $.ajax({
             url:'{{ route('get-serial-no')}}',
             method:'GET',

@@ -21,44 +21,59 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($data as $keys=> $row)
+                                @foreach ($data as $keys => $row)
                                     @php
                                         $total = 0;
-                                        $item = 0;
-                                        foreach ($row->salesDetails as $key=> $value) {
+                                        $item = count($row->salesDetails);
+                                        foreach ($row->salesDetails as $value) {
                                             $total += $value->qty * $value->price;
-                                            $item += 1;
                                         }
-                                        $returnCheck = DB::table('sales_returns')->where('sales_id', $row->id)->first();
+                                        $returnCheck = DB::table('sales_returns')->where('sales_id', $row->id)->latest()->first();
+                                        $status = $returnCheck ? $returnCheck->status : null;
                                     @endphp
                                     <tr>
-                                        <td>{{++$keys}}</td>
-                                        <td><strong>No: </strong>{{$row->inv_no}}<br><strong>Date: </strong>{{date("j F, Y", strtotime($row->inv_date))}}</td>
-                                        <td><strong>Name: </strong>{{$row->mastCustomer->name ?? 'NULL'}}<br><strong>Phone: </strong>{{$row->mastCustomer->phone ?? 'NULL'}}</td>
-                                        <td>{{$row->mastItemCategory->cat_name ?? 'NULL'}}</td>
-                                        <td>@if($row->is_parsial == 0)
-                                            <span class="badge light badge-success">
-                                                <i class="fa fa-circle text-success mr-1"></i>Complete
-                                            </span>
-                                            @elseif($row->is_parsial == 1)
-                                            <span class="badge light badge-warning">
-                                                <i class="fa fa-circle text-warning mr-1"></i>Parsial
-                                            </span>
+                                        <td>{{ ++$keys }}</td>
+                                        <td>
+                                            <strong>No: </strong>{{ $row->inv_no }}<br>
+                                            <strong>Date: </strong>{{ date("j F, Y", strtotime($row->inv_date)) }}
+                                        </td>
+                                        <td>
+                                            <strong>Name: </strong>{{ $row->mastCustomer->name ?? 'NULL' }}<br>
+                                            <strong>Phone: </strong>{{ $row->mastCustomer->phone ?? 'NULL' }}
+                                        </td>
+                                        <td>{{ $row->mastItemCategory->cat_name ?? 'NULL' }}</td>
+                                        <td>
+                                            @if ($row->is_parsial == 0)
+                                                <span class="badge light badge-success">
+                                                    <i class="fa fa-circle text-success mr-1"></i>Complete
+                                                </span>
+                                            @elseif ($row->is_parsial == 1)
+                                                <span class="badge light badge-warning">
+                                                    <i class="fa fa-circle text-warning mr-1"></i>Parsial
+                                                </span>
                                             @endif
                                         </td>
-                                        <td class="text-center">{{$item}}</td>
-                                        <td class="text-right">{{$total}}</td>
+                                        <td class="text-center">{{ $item }}</td>
+                                        <td class="text-right">{{ $total }}</td>
                                         <td class="text-right">
-                                            @if ($returnCheck)
-                                            <button id="show-data" data-id="{{ $row->id }}" class="btn btn-success p-1 px-2" data-return="{{$returnCheck->id}}" data-check="1"><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button>
+                                            @if ($status === 0)
+                                                <button id="show-data" data-id="{{ $row->id }}" class="btn btn-success p-1 px-2"
+                                                    data-return="{{ $returnCheck->id }}" data-check="1">
+                                                    <i class="fa fa-pencil"></i>
+                                                    <span class="btn-icon-add"></span>Edit
+                                                </button>
                                             @else
-                                            <button id="show-data" data-id="{{ $row->id }}" class="btn btn-secondary p-1 px-2" data-check="0"><i class="fa fa-plus"></i></i><span class="btn-icon-add"></span>Return</button>
+                                                <button id="show-data" data-id="{{ $row->id }}" class="btn btn-secondary p-1 px-2"
+                                                    data-check="0">
+                                                    <i class="fa fa-plus"></i>
+                                                    <span class="btn-icon-add"></span>Return
+                                                </button>
                                             @endif
                                         </td>
                                     </tr>
                                 @endforeach
-
                             </tbody>
+                            
                         </table>
                     </div>
                 </div>
@@ -304,9 +319,9 @@
             {
                 $(".bd-example-modal-lg").modal('hide');
                 swal("Your data save successfully", "Well done, you pressed a button", "success");
-                // .then(function() {
-                //     location.reload();
-                // });
+                .then(function() {
+                    location.reload();
+                });
             },
             error: function(response) {
                 swal({

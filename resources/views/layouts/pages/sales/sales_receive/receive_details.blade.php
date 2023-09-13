@@ -62,7 +62,13 @@
                                     <td>{{$row->rcv_qty ?? '0' }}</td>
                                     <td>{{$row->qty * $row->price}}</td>
                                     <td class="text-right">
-                                        <button type="button" class="btn btn-sm btn-success p-1 px-2" id="edit_data" data-id="{{ $row->id }}"><i class="fa fa-plus"></i></i><span class="btn-icon-add"></span>Add New</button>
+                                        @if ($row->qty == $row->rcv_qty)  
+                                        <span class="badge light badge-success">
+                                            <i class="fa fa-circle text-success mr-1"></i>Successful
+                                        </span>
+                                        @else
+                                            <button type="button" class="btn btn-sm btn-success p-1 px-2" id="edit_data" data-id="{{ $row->id }}"><i class="fa fa-plus"></i></i><span class="btn-icon-add"></span>Add New</button>
+                                        @endif
                                     </td>
                                 </tr>
                                 @endforeach
