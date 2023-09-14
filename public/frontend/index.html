@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Groovin Bootstrap Template - Index</title>
+    <title>Icon ISL</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -698,6 +698,58 @@
             </div>
         </section><!-- End Clients Section -->
 
+        <!-- ======= Event Section ======= -->
+        <section id="event" class="event d-none">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Upcomming <span class="color">Events</span></h2>
+                    <div class="border"></div>
+                    <p>A Portfolio can show, What we do and How we solve your Problem.</p>
+                </div>
+                <!-- Blog Slider -->
+                <div class="blog-slider">
+                    <div class="blog-slider__wrp swiper-wrapper">
+                        <div class="blog-slider__item swiper-slide">
+                            <div class="blog-slider__img">
+                                <img src="https://res.cloudinary.com/muhammederdem/image/upload/q_60/v1535759872/kuldar-kalvik-799168-unsplash.webp" alt="">
+                            </div>
+                            <div class="blog-slider__content">
+                                <span class="blog-slider__code">26 December 2019</span>
+                                <div class="blog-slider__title">Lorem Ipsum Dolor</div>
+                                <div class="blog-slider__text">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae voluptate repellendus magni illo ea animi? </div>
+                                <a href="#" class="btn btn-sm animated-button gibson-one">READ MORE</a>
+                            </div>
+                        </div>
+                        <div class="blog-slider__item swiper-slide">
+                            <div class="blog-slider__img">
+                                <img src="https://res.cloudinary.com/muhammederdem/image/upload/q_60/v1535759871/jason-leung-798979-unsplash.webp" alt="">
+                            </div>
+                            <div class="blog-slider__content">
+                                <span class="blog-slider__code">26 December 2019</span>
+                                <div class="blog-slider__title">Lorem Ipsum Dolor2</div>
+                                <div class="blog-slider__text">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae voluptate repellendus magni illo ea animi?</div>
+                                <a href="#" class="btn btn-sm animated-button thar-one">READ MORE</a>
+                            </div>
+                        </div>
+    
+                        <div class="blog-slider__item swiper-slide">
+                            <div class="blog-slider__img">
+                                <img src="https://res.cloudinary.com/muhammederdem/image/upload/q_60/v1535759871/alessandro-capuzzi-799180-unsplash.webp" alt="">
+                            </div>
+                            <div class="blog-slider__content">
+                                <span class="blog-slider__code">26 December 2019</span>
+                                <div class="blog-slider__title">Lorem Ipsum Dolor</div>
+                                <div class="blog-slider__text">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae voluptate repellendus magni illo ea animi?</div>
+                                <a href="#" class="blog-slider__button">READ MORE</a>
+                            </div>
+                        </div>
+    
+                    </div>
+                    <div class="blog-slider__pagination"></div>
+                </div>
+                <!-- End Blog Slider -->
+            </div>
+        </section>
         <!-- ======= Contact Section ======= -->
         <section id="contact" class="contact">
             <div class="container">
@@ -798,6 +850,7 @@
                 </div>
             </div>
         </div>
+        
 
         <div class="container">
             <div class="copyright">
@@ -829,6 +882,26 @@
     <script src="assets/js/main.js"></script>
     <script src="assets/js/custom.js"></script>
 
+    <script>
+        // Show Slider preloader element
+        var preloaders = document.getElementsByClassName('event');
+        for (var i = 0; i < preloaders.length; i++) {
+            preloaders[i].classList.remove('d-none');
+        }
+
+        var swiper = new Swiper('.blog-slider', {
+            spaceBetween: 30,
+            effect: 'fade',
+            loop: true,
+            mousewheel: {
+                invert: false,
+            },
+            pagination: {
+                el: '.blog-slider__pagination',
+                clickable: true,
+            }
+        });
+    </script>
     <script>
         // JavaScript to hide the preloader when the page is fully loaded
         window.addEventListener('load', function () {

@@ -538,15 +538,15 @@ a.animated-button.gibson-four:hover:after {
 /* Thar Buttons */
 
 a.animated-button.thar-one {
-	color: #fff;
+	color: var(--mr-default2);
 	cursor: pointer;
 	display: block;
 	position: relative;
-	border: 2px solid #F7CA18;
+	border: 2px solid var(--mr-default2);
 	transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
 }
 a.animated-button.thar-one:hover {
-	color: #000 !important;
+	color: #fff !important;
 	background-color: transparent;
 	text-shadow: none;
 }
@@ -565,7 +565,7 @@ a.animated-button.thar-one:before {
 	z-index: -1;
 	content: '';
 	color: #000 !important;
-	background: #F7CA18;
+	background: var(--mr-default2);
 	transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
 }
 a.animated-button.thar-two {
@@ -600,15 +600,15 @@ a.animated-button.thar-two:before {
 	transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
 }
 a.animated-button.thar-three {
-	color: #fff;
+	color: var(--mr-default2);
 	cursor: pointer;
 	display: block;
 	position: relative;
-	border: 2px solid #F7CA18;
+	border: 2px solid var(--mr-default2);
 	transition: all 0.4s cubic-bezier(0.42, 0, 0.58, 1);
 }
 a.animated-button.thar-three:hover {
-	color: #000 !important;
+	color: #fff !important;
 	background-color: transparent;
 	text-shadow: nthree;
 }
@@ -626,8 +626,8 @@ a.animated-button.thar-three:before {
 	width: 0px;
 	z-index: -1;
 	content: '';
-	color: #000 !important;
-	background: #F7CA18;
+	color: #fff !important;
+	background: var(--mr-default2);
 	transition: all 0.4s cubic-bezier(0.42, 0, 0.58, 1);
 }
 a.animated-button.thar-four {
