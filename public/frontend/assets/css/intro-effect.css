@@ -600,11 +600,11 @@ a.animated-button.thar-two:before {
 	transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
 }
 a.animated-button.thar-three {
-	color: var(--mr-default2);
+	color: var(--mr-default);
 	cursor: pointer;
 	display: block;
 	position: relative;
-	border: 2px solid var(--mr-default2);
+	border: 2px solid var(--mr-default);
 	transition: all 0.4s cubic-bezier(0.42, 0, 0.58, 1);
 }
 a.animated-button.thar-three:hover {
@@ -627,7 +627,7 @@ a.animated-button.thar-three:before {
 	z-index: -1;
 	content: '';
 	color: #fff !important;
-	background: var(--mr-default2);
+	background: var(--mr-default);
 	transition: all 0.4s cubic-bezier(0.42, 0, 0.58, 1);
 }
 a.animated-button.thar-four {

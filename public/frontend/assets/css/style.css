@@ -1552,7 +1552,7 @@ position: relative;
   flex-shrink: 0;
   height: 300px;
   background-image: linear-gradient(147deg, #fe8a39 0%, #fd3838 74%);
-  box-shadow: 4px 13px 30px 1px rgba(252, 56, 56, 0.2);
+  box-shadow: 0px 2px 15px 0px #6c757d;
   border-radius: 20px;
   transform: translateX(-80px);
   overflow: hidden;
@@ -1887,6 +1887,25 @@ position: relative;
 }
 
 /*--------------------------------------------------------------
+# Hero-Banner
+--------------------------------------------------------------*/
+.hero-banner{
+  padding: 40px 0px;
+  margin: 0 auto;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
+  height: 50%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+}
+.hero-banner h1{
+  text-align: center;
+  color: #fff;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  text-transform: uppercase;
+}
+/*--------------------------------------------------------------
 # Breadcrumbs
 --------------------------------------------------------------*/
 .breadcrumbs {
@@ -1933,6 +1952,301 @@ position: relative;
     display: inline-block;
   }
 }
+
+/*--------------------------------------------------------------
+# Job Details  => Page
+--------------------------------------------------------------*/
+
+.job_details_content_wrapper{
+    padding-right: 30px;
+}
+.job_details_content h6{
+    color: #5C5C5C;
+    font-weight: bold;
+}
+.job_details_content p{
+    color: #5C5C5C;
+    font-size: 14px;
+    margin-left: 20px;
+}
+.job_details_content ul{
+    color: #5C5C5C;
+    font-size: 14px;
+}
+
+.job_apply_button{
+    margin: 0 5%;
+    padding: 15px;
+    border-top: 1px dotted var(--crimson);
+    border-bottom: 1px dotted var(--crimson);
+}
+.job_apply_button a{
+    color: var(--crimson);
+}
+/*--------------------------------------------------------------
+# Job Post => Page
+--------------------------------------------------------------*/
+
+/*----Header Title-------*/
+.search_job_post form {
+    width: 100%;
+    height: 44px;
+    padding-left: 10px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 20px;
+}
+
+.search_job_post input {
+    all: unset;
+    font: 16px system-ui;
+    color: var(--mr-default);
+    background: #dfdfdd;
+    width: 80%;
+    height: auto;
+    padding: 10px 0px;
+    padding-left: 20px;
+    outline: none;
+}
+
+.search_job_post button {
+    color: #fff;
+    width: 20%;
+    padding: 10px 0px;
+    margin-left: 1%;
+    outline: none;
+    background: var(--mr-default);
+    border: none;
+}
+
+.search_job_post button:hover {
+    background: var(--mr-hover);
+    transition: .3s;
+}
+
+.search_job_post ::placeholder {
+    color: var(--mr-default);
+}
+
+/*-------Content----------*/
+.job_card_wrapper {
+    transition: all linear 0.3s;
+    display: flex;
+    padding: 20px 5px;
+    margin-bottom: 30px;
+    border-radius: 5px;
+    border: 2px solid silver;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.job_card_wrapper:hover {
+    transform: translateY(-8px);
+    opacity: 1;
+}
+/*--------------*/
+.job_item_img{
+    position: relative;
+    width: 30%;
+}
+.job_item_img img {
+    padding: 10px;
+    text-align: center;
+    border: 10px solid white;
+}
+
+.job_item_details{
+    width: 70%;
+}
+.job_item_details h6{
+    color: #222;
+}
+/* .job_item_details p{
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;   
+} */
+
+.job_item_details ul {
+    padding: 0px;
+    margin: 0px;
+    line-height: 30px;
+    font-family: arial;
+    font-size: 14px;
+    color: #3e332d;
+    list-style-type: none;
+    
+}
+
+.job_item_details ul li{
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+.job_item_details ul li i{
+    margin-right: 5px;
+}
+.job_post_end_date{
+    margin: 8px 20px 0px;
+    cursor: default;
+}
+.job_post_end_date p{
+    text-align: center;
+    margin: 0px;
+    font-size: 12px;
+}
+/*--------------*/
+.job_post_btn {
+    padding: 5px 15px;
+    margin-top: 10px;
+    cursor: pointer;
+    font-family: "klinic-slab", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    text-align: center;
+    border: 1px solid #3e332d;
+    display: inline-block;
+    background-color: #ffffff;
+    color: #3e332d;
+}
+
+.job_post_btn:hover {
+    background-color: #3e332d;
+    color: white;
+    transition: .3s;
+}
+
+/*--------------------------------------------------------------
+# Job Apply => Page
+--------------------------------------------------------------*/
+
+/*----Input Design----*/
+.inpubox {
+  padding: 5px 10px;
+  position: relative;
+  z-index: 2;
+  background: transparent;
+  border: 1px solid #ccc;
+  border-radius: 0;
+  width: 100%;
+}
+
+.inpubox:focus {
+  outline: none;
+  border-color: var(--mr-default);
+}
+
+.go_up_effect {
+  position: relative;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.go_up_effect label {
+  color: rgba(121, 121, 121, 0.8196078431372549);
+  position: absolute;
+  left: 10px;
+  top: 0;
+  line-height: 35px;
+  z-index: 1;
+  -webkit-transition: all .3s ease-in-out;
+  -moz-transition: all .3s ease-in-out;
+  transition: all .3s ease-in-out;
+  font-weight: 200;
+}
+
+.go_up_effect input:focus+label,
+.go_up_effect.has-data label {
+  left: 0;
+  top: -30px;
+  color: var(--mr-default);
+  font-weight: bold;
+  font-size: 12px;
+}
+
+/*----------File Type------------*/
+.uplaoad_cv input[type=file] {
+    color: transparent;
+    display: block;
+    width: 100%;
+    margin-top: 20px;
+  }
+.uplaoad_cv input[type=file]::-webkit-file-upload-button {
+    visibility: hidden;
+}
+.uplaoad_cv input[type=file]::before {
+    content: 'Upload CV';
+    color: rgb(125, 125, 125);
+    display: inline-block;
+    border: 2px solid silver;
+    border-radius: 3px;
+    padding: 10px;
+    width: 100%;
+    text-align: center;
+    outline: none;
+    white-space: nowrap;
+    -webkit-user-select: none;
+    cursor: pointer;
+    text-shadow: 1px 1px #fff;
+    font-weight: 700;
+    font-size: 10pt;
+    transition: .4s;
+}
+.uplaoad_cv input[type=file]:hover::before {
+    border: 2px solid var(--mr-default2);
+    color: var(--mr-default2);
+}
+.uplaoad_cv input[type=file]:active {
+    outline: 0;
+}
+.uplaoad_cv input[type=file]:active::before {
+    background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9); 
+}
+
+/*----------Url Type------------*/
+.linkdin_profile_link{
+    border: 1px solid silver;
+    margin: 0px;
+    margin-top: 20px;
+}
+.linkdin_profile_link label{
+    padding: 10px;
+    width: 100%;
+    margin: 0px;
+}
+.linkdin_profile_link input[type=url]{
+    padding: 10px 0px 10px 15px;
+    border: 1px solid transparent;
+    outline: none;
+    border-left: 1px solid silver;
+    width: 100%;
+}
+.linkdin_profile_link input[type=url]:focus{
+    border: .5px solid silver;
+    border-color: var(--mr-default);
+}
+
+
+.job_submit_btn{
+    padding: 10px 40px;
+    cursor: pointer;
+    font-family: "klinic-slab", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    text-align: center;
+    display: inline-block;
+    background-color: var(--mr-default);
+    transition: .3s;
+    outline: none;
+    border: none;
+    color: white;
+}
+.job_submit_btn:hover{
+    background: var(--mr-hover);
+}
+
 
 /*--------------------------------------------------------------
 # Footer

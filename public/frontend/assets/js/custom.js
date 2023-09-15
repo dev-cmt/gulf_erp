@@ -100,7 +100,7 @@ $(document).ready(function () {
 
 //-----Team Member
 $(document).ready(function () {
-    $("#owl-review-clients").owlCarousel({
+    $("#owl-gallery").owlCarousel({
         items: 2
     });
     $('.link').on('click', function (event) {
