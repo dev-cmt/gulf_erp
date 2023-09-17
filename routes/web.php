@@ -23,6 +23,9 @@ use App\Http\Controllers\Sales\SalesReturnController;
 use App\Http\Controllers\Warranty\ComplaintIssueController;
 use App\Http\Controllers\Warranty\RequisitionController;
 use App\Http\Controllers\Warranty\ServiceBillController;
+use App\Http\Controllers\Warranty\SparePartController;
+use App\Http\Controllers\Warranty\JobCardController;
+
 
 //--Master Data
 use App\Http\Controllers\Master\MastDepartmentController;
@@ -271,19 +274,29 @@ Route::group(['middleware' => ['auth']], function(){
      * Warranty & Service => Job Card
      * ______________________________________________________________________________________________
      */
-    Route::get('job_card',[JobCardController::class,'movementIndex'])->name('job_card');
+    Route::get('job_card',[JobCardController::class,'jobCardIndex'])->name('job_card');
+    Route::get('job_card_list',[JobCardController::class,'jobCardpage'])->name('job_card_list');
     Route::get('technician_add',[JobCardController::class,'technicianAdd'])->name('technician.add');
+    Route::post('store_job_card',[jobcardController::class,'storeJobCard'])->name('store_job_card');
+    Route::post('store_job_visit',[jobcardController::class,'storeJobVisit'])->name('store_job_visit');
+
     /**______________________________________________________________________________________________
      * Warranty & Service => Technician Movement
      * ______________________________________________________________________________________________
      */
-    Route::get('warranty/technician-movement/index ',[TechnicianMovementController::class,'movementIndex'])->name('technician-movement.index');
+
 
     /**______________________________________________________________________________________________
+     /**______________________________________________________________________________________________
      * Warranty & Service => Tools Requisition
      * ______________________________________________________________________________________________
      */
     Route::get('warranty/tools-requisition/index',[RequisitionController::class,'indexTools'])->name('tools-requisition.index');
+
+    Route::get('warranty/tools-requisition/list',[RequisitionController::class,'toolsList'])->name('tools-list');
+
+    Route::get('technician_add',[RequisitionController::class,'technicianAdd'])->name('technician.add');
+
     Route::post('warranty/tools-requisition/store', [RequisitionController::class, 'storeTools'])->name('tools-requisition.store');
 
     Route::get('requisition/edit',[RequisitionController::class,'edit'])->name('inv_requisition_edit');
@@ -295,6 +308,11 @@ Route::group(['middleware' => ['auth']], function(){
      */
     Route::get('warranty/sparepart-requisition/index',[RequisitionController::class,'indexSparePart'])->name('spare-parts-requisition.index');
     Route::post('warranty/sparepart-requisition/store', [RequisitionController::class, 'storeTools'])->name('sparepart-requisition.store');
+    Route::post('warranty/sparepart-requisition/store', [SparePartController::class, 'spareTools'])->name('sparepart.store');
+
+    Route::get('/get-spare-part',[SparePartController::class,'getComplanitData'])->name('get-spare-part');
+
+    Route::get('warranty/spare-part-requisition/list',[SparePartController::class,'sparePartList'])->name('spare-part-list');
     /**______________________________________________________________________________________________
      * Warranty & Service => Service Bill
      * ______________________________________________________________________________________________
@@ -303,6 +321,7 @@ Route::group(['middleware' => ['auth']], function(){
 
     Route::get('/get_bill',[ServiceBillController::class,'getBill'])->name('get-bill');
     Route::get('get/selse-edit-part-id',[ServiceBillController::class,'getSalesDetails'])->name('selse-edit-part-id');
+    Route::post('/calculate-total', [ServiceBillController::class,'calculateTotal'])->name('calculate-total');
 
 });
 
@@ -347,7 +366,9 @@ Route::group(['middleware' => ['auth']], function(){
     Route::post('submit.technician',[MastTechnicianController::class,'updateDesignation'])->name('submit.technician');
     Route::get('technician.edit',[MastTechnicianController::class,'technicianEdit'])->name('technician.edit');
     Route::post('update.designation',[MastTechnicianController::class,'updateTechnician'])->name('update.designation');
-    
+    // setup store
+    Route::post('setup_store',[MastTechnicianController::class,'technicianSetupStore'])->name('setup_store');
+
 });
 /**______________________________________________________________________________________________
  * Dwonload File => PDF, EXCEL ETC

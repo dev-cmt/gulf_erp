@@ -13,8 +13,9 @@ use App\Models\Master\MastCustomer;
 use App\Models\Master\MastItemRegister;
 use App\Helpers\Helper;
 use App\Models\Warranty\Complaint;
-use App\Models\Requisition;
-use App\Models\RequisitionDetails;
+use App\Models\Warranty\Requisition;
+use App\Models\Warranty\RequisitionDetails;
+
 
 class RequisitionController extends Controller
 {
@@ -22,11 +23,33 @@ class RequisitionController extends Controller
     {
         $item_group = MastItemGroup::where('mast_item_category_id', 4)->where('status', 1)->orderBy('part_name', 'asc')->get();
 
-        $complaintt = Complaint::with('complaintType')->get();
+        // $complaintt = Complaint::with('complaintType')->get();
         $customer = MastCustomer::where('status', 1)->get();
-    
-        return view('layouts.pages.warranty.tools_requisition.index',compact('customer','item_group','complaintt'));
+
+        // $data = Requisition::where('mast_item_category_id', 4)->with('complaintType','requisitionDetails','mastCustomer')->orderBy('id', 'desc')->latest()->get();
+
+        $data = Complaint::with('complaintType')->get();
+        $list = Requisition::all();
+        // dd($list);
+
+        return view('layouts.pages.warranty.tools_requisition.index',compact('customer','item_group','data','list'));
     }
+
+    public function toolsList()
+    {
+        $item_group = MastItemGroup::where('mast_item_category_id', 4)->where('status', 1)->orderBy('part_name', 'asc')->get();
+        $customer = MastCustomer::where('status', 1)->get();
+        $data = Complaint::with('complaintType')->get();
+        $list = Requisition::all();
+
+        $job = DB::table('job_cards')
+        ->join('users','users.id','job_cards.tech_id')
+        ->join('complaints','complaints.id','job_cards.tracking_no')
+        ->get()->toArray();
+        // dd($job);
+        return view('layouts.pages.warranty.tools_requisition.requisiton-list',compact('customer','item_group','data','list'));
+    }
+
     public function storeTools(Request $request)
     {
         //  $purchase_codes = Helper::IDGenerator(new Requisition, 'requ_no', 5, "REQUISITION-NO"); /* Generate id */ 
@@ -35,7 +58,7 @@ class RequisitionController extends Controller
             $storePurchase = Requisition::findOrFail($requ_id);
         }else{
             $validator = Validator::make($request->all(), [
-                'requ_no' => 'required',
+               
                 'requ_date' => 'required',
                 'mast_customer_id' => 'required',
             ]);
@@ -46,10 +69,12 @@ class RequisitionController extends Controller
             // $storePurchase->requ_no = $purchase_codes;
         }
 
+        $IDGenarator = Helper::IDGenerator(new Requisition,'requ_no', 5, "REQU");
         $storePurchase->requ_no = $request->requ_no;
         $storePurchase->requ_date = $request->requ_date;
         $storePurchase->remarks = $request->remarks;
         $storePurchase->status = 0;
+        $storePurchase->requ_no = $IDGenarator;
         $storePurchase->mast_item_category_id = 4;
         // $storePurchase->mast_customer_id = $request->mast_customer_id;
         
@@ -73,6 +98,7 @@ class RequisitionController extends Controller
 
             }
         }
+        return response()->json('success');
         
     }
 
@@ -99,26 +125,15 @@ class RequisitionController extends Controller
     public function edit(Request $request)
     {
         // Get active customers
-        $customer = MastCustomer::where('status', 1)->get();
-    
-        // Retrieve purchase details related to the specified requisition ID
-        $purchase_details = RequisitionDetails::where('requ_id', $request->id)
-            ->join('requisitions', 'requisitions.id', 'requisition_details.requ_id')
-            ->join('mast_item_categories', 'mast_item_categories.id', 'requisition_details.cat_id')
-            ->join('mast_item_registers', 'mast_item_registers.id', 'requisition_details.mast_item_register_id')
-            ->select('requisition_details.*', 'requisitions.requ_no', 'requisitions.requ_date', 'requisitions.remarks',
-                'mast_item_categories.id as cat_id', 'mast_item_registers.id as item_register_id', 'mast_item_registers.part_no')
-            ->get();
-    
-        // Retrieve the requisition information
-        $complaintt = Requisition::where('id', $request->id)->first();
-        // dd($complaintt);
-        // Return the retrieved data as a JSON response
+        $data = Requisition::where('id', $request->id)->first();
+
         return response()->json([
-            'complaintt' => $complaintt,
-            'customer' => $customer,
-            'purchase_details' => $purchase_details,
+            'data'   =>$data,
+            // 'complaintt' => $complaintt,
+            // 'customer' => $customer,
+            // 'purchase_details' => $purchase_details,
         ]);
+        
     }
 
     
@@ -128,10 +143,15 @@ class RequisitionController extends Controller
      */
     public function indexSparePart()
     {
-        $item_group = MastItemGroup::where('mast_item_category_id', 4)->where('status', 1)->orderBy('part_name', 'asc')->get();
+        $item_group = MastItemGroup::where('mast_item_category_id', 2)->where('status', 1)->orderBy('part_name', 'asc')->get();
         $complaintt = Complaint::with('complaintType')->get();
         $customer = MastCustomer::where('status', 1)->get();
 
         return view('layouts.pages.warranty.spare_part.index' , compact('item_group','complaintt','customer'));
     }
+
+
+    
 }
+
+   

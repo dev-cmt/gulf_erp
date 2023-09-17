@@ -91,8 +91,8 @@
                                         <span class="text-danger">*</span>
                                     </label>
                                     <div class="col-md-7">
-                                        {{-- <option value="{{$data->id}}">{{$data->complaintType->name}}</option> --}}
-                                        <label class="col-md-5 col-form-label" id="inv_no">Serniabat</label>
+                                      <option value="{{$data->id}}">{{$data->complaintType->name}}</option> 
+                                        <!-- <label class="col-md-5 col-form-label" id="inv_no">Serniabat</label> -->
                                     </div>
                                 </div>
                             </div>
@@ -163,10 +163,11 @@
                                             </tr>
                                         </thead>
                                         <tbody id="">
+                                          @foreach($bill as $serv)
                                             <tr>
-                                                <td>07/20/2023</td>
-                                                <td>Car Spare Parts</td>
-                                                <td>Gas Change</td>
+                                                <td>{{ $serv->job_date }}</td>
+                                                <td>{{ $serv->tech_id}}</td>
+                                                <td>{{ $serv->observe_details}}</td>
                                                 <td>
                                                     <div style="display: flex">
                                                         <button id="new_add" type="button" title="Add" onclick="" class="btn btn-icon btn-outline-warning border-0 btn-xs mr-2 new_add">
@@ -182,6 +183,7 @@
                                                     </div>
                                                 </td>
                                             </tr>
+                                          @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -206,18 +208,20 @@
                                             </tr>
                                         </thead>
                                         <tbody id="">
+                                            @foreach($details as $data)
                                             <tr>
-                                                <td>GL-5678</td>
-                                                <td>Car Spare Parts</td>
-                                                <td>1*4</td>
-                                                <td>Box</td>
-                                                <td>500</td>
-                                                <td>10</td>
-                                                <td>5000</td>
+                                                <td>{{$data->mastItemRegister->part_no}}</td>
+                                                <td>{{$data->mastItemRegister->mastItemGroup->part_name}}</td>
+                                                <td>{{$data->mastItemRegister->box_qty}}</td>
+                                                <td>{{$data->mastItemRegister->unit->unit_name}}</td>
+                                                <td class="price">{{$data->mastItemRegister->price}}</td>
+                                                <td class="quantity">{{$data->qty}}</td>
+                                                <td><span class="total" id="total">0.00</span></td>
                                                 <td>
                                                     <button type="button" class="btn btn-sm btn-danger" id="" data-id=""><i class="fa fa-trash" ></i><span class="btn-icon-add"></span>Delete</button>
                                                 </td>
                                             </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -262,6 +266,46 @@
 
 </script>
 
+
+<script>
+    $('#items-table').on('input', '.quantity, .price', function() {
+        updateSubtotal(0);
+    });
+    function updateSubtotal(update_subTotal) {
+        var total = 0;
+        $('#items-table tbody tr').each(function() {
+            var quantity = parseFloat($(this).find('.quantity').val()) || 0;
+            var price = parseFloat($(this).find('.price').val()) || 0;
+            var total = quantity * price;
+            $(this).find('.total').text(total.toFixed(2));
+            total += total;
+        });
+        var update_total = total - update_subTotal;
+        $('#total').text(update_total.toFixed(2));
+    }
+</script>
+
+
+<!-- <script>
+    $(document).ready(function() {
+        $('#item-table').on('change', '.quantity, .price', function() {
+            var row = $(this).closest('tr');
+            var qty = parseFloat(row.find('.quantity').val());
+            var price = parseFloat(row.find('.price').val());
+            // alert('hi');
+
+            $.ajax({
+                url: '{{ route('calculate-total')}}',
+                type: 'POST',
+                data: { quantity: qty, price: price },
+                dataType: 'json',
+                success: function(data) {
+                row.find('.total').text(data.total);
+                }
+                });
+            });
+        });
+</script> -->
 
 <script>
     var d = new Date()

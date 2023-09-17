@@ -3,9 +3,10 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Tools Requisition(Complain List)</h4>
+                    <h4 class="card-title">Spare Parts Requisition</h4>
+                    <button type="button" id="open_modal" class="btn btn-sm btn-primary p-1 px-2"><i class="fa  fa-plus"></i></i><span class="btn-icon-add"></span>Create</button>
                 </div>
-                <div class="card-body" id="reload">
+                <div class="card-body" id="reload">           
                     <div class="form-group row">
                         <label class="col-md-2 mt-2"><h5>Start Date: </h5></label>
                         <div class="col-md-2">
@@ -20,24 +21,26 @@
                         <table id="example3" class="display " style="min-width: 845px">
                                 <thead>
                                     <tr>
-                                        <th>Issue No</th>
-                                        <th>Date</th>
-                                        <th>Customer</th>
-                                        <th>Mobile</th>
-                                        <th>Complaint Type</th>
+                                        <th>Requ No</th>
+                                        <th>Requ Date</th>
+                                        <th>Tracking No</th>
+                                        <th>Tech Name</th>
+                                        <th>Complaint Date</th>
+                                        <th>Complaint Name</th>
                                         <th>Status</th>
                                         <th class="text-center">Action</th>
                                     </tr>
                                 </thead>
-                                <tbody id="purchase_tbody">
-                                        @foreach($data as $item)
+                                    <tbody id="purchase_tbody">
+                                        @foreach($list as $item)
                                         
                                         <tr id="row_purchase_table_{{ $item->id}}">
-                                            <td>{{ $item->issue_no}}</td>
+                                            <td>{{ $item->requ_no}}</td>
+                                            <td>{{ $item->requ_date}}</td>
+                                            <td>{{ $item->tracking_no}}</td>
+                                            <td>{{ $item->tech_id}}</td>
                                             <td>{{ $item->issue_date}}</td>
-                                            <td>{{ $item->mastCustomer->name}}</td>
-                                            <td>{{ $item->mastCustomer->phone}}</td>
-                                            <td>{{ $item->mastCustomer->remarks}}</td>
+                                            <td>{{ $item->issue_no}}</td>
                                             <td>@if($item->status == 0)
                                               <span class="badge light badge-warning">
                                                 <i class="fa fa-circle text-warning mr-1"></i>Pending
@@ -48,23 +51,18 @@
                                                 </span>
                                                 @elseif($item->status == 2)
                                              <span class="badge light badge-danger">
-                                             <i class="fa fa-circle text-danger mr-1"></i>Canceled
+                                             <i class="fa fa-circle text-danger mr-1"></i>Refund
                                             </span>
                                             @endif
                                             </td>
                                             <td>
-                                                <a href="{{ route('tools-list') }}">
-                                                <button type="button" class="btn btn-sm btn-primary p-1 px-2">
-                                                <i class="fa fa-plus"></i>
-                                                <span class="btn-icon-add"></span>
-                                                        New
-                                                </button>
-                                                </a>
+                                            <button type="button" class="btn btn-sm btn-success p-1 px-2" id="edit_data" data-id="{{ $item->id }}"><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button>
+
+                                            <button type="button" data-toggle="modal" data-target=".view-modal" class="btn btn-sm btn-info p-1 px-2" id="view_data" data-id="{{ $item->id }}"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</button>
                                             </td>
                                         </tr>
-                                
                                         @endforeach
-                                 </tbody>
+                                    </tbody>
                         </table>
                     </div>
                 </div>
@@ -77,11 +75,11 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        Tools Requisition
+                        Spare Parts Requisition
                     </h5>
                     <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                 </div>
-                <form class="form-valide" data-action="{{ route('tools-requisition.store') }}" method="POST" enctype="multipart/form-data" id="add-user-form">
+                <form class="form-valide" data-action="{{ route('sparepart.store') }}" method="POST" enctype="multipart/form-data" id="add-user-form">
                     @csrf
                     <div class="modal-body py-2">
                         <div class="row" id="main-row-data">
@@ -90,7 +88,13 @@
                                 <div class="form-group row">
                                     <label class="col-md-5 col-form-label">Complaint ID</label>
                                     <div class="col-md-7">
-                                        <label class="col-md-5 col-form-label" id="requ_no">Gulf-5680</label>
+                                        <select name="mast_customer_id" id="complaint_id" class="form-control dropdwon_select" required>
+                                        <option selected disabled>--Select--</option>
+                                            @foreach($data as $row)
+                                            <option value="{{ $row->id}}">{{ $row->issue_no}}</option>
+                                            @endforeach
+                                        </select>
+                                        <!-- <label class="col-md-5 col-form-label" id="requ_no">Gulf-5680</label> -->
                                     </div>
                                 </div>
                             </div>
@@ -100,7 +104,7 @@
                                         <span class="text-danger">*</span>
                                     </label>
                                     <div class="col-md-7">
-                                        <input type="date" name="requ_date" id="requ_date" class="form-control" value="{{ old('date') ? old('date'):  date('Y-m-d') }}">
+                                        <input type="date" name="requ_date" id="issueDate" class="form-control" value="{{ old('date') ? old('date'):  date('Y-m-d') }}">
                                     </div>
                                 </div>
                             </div>
@@ -110,7 +114,9 @@
                                         <span class="text-danger">*</span>
                                     </label>
                                     <div class="col-md-7">
-                                        <option value="{{$item->id}}">{{$item->name}}</option>
+
+                                    <input type="text" readonly id="customerName" style="border: none">
+                                     <!-- <option value="{{$item->id}}">{{$item->name}}</option>  -->
                                         <!-- <label class="col-md-5 col-form-label" id="inv_no">Alam</label> -->
                                     </div>
                                 </div>
@@ -135,8 +141,8 @@
                                     <label class="col-md-5 col-form-label">Requisition No.</label>
                                     <div class="col-md-7">
 
-                                       <label class="col-md-5 col-form-label" id="requ_no">REQU-</label>
-                                        <!-- <input type="number" name="requ_no" class="col-md-5 col-form-label" id="requ_no" required> -->
+                                     <label class="col-md-5 col-form-label" id="requ_no">REQU-</label>
+                                        <!-- <input type="number" name="requ_no" class="col-md-5 col-form-label" id="requ_no" > -->
                                     </div>
                                 </div>
                             </div>
@@ -176,26 +182,9 @@
                                             </tr>
                                         </thead>
                                         <tbody id="table-body">
-                                            <!-- <tr>
-                                                <td>GL-5678</td>
-                                                <td>Car Spare Parts</td>
-                                                <td>1200</td>
-                                                <td>500</td>
-                                                <td>10</td>
-                                                <td>
-                                                    <button type="button" class="btn btn-sm btn-danger" id="view_data" data-id=""><i class="fa fa-trash" ></i><span class="btn-icon-add"></span>Delete</button>
-                                                </td>
-                                            </tr> -->
+                                            
                                         </tbody>
                                     </table>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-group row">
-                                    <label for="" class="col-md-2">Description</label>
-                                    <div class="col-md-10">
-                                        <textarea name="remarks" id="remarks" cols="30" rows="2" class="form-control" style="width: 95%; margin-left: 45px;"></textarea>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -210,17 +199,16 @@
         </div>
     </div>
 
-
-    <!--view click than modal open-->
-
-    
-
 </x-app-layout>
+
+
 
 
 <script type="text/javascript">
     /*=======//Show Modal//=========*/
     $(document).on('click','#open_modal',function(){
+        // alert('hi');
+        $(".bd-example-modal-lg").modal('show');
         //----Open New Add Row
         var tableBody = $('#table-body');
         tableBody.empty();
@@ -231,12 +219,13 @@
                 dropdownParent: $(this).parent()
             });
         });
-        $(".bd-example-modal-lg").modal('show');
+        
         $(".table_action").show();
         $(".submit_btn").show();
         $("#id").val("");
        
     });
+
     /*=======//Save Data //=========*/
     $(document).ready(function(){
         var form = '#add-user-form';
@@ -244,20 +233,20 @@
             event.preventDefault();
             var url = $(this).attr('data-action');
             var allSubValuesNotNull = true;
-            // $('.val_part_number').each(function() {
-            //     var value = $(this).val();
-            //     if (value === null || value === '') {
-            //         allSubValuesNotNull = false;
-            //         return false;
-            //     }
-            // });
-            // $('.val_quantity').each(function() {
-            //     var value = $(this).val();
-            //     if (value === null || value === '') {
-            //         allSubValuesNotNull = false;
-            //         return false;
-            //     }
-            // });
+            $('.val_part_number').each(function() {
+                var value = $(this).val();
+                if (value === null || value === '') {
+                    allSubValuesNotNull = false;
+                    return false;
+                }
+            });
+            $('.val_quantity').each(function() {
+                var value = $(this).val();
+                if (value === null || value === '') {
+                    allSubValuesNotNull = false;
+                    return false;
+                }
+            });
            
             if (allSubValuesNotNull) {
                 $.ajax({
@@ -271,19 +260,18 @@
                     success:function(response)
                     {
                         $(form).trigger("reset");
-                        swal("Success Message Title", "Well done, you pressed a button", "success")
+                        swal("Success Message Title", "Well done, you pressed a button", "success");
                         $(".bd-example-modal-lg").modal('hide');
-
 
                         var storePurchase = response.storePurchase;
                         
                         var i = 0;++i;
                         var row = '<tr id="row_purchase_table_'+ storePurchase.id + '" role="row" class="odd">';
-                        row += '<td></td>';
                         row += '<td>' + storePurchase.requ_no + '</td>';
                         row += '<td>' + storePurchase.requ_date + '</td>';
                         row += '<td>' + response.complaintType.name + '</td>';
                         row += '<td>' + response.complaintType.phone + '</td>';
+                        row += '<td>' + storePurchase.remarks + '</td>';
                         row += '<td>';
                         if(storePurchase.status == 0)
                             row += '<span class="badge light badge-warning"><i class="fa fa-circle text-warning mr-1"></i>Pending</span>';
@@ -296,7 +284,7 @@
                         row += '<td><button type="button" id="open_modal" class="btn btn-sm btn-primary p-1 px-2"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>Create</button></td>';
                         row += '<td class="d-flex"><button type="button" class="btn btn-sm btn-success p-1 px-2 mr-1" id="edit_data" data-id="'+storePurchase.id+'"><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button><button type="button" class="btn btn-sm btn-info p-1 px-2" id="view_data" data-id="'+storePurchase.id+'"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</button></td>';
 
-                        if($("#requ_id").val()){
+                        if($("#pur_id").val()){
                             $("#row_purchase_table_" + storePurchase.id).replaceWith(row);
                         }else{
                             $("#purchase_tbody").prepend(row);
@@ -324,7 +312,7 @@
     /*========//Edit Data//=========*/
     $(document).on('click', '#edit_data', function(){
         var id = $(this).data('id');
-        alert(id);
+        alert('hi');
         $.ajax({
             url:'{{ route('inv_requisition_edit')}}',
             method:'GET',
@@ -338,23 +326,25 @@
             }
         });
     });
+
     /*========//View Data//=========*/
     $(document).on('click', '#view_data', function(){
         var id = $(this).data('id');
-        alert(id);
+        
         $.ajax({
             url:'{{ route('inv_requisition_edit')}}',
             method:'GET',
-            dataType:"JSON",
             data:{id:id},
             success:function(response){
-                showData(response, 2);
+             dataType:"JSON",
+               showData(response, 2);
             },
             error: function(xhr, status, error) {
                 console.log(error);
             }
         });
     });
+  
 
     function showData(response, check) {
         $(".bd-example-modal-lg").modal('show');
@@ -369,8 +359,8 @@
         $('#remarks').html(complaintt.remarks);
         
         //--Get Supplier Data
-        
-        var supplier = response.customer;
+
+        var customer = response.customer;
         var supplier_dr = $('#mast_customer_id');
         supplier_dr.empty();
         supplier_dr.append('<option selected disabled>--Select--</option>');
@@ -378,8 +368,7 @@
             var selected = (option.id == customer.mast_customer_id) ? 'selected' : '';
             supplier_dr.append('<option value="' + option.id + '" ' + selected + '>' + option.name + '</option>');
         });
-        //--Get Work Station Data
-        
+
 
         if(check == 1){
 
@@ -389,34 +378,33 @@
             $('#remarks').prop("disabled", false);
             $('#mast_supplier_id').prop("disabled", false);
             $('#mast_work_station_id').prop("disabled", false);
-            // $('#mast_customer_id').prop("disabled", false);
+            $('#mast_customer_id').prop("disabled", false);
 
             
             $(".table_action").show();
             $('.submit_btn').show();
         }else{
-
+            
             $("#requ_id").prop("disabled", true);
             $('#requ_no').prop("disabled", true);
             $("#requ_date").prop("disabled", true);
             $('#remarks').prop("disabled", true);
             $('#mast_supplier_id').prop("disabled", true);
             $('#mast_work_station_id').prop("disabled", true);
-            // $('#mast_customer_id').prop("disabled", false);
+            $('#mast_customer_id').prop("disabled", false);
 
             $('.table_action').hide();
             $('.submit_btn').hide();
         }
-        
-        //requisition_details...
-        
+
+        //--Table Purchase Details
         var tableBody = $('#table-body');
         tableBody.empty();
-        var requisitionDetails = response.purchase_details;
+        var purchaseDetails = response.purchase_details;
         var total = 0;
         var i = 0;
         if(check == 1){ //Edit - 1
-            $.each(requisitionDetails, function(index, item) {
+            $.each(purchaseDetails, function(index, item) {
                 var subtotal = item.qty * item.price;
                 var newRow = $('<tr id="row_todo_'+ item.id + '">' +
                     '<input type="hidden" name="editFile['+i+'][id]" id="salesDetailsId" value="' + item.id + '">' +
@@ -429,7 +417,7 @@
                         '</select>' +
                     '</td>' +
                     '<td><select id="partNumber" name="editFile['+i+'][item_id]" class="form-control dropdwon_select val_part_number"></select></td>' +
-                    '<td><input type="text" name="" INV-NO id="packageSize" class="form-control" value="' + item.box_qty + '"></td>' +
+                    '<td><input type="text" name="" REQUISITION-NO id="packageSize" class="form-control" value="' + item.box_qty + '"></td>' +
                     '<td><input type="text" name="" readonly id="unit" class="form-control" value="' + item.unit_name + '"></td>' +
                     '<td><input type="number" name="editFile['+i+'][qty]" id="" class="form-control quantity val_quantity"  value="'+ item.qty +'"></td>' +
                     '<td class="text-center">' +
@@ -470,8 +458,8 @@
             $('#total').text(total.toFixed(2));
         }
         if(check == 2){ //View - 2
-            $.each(requisitionDetails, function(index, item) {
-                
+            $.each(purchaseDetails, function(index, item) {
+                var subtotal = item.qty * item.price;
                 var row = '<tr id="row_todo_'+ item.id + '">';
                 row += '<td>' + item.part_name + '</td>';
                 row += '<td>' + item.part_no + '</td>';
@@ -484,7 +472,6 @@
             });
             $('#total').text(total.toFixed(2));
         }
-        
     }
 
     /*========//Delete Data//========*/
@@ -524,20 +511,21 @@
     var count = 0;
     $("#items-table").on("click", ".add-row", function() {
         var allValuesNotNull = true;
-        // $('.val_part_number').each(function() {
-        //     var value = $(this).val();
-        //     if (value === null || value === '') {
-        //         allValuesNotNull = false;
-        //         return false;
-        //     }
-        // });
-        // $('.val_quantity').each(function() {
-        //     var value = $(this).val();
-        //     if (value === null || value === '') {
-        //         allValuesNotNull = false;
-        //         return false;
-        //     }
-        // });
+        $('.val_part_number').each(function() {
+            var value = $(this).val();
+            if (value === null || value === '') {
+                allValuesNotNull = false;
+                return false;
+            }
+        });
+        $('.val_quantity').each(function() {
+            var value = $(this).val();
+            if (value === null || value === '') {
+                allValuesNotNull = false;
+                return false;
+            }
+        });
+        
         if (allValuesNotNull) {
             ++count;
             addRow(count);
@@ -576,14 +564,14 @@
             });
         });
     }
-
     //======Remove ROW
     $('#items-table').on('click', '.remove-row', function() {
         $(this).closest('tr').remove();
         updateSubtotal(0);
     });
-    
+
 </script>
+
 <script type="text/javascript">
     //======Get Item Group All Data
     $(document).on('change','#item_category',function(){
@@ -634,6 +622,7 @@
                 title: 'Duplicate Values',
                 text: 'Duplicate values are not allowed in the partNumber dropdown.',
             });
+
             //--Reset Option
             var $currentRow = $(this).closest('tr');
             var itemCategoryValue = $currentRow.find('.val_item_category').val();
@@ -653,6 +642,7 @@
             });
         }
     });
+
     //======Validation Message
     @if(Session::has('messege'))
         var type="{{Session::get('alert-type','info')}}"
@@ -666,10 +656,8 @@
                 break;
         }
     @endif
+
 </script>
-
-
-
 
 
 <script>
@@ -708,7 +696,25 @@
     document.getElementById('date').value = c_date;
 </script>
 
+<script>
+
+    $(document).on('click','#complaint_id', function(){
+        var complaint_id = $(this).data('id');
+        alert('complaint_id');
 
 
+        $.ajax({
+            url:'{{ route('get-spare-part')}}',
+            method:'GET',
+            dataType:"JSON",
+            data:{'complaint_id':complaint_id},
+            success:function(response){
+                console.log(response)
+                $('#customerName').val(response.viewComplaint.mastCustomer.name);
+                $('#issueDate').val(response.viewCompliant.issue_date);
+                
+            }
+        });
+    });
 
-
+</script>

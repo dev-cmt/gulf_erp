@@ -178,7 +178,8 @@
                             </ul>
                         </li>
                         <li><a href="{{ route('job_card') }}">Prepare Job Card</a></li>
-                        <li><a href="{{route('technician-movement.index')}}">Tachnician Movement</a></li>
+                        <li><a href="{{ route('job_card_list') }}"> Job Card</a></li>
+                        <li><a href="">Tachnician Movement</a></li>
                         <li><a href="{{ route('tools-requisition.index')}}">Tools Requsition</a></li>
                         <li><a href="{{ route('spare-parts-requisition.index')}}">Spare Parts Requsition</a></li>
                         <li><a href="{{ route('service-bill.index')}}">Service Bill</a></li>

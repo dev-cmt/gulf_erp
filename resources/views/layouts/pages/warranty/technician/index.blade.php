@@ -205,7 +205,7 @@
 <script>
     $(document).on('change','#tecnicianName',function () {
         var tecnicianId = $(this).val();
-       
+
 
         $.ajax({
             url:'{{route('get-designation-Name')}}',

@@ -24,8 +24,8 @@
                                     <tr>
                                         <td>{{ $item->issue_no }}</td>
                                         <td>{{ $item->issue_date }}</td>
-                                        <td>{{ $item->custo->name }}</td>
-                                        <td>{{ $item->custo->phone }}</td>
+                                        <td>{{ $item->mastCustomer->name }}</td>
+                                        <td>{{ $item->mastCustomer->phone }}</td>
                                         <td>@if($item->status == 0)
                                             <span class="badge light badge-warning">
                                                 <i class="fa fa-circle text-warning mr-1"></i>Pending
@@ -130,7 +130,6 @@
 <script>
     $(document).on('click', '#view_compliant', function(){
      var compliant_id = $(this).data('id');
-     alert(compliant_id);
 
      $.ajax({
             url:'{{ route('get-compliant-show')}}',

@@ -1,17 +1,20 @@
 <?php
 
-namespace App\Models\Master;
+namespace App\Models\Warranty;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class MastComplaintType extends Model
+class ServiceBillDetails extends Model
 {
     use HasFactory;
-    protected $fillable = [
-        'name',
+
+    protected $fillable=[
+        
         'description',
-        'status',
+        'qty',
+        'price',
+        'total',
         'user_id',
     ];
 }

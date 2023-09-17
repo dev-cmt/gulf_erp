@@ -22,8 +22,6 @@ return new class extends Migration
             $table->text('remarks')->nullable();
             $table->unsignedBigInteger('mast_complaint_type_id');
             $table->foreign('mast_complaint_type_id')->references('id')->on('mast_complaint_types')->onDelete('cascade');
-            $table->unsignedBigInteger('delivery_id');
-            $table->foreign('delivery_id')->references('id')->on('deliveries')->onDelete('cascade');
             $table->unsignedBigInteger('mast_customer_id');
             $table->foreign('mast_customer_id')->references('id')->on('mast_customers')->onDelete('cascade');
             $table->unsignedBigInteger('user_id');
