@@ -19,6 +19,7 @@ use App\Models\Master\MastItemRegister;
 use App\Models\Master\MastSupplier;
 use App\Models\Master\MastCustomerType;
 use App\Models\Master\MastCustomer;
+use App\Models\Master\MastComplaintType;
 
 class ImportSeeder extends Seeder
 {
@@ -797,6 +798,19 @@ class ImportSeeder extends Seeder
             'remarks'=>'Test Only',
             'status'=>'1',
             'mast_customer_type_id'=>'3',
+            'user_id'=>'1',
+        ]);
+        //____________________________________//
+        MastComplaintType::create([
+            'name'=>'Service Problem',
+            'description'=>'TEST-01',
+            'status'=>'1',
+            'user_id'=>'1',
+        ]);
+        MastComplaintType::create([
+            'name'=>'Gass Problem',
+            'description'=>'TEST-01',
+            'status'=>'1',
             'user_id'=>'1',
         ]);
     }

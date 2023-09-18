@@ -17,14 +17,14 @@ class ComplaintIssueController extends Controller
 {
     public function index()
     {
-        $data = Complaint::with('custo')->get();
+        $data = Complaint::get();
         return view('layouts.pages.warranty.complaint.index',compact('data'));
     }
     public function showCustomerList()
     {
-        $allCustomer = MastCustomer::with('mastCustomerType')->latest()->get();
+        $customer = MastCustomer::with('mastCustomerType')->orderBy('id', 'asc')->get();
         $compliantType = MastComplaintType::all();
-        return view('layouts.pages.warranty.complaint.customer-list',compact('allCustomer','compliantType'));
+        return view('layouts.pages.warranty.complaint.customer-list',compact('customer','compliantType'));
     }
 
     public function store(Request $request)
@@ -32,16 +32,17 @@ class ComplaintIssueController extends Controller
         $IDGenarator = Helper::IDGenerator(new Complaint,'issue_no', 5, "ISSUE");
         $data = new Complaint();
         $data->note = $request->note;
+        $data->note = $request->note;
         $data->remarks = $request->remarks;
         $data->mast_complaint_type_id = $request->mast_complaint_type_id;
         $data->mast_customer_id = $request->mast_customer_id;
-        $data->issue_date = $request->issue_date;
+        $data->issue_date = date('y-m-d');
         $data->with_warranty = $request->warenty == 'Yes' ? 1 : 0 ;
         $data->issue_no = $IDGenarator;
         $data->user_id = Auth::user()->id;
         $data->save();
 
-        return redirect()->route('complaint-issue');
+        return redirect()->route('warranty-complaint.index');
     }
 
 
@@ -51,7 +52,7 @@ class ComplaintIssueController extends Controller
      */
     public function getCompliantData(Request $request)
     {
-        $viewCompliant = Complaint::with('custo')->with('compliantType')->where('id',$request->compliant_id)->first()->toArray();
+        $viewCompliant = Complaint::with('mastCustomer')->with('compliantType')->where('id',$request->compliant_id)->first()->toArray();
         return response()->json([
             'viewCompliant' => $viewCompliant,
         ]);
@@ -59,24 +60,34 @@ class ComplaintIssueController extends Controller
 
     public function getCustomerDetails(Request $request)
     {
-        $getDelivary = Delivery::with('itemCode')->with('customerName')->with('itemCode.mastItemGroup')->with('saleDate')->where('mast_customer_id', $request->addNew_id)->get()->toArray();
-        $customerNamer = Delivery::with('customerName')->where('mast_customer_id', $request->addNew_id)->first();
+        $customer = MastCustomer::orderBy('name', 'asc')->where('id', $request->customer_id)->first();
+        $getDelivary = Delivery::where('mast_customer_id', $request->customer_id)->get();
 
-        foreach($getDelivary as $data){
-            $previousDate =  date('Y-m-d', strtotime(str_replace('/','-',$data['deli_date'])));
-            $previousDate = Carbon::parse($previousDate);
+        $getDelivary = Delivery::where('deliveries.mast_customer_id', $request->customer_id)
+        ->join('mast_item_registers', 'mast_item_registers.id', 'deliveries.mast_item_register_id')
+        ->join('mast_item_groups', 'mast_item_groups.id', 'mast_item_registers.mast_item_group_id')
+        ->join('sales', 'sales.id', 'deliveries.sales_id')
+        ->select('deliveries.*','mast_item_registers.part_no','mast_item_groups.part_name','sales.inv_date')
+        ->get();
+        
+        foreach ($getDelivary as $data) {
+            $previousDate = Carbon::createFromFormat('Y-m-d', $data->deli_date);
             $todayDate = Carbon::today();
-            $monthDifference = $todayDate->diffInDays($previousDate);
-            $total_day = $data['item_code']['warranty'] * 30;
-            $data['warranty_status'] = $monthDifference <= $total_day ? 'Yes' : 'No';
+            
+            if ($data->mastItemRegister && $data->mastItemRegister->warranty) {
+                $total_day = $data->mastItemRegister->warranty * 30;
+                $data['warranty_status'] = $todayDate->diffInDays($previousDate) <= $total_day ? 'Yes' : 'No';
+            } else {
+                $data['warranty_status'] = 'N/A';
+            }
         }
 
         return response()->json([
-            'getDelivary' => $getDelivary,
-            'customerName' => $customerNamer->customerName->name,
-            'customerNameId' => $customerNamer->customerName->id,
-
+            'customer' => $customer,
+            'deliveries' => $getDelivary,
         ]);
     }
+
+
 
 }

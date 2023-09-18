@@ -26,7 +26,6 @@
                                         <th>Mobile</th>
                                         <th>Description</th>
                                         <th>Status</th>
-                                        <th>Requisition</th>
                                         <th class="text-center">Action</th>
                                     </tr>
                                 </thead>
@@ -35,8 +34,8 @@
                                         <tr id="row_purchase_table_{{ $item->id}}">
                                             <td>{{ $item->issue_no}}</td>
                                             <td>{{ $item->issue_date}}</td>
-                                            <td>{{ $item->complaintType->name}}</td>
-                                            <td>{{ $item->complaintType->phone}}</td>
+                                            <td>{{ $item->mastCustomer->name}}</td>
+                                            <td>{{ $item->mastCustomer->phone}}</td>
                                             <td>{{ $item->remarks}}</td>
                                             <td>@if($item->status == 0)
                                               <span class="badge light badge-warning">
@@ -53,12 +52,13 @@
                                              @endif
                                             </td>
                                             <td>
-                                            <button type="button" id="open_modal" class="btn btn-sm btn-primary p-1 px-2"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>Create</button>
-                                            </td>
-                                            <td>
-                                            <button type="button" class="btn btn-sm btn-success p-1 px-2" id="edit_data" data-id="{{ $item->id }}"><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button>
-
-                                            <button type="button" class="btn btn-sm btn-info p-1 px-2" id="view_data" data-id="{{ $item->id }}"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</button>
+                                                <a href="{{ route('spare-part-list') }}">
+                                                <button type="button" class="btn btn-sm btn-primary p-1 px-2">
+                                                <i class="fa fa-plus"></i>
+                                                <span class="btn-icon-add"></span>
+                                                        New
+                                                </button>
+                                                </a>
                                             </td>
                                         </tr>
                                 
@@ -76,11 +76,11 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        Tools Requisition
+                        Spare Parts Requisition
                     </h5>
                     <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                 </div>
-                <form class="form-valide" data-action="{{ route('sparepart-requisition.store') }}" method="POST" enctype="multipart/form-data" id="add-user-form">
+                <form class="form-valide" data-action="{{ route('sparepart.store') }}" method="POST" enctype="multipart/form-data" id="add-user-form">
                     @csrf
                     <div class="modal-body py-2">
                         <div class="row" id="main-row-data">
@@ -109,7 +109,10 @@
                                         <span class="text-danger">*</span>
                                     </label>
                                     <div class="col-md-7">
-                                        <label class="col-md-5 col-form-label" id="inv_no">Alam</label>
+
+                                    <option value="{{$item->id}}">{{$item->mastCustomer->name}}</option> 
+
+                                        <!-- <label class="col-md-5 col-form-label" id="inv_no">Alam</label> -->
                                     </div>
                                 </div>
                             </div>
@@ -132,7 +135,9 @@
                                 <div class="form-group row">
                                     <label class="col-md-5 col-form-label">Requisition No.</label>
                                     <div class="col-md-7">
-                                        <input type="number" name="requ_no" class="col-md-5 col-form-label" id="requ_no" required>
+
+                                     <label class="col-md-5 col-form-label" id="requ_no">REQU-</label>
+                                        <!-- <input type="number" name="requ_no" class="col-md-5 col-form-label" id="requ_no" > -->
                                     </div>
                                 </div>
                             </div>
@@ -197,7 +202,8 @@
 <script type="text/javascript">
     /*=======//Show Modal//=========*/
     $(document).on('click','#open_modal',function(){
-        alert('hi');
+        // alert('hi');
+        $(".bd-example-modal-lg").modal('show');
         //----Open New Add Row
         var tableBody = $('#table-body');
         tableBody.empty();
@@ -208,7 +214,7 @@
                 dropdownParent: $(this).parent()
             });
         });
-        $(".bd-example-modal-lg").modal('show');
+        
         $(".table_action").show();
         $(".submit_btn").show();
         $("#id").val("");
@@ -249,9 +255,9 @@
                     success:function(response)
                     {
                         $(form).trigger("reset");
-                        swal("Success Message Title", "Well done, you pressed a button", "success")
-                        alert(hi);
+                        swal("Success Message Title", "Well done, you pressed a button", "success");
                         $(".bd-example-modal-lg").modal('hide');
+
                         var storePurchase = response.storePurchase;
                         
                         var i = 0;++i;
@@ -301,6 +307,7 @@
     /*========//Edit Data//=========*/
     $(document).on('click', '#edit_data', function(){
         var id = $(this).data('id');
+        alert('hi');
         $.ajax({
             url:'{{ route('inv_requisition_edit')}}',
             method:'GET',
@@ -683,3 +690,6 @@
     var c_date = yr + '-' + month + '-' + date;
     document.getElementById('date').value = c_date;
 </script>
+
+
+

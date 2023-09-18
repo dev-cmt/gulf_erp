@@ -24,6 +24,7 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title">Job Card list</h4>
+
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -39,11 +40,17 @@
                             <tbody>
                                 @foreach ($tecnician as $item )
                                 <tr style="text-align: center">
-                                    <td>{{ $item->user->name }}</td>
-                                    <td>{{ $item->user->employee_code }}</td>
-                                    <td>1/3</td>
+                                    <td>{{ $item->name }}</td>
+                                    <td>{{ $item->employee_code }}</td>
+                                    {{-- <td>{{ $item->cnt }} / 3</td> --}}
+                                    <td>{{ $item->cnt }} /3</td>
                                     <td>
-                                        <button type="button" id="tech_data" data-toggle="modal" data-id="{{ $item->id }}"  data-target=".bd-example-modal-lg" class="btn btn-sm btn-success p-1 px-2" ><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Add</button>
+                                        @if($item->cnt != 3)
+
+                                            <button type="button" id="tech_data" data-toggle="modal" data-id="{{ $item->id }}"  data-target=".bd-example-modal-lg" class="btn btn-sm btn-success p-1 px-2" ><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Add</button>
+
+                                        @endif
+
                                         <button type="button" id="edit_data" data-toggle="modal" data-id=""  data-target="" class="btn btn-sm btn-info p-1 px-2" ><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>view</button>
                                     </td>
                                 </tr>
@@ -68,8 +75,10 @@
                 <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
             </div>
                 <div class="modal-body">
-                    <form class="form-valide" data-action="" method="POST" enctype="multipart/form-data" id="add-user-form">
+                    <form class="form-valide" data-action="{{ route('store_job_card') }}" method="POST" enctype="multipart/form-data" id="add-user-form">
                         @csrf
+                        <input type="hidden" id="techId" name="techId">
+                        <input type="hidden" id="compliantId" name="com_Id">
                         <div class="modal-body py-2 px-4">
                             <div class="row">
                                 <div class="col-md-3">
@@ -77,7 +86,7 @@
                                         <label class="col-md-3 col-form-label">Date
                                         </label>
                                         <div class="col-md-9">
-                                          <input type="date" class="form-control" id="date">
+                                          <input type="date" class="form-control" id="date" name="cur_date">
                                         </div>
                                     </div>
                                 </div>
@@ -102,7 +111,7 @@
                                         <label class="col-md-6 col-form-label" style="margin-left: -13px">Job No
                                         </label>
                                         <div class="col-md-6">
-                                          <input type="text"  class="form-control">
+                                            <input type="text">
                                         </div>
                                     </div>
                                 </div>
@@ -126,17 +135,13 @@
                                                 <td>{{ $item->custo->name }}</td>
                                                 <td>{{ $item->remarks }}</td>
                                                 <td>{{ $item->status == 0 ? 'new':'' }}</td>
-                                                <td><button type="button" >assign work</button></td>
+                                                {{-- <td><a href="" class="btn btn-sm btn-success p-1 px-2 submit_btn" name="complaint_id" id="com_id" data-id="{{ $item->id }}">Assign work</a></td> --}}
+                                                <td><button type="submit" id="com_id" name="com_id" data-id="{{ $item->id }}" class="btn btn-sm btn-primary submit_btn">Submit</button></td>
                                             </tr>
                                         @endforeach
                                     </tbody>
                                   </table>
                             </div>
-
-
-                        </div>
-                        <div class="modal-footer" style="height:50px">
-                            <button type="submit" class="btn btn-sm btn-primary submit_btn">Submit</button>
                         </div>
                     </form>
                 </div>
@@ -145,12 +150,13 @@
 </div>
 
 </x-app-layout>
-
-
+{{-- <script>
+   var job = tecnician;
+   alert(job);
+</script> --}}
 <script>
     $(document).on('click', '#tech_data', function(){
        var id = $(this).data('id');
-       alert(id);
 
        $.ajax({
            url:'{{ route('technician.add')}}',
@@ -160,9 +166,47 @@
            success:function(response){
                console.log(response);
                $('#techName').val(response.name);
+               $('#techId').val(response.id);
+
            }
        });
    });
+</script>
+
+<script>
+    $(document).on('click', '#com_id', function(){
+       var id = $(this).data('id');
+       $('#compliantId').val(id);
+   });
+</script>
+
+<script>
+    $(document).ready(function(){
+    var form = '#add-user-form';
+    $(form).on('submit', function(event){
+        event.preventDefault();
+        var url = $(this).attr('data-action');
+
+                $.ajax({
+                url: url,
+                method: 'POST',
+                data: new FormData(this),
+                dataType: 'JSON',
+                contentType: false,
+                cache: false,
+                processData: false,
+                success:function(response)
+                {
+
+                    $('.bd-example-modal-lg').modal('hide');
+                    console.log(response);
+                    location.reload();
+
+
+                }
+                });
+            });
+    });
 </script>
 
 <script>

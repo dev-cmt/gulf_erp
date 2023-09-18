@@ -3,7 +3,9 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Tools Requisition(Complain List)</h4>
+                    <h4 class="card-title">Tools Requisition List</h4>
+
+                    <button type="button" id="open_modal" class="btn btn-sm btn-primary p-1 px-2"><i class="fa  fa-plus"></i></i><span class="btn-icon-add"></span>Create</button>
                 </div>
                 <div class="card-body" id="reload">
                     <div class="form-group row">
@@ -20,24 +22,26 @@
                         <table id="example3" class="display " style="min-width: 845px">
                                 <thead>
                                     <tr>
-                                        <th>Issue No</th>
-                                        <th>Date</th>
-                                        <th>Customer</th>
-                                        <th>Mobile</th>
-                                        <th>Complaint Type</th>
+                                        <th>Requ No</th>
+                                        <th>Requ Date</th>
+                                        <th>Tracking No</th>
+                                        <th>Tech Name</th>
+                                        <th>Complaint Date</th>
+                                        <th>Complaint Name</th>
                                         <th>Status</th>
                                         <th class="text-center">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody id="purchase_tbody">
-                                        @foreach($data as $item)
+                                        @foreach($list as $item)
                                         
                                         <tr id="row_purchase_table_{{ $item->id}}">
-                                            <td>{{ $item->issue_no}}</td>
+                                            <td>{{ $item->requ_no}}</td>
+                                            <td>{{ $item->requ_date}}</td>
+                                            <td>{{ $item->tracking_no}}</td>
+                                            <td>{{ $item->tech_id}}</td>
                                             <td>{{ $item->issue_date}}</td>
-                                            <td>{{ $item->mastCustomer->name}}</td>
-                                            <td>{{ $item->mastCustomer->phone}}</td>
-                                            <td>{{ $item->mastCustomer->remarks}}</td>
+                                            <td>{{ $item->issue_no}}</td>
                                             <td>@if($item->status == 0)
                                               <span class="badge light badge-warning">
                                                 <i class="fa fa-circle text-warning mr-1"></i>Pending
@@ -48,21 +52,16 @@
                                                 </span>
                                                 @elseif($item->status == 2)
                                              <span class="badge light badge-danger">
-                                             <i class="fa fa-circle text-danger mr-1"></i>Canceled
+                                             <i class="fa fa-circle text-danger mr-1"></i>Refund
                                             </span>
                                             @endif
                                             </td>
                                             <td>
-                                                <a href="{{ route('tools-list') }}">
-                                                <button type="button" class="btn btn-sm btn-primary p-1 px-2">
-                                                <i class="fa fa-plus"></i>
-                                                <span class="btn-icon-add"></span>
-                                                        New
-                                                </button>
-                                                </a>
+                                            <button type="button" class="btn btn-sm btn-success p-1 px-2" id="edit_data" data-id="{{ $item->id }}"><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button>
+
+                                            <button type="button" data-toggle="modal" data-target=".view-modal" class="btn btn-sm btn-info p-1 px-2" id="view_data" data-id="{{ $item->id }}"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</button>
                                             </td>
                                         </tr>
-                                
                                         @endforeach
                                  </tbody>
                         </table>
@@ -90,7 +89,13 @@
                                 <div class="form-group row">
                                     <label class="col-md-5 col-form-label">Complaint ID</label>
                                     <div class="col-md-7">
-                                        <label class="col-md-5 col-form-label" id="requ_no">Gulf-5680</label>
+                                    <select name="mast_customer_id" id="complaint_id" class="form-control dropdwon_select" required>
+                                        <option selected disabled>--Select--</option>
+                                        @foreach($data as $row)
+                                            <option value="{{ $row->id}}">{{ $row->issue_no}}</option>
+                                            @endforeach
+                                        </select>
+                                        <!-- <label class="col-md-5 col-form-label" id="requ_no">Gulf-5680</label> -->
                                     </div>
                                 </div>
                             </div>
@@ -100,7 +105,7 @@
                                         <span class="text-danger">*</span>
                                     </label>
                                     <div class="col-md-7">
-                                        <input type="date" name="requ_date" id="requ_date" class="form-control" value="{{ old('date') ? old('date'):  date('Y-m-d') }}">
+                                        <input type="text">
                                     </div>
                                 </div>
                             </div>
@@ -331,7 +336,13 @@
             dataType:"JSON",
             data:{id:id},
             success:function(response){
-                showData(response, 1);
+
+                $('#remarks').val(response.data.remarks);
+                $('#complaint_id').html(response.data.complaint_id);
+                $('#requ_no').html(response.data.requ_no);
+                $('#inv_date').val(response.data.inv_date);
+                $(".bd-example-modal-lg").modal('show');
+                // showData(response, 1);
             },
             error: function(xhr, status, error) {
                 console.log(error);
@@ -707,8 +718,6 @@
     var c_date = yr + '-' + month + '-' + date;
     document.getElementById('date').value = c_date;
 </script>
-
-
 
 
 
