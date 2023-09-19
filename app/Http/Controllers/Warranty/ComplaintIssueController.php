@@ -4,12 +4,13 @@ namespace App\Http\Controllers\Warranty;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Master\MastCustomer;
 use App\Models\deliverie;
 use App\Models\Warranty\Complaint;
 use App\Models\Master\MastComplaintType;
 use App\Models\Inventory\Delivery;
-use Illuminate\Support\Facades\Auth;
 use App\Helpers\Helper;
 use Carbon\Carbon;
 
@@ -29,6 +30,13 @@ class ComplaintIssueController extends Controller
 
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'mast_complaint_type_id' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
         $IDGenarator = Helper::IDGenerator(new Complaint,'issue_no', 5, "ISSUE");
         $data = new Complaint();
         $data->note = $request->note;
@@ -42,7 +50,7 @@ class ComplaintIssueController extends Controller
         $data->user_id = Auth::user()->id;
         $data->save();
 
-        return redirect()->route('warranty-complaint.index');
+        return response()->json(['data' => $data]);
     }
 
 
@@ -52,10 +60,8 @@ class ComplaintIssueController extends Controller
      */
     public function getCompliantData(Request $request)
     {
-        $viewCompliant = Complaint::with('mastCustomer')->with('compliantType')->where('id',$request->compliant_id)->first()->toArray();
-        return response()->json([
-            'viewCompliant' => $viewCompliant,
-        ]);
+        $complaint = Complaint::with('mastCustomer')->with('compliantType')->where('id',$request->id)->first();
+        return response()->json($complaint);
     }
 
     public function getCustomerDetails(Request $request)
@@ -81,7 +87,6 @@ class ComplaintIssueController extends Controller
                 $data['warranty_status'] = 'N/A';
             }
         }
-
         return response()->json([
             'customer' => $customer,
             'deliveries' => $getDelivary,

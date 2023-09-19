@@ -8,38 +8,49 @@ use App\Models\Admin\InfoPersonal;
 use App\Models\Warranty\Complaint;
 use App\Models\Warranty\JobCard;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
-use DB;
+use App\Models\Setup;
 
 
-class jobcardController extends Controller
+class JobCardController extends Controller
 {
     public function jobCardIndex()
     {
-        // $tecnician = InfoPersonal::where('mast_designation_id',9)
-        // ->join('job_cards','job_cards.tech_id','info_personals.id')
-        // ->join('users','users.id','info_personals.user_id')
-        // ->select('users.name','users.employee_code')
-        // // ->groupBy('info_personals.id')
-        // ->get();
-
-        $tecnician = DB::table('users')
-        ->join('info_personals','info_personals.emp_id','users.id')
+        $setup = Setup::first();
+        $tecnician = User::where('info_personals.mast_designation_id', $setup->services_technician)
+        ->join('info_personals','info_personals.emp_id','=','users.id')
         ->leftjoin('job_cards','job_cards.tech_id','=','info_personals.id')
-        ->where('job_cards.job_date', date('Y-m-d'))
-        ->select('users.name','users.employee_code','users.id',DB::raw('count(*) as cnt'))
-        // ->select('users.name','users.employee_code','users.id','job_cards.job_date')
+        ->select('users.name','users.employee_code','users.id', DB::raw('count(*) as cnt'))
         ->groupBy('users.name','users.employee_code','users.id')
         ->get();
-        // dd($tecnician);
+      
 
-        $compliant = Complaint::with('custo')->whereNotIn('id', function($q){
-            $q->select('tracking_no')->from('job_cards')->where('job_date', date('Y-m-d'));
+        $compliant = Complaint::with('mastCustomer')->whereNotIn('id', function($q){
+            $q->select('complaint_id')->from('job_cards')->where('date', date('Y-m-d'));
         })->get();
 
         // $compliant = Complaint::with('custo')->where('issue_date',date('Y-m-d'))->get();
         // dd($compliant);
         return view('layouts.pages.warranty.jobcard.index',compact('tecnician','compliant'));
+    }
+    public function jobCardStore(Request $request)
+    {
+        $data = new JobCard();
+        $data->date = date('Y-m-d');
+        $data->tech_id = $request->tech_id;
+        $data->complaint_id= $request->compliant_id;
+        $data->user_id = Auth::user()->id;
+        $data->save();
+
+        $complaint = Complaint::findOrFail($data->complaint_id);
+        $complaint->tech_id = $data->tech_id;
+        $complaint->save();
+
+        $jobNo = JobCard::where('date', date('Y-m-d'))->count();
+        return response()->json([ 
+            'jobNo' => $jobNo,
+        ]);
     }
 
     public function technicianAdd(Request $request)
@@ -47,19 +58,7 @@ class jobcardController extends Controller
         $techAdd = User::where('id',$request->id)->first();
          return response()->json($techAdd);
     }
-    public function storeJobCard(Request $request)
-    {
-
-            $jobCard = new JobCard();
-            $jobCard->job_date      = $request->cur_date;
-            $jobCard->tech_id       = $request->techId;
-            $jobCard->tracking_no   = $request->com_Id;
-            $jobCard->user_id       =  Auth::user()->id;
-            $jobCard->save();
-            return response()->json('success');
-
-
-    }
+   
 
     public function jobCardpage()
     {
@@ -88,6 +87,21 @@ class jobcardController extends Controller
         $jobCard->observe_details   = $request->observeDetails;
         $jobCard->save();
         return response()->json('success');
+    }
+
+    /**_________________________________________________________________
+     * GET AJAX DATA
+     * _________________________________________________________________
+     */
+    function getComplaintDetails(Request $request) {
+        $compliant = Complaint::with('mastCustomer')->where('status', 0)->get()->toArray();
+        $jobNo = JobCard::where('date', date('Y-m-d'))->count();
+        $user = User::where('id', $request->id)->first();
+        return response()->json([ 
+            'technicin_name' => $user->name,
+            'jobNo' => $jobNo,
+            'compliant' => $compliant,
+        ]);
     }
 
 }

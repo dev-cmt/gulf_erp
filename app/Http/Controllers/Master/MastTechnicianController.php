@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Master;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use App\Models\Admin\InfoPersonal;
 use App\Models\Master\MastDesignation;
@@ -12,56 +13,62 @@ use App\Models\User;
 
 class MastTechnicianController extends Controller
 {
-    public function technicianInformation()
+    public function index()
     {
-        $technicianId = Setup::first();
-        $employ_id = InfoPersonal::where('mast_designation_id', $technicianId->services_technician)->pluck('emp_id');
-        $tecnicianName = User::whereNotIn('id', $employ_id)->get();
-        
-        $technician = InfoPersonal::with('user')->with('mastDepartment')->with('mastDesignation')->where('mast_designation_id', $technicianId->services_technician)->get();
-        return view('layouts.pages.master.technician.index', compact('technician','tecnicianName'));
-    }
-    public function technicianEdit(Request $request)
-    {
-        $technicianId = Setup::first();
-        $getTechnicianData = InfoPersonal::with('user')->with('mastDepartment')->with('mastDesignation')->where('mast_designation_id', $technicianId->services_technician)->where('id',$request->id)->first()->toArray();
-        $designation = MastDesignation::all();
+        $setup = Setup::first();
+        $employ_id = InfoPersonal::where('mast_designation_id', $setup->services_technician)->pluck('emp_id');
+        $employees = User::whereNotIn('id', [1,2])->whereNotIn('id', $employ_id)->get();
 
-            return response()->json([
-                'getTechnicianData' => $getTechnicianData,
-                'designation' => $designation,
-
-            ]);
+        $technician = InfoPersonal::with('user')->with('mastDepartment')->with('mastDesignation')->where('mast_designation_id', $setup->services_technician)->get();
+        $designation = MastDesignation::where('status', 1)->get();
+        return view('layouts.pages.master.technician.index', compact('technician','employees','designation','setup'));
     }
 
     public function updateTechnician(Request $request)
     {
-        $updateDesignation = InfoPersonal::find($request->sal_id);
-        $updateDesignation->mast_designation_id  = $request->designation;
-        $updateDesignation->save();
-        return response()->json('success');
-    }
-
-
-    public function getDesignation(Request $request)
-    {
-        $desig =  InfoPersonal::with('mastDesignation')->where('emp_id',$request->id)->first()->toArray();
-        $designation = MastDesignation::all();
-        return response()->json([
-            'desig' => $desig,
-            'designation' => $designation,
+        $validator = Validator::make($request->all(), [
+            'employee_id' => 'required',
+            'mast_designation_id' => 'required',
         ]);
-    }
 
-    public function updateDesignation(Request $request)
-    {
-        InfoPersonal::updateOrCreate(
-            ['emp_id' => $request->employee_id],
-            [
-                'mast_designation_id' => $request->designationId,
-                'updated_at' => $request->assignDate,
-            ]
-        );
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $data = InfoPersonal::where('emp_id', $request->employee_id)->first();
+        $data->mast_designation_id = $request->mast_designation_id;
+        $data->save();
+
         return response()->json('success');
     }
+
+
+    /***______________________________________________________
+     * SetUp Technician
+     * _______________________________________________________
+     */
+    public function setupTechnician(Request $request)
+    {
+        $tech_desig = Setup::first();
+        $tech_desig->install_technician = $request->install_technician;
+        $tech_desig->services_technician = $request->services_technician;
+        $tech_desig->save();
+        return redirect()->back();
+    }
+
+    /***______________________________________________________
+     * Call AJAX 
+     * _______________________________________________________
+     */
+     public function getEmployeeInfo(Request $request)
+     {
+         $personalDetails =  InfoPersonal::with('mastDesignation')->with('mastDepartment')->where('emp_id',$request->id)->first()->toArray();
+         $employee = User::whereNotIn('id', [1,2])->where('status', 1)->get();
+         $designation = MastDesignation::where('status', 1)->get();
+         return response()->json([
+             'personalDetails' => $personalDetails,
+             'employee' => $employee,
+             'designation' => $designation,
+         ]);
+     }
 }

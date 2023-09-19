@@ -13,12 +13,13 @@ class Complaint extends Model
     protected $fillable = [
         'issue_date',
         'issue_no',
-        'with_warranty',
+        'tech_id',
         'note',
         'remarks',
         'mast_complaint_type_id',
         'mast_customer_id',
         'user_id',
+        'view',
         'status',
     ];
 

@@ -274,11 +274,17 @@ Route::group(['middleware' => ['auth']], function(){
      * Warranty & Service => Job Card
      * ______________________________________________________________________________________________
      */
-    Route::get('job_card',[JobCardController::class,'jobCardIndex'])->name('job_card');
-    Route::get('job_card_list',[JobCardController::class,'jobCardpage'])->name('job_card_list');
+    Route::get('warranty/prepare/job-card',[JobCardController::class,'jobCardIndex'])->name('warranty-prepare-card.index');
+    Route::get('warranty/jobcard-store',[JobCardController::class,'jobCardStore'])->name('warranty-jobcard.store');
+    Route::get('get/complaint-details',[JobCardController::class,'getComplaintDetails'])->name('get-complaint-details');
+
+
+
+
+    Route::get('warranty/job-card-list',[JobCardController::class,'jobCardpage'])->name('warranty-jobcard.list');
     Route::get('technician_add',[JobCardController::class,'technicianAdd'])->name('technician.add');
-    Route::post('store_job_card',[jobcardController::class,'storeJobCard'])->name('store_job_card');
-    Route::post('store_job_visit',[jobcardController::class,'storeJobVisit'])->name('store_job_visit');
+    Route::post('store_job_card',[JobCardController::class,'storeJobCard'])->name('store_job_card');
+    Route::post('store_job_visit',[JobCardController::class,'storeJobVisit'])->name('store_job_visit');
 
     /**______________________________________________________________________________________________
      * Warranty & Service => Technician Movement
@@ -359,16 +365,11 @@ Route::group(['middleware' => ['auth']], function(){
      */
     Route::resource('mast_compliant_type', MastCompliantTypeController::class);
     // Setup Technician
-
+    Route::post('setup-technician/update',[MastTechnicianController::class,'setupTechnician'])->name('setup.technician');
     // Technician Update
-    Route::get('technician.index',[MastTechnicianController::class,'technicianInformation'])->name('tecnician.index');
-    Route::get('get-designation-Name',[MastTechnicianController::class,'getDesignation'])->name('get-designation-Name');
-    Route::post('submit.technician',[MastTechnicianController::class,'updateDesignation'])->name('submit.technician');
-    Route::get('technician.edit',[MastTechnicianController::class,'technicianEdit'])->name('technician.edit');
-    Route::post('update.designation',[MastTechnicianController::class,'updateTechnician'])->name('update.designation');
-    // setup store
-    Route::post('setup_store',[MastTechnicianController::class,'technicianSetupStore'])->name('setup_store');
-
+    Route::get('technician/index',[MastTechnicianController::class,'index'])->name('tecnician.index');
+    Route::post('technician-update',[MastTechnicianController::class,'updateTechnician'])->name('technician.update');
+    Route::get('get/employee-personal-info',[MastTechnicianController::class,'getEmployeeInfo'])->name('get-employee-personal-info');
 });
 /**______________________________________________________________________________________________
  * Dwonload File => PDF, EXCEL ETC

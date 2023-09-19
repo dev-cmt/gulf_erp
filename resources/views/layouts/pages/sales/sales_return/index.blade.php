@@ -57,15 +57,13 @@
                                         <td class="text-right">{{ $total }}</td>
                                         <td class="text-right">
                                             @if ($status === 0)
-                                                <button id="show-data" data-id="{{ $row->id }}" class="btn btn-success p-1 px-2"
+                                                <button id="show-dats" data-id="{{ $row->id }}" class="btn btn-success p-1 px-2"
                                                     data-return="{{ $returnCheck->id }}" data-check="1">
                                                     <i class="fa fa-pencil"></i>
                                                     <span class="btn-icon-add"></span>Edit
                                                 </button>
                                             @else
-                                                <button id="show-data" data-id="{{ $row->id }}" class="btn btn-secondary p-1 px-2"
-                                                    data-check="0">
-                                                    <i class="fa fa-plus"></i>
+                                                <button data-id="{{ $row->id }}" data-check="0" class="btn btn-secondary p-1 px-2 data-show"><i class="fa fa-plus"></i>
                                                     <span class="btn-icon-add"></span>Return
                                                 </button>
                                             @endif
@@ -159,180 +157,183 @@
 
         </div>
     </div>
+    @push('script')
+    <script type="text/javascript">
+        /*=======//View Details Add Modal//=========*/
+        $(document).on('click', '.data-show', function() {
+            var id = $(this).data('id');
+            var check = $(this).data('check');
+            var returnId = $(this).data('return');
+            $('#set_id').val('');
+            $('#table-body').empty();
+            $.ajax({
+                url: '{{ route('get_sales_delivery_details')}}',
+                method: 'GET',
+                dataType: "JSON",
+                data: {'id': id},
+                success: function(response) {
+                    var dataMast = response.sales;
 
-</x-app-layout>
+                    $('#inv_no').html(dataMast.inv_no);
+                    $("#inv_date").html(dataMast.inv_date);
+                    $("#mast_customers").html(dataMast.name);
+                    $("#store_name").html(response.store);
+                    // $('#remarks').html(response.remarks);
 
-<script>
-    /*=======//View Details Add Modal//=========*/
-    $(document).on('click', '#show-data', function() {
-        var id = $(this).data('id');
-        var check = $(this).data('check');
-        var returnId = $(this).data('return');
-        $('#set_id').val('');
-        $('#table-body').empty();
-        $.ajax({
-            url: '{{ route('get_sales_delivery_details')}}',
-            method: 'GET',
-            dataType: "JSON",
-            data: {'id': id},
-            success: function(response) {
-                var dataMast = response.sales;
+                    var i = 0;
+                    var total = 0;
+                    var dataDetails = response.data;
+                    $.each(dataDetails, function(index, item) {
+                        var subtotal = item.deli_qty * item.price;
+                        if(check == 0){ // Show => 0
+                            var row = '<tr>';
+                            row += '<input type="hidden" name="sales_id" value="' + dataMast.id + '">';
+                            row += '<input type="hidden" name="moreFile[' + i + '][price]" value="' + item.price + '">';
+                            row += '<input type="hidden" name="moreFile[' + i + '][mast_item_register_id]" value="' + item.mast_item_register_id + '">';
 
-                $('#inv_no').html(dataMast.inv_no);
-                $("#inv_date").html(dataMast.inv_date);
-                $("#mast_customers").html(dataMast.name);
-                $("#store_name").html(response.store);
-                // $('#remarks').html(response.remarks);
+                            row += '<td><input type="checkbox" name="" class="checkbox-enable-disable" value="1"></td>';
+                            row += '<td>' + item.cat_name + '</td>';
+                            row += '<td>' + item.part_name + '</td>';
+                            row += '<td>' + item.part_no + '</td>';
+                            row += '<td>' + item.price + '</td>';
+                            row += '<td id="deli_qty">' + item.deli_qty + '</td>';
+                            row += '<td><input type="number" name="moreFile[' + i + '][qty]" class="form-control checkbox-qty" value="' + item.deli_qty + '" disabled></td>';
+                            row += '<td>' + subtotal + '</td>';
+                            row += '</tr>';
 
-                var i = 0;
-                var total = 0;
-                var dataDetails = response.data;
-                $.each(dataDetails, function(index, item) {
-                    var subtotal = item.deli_qty * item.price;
-                    if(check == 0){ // Show => 0
-                        var row = '<tr>';
-                        row += '<input type="hidden" name="sales_id" value="' + dataMast.id + '">';
-                        row += '<input type="hidden" name="moreFile[' + i + '][price]" value="' + item.price + '">';
-                        row += '<input type="hidden" name="moreFile[' + i + '][mast_item_register_id]" value="' + item.mast_item_register_id + '">';
+                            $('#table-body').append(row); // Append the row here
+                            total += subtotal;
+                            i++; // Increment i here
+                            attachEventHandlers();
+                        }else if(check == 1){ // Edit => 1
+                            $.ajax({
+                                url: '{{ route('get-retunr-details-check')}}',
+                                method: 'GET',
+                                dataType: 'json',
+                                data: {'id': item.mast_item_register_id, 'sales_return_id': returnId},
+                                success: function(returnDetailsCount) {
+                                    var row = '<tr>';
+                                    row += '<input type="hidden" name="sales_id" value="' + dataMast.id + '">';
+                                    row += '<input type="hidden" name="sales_return_id" value="' + returnId + '">';
+                                    row += '<input type="hidden" name="editFile['+ i +'][id]" value="' + returnDetailsCount.id + '">';
 
-                        row += '<td><input type="checkbox" name="" class="checkbox-enable-disable" value="1"></td>';
-                        row += '<td>' + item.cat_name + '</td>';
-                        row += '<td>' + item.part_name + '</td>';
-                        row += '<td>' + item.part_no + '</td>';
-                        row += '<td>' + item.price + '</td>';
-                        row += '<td id="deli_qty">' + item.deli_qty + '</td>';
-                        row += '<td><input type="number" name="moreFile[' + i + '][qty]" class="form-control checkbox-qty" value="' + item.deli_qty + '" disabled></td>';
-                        row += '<td>' + subtotal + '</td>';
-                        row += '</tr>';
+                                    var priceFieldName = returnDetailsCount.qty >= 0 ? 'editFile[' + i + '][price]' : 'moreFile[' + i + '][price]';
+                                    row += '<input type="hidden" name="' + priceFieldName + '" value="' + item.price + '">';
 
-                        $('#table-body').append(row); // Append the row here
-                        total += subtotal;
-                        i++; // Increment i here
-                        attachEventHandlers();
-                    }else if(check == 1){ // Edit => 1
-                        $.ajax({
-                            url: '{{ route('get-retunr-details-check')}}',
-                            method: 'GET',
-                            dataType: 'json',
-                            data: {'id': item.mast_item_register_id, 'sales_return_id': returnId},
-                            success: function(returnDetailsCount) {
-                                var row = '<tr>';
-                                row += '<input type="hidden" name="sales_id" value="' + dataMast.id + '">';
-                                row += '<input type="hidden" name="sales_return_id" value="' + returnId + '">';
-                                row += '<input type="hidden" name="editFile['+ i +'][id]" value="' + returnDetailsCount.id + '">';
+                                    var mastItemRegisterIdFieldName = returnDetailsCount.qty >= 0 ? 'editFile[' + i + '][mast_item_register_id]' : 'moreFile[' + i + '][mast_item_register_id]';
+                                    row += '<input type="hidden" name="' + mastItemRegisterIdFieldName + '" value="' + item.mast_item_register_id + '">';
 
-                                var priceFieldName = returnDetailsCount.qty >= 0 ? 'editFile[' + i + '][price]' : 'moreFile[' + i + '][price]';
-                                row += '<input type="hidden" name="' + priceFieldName + '" value="' + item.price + '">';
+                                    var isChecked = returnDetailsCount.qty >= 0 ? 'checked' : '';
+                                    row += '<td><input type="checkbox" ' + isChecked + ' name="" class="checkbox-enable-disable" value="1"/></td>';
+                                    row += '<td>' + item.cat_name + '</td>';
+                                    row += '<td>' + item.part_name + '</td>';
+                                    row += '<td>' + item.part_no + '</td>';
+                                    row += '<td>' + item.price + '</td>';
+                                    row += '<td id="deli_qty">' + item.deli_qty + '</td>';
 
-                                var mastItemRegisterIdFieldName = returnDetailsCount.qty >= 0 ? 'editFile[' + i + '][mast_item_register_id]' : 'moreFile[' + i + '][mast_item_register_id]';
-                                row += '<input type="hidden" name="' + mastItemRegisterIdFieldName + '" value="' + item.mast_item_register_id + '">';
+                                    var qtyFieldName = returnDetailsCount.qty >= 0 ? 'editFile[' + i + '][qty]' : 'moreFile[' + i + '][qty]';
+                                    var qtyValue = returnDetailsCount.qty >= 0 ? returnDetailsCount.qty : item.deli_qty;
 
-                                var isChecked = returnDetailsCount.qty >= 0 ? 'checked' : '';
-                                row += '<td><input type="checkbox" ' + isChecked + ' name="" class="checkbox-enable-disable" value="1"/></td>';
-                                row += '<td>' + item.cat_name + '</td>';
-                                row += '<td>' + item.part_name + '</td>';
-                                row += '<td>' + item.part_no + '</td>';
-                                row += '<td>' + item.price + '</td>';
-                                row += '<td id="deli_qty">' + item.deli_qty + '</td>';
+                                    row += '<td><input type="number" name="' + qtyFieldName + '" class="form-control checkbox-qty" value="' + qtyValue + '"/></td>';
+                                    row += '<td>' + subtotal + '</td>';
+                                    row += '</tr>';
 
-                                var qtyFieldName = returnDetailsCount.qty >= 0 ? 'editFile[' + i + '][qty]' : 'moreFile[' + i + '][qty]';
-                                var qtyValue = returnDetailsCount.qty >= 0 ? returnDetailsCount.qty : item.deli_qty;
+                                    $('#table-body').append(row);
+                                    total += subtotal;
+                                    i++;
+                                    attachEventHandlers();
+                                },
+                                error: function() {
+                                    // Handle errors if the AJAX request fails
+                                }
+                            });
+                        }
+                    });
 
-                                row += '<td><input type="number" name="' + qtyFieldName + '" class="form-control checkbox-qty" value="' + qtyValue + '"/></td>';
-                                row += '<td>' + subtotal + '</td>';
-                                row += '</tr>';
+                    $('#total').html(total.toFixed(2));
+                },
+                error: function(response) {
+                    swal("Error!", "All input values are not null or empty.", "error");
+                }
+            });
+            $(".bd-example-modal-lg").modal('show');
+        });
 
-                                $('#table-body').append(row);
-                                total += subtotal;
-                                i++;
-                                attachEventHandlers();
-                            },
-                            error: function() {
-                                // Handle errors if the AJAX request fails
-                            }
+        function attachEventHandlers() {
+            $(".checkbox-enable-disable").on("change", function() {
+                var quantityInput = $(this).closest("tr").find("input[name^='moreFile'][name$='[qty]']");
+                var editQuantityInput = $(this).closest("tr").find("input[name^='editFile'][name$='[qty]']");
+
+                if ($(this).is(":checked")) {
+                    quantityInput.prop("disabled", false);
+                    editQuantityInput.prop("disabled", false);
+                } else {
+                    quantityInput.prop("disabled", true);
+                    editQuantityInput.prop("disabled", true);
+                    
+                    // Reset the quantity input value when disabling
+                    quantityInput.val(0);
+                    editQuantityInput.val(0);
+
+                    quantityInput.removeClass('text-danger');
+                    editQuantityInput.removeClass('text-danger');
+                }
+            });
+
+            $(".checkbox-qty").on("change", function() {
+                var quantityInput = $(this);
+                var deliQtyCell = quantityInput.closest("tr").find("#deli_qty");
+                var deliQty = parseFloat(deliQtyCell.text());
+                var enteredQty = parseFloat(quantityInput.val());
+
+                if (enteredQty < 0) {
+                    quantityInput.val(0);
+                } else if (enteredQty > deliQty) {
+                    quantityInput.addClass('text-danger');
+                    $(".submit_btn").prop("disabled", true);
+                } else {
+                    quantityInput.removeClass('text-danger');
+                    $(".submit_btn").prop("disabled", false);
+                }
+            });
+        }
+
+        /*===========// Save Data//===========*/
+        $(document).ready(function() {
+            var form = '#add-user-form';
+            $(form).on('submit', function(event) {
+                event.preventDefault();
+                var url = $(this).attr('data-action');
+                $.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: new FormData(this),
+                    dataType: 'JSON',
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    success: function(response) {
+                        $(".bd-example-modal-lg").modal('hide');
+                        swal("Your data save successfully", "Well done, you pressed a button", "success")
+                            .then(function() {
+                                location.reload();
+                            });
+                    },
+                    error: function(response) {
+                        swal({
+                            title: "No Data Found",
+                            text: "There are no details available for this item.",
+                            icon: "warning",
+                            button: "OK",
+                            dangerMode: true,
                         });
                     }
                 });
-
-                $('#total').html(total.toFixed(2));
-            },
-            error: function(response) {
-                swal("Error!", "All input values are not null or empty.", "error");
-            }
-        });
-        $(".bd-example-modal-lg").modal('show');
-    });
-
-    function attachEventHandlers() {
-        $(".checkbox-enable-disable").on("change", function() {
-            var quantityInput = $(this).closest("tr").find("input[name^='moreFile'][name$='[qty]']");
-            var editQuantityInput = $(this).closest("tr").find("input[name^='editFile'][name$='[qty]']");
-
-            if ($(this).is(":checked")) {
-                quantityInput.prop("disabled", false);
-                editQuantityInput.prop("disabled", false);
-            } else {
-                quantityInput.prop("disabled", true);
-                editQuantityInput.prop("disabled", true);
-                
-                // Reset the quantity input value when disabling
-                quantityInput.val(0);
-                editQuantityInput.val(0);
-
-                quantityInput.removeClass('text-danger');
-                editQuantityInput.removeClass('text-danger');
-            }
+            });
         });
 
-        $(".checkbox-qty").on("change", function() {
-            var quantityInput = $(this);
-            var deliQtyCell = quantityInput.closest("tr").find("#deli_qty");
-            var deliQty = parseFloat(deliQtyCell.text());
-            var enteredQty = parseFloat(quantityInput.val());
+    
+    </script>
+    @endpush
+</x-app-layout>
 
-            if (enteredQty < 0) {
-                quantityInput.val(0);
-            } else if (enteredQty > deliQty) {
-                quantityInput.addClass('text-danger');
-                $(".submit_btn").prop("disabled", true);
-            } else {
-                quantityInput.removeClass('text-danger');
-                $(".submit_btn").prop("disabled", false);
-            }
-        });
-    }
-
-    /*===========// Save Data//===========*/
-    var form = '#add-user-form';
-    $(form).on('submit', function(event){
-        event.preventDefault();
-        var url = $(this).attr('data-action');
-        $.ajax({
-            url: url,
-            method: 'POST',
-            data: new FormData(this),
-            dataType: 'JSON',
-            contentType: false,
-            cache: false,
-            processData: false,
-            success:function(response)
-            {
-                $(".bd-example-modal-lg").modal('hide');
-                swal("Your data save successfully", "Well done, you pressed a button", "success");
-                .then(function() {
-                    location.reload();
-                });
-            },
-            error: function(response) {
-                swal({
-                    title: "No Data Found",
-                    text: "There are no details available for this item.",
-                    icon: "warning",
-                    button: "OK",
-                    dangerMode: true,
-                });
-            }
-        });
-    });
-
-</script>

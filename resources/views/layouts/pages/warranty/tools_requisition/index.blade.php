@@ -3,7 +3,9 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Tools Requisition(Complain List)</h4>
+                    <h4 class="card-title">Tools Requisition List</h4>
+
+                    <button type="button" id="open_modal" class="btn btn-sm btn-primary p-1 px-2"><i class="fa  fa-plus"></i></i><span class="btn-icon-add"></span>Create</button>
                 </div>
                 <div class="card-body" id="reload">
                     <div class="form-group row">
@@ -20,24 +22,26 @@
                         <table id="example3" class="display " style="min-width: 845px">
                                 <thead>
                                     <tr>
-                                        <th>Issue No</th>
-                                        <th>Date</th>
-                                        <th>Customer</th>
-                                        <th>Mobile</th>
-                                        <th>Complaint Type</th>
+                                        <th>Requ No</th>
+                                        <th>Requ Date</th>
+                                        <th>Tracking No</th>
+                                        <th>Tech Name</th>
+                                        <th>Complaint Date</th>
+                                        <th>Complaint Name</th>
                                         <th>Status</th>
                                         <th class="text-center">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody id="purchase_tbody">
-                                        @foreach($data as $item)
+                                        @foreach($list as $item)
                                         
                                         <tr id="row_purchase_table_{{ $item->id}}">
-                                            <td>{{ $item->issue_no}}</td>
-                                            <td>{{ $item->issue_date}}</td>
-                                            <td>{{ $item->mastCustomer->name}}</td>
-                                            <td>{{ $item->mastCustomer->phone}}</td>
-                                            <td>{{ $item->mastCustomer->remarks}}</td>
+                                            <td>{{ $item->requ_no}}</td>
+                                            <td>{{ $item->requ_date}}</td>
+                                            <td>{{ $item->issueNo->id ?? 'null'}}</td>
+                                            <td>{{ $item->tech_id ?? 'null'}}</td>
+                                            <td>{{ $item->issueNo->issue_date ?? 'null'}}</td>
+                                            <td>{{ $item->issueNo->issue_no ?? 'null'}}</td>
                                             <td>@if($item->status == 0)
                                               <span class="badge light badge-warning">
                                                 <i class="fa fa-circle text-warning mr-1"></i>Pending
@@ -48,21 +52,16 @@
                                                 </span>
                                                 @elseif($item->status == 2)
                                              <span class="badge light badge-danger">
-                                             <i class="fa fa-circle text-danger mr-1"></i>Canceled
+                                             <i class="fa fa-circle text-danger mr-1"></i>Refund
                                             </span>
                                             @endif
                                             </td>
                                             <td>
-                                                <a href="{{ route('tools-list') }}">
-                                                <button type="button" class="btn btn-sm btn-primary p-1 px-2">
-                                                <i class="fa fa-plus"></i>
-                                                <span class="btn-icon-add"></span>
-                                                        New
-                                                </button>
-                                                </a>
+                                                <button type="button" class="btn btn-sm btn-success p-1 px-2" id="edit_data" data-id="{{ $item->id }}" {{$item->status !=0 ? 'disabled':''}}><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button>
+
+                                                <button type="button" class="btn btn-sm btn-info p-1 px-2" id="view_data" data-id="{{ $item->id }}"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</button>
                                             </td>
                                         </tr>
-                                
                                         @endforeach
                                  </tbody>
                         </table>
@@ -90,7 +89,12 @@
                                 <div class="form-group row">
                                     <label class="col-md-5 col-form-label">Complaint ID</label>
                                     <div class="col-md-7">
-                                        <label class="col-md-5 col-form-label" id="requ_no">Gulf-5680</label>
+                                        <select name="complaint_id" id="complaintID" class="form-control dropdwon_select" required>
+                                        <option selected disabled>--Select--</option>
+                                            @foreach($data as $row)
+                                            <option value="{{ $row->id}}">{{ $row->issue_no}}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -100,7 +104,7 @@
                                         <span class="text-danger">*</span>
                                     </label>
                                     <div class="col-md-7">
-                                        <input type="date" name="requ_date" id="requ_date" class="form-control" value="{{ old('date') ? old('date'):  date('Y-m-d') }}">
+                                        <input type="date" name="issueDate" id="join" readonly>
                                     </div>
                                 </div>
                             </div>
@@ -110,8 +114,7 @@
                                         <span class="text-danger">*</span>
                                     </label>
                                     <div class="col-md-7">
-                                        <option value="{{$item->id}}">{{$item->name}}</option>
-                                        <!-- <label class="col-md-5 col-form-label" id="inv_no">Alam</label> -->
+                                        <input type="text" readonly id="customerName" name="customName" style="border: none">
                                     </div>
                                 </div>
                             </div>
@@ -121,9 +124,9 @@
                                         <span class="text-danger">*</span>
                                     </label>
                                     <div class="col-md-7">
-                                        <select name="mast_customer_id" id="mast_customer_id" class="form-control dropdwon_select" required>
+                                        <select name="tech_id" id="tecnicianName" class="form-control dropdwon_select" required>
                                         <option selected disabled>--Select--</option>
-                                        @foreach($customer as $row)
+                                        @foreach($tecnicianName as $row)
                                             <option value="{{ $row->id}}">{{ $row->name}}</option>
                                             @endforeach
                                         </select>
@@ -136,7 +139,7 @@
                                     <div class="col-md-7">
 
                                        <label class="col-md-5 col-form-label" id="requ_no">REQU-</label>
-                                        <!-- <input type="number" name="requ_no" class="col-md-5 col-form-label" id="requ_no" required> -->
+                                       
                                     </div>
                                 </div>
                             </div>
@@ -146,7 +149,7 @@
                                         <span class="text-danger">*</span>
                                     </label>
                                     <div class="col-md-7">
-                                        <input type="date" name="requ_date" id="inv_date" class="form-control" value="{{ old('date') ? old('date'):  date('Y-m-d') }}">
+                                        <input type="date" name="requ_date" id="requ_date" class="form-control" value="{{ old('date') ? old('date'):  date('Y-m-d') }}">
                                     </div>
                                 </div>
                             </div>
@@ -211,8 +214,6 @@
     </div>
 
 
-    <!--view click than modal open-->
-
     
 
 </x-app-layout>
@@ -232,6 +233,8 @@
             });
         });
         $(".bd-example-modal-lg").modal('show');
+
+        $("#requ_id").val('');
         $(".table_action").show();
         $(".submit_btn").show();
         $("#id").val("");
@@ -244,20 +247,20 @@
             event.preventDefault();
             var url = $(this).attr('data-action');
             var allSubValuesNotNull = true;
-            // $('.val_part_number').each(function() {
-            //     var value = $(this).val();
-            //     if (value === null || value === '') {
-            //         allSubValuesNotNull = false;
-            //         return false;
-            //     }
-            // });
-            // $('.val_quantity').each(function() {
-            //     var value = $(this).val();
-            //     if (value === null || value === '') {
-            //         allSubValuesNotNull = false;
-            //         return false;
-            //     }
-            // });
+            $('.val_part_number').each(function() {
+                var value = $(this).val();
+                if (value === null || value === '') {
+                    allSubValuesNotNull = false;
+                    return false;
+                }
+            });
+            $('.val_quantity').each(function() {
+                var value = $(this).val();
+                if (value === null || value === '') {
+                    allSubValuesNotNull = false;
+                    return false;
+                }
+            });
            
             if (allSubValuesNotNull) {
                 $.ajax({
@@ -279,11 +282,12 @@
                         
                         var i = 0;++i;
                         var row = '<tr id="row_purchase_table_'+ storePurchase.id + '" role="row" class="odd">';
-                        row += '<td></td>';
                         row += '<td>' + storePurchase.requ_no + '</td>';
                         row += '<td>' + storePurchase.requ_date + '</td>';
-                        row += '<td>' + response.complaintType.name + '</td>';
-                        row += '<td>' + response.complaintType.phone + '</td>';
+                        row += '<td>' + response.techName.tech_id + '</td>';
+                        row += '<td>' + response.techName.tracking_no + '</td>';
+                        row += '<td>' + storePurchase.remarks + '</td>';
+                        row += '<td>' + response.issueNo.issue_no + '</td>';
                         row += '<td>';
                         if(storePurchase.status == 0)
                             row += '<span class="badge light badge-warning"><i class="fa fa-circle text-warning mr-1"></i>Pending</span>';
@@ -321,27 +325,31 @@
             }
         });
     });
+
     /*========//Edit Data//=========*/
     $(document).on('click', '#edit_data', function(){
+
         var id = $(this).data('id');
         alert(id);
+
         $.ajax({
-            url:'{{ route('inv_requisition_edit')}}',
-            method:'GET',
-            dataType:"JSON",
-            data:{id:id},
-            success:function(response){
-                showData(response, 1);
+            url: '{{ route('inv_requisition_edit')}}', 
+            method: 'GET',
+            dataType: "JSON",
+            data: {id: id},
+
+            success: function(response) {
+                showData(response, 1); 
             },
             error: function(xhr, status, error) {
                 console.log(error);
             }
         });
     });
+
     /*========//View Data//=========*/
     $(document).on('click', '#view_data', function(){
         var id = $(this).data('id');
-        alert(id);
         $.ajax({
             url:'{{ route('inv_requisition_edit')}}',
             method:'GET',
@@ -361,118 +369,133 @@
         $(".modal-footer").show();
         
         //--Get Master Data
-        var data = response.data;
+        var tools = response.tools;
 
-        $("#requ_id").val(complaintt.id);
-        $('#requ_no').html(complaintt.requ_no);
-        $("#requ_date").val(complaintt.requ_date);
-        $('#remarks').html(complaintt.remarks);
+        $('#requ_id').val(response.tools.id);
+
+        $('#requ_no').html(response.tools.requ_no);
+        $('#requ_date').val(response.tools.requ_date);
+        $('#tecnicianName').val(response.tools.make_name.name);
+        $('#remarks').val(response.tools.remarks);
+        $('#join').val(response.tools.issue_no.issue_date);
+        $('#customerName').val(response.tools.mast_customer.name);
         
         //--Get Supplier Data
+
         
-        var supplier = response.customer;
-        var supplier_dr = $('#mast_customer_id');
-        supplier_dr.empty();
-        supplier_dr.append('<option selected disabled>--Select--</option>');
-        $.each(customer, function(index, option) {
-            var selected = (option.id == customer.mast_customer_id) ? 'selected' : '';
-            supplier_dr.append('<option value="' + option.id + '" ' + selected + '>' + option.name + '</option>');
+        var com_id = response.compliant;
+        var complaint_type = $('#complaintID');
+        complaint_type.empty();
+        complaint_type.append('<option selected disabled>--Select--</option>');
+
+        $.each(com_id, function(index, option) {
+            var selected = (option.id == response.tools.issue_no.id) ? 'selected' : '';
+            complaint_type.append('<option value="' + option.id + '" ' + selected + '>' + option.issue_no + '</option>');
         });
-        //--Get Work Station Data
-        
+
+
+        var user_id = response.user_data;
+        var user_name = $('#tecnicianName');
+
+        user_name.empty();
+        user_name.append('<option selected disabled>--Select--</option>');
+
+        $.each(user_id, function(index, option){
+            var selected = (option.id == response.tools.make_name.id) ? 'selected' : '';
+            user_name.append('<option value="' + option.id +'" '+ selected + '>' + option.name + '</option>');
+        });
+
 
         if(check == 1){
+            $(".modal-title").html('Tools Details View');
 
-            $("#requ_id").prop("disabled", false);
+            $("#complaintID").prop("disabled", false);
             $('#requ_no').prop("disabled", false);
             $("#requ_date").prop("disabled", false);
             $('#remarks').prop("disabled", false);
-            $('#mast_supplier_id').prop("disabled", false);
-            $('#mast_work_station_id').prop("disabled", false);
-            // $('#mast_customer_id').prop("disabled", false);
+            $('#tecnicianName').prop("disabled", false);
+            $('#join').prop("disabled", false);
+            $('#customerName').prop("disabled", false);
 
             
             $(".table_action").show();
             $('.submit_btn').show();
         }else{
-
-            $("#requ_id").prop("disabled", true);
+            
             $('#requ_no').prop("disabled", true);
             $("#requ_date").prop("disabled", true);
             $('#remarks').prop("disabled", true);
-            $('#mast_supplier_id').prop("disabled", true);
-            $('#mast_work_station_id').prop("disabled", true);
-            // $('#mast_customer_id').prop("disabled", false);
+            $('#tecnicianName').prop("disabled", true);
+            $('#join').prop("disabled", true);
+            $('#customerName').prop("disabled", false);
 
+            $("#complaintID").prop("disabled", true);
             $('.table_action').hide();
             $('.submit_btn').hide();
         }
-        
-        //requisition_details...
-        
-        var tableBody = $('#table-body');
-        tableBody.empty();
-        var requisitionDetails = response.purchase_details;
-        var total = 0;
-        var i = 0;
-        if(check == 1){ //Edit - 1
-            $.each(requisitionDetails, function(index, item) {
-                var subtotal = item.qty * item.price;
-                var newRow = $('<tr id="row_todo_'+ item.id + '">' +
-                    '<input type="hidden" name="editFile['+i+'][id]" id="salesDetailsId" value="' + item.id + '">' +
-                    '<td>'+
-                        '<select id="item_category" class="form-control dropdwon_select val_item_category">' +
-                        '<option selected disabled>--Select--</option>' +
-                        '@foreach($item_group as $data)' +
-                            '<option value="{{ $data->id }}" data-part_name="{{ $data->part_name }}" ' + ('{{ $data->id }}' == item.item_groups_id ? 'selected' : '') + '>' + '{{ $data->part_name }}' + '</option>' +
-                        '@endforeach' +
-                        '</select>' +
-                    '</td>' +
-                    '<td><select id="partNumber" name="editFile['+i+'][item_id]" class="form-control dropdwon_select val_part_number"></select></td>' +
-                    '<td><input type="text" name="" INV-NO id="packageSize" class="form-control" value="' + item.box_qty + '"></td>' +
-                    '<td><input type="text" name="" readonly id="unit" class="form-control" value="' + item.unit_name + '"></td>' +
-                    '<td><input type="number" name="editFile['+i+'][qty]" id="" class="form-control quantity val_quantity"  value="'+ item.qty +'"></td>' +
-                    '<td class="text-center">' +
-                        '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs edit_add_hide" onClick="addRow(0)"><span class="fa fa-plus"></span></button>' +
-                        '<button type="button" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0" id="delete_data" data-id="' + item.id +'"><span class="fa fa-trash"></span></button>' +
-                    '</td>'+
-                '</tr>');
 
-                if ($("#id").val()) {
-                    $("#row_todo_" + item.id).replaceWith(newRow);
-                } else {
-                    tableBody.append(newRow);
-                }
+            //--Table Purchase Details
 
-                var currentRow = $(newRow);
-                var partNumberSelect = currentRow.find('.val_part_number');
-                $.ajax({
-                    url: '{{ route('get-part-id')}}',
-                    method: 'GET',
-                    dataType: 'JSON',
-                    data: { 'part_id': item.item_groups_id },
-                    success: function(data) {
-                        partNumberSelect.append('<option value="" selected>--Select--</option>');
+                    var tableBody = $('#table-body');
+                    tableBody.empty();
+                    var purchaseDetails = response.requisition_details;
 
-                        $.each(data, function(index, option) {
-                            var selected = (option.id == item.item_rg_id) ? 'selected' : '';
-                            partNumberSelect.append('<option value="' + option.id + '" ' + selected + '>' + option.part_no + '</option>');
+                    var i = 0;
+                if(check == 1){ //Edit - 1
+                    $.each(purchaseDetails, function(index, item) {
+
+                        var newRow = $('<tr id="row_todo_'+ item.id + '">' +
+                            '<input type="hidden" name="editFile['+i+'][id]" id="salesDetailsId" value="' + item.id + '">' +
+                            '<td>'+
+                                '<select id="item_category" class="form-control dropdwon_select val_item_category">' +
+                                '<option selected disabled>--Select--</option>' +
+                                '@foreach($item_group as $data)' +
+                                    '<option value="{{ $data->id }}" data-part_name="{{ $data->part_name }}" ' + ('{{ $data->id }}' == item.item_group_id ? 'selected' : '') + '>' + '{{ $data->part_name }}' + '</option>' +
+                                '@endforeach' +
+                                '</select>' +
+                            '</td>' +
+                            '<td><select id="partNumber" name="editFile['+i+'][item_id]" class="form-control dropdwon_select val_part_number"></select></td>' +
+                            '<td><input type="text" name="" REQUISITION-NO id="packageSize" class="form-control" value="' + item.box_qty + '"></td>' +
+                            '<td><input type="text" name="" readonly id="unit" class="form-control" value="' + item.unit_name + '"></td>' +
+                            '<td><input type="number" name="editFile['+i+'][qty]" id="" class="form-control quantity val_quantity"  value="'+ item.qty +'"></td>' +
+                            '<td class="text-center">' +
+                                '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs edit_add_hide" onClick="addRow(0)"><span class="fa fa-plus"></span></button>' +
+                                '<button type="button" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0" id="delete_data" data-id="' + item.id +'"><span class="fa fa-trash"></span></button>' +
+                            '</td>'+
+                        '</tr>');
+                        
+
+                        $('#items-table tbody').append(newRow);
+
+                        var currentRow = $(newRow);
+                        var partNumberSelect = currentRow.find('.val_part_number');
+                        $.ajax({
+                            url: '{{ route('edit-part-id')}}',
+                            method: 'GET',
+                            dataType: 'JSON',
+                            data: { 'part_id': item.item_group_id},
+                            
+                            success: function(data) {
+                                // partNumberSelect.append('<option value="" selected>--Select--</option>');
+
+                                $.each(data, function(index, option) {
+                                    var selected = (option.id == item.item_rg_id) ? 'selected' : '';
+                                    partNumberSelect.append('<option value="' + option.id + '" ' + selected + '>' + option.part_no + '</option>');
+                                });
+                            },
+                            error: function() {
+                                alert('Fail');
+                            }
                         });
-                    },
-                    error: function() {
-                        alert('Fail');
-                    }
-                });
-                i++;
-                $(this).find('.subtotal').text(subtotal.toFixed(2));
-                total += subtotal;
-            });
-            $('#total').text(total.toFixed(2));
-        }
+                    });
+                    i++;
+                }    
+        
         if(check == 2){ //View - 2
-            $.each(requisitionDetails, function(index, item) {
-                
-                var row = '<tr id="row_todo_'+ item.id + '">';
+
+            $.each(purchaseDetails, function(index, item) {
+
+                var row = '<tr id="row_todo_'+ item.part_name + '">';
                 row += '<td>' + item.part_name + '</td>';
                 row += '<td>' + item.part_no + '</td>';
                 row += '<td>' + item.box_qty + '</td>';
@@ -482,9 +505,8 @@
                 tableBody.prepend(row);
 
             });
-            $('#total').text(total.toFixed(2));
+           
         }
-        
     }
 
     /*========//Delete Data//========*/
@@ -497,22 +519,47 @@
     });
     $("body").on('click','#delete_data',function(){
         var id = $(this).data('id');
-        $.ajax({
-            url: "{{ url('inv_purchase/destroy')}}" + '/' + id,
-            method: 'DELETE',
-            type: 'DELETE',
-            success: function(response) {
-                toastr.success("Record deleted successfully!");
-                $("#row_todo_" + id).remove();
-                $('#table-body').closest('tr').remove();
-                updateSubtotal(0);
-            },
-            error: function(response) {
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'An error occurred.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this data!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                // Place your delete code here
+                $.ajax({
+                    url: "{{ url('inv_purchase/destroy')}}" + '/' + id,
+                    method: 'DELETE',
+                    type: 'DELETE',
+                    success: function(response) {
+                        toastr.success("Record deleted successfully!");
+                        $("#row_todo_" + id).remove();
+                        $('#table-body').closest('tr').remove();
+                        updateSubtotal(0);
+
+                        var countTrData = parseInt($('#items-table tbody tr .countTdData').length);
+                        if(countTrData < 1 ){
+                            $(".bd-example-modal-lg").modal('hide');
+                            deleteMasterData();
+                        }
+                    },
+                    error: function(response) {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'An error occurred.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                });
+            } 
+            else 
+            {
+                // User clicked "No" button, do nothing
+                swal("Your data is safe!", {
+                    icon: "success",
                 });
             }
         });
@@ -524,20 +571,20 @@
     var count = 0;
     $("#items-table").on("click", ".add-row", function() {
         var allValuesNotNull = true;
-        // $('.val_part_number').each(function() {
-        //     var value = $(this).val();
-        //     if (value === null || value === '') {
-        //         allValuesNotNull = false;
-        //         return false;
-        //     }
-        // });
-        // $('.val_quantity').each(function() {
-        //     var value = $(this).val();
-        //     if (value === null || value === '') {
-        //         allValuesNotNull = false;
-        //         return false;
-        //     }
-        // });
+        $('.val_part_number').each(function() {
+            var value = $(this).val();
+            if (value === null || value === '') {
+                allValuesNotNull = false;
+                return false;
+            }
+        });
+        $('.val_quantity').each(function() {
+            var value = $(this).val();
+            if (value === null || value === '') {
+                allValuesNotNull = false;
+                return false;
+            }
+        });
         if (allValuesNotNull) {
             ++count;
             addRow(count);
@@ -709,6 +756,24 @@
 </script>
 
 
+<script>
+    $(document).on('change','#complaintID',function () {
+        var id = $(this).val();
+        
 
+        $.ajax({
+            url:'{{route('get-tools-Name')}}',
+            method:'GET',
+            dataType:"JSON",
+            data:{'id': id},
+            success: function(response){
 
+                $('#join').val(response.desig.issue_date);
+                $('#customerName').val(response.desig.name);
+                
+                
+             }
+        });
+    });
+</script>
 

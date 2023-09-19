@@ -15,19 +15,18 @@ return new class extends Migration
     {
         Schema::create('job_cards', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('tracking_no')->nullable();
-            $table->foreign('tracking_no')->references('id')->on('complaints')->onDelete('cascade');
-            $table->date('job_date')->nullable();
-            $table->tinyInteger('is_next_visit')->default(false);
+            $table->date('date')->nullable();
             $table->date('next_date')->nullable();
-            $table->tinyInteger('is_complete')->default(false);
             $table->tinyInteger('is_spare_parts')->nullable();
             $table->text('note')->nullable();
+            $table->text('description')->nullable();
+            $table->unsignedBigInteger('complaint_id')->nullable();
+            $table->foreign('complaint_id')->references('id')->on('complaints')->onDelete('cascade');
             $table->unsignedBigInteger('tech_id')->nullable;
-            $table->text('observe_details')->nullable();
-            $table->foreign('tech_id')->references('id')->on('info_personals')->onDelete('cascade');
+            $table->foreign('tech_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->tinyInteger('status')->default(false);
             $table->timestamps();
         });
     }

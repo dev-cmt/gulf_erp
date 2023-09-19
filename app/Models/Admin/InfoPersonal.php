@@ -86,5 +86,9 @@ class InfoPersonal extends Model
     {
         return $this->belongsTo(User::class, 'reporting_boss', 'id');
     }
+    public function employeeName()
+    {
+        return $this->belongsTo(User::class, 'emp_id', 'id');
+    }
 
 }

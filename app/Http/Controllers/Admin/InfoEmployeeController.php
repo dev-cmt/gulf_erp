@@ -34,7 +34,7 @@ class InfoEmployeeController extends Controller
      */
     public function employee_list()
     {
-        $user = User::where('status', 1)->get();
+        $user = User::whereNotIn('id', [1,2])->where('status', 1)->get();
         return view('layouts.pages.admin.info_employee.employee_list',compact('user'));
     }
     public function employee_details($id)
@@ -278,7 +278,7 @@ class InfoEmployeeController extends Controller
      */
     public function employee_create()
     {
-        $user = User::where( 'is_admin', '==', 0)->orWhere('status', '==', 0)->get();
+        $user = User::whereNotIn('id', [1,2])->where( 'is_admin', '==', 0)->orWhere('status', '==', 0)->get();
         return view('layouts.pages.admin.info_employee.employee_register',compact('user'));
     }
     public function employee_register(Request $request)

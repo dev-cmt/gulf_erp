@@ -4,6 +4,7 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title">Spare Parts Requisition</h4>
+                    <button type="button" id="open_modal" class="btn btn-sm btn-primary p-1 px-2"><i class="fa  fa-plus"></i></i><span class="btn-icon-add"></span>Create</button>
                 </div>
                 <div class="card-body" id="reload">           
                     <div class="form-group row">
@@ -20,23 +21,27 @@
                         <table id="example3" class="display " style="min-width: 845px">
                                 <thead>
                                     <tr>
-                                        <th>Issue No</th>
-                                        <th>Date</th>
-                                        <th>Customer Name</th>
-                                        <th>Mobile</th>
-                                        <th>Description</th>
+                                        <th>Requ No</th>
+                                        <th>Requ Date</th>
+                                        <th>Tracking No</th>
+                                        <th>Tech Name</th>
+                                        <th>Complaint Date</th>
+                                        <th>Complaint Name</th>
                                         <th>Status</th>
                                         <th class="text-center">Action</th>
                                     </tr>
                                 </thead>
-                                <tbody id="purchase_tbody">
-                                        @foreach($complaintt as $item)
+                                    <tbody id="purchase_tbody">
+
+                                        @foreach($spare as $item)
+                                        
                                         <tr id="row_purchase_table_{{ $item->id}}">
-                                            <td>{{ $item->issue_no}}</td>
-                                            <td>{{ $item->issue_date}}</td>
-                                            <td>{{ $item->mastCustomer->name}}</td>
-                                            <td>{{ $item->mastCustomer->phone}}</td>
-                                            <td>{{ $item->remarks}}</td>
+                                            <td>{{ $item->requ_no}}</td>
+                                            <td>{{ $item->requ_date}}</td>
+                                            <td>{{ $item->issueNo->id ?? 'null'}}</td>
+                                            <td>{{ $item->tech_id ?? 'null'}}</td>
+                                            <td>{{ $item->issueNo->issue_date ?? 'null'}}</td>
+                                            <td>{{ $item->issueNo->issue_no ?? 'null'}}</td>
                                             <td>@if($item->status == 0)
                                               <span class="badge light badge-warning">
                                                 <i class="fa fa-circle text-warning mr-1"></i>Pending
@@ -46,24 +51,19 @@
                                                     <i class="fa fa-circle text-success mr-1"></i>Successful
                                                 </span>
                                                 @elseif($item->status == 2)
-                                              <span class="badge light badge-danger">
-                                                <i class="fa fa-circle text-danger mr-1"></i>Canceled
-                                              </span>
-                                             @endif
+                                             <span class="badge light badge-danger">
+                                             <i class="fa fa-circle text-danger mr-1"></i>Refund
+                                            </span>
+                                            @endif
                                             </td>
-                                            <td>
-                                                <a href="{{ route('spare-part-list') }}">
-                                                <button type="button" class="btn btn-sm btn-primary p-1 px-2">
-                                                <i class="fa fa-plus"></i>
-                                                <span class="btn-icon-add"></span>
-                                                        New
-                                                </button>
-                                                </a>
+                                            <td style="width:210px;text-align:right">
+                                                <button type="button" class="btn btn-sm btn-success p-1 px-2" id="edit_data" data-id="{{ $item->id }}"><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button>
+
+                                                <button type="button" class="btn btn-sm btn-info p-1 px-2" id="view_data" data-id="{{ $item->id }}"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</button>
                                             </td>
                                         </tr>
-                                
                                         @endforeach
-                                 </tbody>
+                                    </tbody>
                         </table>
                     </div>
                 </div>
@@ -80,7 +80,7 @@
                     </h5>
                     <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                 </div>
-                <form class="form-valide" data-action="{{ route('sparepart.store') }}" method="POST" enctype="multipart/form-data" id="add-user-form">
+                <form class="form-valide" data-action="{{ route('sparepart-requisition.store') }}" method="POST" enctype="multipart/form-data" id="add-user-form">
                     @csrf
                     <div class="modal-body py-2">
                         <div class="row" id="main-row-data">
@@ -89,7 +89,13 @@
                                 <div class="form-group row">
                                     <label class="col-md-5 col-form-label">Complaint ID</label>
                                     <div class="col-md-7">
-                                        <label class="col-md-5 col-form-label" id="requ_no">Gulf-5680</label>
+                                        <select name="complaint_id" id="complaintID" class="form-control dropdwon_select" required>
+                                            <option selected disabled>--Select--</option>
+                                            @foreach($data as $row)
+                                                <option value="{{ $row->id}}">{{ $row->issue_no}}</option>
+                                            @endforeach
+                                        </select>
+                                       
                                     </div>
                                 </div>
                             </div>
@@ -99,7 +105,7 @@
                                         <span class="text-danger">*</span>
                                     </label>
                                     <div class="col-md-7">
-                                        <input type="date" name="requ_date" id="requ_date" class="form-control" value="{{ old('date') ? old('date'):  date('Y-m-d') }}">
+                                        <input type="date" name="issueDate" id="join" readonly>
                                     </div>
                                 </div>
                             </div>
@@ -109,10 +115,7 @@
                                         <span class="text-danger">*</span>
                                     </label>
                                     <div class="col-md-7">
-
-                                    <option value="{{$item->id}}">{{$item->mastCustomer->name}}</option> 
-
-                                        <!-- <label class="col-md-5 col-form-label" id="inv_no">Alam</label> -->
+                                        <input type="text" readonly id="customerName" name="customName" style="border: none"> 
                                     </div>
                                 </div>
                             </div>
@@ -122,9 +125,9 @@
                                         <span class="text-danger">*</span>
                                     </label>
                                     <div class="col-md-7">
-                                        <select name="mast_customer_id" id="mast_customer_id" class="form-control dropdwon_select" required>
+                                        <select name="tech_id" id="tecnicianName" class="form-control dropdwon_select" required>
                                         <option selected disabled>--Select--</option>
-                                        @foreach($customer as $row)
+                                        @foreach($tecnicianName as $row)
                                             <option value="{{ $row->id}}">{{ $row->name}}</option>
                                             @endforeach
                                         </select>
@@ -137,7 +140,7 @@
                                     <div class="col-md-7">
 
                                      <label class="col-md-5 col-form-label" id="requ_no">REQU-</label>
-                                        <!-- <input type="number" name="requ_no" class="col-md-5 col-form-label" id="requ_no" > -->
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -147,7 +150,7 @@
                                         <span class="text-danger">*</span>
                                     </label>
                                     <div class="col-md-7">
-                                        <input type="date" name="requ_date" id="inv_date" class="form-control" value="{{ old('date') ? old('date'):  date('Y-m-d') }}">
+                                        <input type="date" name="requ_date" id="requ_date" class="form-control" value="{{ old('date') ? old('date'):  date('Y-m-d') }}">
                                     </div>
                                 </div>
                             </div>
@@ -215,6 +218,7 @@
             });
         });
         
+        $("#requ_id").val('');
         $(".table_action").show();
         $(".submit_btn").show();
         $("#id").val("");
@@ -258,6 +262,7 @@
                         swal("Success Message Title", "Well done, you pressed a button", "success");
                         $(".bd-example-modal-lg").modal('hide');
 
+
                         var storePurchase = response.storePurchase;
                         
                         var i = 0;++i;
@@ -279,7 +284,7 @@
                         row += '<td><button type="button" id="open_modal" class="btn btn-sm btn-primary p-1 px-2"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>Create</button></td>';
                         row += '<td class="d-flex"><button type="button" class="btn btn-sm btn-success p-1 px-2 mr-1" id="edit_data" data-id="'+storePurchase.id+'"><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button><button type="button" class="btn btn-sm btn-info p-1 px-2" id="view_data" data-id="'+storePurchase.id+'"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</button></td>';
 
-                        if($("#pur_id").val()){
+                        if($("#requ_id").val()){
                             $("#row_purchase_table_" + storePurchase.id).replaceWith(row);
                         }else{
                             $("#purchase_tbody").prepend(row);
@@ -304,20 +309,21 @@
             }
         });
     });
+
     /*========//Edit Data//=========*/
     $(document).on('click', '#edit_data', function(){
         var id = $(this).data('id');
-        alert('hi');
+
         $.ajax({
-            url:'{{ route('inv_requisition_edit')}}',
-            method:'GET',
-            dataType:"JSON",
-            data:{id:id},
-            success:function(response){
-                showData(response, 1);
+            url: '{{ route('spare_requisition_edit')}}', 
+            method: 'GET',
+            dataType: "JSON",
+            data: {id: id},
+            success: function(response) {
+                showData(response, 1);              
             },
             error: function(xhr, status, error) {
-                console.log(error);
+             console.log(error);
             }
         });
     });
@@ -327,12 +333,12 @@
         var id = $(this).data('id');
         
         $.ajax({
-            url:'{{ route('inv_requisition_edit')}}',
+            url:'{{ route('spare_requisition_edit')}}',
             method:'GET',
+            dataType:"JSON",
             data:{id:id},
             success:function(response){
-             dataType:"JSON",
-               showData(response, 2);
+                showData(response, 2);
             },
             error: function(xhr, status, error) {
                 console.log(error);
@@ -346,116 +352,133 @@
         $(".modal-footer").show();
         
         //--Get Master Data
-        var data = response.data;
+        var spot = response.spot;
 
-        $("#requ_id").val(complaintt.id);
-        $('#requ_no').html(complaintt.requ_no);
-        $("#requ_date").val(complaintt.requ_date);
-        $('#remarks').html(complaintt.remarks);
+        $('#requ_id').val(response.spot.id);
+
+        $('#requ_no').html(response.spot.requ_no);
+        $('#requ_date').val(response.spot.requ_date);
+        $('#tecnicianName').val(response.spot.make_name.name);
+        $('#remarks').val(response.spot.remarks);
+        $('#join').val(response.spot.issue_no.issue_date);
+        $('#customerName').val(response.spot.mast_customer.name);
         
         //--Get Supplier Data
 
-        var customer = response.customer;
-        var supplier_dr = $('#mast_customer_id');
-        supplier_dr.empty();
-        supplier_dr.append('<option selected disabled>--Select--</option>');
-        $.each(customer, function(index, option) {
-            var selected = (option.id == customer.mast_customer_id) ? 'selected' : '';
-            supplier_dr.append('<option value="' + option.id + '" ' + selected + '>' + option.name + '</option>');
+        var com_id = response.compliant;
+        var complaint_type = $('#complaintID');
+        complaint_type.empty();
+        complaint_type.append('<option selected disabled>--Select--</option>');
+
+        $.each(com_id, function(index, option) {
+            var selected = (option.id == response.spot.issue_no.id) ? 'selected' : '';
+            complaint_type.append('<option value="' + option.id + '" ' + selected + '>' + option.issue_no + '</option>');
         });
 
+        //--Get Technician Data
+
+        var user_id = response.user_data;
+        var user_name = $('#tecnicianName');
+       
+        user_name.empty();
+        user_name.append('<option selected disabled>--Select--</option>');
+
+        $.each(user_id, function(index, option){
+            var selected = (option.id == response.spot.make_name.id) ? 'selected' : '';
+            user_name.append('<option value="' + option.id +'" '+ selected + '>' + option.name + '</option>');
+        });
 
         if(check == 1){
+            $(".modal-title").html('Spare Part Details View');
 
             $("#requ_id").prop("disabled", false);
             $('#requ_no').prop("disabled", false);
             $("#requ_date").prop("disabled", false);
             $('#remarks').prop("disabled", false);
-            $('#mast_supplier_id').prop("disabled", false);
-            $('#mast_work_station_id').prop("disabled", false);
-            $('#mast_customer_id').prop("disabled", false);
+            $('#tecnicianName').prop("disabled", false);
+            $('#join').prop("disabled", false);
+            $('#customerName').prop("disabled", false);
 
             
             $(".table_action").show();
             $('.submit_btn').show();
         }else{
-            
             $("#requ_id").prop("disabled", true);
             $('#requ_no').prop("disabled", true);
             $("#requ_date").prop("disabled", true);
             $('#remarks').prop("disabled", true);
-            $('#mast_supplier_id').prop("disabled", true);
-            $('#mast_work_station_id').prop("disabled", true);
-            $('#mast_customer_id').prop("disabled", false);
+            $('#tecnicianName').prop("disabled", true);
+            $('#join').prop("disabled", true);
+            $('#customerName').prop("disabled", false);
 
+            $("#complaintID").prop("disabled", true);
             $('.table_action').hide();
             $('.submit_btn').hide();
         }
 
-        //--Table Purchase Details
-        var tableBody = $('#table-body');
-        tableBody.empty();
-        var purchaseDetails = response.purchase_details;
-        var total = 0;
-        var i = 0;
-        if(check == 1){ //Edit - 1
-            $.each(purchaseDetails, function(index, item) {
-                var subtotal = item.qty * item.price;
-                var newRow = $('<tr id="row_todo_'+ item.id + '">' +
-                    '<input type="hidden" name="editFile['+i+'][id]" id="salesDetailsId" value="' + item.id + '">' +
-                    '<td>'+
-                        '<select id="item_category" class="form-control dropdwon_select val_item_category">' +
-                        '<option selected disabled>--Select--</option>' +
-                        '@foreach($item_group as $data)' +
-                            '<option value="{{ $data->id }}" data-part_name="{{ $data->part_name }}" ' + ('{{ $data->id }}' == item.item_groups_id ? 'selected' : '') + '>' + '{{ $data->part_name }}' + '</option>' +
-                        '@endforeach' +
-                        '</select>' +
-                    '</td>' +
-                    '<td><select id="partNumber" name="editFile['+i+'][item_id]" class="form-control dropdwon_select val_part_number"></select></td>' +
-                    '<td><input type="text" name="" REQUISITION-NO id="packageSize" class="form-control" value="' + item.box_qty + '"></td>' +
-                    '<td><input type="text" name="" readonly id="unit" class="form-control" value="' + item.unit_name + '"></td>' +
-                    '<td><input type="number" name="editFile['+i+'][qty]" id="" class="form-control quantity val_quantity"  value="'+ item.qty +'"></td>' +
-                    '<td class="text-center">' +
-                        '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs edit_add_hide" onClick="addRow(0)"><span class="fa fa-plus"></span></button>' +
-                        '<button type="button" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0" id="delete_data" data-id="' + item.id +'"><span class="fa fa-trash"></span></button>' +
-                    '</td>'+
-                '</tr>');
+                //--Table Purchase Details
 
-                if ($("#id").val()) {
-                    $("#row_todo_" + item.id).replaceWith(newRow);
-                } else {
-                    tableBody.append(newRow);
+                var tableBody = $('#table-body');
+                tableBody.empty();
+                var purchaseDetails = response.purchase_details;
+
+                var i = 0;
+
+                if(check == 1){ //Edit - 1
+                    $.each(purchaseDetails, function(index, item) {
+
+                        var newRow = $('<tr id="row_todo_'+ item.id + '">' +
+                            '<input type="hidden" name="editFile['+i+'][id]" id="salesDetailsId" value="' + item.id + '">' +
+                            '<td>'+
+                                '<select id="item_category" class="form-control dropdwon_select val_item_category">' +
+                                '<option selected disabled>--Select--</option>' +
+                                '@foreach($item_group as $data)' +
+                                    '<option value="{{ $data->id }}" data-part_name="{{ $data->part_name }}" ' + ('{{ $data->id }}' == item.item_group_id ? 'selected' : '') + '>' + '{{ $data->part_name }}' + '</option>' +
+                                '@endforeach' +
+                                '</select>' +
+                            '</td>' +
+                            '<td><select id="partNumber" name="editFile['+i+'][item_id]" class="form-control dropdwon_select val_part_number"></select></td>' +
+                            '<td><input type="text" name="" REQUISITION-NO id="packageSize" class="form-control" value="' + item.box_qty + '"></td>' +
+                            '<td><input type="text" name="" readonly id="unit" class="form-control" value="' + item.unit_name + '"></td>' +
+                            '<td><input type="number" name="editFile['+i+'][qty]" id="" class="form-control quantity val_quantity"  value="'+ item.qty +'"></td>' +
+                            '<td class="text-center">' +
+                                '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs edit_add_hide" onClick="addRow(0)"><span class="fa fa-plus"></span></button>' +
+                                '<button type="button" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0" id="delete_data" data-id="' + item.id +'"><span class="fa fa-trash"></span></button>' +
+                            '</td>'+
+                        '</tr>');
+                        
+
+                        $('#items-table tbody').append(newRow);
+
+                        var currentRow = $(newRow);
+                        var partNumberSelect = currentRow.find('.val_part_number');
+
+                        $.ajax({
+                            url: '{{ route('edit-part-id')}}',
+                            method: 'GET',
+                            dataType: 'JSON',
+                            data: { 'part_id': item.item_group_id},
+                            
+                            success: function(data) {
+                                // partNumberSelect.append('<option value="" selected>--Select--</option>');
+
+                                $.each(data, function(index, option) {
+                                    var selected = (option.id == item.item_rg_id) ? 'selected' : '';
+                                    partNumberSelect.append('<option value="' + option.id + '" ' + selected + '>' + option.part_no + '</option>');
+                                });
+                            },
+                            error: function() {
+                                alert('Fail');
+                            }
+                        });
+                    });
+                    i++;
                 }
 
-                var currentRow = $(newRow);
-                var partNumberSelect = currentRow.find('.val_part_number');
-                $.ajax({
-                    url: '{{ route('get-part-id')}}',
-                    method: 'GET',
-                    dataType: 'JSON',
-                    data: { 'part_id': item.item_groups_id },
-                    success: function(data) {
-                        partNumberSelect.append('<option value="" selected>--Select--</option>');
-
-                        $.each(data, function(index, option) {
-                            var selected = (option.id == item.item_rg_id) ? 'selected' : '';
-                            partNumberSelect.append('<option value="' + option.id + '" ' + selected + '>' + option.part_no + '</option>');
-                        });
-                    },
-                    error: function() {
-                        alert('Fail');
-                    }
-                });
-                i++;
-                $(this).find('.subtotal').text(subtotal.toFixed(2));
-                total += subtotal;
-            });
-            $('#total').text(total.toFixed(2));
-        }
         if(check == 2){ //View - 2
             $.each(purchaseDetails, function(index, item) {
-                var subtotal = item.qty * item.price;
-                var row = '<tr id="row_todo_'+ item.id + '">';
+                
+                var row = '<tr id="row_todo_'+ item.part_name + '">';
                 row += '<td>' + item.part_name + '</td>';
                 row += '<td>' + item.part_no + '</td>';
                 row += '<td>' + item.box_qty + '</td>';
@@ -465,7 +488,7 @@
                 tableBody.prepend(row);
 
             });
-            $('#total').text(total.toFixed(2));
+           
         }
     }
 
@@ -479,26 +502,70 @@
     });
     $("body").on('click','#delete_data',function(){
         var id = $(this).data('id');
-        $.ajax({
-            url: "{{ url('inv_purchase/destroy')}}" + '/' + id,
-            method: 'DELETE',
-            type: 'DELETE',
-            success: function(response) {
-                toastr.success("Record deleted successfully!");
-                $("#row_todo_" + id).remove();
-                $('#table-body').closest('tr').remove();
-                updateSubtotal(0);
-            },
-            error: function(response) {
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'An error occurred.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this data!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                // Place your delete code here
+                $.ajax({
+                    url: "{{ url('inv_purchase/destroy')}}" + '/' + id,
+                    method: 'DELETE',
+                    type: 'DELETE',
+                    success: function(response) {
+                        toastr.success("Record deleted successfully!");
+                        $("#row_todo_" + id).remove();
+                        $('#table-body').closest('tr').remove();
+                        updateSubtotal(0);
+
+                        var countTrData = parseInt($('#items-table tbody tr .countTdData').length);
+                        if(countTrData < 1 ){
+                            $(".bd-example-modal-lg").modal('hide');
+                            deleteMasterData();
+                        }
+                    },
+                    error: function(response) {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'An error occurred.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                });
+            } 
+            else 
+            {
+                // User clicked "No" button, do nothing
+                swal("Your data is safe!", {
+                    icon: "success",
                 });
             }
         });
     });
+
+    function deleteMasterData(){
+        var id = $('#requ_id').val();
+        $.ajax({
+            url:'{{ route('getDelete-master-purchase')}}',
+            method:'GET',
+            dataType:"JSON",
+            data:{'id':id},
+            success:function(response){
+                swal("Your data save successfully", "Well done, you pressed a button", "success")
+                    .then(function() {
+                        location.reload();
+                    });
+            },
+            error:function(){
+                alert('Fail');
+            }
+        });
+    }
 </script>
 
 <script type="text/javascript">
@@ -541,7 +608,7 @@
             '<td><select id="partNumber" name="moreFile['+i+'][item_id]" class="form-control dropdwon_select val_part_number"></select></td>' +
             '<td><input type="text" name="" readonly id="packageSize" class="form-control"></td>' +
             '<td><input type="text" name="" readonly id="unit" class="form-control"></td>' +
-            '<td><input type="number" name="moreFile['+i+'][qty]" id="" class="form-control quantity val_quantity"></td>' +
+            '<td><input type="number" name="moreFile['+i+'][qty]" id="qty" class="form-control quantity val_quantity"></td>' +
             '<td class="text-center">' +
                 '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs add-row"><span class="fa fa-plus"></span></button>' +
                 '<button type="button" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0 remove-row"><span class="fa fa-trash"></span></button>' +
@@ -691,5 +758,23 @@
     document.getElementById('date').value = c_date;
 </script>
 
+<script>
+    $(document).on('change','#complaintID',function () {
+        var id = $(this).val();
+        
 
+        $.ajax({
+            url:'{{route('get-complaint-Name')}}',
+            method:'GET',
+            dataType:"JSON",
+            data:{'id': id},
+            success: function(response){
 
+                $('#join').val(response.desig.issue_date);
+                $('#customerName').val(response.desig.name);
+                
+                
+             }
+        });
+    });
+</script>

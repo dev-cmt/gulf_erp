@@ -9,7 +9,7 @@
                     <div class="form-group row">
                         <label class="col-md-2 mt-2"><h5>Start Date: </h5></label>
                         <div class="col-md-2">
-                            <input type="date" class="form-control" name="end_date" placeholder="Enter Date.." id="date">
+                            <input type="date" class="form-control" name="start_date" placeholder="Enter Date.." id="date">
                         </div>
                         <label class="col-md-2 mt-2"><h5>End Date: </h5></label>
                         <div class="col-md-2">
@@ -34,8 +34,8 @@
                                     <tr>
                                         <td>{{ $data->issue_no}}</td>
                                         <td>{{ $data->issue_date}}</td>
-                                        <td>{{ $data->complaintType->name}}</td>
-                                        <td>{{ $data->complaintType->phone}}</td>
+                                        <td>{{ $data->custo->name}}</td>
+                                        <td>{{ $data->custo->phone}}</td>
                                         <td>{{ $data->remarks}}</td>
                                         <td>@if($data->status == 0)
                                               <span class="badge light badge-warning">
@@ -50,7 +50,7 @@
                                              <i class="fa fa-circle text-danger mr-1"></i>Canceled
                                             </span>
                                             @endif
-                                            </td>
+                                        </td>
                                         <td>
                                             <button type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-sm btn-primary p-1 px-2" id="service_bill" data-id="{{ $data->id }}"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</button>
                                         </td>
@@ -72,7 +72,7 @@
                     </h5>
                     <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                 </div>
-                <form class="form-valide" data-action="" method="POST" enctype="multipart/form-data" id="add-user-form">
+                <form class="form-valide" data-action="{{ route('service-bill.store') }}" method="POST" enctype="multipart/form-data" id="add-user-form">
                     @csrf
                     <div class="modal-body py-2">
                         <div class="row" id="main-row-data">
@@ -81,9 +81,20 @@
                                 <div class="form-group row">
                                     <label class="col-md-5 col-form-label">Complaint ID</label>
                                     <div class="col-md-7">
-                                        <label class="col-md-5 col-form-label" id="inv_no">GULF-XXXXX</label>
+                                        <select name="complaint_id" id="complaintID" class="form-control dropdwon_select" required>
+                                        <option selected disabled>--Select--</option>
+                                            @foreach($service as $row)
+                                            <option value="{{ $row->id}}">{{ $row->issue_no}}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
+                                <!-- <div class="form-group row">
+                                    <label class="col-md-5 col-form-label">Complaint ID</label>
+                                    <div class="col-md-7">
+                                        <label class="col-md-5 col-form-label" id="inv_no">COMPLAINT-XXXXX</label>
+                                    </div>
+                                </div> -->
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group row">
@@ -91,7 +102,7 @@
                                         <span class="text-danger">*</span>
                                     </label>
                                     <div class="col-md-7">
-                                      <option value="{{$data->id}}">{{$data->complaintType->name}}</option> 
+                                      <option value="{{$data->id}}">{{$data->custo->name}}</option> 
                                         <!-- <label class="col-md-5 col-form-label" id="inv_no">Serniabat</label> -->
                                     </div>
                                 </div>
@@ -102,7 +113,7 @@
                                         <span class="text-danger">*</span>
                                     </label>
                                     <div class="col-md-7">
-                                        <input type="date" name="inv_date" id="inv_date" class="form-control" value="{{ old('date') ? old('date'):  date('Y-m-d') }}">
+                                        <input type="date" name="complaint_date" id="inv_date" class="form-control" value="{{ old('date') ? old('date'):  date('Y-m-d') }}">
                                     </div>
                                 </div>
                             </div>
@@ -111,26 +122,31 @@
                                     <label class="col-md-5 col-form-label">Technician Name
                                         <span class="text-danger">*</span>
                                     </label>
+                                        <div class="col-md-7">
+                                            <select name="tech_id" id="tecnicianName" class="form-control dropdwon_select" required>
+                                            <option selected disabled>--Select--</option>
+                                            @foreach($tecnicianName as $row)
+                                                <option value="{{ $row->id}}">{{ $row->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-5 col-form-label">Bill No.</label>
                                     <div class="col-md-7">
-                                        <label class="col-md-5 col-form-label" id="inv_no">Raju Khan</label>
+                                        <label class="col-md-5 col-form-label" id="requ_no">BILL NO--</label>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group row">
-                                    <label class="col-md-5 col-form-label">Requisition No.</label>
-                                    <div class="col-md-7">
-                                        <label class="col-md-5 col-form-label" id="inv_no">GL-56789</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group row">
-                                    <label class="col-md-5 col-form-label">Requisition Date
+                                    <label class="col-md-5 col-form-label">Bill Date
                                         <span class="text-danger">*</span>
                                     </label>
                                     <div class="col-md-7">
-                                        <input type="date" name="inv_date" id="inv_date" class="form-control" value="{{ old('date') ? old('date'):  date('Y-m-d') }}">
+                                        <input type="date" name="bill_date" id="inv_date" class="form-control" value="{{ old('date') ? old('date'):  date('Y-m-d') }}">
                                     </div>
                                 </div>
                             </div>
@@ -238,6 +254,79 @@
         </div>
     </div>
 </x-app-layout>
+
+
+<script>
+    /*=======//Save Data //=========*/
+    $(document).ready(function(){
+        var form = '#add-user-form';
+        $(form).on('submit', function(event){
+            event.preventDefault();
+            var url = $(this).attr('data-action');
+            var allSubValuesNotNull = true;
+            
+            if (allSubValuesNotNull) {
+                $.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: new FormData(this),
+                    dataType: 'JSON',
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    success:function(response)
+                    {
+                        $(form).trigger("reset");
+                        swal("Success Message Title", "Well done, you pressed a button", "success");
+                        $(".bd-example-modal-lg").modal('hide');
+
+                        var storePurchase = response.storePurchase;
+                        
+                        var i = 0;++i;
+                        var row = '<tr id="row_purchase_table_'+ storePurchase.id + '" role="row" class="odd">';
+                        row += '<td>' + storePurchase.requ_no + '</td>';
+                        row += '<td>' + storePurchase.requ_date + '</td>';
+                        row += '<td>' + response.complaintType.name + '</td>';
+                        row += '<td>' + response.complaintType.phone + '</td>';
+                        row += '<td>' + storePurchase.remarks + '</td>';
+                        row += '<td>';
+                        if(storePurchase.status == 0)
+                            row += '<span class="badge light badge-warning"><i class="fa fa-circle text-warning mr-1"></i>Pending</span>';
+                        else if(storePurchase.status == 1)
+                            row += '<span class="badge light badge-success"><i class="fa fa-circle text-success mr-1"></i>Successful</span>';
+                        else if(storePurchase.status == 2)
+                            row += '<span class="badge light badge-danger"><i class="fa fa-circle text-danger mr-1"></i>Canceled</span>';
+                        
+                        row += '</td>';
+                        row += '<td><button type="button" id="open_modal" class="btn btn-sm btn-primary p-1 px-2"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>Create</button></td>';
+                        row += '<td class="d-flex"><button type="button" class="btn btn-sm btn-success p-1 px-2 mr-1" id="edit_data" data-id="'+storePurchase.id+'"><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button><button type="button" class="btn btn-sm btn-info p-1 px-2" id="view_data" data-id="'+storePurchase.id+'"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</button></td>';
+
+                        if($("#pur_id").val()){
+                            $("#row_purchase_table_" + storePurchase.id).replaceWith(row);
+                        }else{
+                            $("#purchase_tbody").prepend(row);
+                        }
+                    },
+                    error: function (xhr) {
+                        var errors = xhr.responseJSON.errors;
+                        var errorHtml = '';
+                        $.each(errors, function(key, value) {
+                            errorHtml += '<li style="color:red">' + value + '</li>';
+                        });
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: '<ul>' + errorHtml + '</ul>',
+                            text: 'All input values are not null or empty.',
+                        });
+                    }
+                });
+            } else {
+                swal("Error!", "All input values are not null or empty.", "error");
+            }
+        });
+    });
+</script>
 
 
 <script>

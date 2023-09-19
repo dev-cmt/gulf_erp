@@ -217,9 +217,9 @@
                 $('#join').val(response.desig.joining_date);
 
                 var designation_name = response.designation;
-                 var designation_type = $('#designationName');
+                var designation_type = $('#designationName');
                     designation_type.empty();
-                 designation_type.append('<option disabled>--Select--</option>');
+                    designation_type.append('<option disabled>--Select--</option>');
                 $.each(designation_name, function(index, option) {
                 var selected = (option.id == response.desig.mast_designation.id) ? 'selected' : '';
                 designation_type.append('<option value="' + option.id + '" ' + selected + '>' + option.desig_name + '</option>');
