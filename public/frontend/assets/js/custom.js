@@ -1,3 +1,4 @@
+
 /**_________________________________________________________
  * PRELOADER
  * _________________________________________________________
@@ -50,6 +51,7 @@ function showLeftAnimation() {
 }
 // Wait for 5 seconds (5000 milliseconds) before triggering the animation
 setTimeout(showLeftAnimation, 1000);
+
 
 
 /**_________________________________________________________
@@ -243,3 +245,4 @@ sr.reveal(".Clients .img", {
   origin: "left",
   distance: "200px",
 });
+
