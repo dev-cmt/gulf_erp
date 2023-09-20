@@ -18,13 +18,16 @@ class JobCardController extends Controller
     public function jobCardIndex()
     {
         $setup = Setup::first();
+        
         $tecnician = User::where('info_personals.mast_designation_id', $setup->services_technician)
-        ->join('info_personals','info_personals.emp_id','=','users.id')
-        ->leftjoin('job_cards','job_cards.tech_id','=','info_personals.id')
-        ->select('users.name','users.employee_code','users.id', DB::raw('count(*) as cnt'))
-        ->groupBy('users.name','users.employee_code','users.id')
+        ->join('info_personals', 'info_personals.emp_id', '=', 'users.id')
+        ->leftJoin('job_cards', function ($join) {
+            $join->on('job_cards.tech_id', '=', 'info_personals.emp_id')
+                ->whereDate('job_cards.date', '=', date('Y-m-d'));
+        })
+        ->select('users.name', 'users.employee_code', 'users.contact_number', 'users.id', DB::raw('count(job_cards.date) as cnt'))
+        ->groupBy('users.name', 'users.employee_code', 'users.contact_number', 'users.id')
         ->get();
-      
 
         $compliant = Complaint::with('mastCustomer')->whereNotIn('id', function($q){
             $q->select('complaint_id')->from('job_cards')->where('date', date('Y-m-d'));
@@ -47,11 +50,18 @@ class JobCardController extends Controller
         $complaint->tech_id = $data->tech_id;
         $complaint->save();
 
-        $jobNo = JobCard::where('date', date('Y-m-d'))->count();
+        $jobNo = JobCard::where('date', date('Y-m-d'))->where('tech_id', $data->tech_id)->count();
         return response()->json([ 
             'jobNo' => $jobNo,
+            'data' => $data,
         ]);
     }
+
+
+
+
+
+
 
     public function technicianAdd(Request $request)
     {
@@ -62,22 +72,12 @@ class JobCardController extends Controller
 
     public function jobCardpage()
     {
-        $job = DB::table('job_cards')
-        ->join('users','users.id','job_cards.tech_id')
-        ->join('complaints','complaints.id','job_cards.tracking_no')
-        // ->where('job_cards.job_date',date('Y-m-d'))
-        ->where('job_cards.tech_id',Auth::user()->id)
-        ->get();
-        // dd($job);
-
-        $jobvisit = JobCard::with('tecName')->first();
-        // dd($jobvisit);
-        return view('layouts.pages.warranty.jobcard.jobCardPage',compact('job','jobvisit'));
+        $compliant = Complaint::where('status', 0)->get();
+        return view('layouts.pages.warranty.jobcard.movement',compact('compliant'));
     }
 
     public function storeJobVisit(Request $request)
     {
-
         $jobCard = new JobCard();
         $jobCard->is_next_visit      = $request->nextVisit;
         $jobCard->next_date          = $request->nextDate;
@@ -94,8 +94,14 @@ class JobCardController extends Controller
      * _________________________________________________________________
      */
     function getComplaintDetails(Request $request) {
-        $compliant = Complaint::with('mastCustomer')->where('status', 0)->get()->toArray();
-        $jobNo = JobCard::where('date', date('Y-m-d'))->count();
+        if($request->check == 1){
+            $compliant = Complaint::with('mastCustomer')->where('tech_id', $request->id)->where('status', 0)->get()->toArray();
+        }if($request->check == 2){
+            $compliant = Complaint::with('mastCustomer')->where('tech_id', null)->where('status', 0)->get()->toArray();
+        }else{
+            $compliant = Complaint::with('mastCustomer')->where('status', 0)->get()->toArray();
+        }
+        $jobNo = JobCard::where('date', date('Y-m-d'))->where('tech_id', $request->id)->count();
         $user = User::where('id', $request->id)->first();
         return response()->json([ 
             'technicin_name' => $user->name,

@@ -277,11 +277,10 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('warranty/prepare/job-card',[JobCardController::class,'jobCardIndex'])->name('warranty-prepare-card.index');
     Route::get('warranty/jobcard-store',[JobCardController::class,'jobCardStore'])->name('warranty-jobcard.store');
     Route::get('get/complaint-details',[JobCardController::class,'getComplaintDetails'])->name('get-complaint-details');
-
-
-
-
-    Route::get('warranty/job-card-list',[JobCardController::class,'jobCardpage'])->name('warranty-jobcard.list');
+    
+    //Technician Movement
+    Route::get('warranty/job-card-list',[JobCardController::class,'technicianMovement'])->name('warranty-jobcard.list');
+    
     Route::get('technician_add',[JobCardController::class,'technicianAdd'])->name('technician.add');
     Route::post('store_job_card',[JobCardController::class,'storeJobCard'])->name('store_job_card');
     Route::post('store_job_visit',[JobCardController::class,'storeJobVisit'])->name('store_job_visit');

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('issue_no')->nullable();
             $table->text('note')->nullable();
             $table->text('remarks')->nullable();
-            $table->integer('view')->default(false);
+            $table->integer('visit')->default(false);
             $table->unsignedBigInteger('mast_complaint_type_id');
             $table->foreign('mast_complaint_type_id')->references('id')->on('mast_complaint_types')->onDelete('cascade');
             $table->unsignedBigInteger('mast_customer_id');

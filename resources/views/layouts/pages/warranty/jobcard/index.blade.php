@@ -13,6 +13,7 @@
                                     <th>SL#</th>
                                     <th>Tecnician name</th>
                                     <th>Tecnician Id</th>
+                                    <th>Tecnician Number</th>
                                     <th>Job No</th>
                                     <th class="text-right">Action</th>
                                 </tr>
@@ -22,14 +23,15 @@
                                 <tr>
                                     <td>{{ ++$key }}</td>
                                     <td>{{ $item->name }}</td>
-                                    <td>{{ $item->employee_code }}</td>
-                                    <td>{{ $item->cnt }} /3</td>
-                                    <td class="text-right">
-                                        @if($item->cnt != 3)
-                                            <button type="button" id="show-data" data-id="{{ $item->id }}" class="btn btn-sm btn-success p-1 px-2" ><i class="fa fa-plus"></i></i><span class="btn-icon-add"></span>Add Work</button>
+                                    <td>{{ $item->employee_code}}</td>
+                                    <td>{{ $item->contact_number}}</td>
+                                    <td id="jobNo_{{$item->id}}">{{$item->cnt}} / 3</td>
+                                    <td class="text-right" id="action_{{$item->id}}">
+                                        @if($item->cnt < 3)
+                                            <button type="button" id="show-data" data-check="0" data-id="{{ $item->id }}" class="btn btn-sm btn-success p-1 px-2" ><i class="fa fa-plus"></i></i><span class="btn-icon-add"></span>Add Work</button>
+                                        @else
+                                            <button type="button" id="show-data" data-check="1" data-id="{{ $item->id }}" class="btn btn-sm btn-secondary p-1 px-2"><i class="fa fa-folder"></i><span class="btn-icon-add"></span>View</button>
                                         @endif
-
-                                        <button type="button" id="edit_data" data-toggle="modal" data-id=""  data-target="" class="btn btn-sm btn-info p-1 px-2" ><i class="fa fa-folder"></i></i><span class="btn-icon-add"></span>View</button>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -55,28 +57,28 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group row">
-                                <label class="col-md-3 col-form-label">Date: </label>
+                                <label class="col-md-3 col-form-label"><strong>Date:</strong></label>
                                 <div class="col-md-9">
                                     <input type="date" class="form-control" name="cur_date" value="{{date('Y-m-d')}}" readonly>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <div class="form-group row">
-                                <label class="col-md-12 col-form-label">New Complian &nbsp;
-                                    <input type="checkbox">
+                            <div class="form-group row view-hide">
+                                <label class="col-md-12 col-form-label"><strong>New Complian &nbsp;</strong>
+                                    <input type="checkbox" id="newComplian">
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group row">
-                                <label class="col-md-5 col-form-label">Technician Name:</label>
+                                <label class="col-md-5 col-form-label"><strong>Technician Name:</strong></label>
                                 <label class="col-md-7 col-form-label" id="technicin_name">Technician Name:</label>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-group row justify-content-end">
-                                <label class="col-md-9 col-form-label text-right">Job No:</label>
+                                <label class="col-md-9 col-form-label text-right"><strong>Job No:</strong></label>
                                 <label class="col-md-3 col-form-label" id="job-no"></label>
                             </div>
                         </div>
@@ -96,7 +98,7 @@
                                             <th width="25%">Description</th>
                                             <th width="25%">Note</th>
                                             <th width="5%">View</th>
-                                            <th width="10%">Action</th>
+                                            <th width="10%" class="view-hide">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody id="table-body"></tbody>
@@ -112,19 +114,33 @@
 
     @push('script')
     <script type="text/javascript">
-        $(document).on('click', '#show-data', function(){
+        $(document).on('change', '#newComplian', function() {
+            var id = $('#tech_id').val();
+            var check = $(this).is(':checked') ? 2 : 0;
+            filterCom(id, check);
+        });
+
+        $(document).on('click', '#show-data', function() {
             var id = $(this).data('id');
+            $('#tech_id').val(id);
+            var check = $(this).data('check');
+            filterCom(id, check);
+        });
+
+        function filterCom(id, check){
             $.ajax({
                 url: '{{ route('get-complaint-details') }}',
                 method: 'GET',
                 dataType: 'JSON',
-                data: {'id': id},
-                success: function(response){
+                data: { 'id': id, 'check':check},
+                success: function(response) {
                     $('.bd-example-modal-lg').modal('show');
                     $('#tech_id').val(id);
                     $('#technicin_name').text(response.technicin_name);
-                    $('#job-no').text(response.jobNo);
-                    
+
+                    var setJobNo = $('#job-no');
+                    setJobNo.text(response.jobNo);
+
                     var tableBody = $('#table-body');
                     tableBody.empty();
                     var sl = 1;
@@ -137,49 +153,67 @@
                         row += '<td>' + item.remarks + '</td>';
                         row += '<td>';
                         row += '<button class="toggle-button btn btn-sm btn-info p-1 px-2" data-toggle-id="note_' + item.id + '">Toggle Note</button>';
-                        row += '<div id="note_' + item.id + '" style="display: none;">'; // Initially hide the note data
+                        row += '<div id="note_' + item.id + '" style="display: none;">';
                         row += noteData(item.note);
                         row += '</div>';
                         row += '</td>';
-    
-                        row += '<td>' + item.status + '</td>';
-                        row += '<td><button type="submit" style="width:85px" class="btn btn-sm btn-secondary p-1 px-2 assign-button" data-row-id="' + item.id + '"><i class="fa fa-briefcase"></i><span class="btn-icon-add"></span>Assign</button></td>';
+
+                        row += '<td>' + item.visit + '</td>';
+                        var isDisabled = (item.tech_id !== null || response.jobNo >= 3) ? 'disabled' : '';
+                        row += '<td class="view-hide"><button type="submit" ' + isDisabled + ' style="width:85px" class="btn btn-sm btn-secondary p-1 px-2 assign-button" data-row-id="' + item.id + '"><i class="fa fa-briefcase"></i><span class="btn-icon-add"></span>Assign</button></td>';
                         row += '</tr>';
                         tableBody.append(row);
                     });
-    
+
+                    // View event listener for buttons
+                    if(check == 1){
+                        $('.view-hide').hide();
+                    }else{
+                        $('.view-hide').show();
+                    }
+
                     // Add event listener for the toggle buttons
                     $('.toggle-button').on('click', function() {
                         var toggleId = $(this).data('toggle-id');
                         $('#' + toggleId).toggle();
                     });
-    
+
                     // Add event listener for the Assign Submit buttons
                     $('.assign-button').on('click', function() {
-                        var compliant_id = $(this).data('row-id');
+                        var button = $(this); // Store the button element in a variable
+                        var compliant_id = button.data('row-id');
                         var tech_id = $('#tech_id').val();
-                        // Process and save the current row data here
                         $.ajax({
                             url: '{{ route('warranty-jobcard.store') }}',
                             method: 'GET',
                             dataType: 'JSON',
-                            data: {'tech_id': tech_id, 'compliant_id': compliant_id},
-                            success: function(response){
+                            data: { 'tech_id': tech_id, 'compliant_id': compliant_id },
+                            success: function(response) {
                                 $('#job-no').text(response.jobNo);
+                                $('#jobNo_' + response.data.tech_id).text(response.jobNo + ' / 3');
+
+                                // Disable Assign Button Or Show View Button
+                                if (response.jobNo >= 3) {
+                                    $('.assign-button').prop('disabled', true);
+                                    var newButton = '<button type="button" id="edit_data"  class="btn btn-sm btn-secondary p-1 px-2"><i class="fa fa-folder"></i><span class="btn-icon-add"></span>View</button>';
+                                    $('#action_' + response.data.tech_id).html(newButton);
+                                } else {
+                                    button.prop('disabled', true);
+                                }
                             },
                             error: function(xhr, status, error) {
                                 console.log(error);
                             }
                         });
-    
                     });
+
                 },
                 error: function(xhr, status, error) {
                     console.log(error);
                     $('#loading').hide();
                 }
             });
-        });
+        }
     
         function noteData(note){
             var row = ''; // Initialize the row variable
@@ -198,21 +232,6 @@
             }
             return row;
         }
-    </script>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <script>
-        $(document).on('click', '#com_id', function(){
-           var id = $(this).data('id');
-           $('#compliantId').val(id);
-       });
     </script>
     
     @endpush

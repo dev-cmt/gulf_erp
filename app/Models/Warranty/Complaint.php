@@ -16,10 +16,10 @@ class Complaint extends Model
         'tech_id',
         'note',
         'remarks',
+        'visit',
         'mast_complaint_type_id',
         'mast_customer_id',
         'user_id',
-        'view',
         'status',
     ];
 
