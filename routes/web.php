@@ -279,7 +279,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('get/complaint-details',[JobCardController::class,'getComplaintDetails'])->name('get-complaint-details');
     
     //Technician Movement
-    Route::get('warranty/job-card-list',[JobCardController::class,'technicianMovement'])->name('warranty-jobcard.list');
+    Route::get('warranty/technician-movement/index',[JobCardController::class,'movement'])->name('warranty-movement.index');
     
     Route::get('technician_add',[JobCardController::class,'technicianAdd'])->name('technician.add');
     Route::post('store_job_card',[JobCardController::class,'storeJobCard'])->name('store_job_card');

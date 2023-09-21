@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Master\MastCustomer;
 use App\Models\Master\MastComplaintType;
+use App\Models\User;
 
 class Complaint extends Model
 {
@@ -26,6 +27,10 @@ class Complaint extends Model
     public function mastCustomer()
     {
         return $this->hasOne(MastCustomer::class,'id','mast_customer_id');
+    }
+    public function technician()
+    {
+        return $this->belongsTo(User::class,'tech_id');
     }
 
     public function compliantType()

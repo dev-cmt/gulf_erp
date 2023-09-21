@@ -70,7 +70,7 @@ class JobCardController extends Controller
     }
    
 
-    public function jobCardpage()
+    public function movement()
     {
         $compliant = Complaint::where('status', 0)->get();
         return view('layouts.pages.warranty.jobcard.movement',compact('compliant'));
