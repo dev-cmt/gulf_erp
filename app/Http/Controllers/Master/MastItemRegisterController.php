@@ -61,8 +61,10 @@ class MastItemRegisterController extends Controller
             'part_no'=> 'required',
             'warranty'=> 'required',
             'box_qty'=> 'required',
-            'price' => ['required', 'numeric', 'regex:/^\d{1,6}(\.\d{1,2})?$/'],
+            'price' => 'required',
+            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
         $data = new MastItemRegister();
         if($request->hasFile("image")){
             if (File::exists("public/images/car-parts/".$data->image)) {
@@ -173,7 +175,7 @@ class MastItemRegisterController extends Controller
             'box_code'=> 'required|max:255',
             'gulf_code'=> 'required',
             'part_no'=> 'required',
-            'warranty'=> 'warranty',
+            'warranty'=> 'required',
             'box_qty'=> 'required',
             'price' => ['required', 'numeric', 'regex:/^\d{1,6}(\.\d{1,2})?$/'],
         ]);
@@ -229,7 +231,7 @@ class MastItemRegisterController extends Controller
     
     public function getPartName(Request $request)
     {
-        $getpartName = MastItemGroup::where('mast_item_category_id',$request->part_name)->get();
+        $getpartName = MastItemGroup::where('mast_item_category_id', $request->part_name)->orderBy('part_name', 'asc')->get();
         return view('layouts.pages.master.item_register.load-part-name',compact('getpartName'));
     }
 }

@@ -25,7 +25,7 @@
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <div class="col-md-6">
-                                                <input type="text" id="unit_name" class="form-control text-capitalize" name="unit_name" value="{{old('unit_name')}}" required>    
+                                                <input type="text" id="unit_name" class="form-control text-capitalize" name="unit_name" maxlength="40" value="{{old('unit_name')}}" required>    
                                             </div>
                                         </div>
                                     </div>
@@ -38,7 +38,7 @@
                                             <div class="row">
                                                 <label class="col-md-4 col-form-label">Description:</label>
                                                 <div class="col-md-6">
-                                                    <textarea class="text form-control" id="description" name="description" rows="1"></textarea>
+                                                    <textarea class="text form-control" id="description" name="description" rows="1" maxlength="250"></textarea>
                                                 </div>
                                             </div>
                                         </div>

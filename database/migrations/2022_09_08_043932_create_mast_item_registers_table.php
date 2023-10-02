@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('gulf_code')->nullable();
             $table->string('part_no')->nullable();
             $table->integer('box_qty')->nullable();
-            $table->decimal('price', 8, 2)->nullable();
+            $table->decimal('price')->nullable();
             $table->string('image')->nullable();
             $table->integer('warranty')->nullable();
             $table->integer('cat_id')->nullable();

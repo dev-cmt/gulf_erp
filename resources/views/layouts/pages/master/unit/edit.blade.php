@@ -26,7 +26,7 @@
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <div class="col-md-6">
-                                                <input type="text" id="unit_name" class="form-control text-capitalize" name="unit_name" value="{{$data->unit_name}}">    
+                                                <input type="text" id="unit_name" class="form-control text-capitalize" name="unit_name" maxlength="40" value="{{$data->unit_name}}">    
                                             </div>
                                         </div>
                                     </div>
@@ -39,7 +39,7 @@
                                             <div class="row">
                                                 <label class="col-md-4 col-form-label">Description:</label>
                                                 <div class="col-md-6">
-                                                    <textarea class="text form-control" id="description" name="description">{{$data->description}}</textarea>
+                                                    <textarea class="text form-control" id="description" name="description" maxlength="250">{{$data->description}}</textarea>
                                                 </div>
                                             </div>
                                         </div>

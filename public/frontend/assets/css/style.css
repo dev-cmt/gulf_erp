@@ -2325,7 +2325,7 @@ position: relative;
 
 #footer .footer-top .footer-links ul i {
   padding-right: 2px;
-  color: #8ed851;
+  color: var(--mr-default2);
   font-size: 18px;
   line-height: 1;
 }
@@ -2348,7 +2348,7 @@ position: relative;
 }
 
 #footer .footer-top .footer-links ul a:hover {
-  color: #81d33d;
+  color: var(--mr-hover2);
 }
 
 #footer .footer-top .footer-newsletter form {
@@ -2371,10 +2371,9 @@ position: relative;
   right: -2px;
   bottom: 0;
   border: 0;
-  background: none;
   font-size: 16px;
   padding: 0 20px;
-  background: var(--mr-default);
+  background: var(--mr-default2);
   color: #fff;
   transition: 0.3s;
   border-radius: 0 4px 4px 0;

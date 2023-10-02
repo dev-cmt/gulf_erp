@@ -45,7 +45,7 @@
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <div class="col-md-6">
-                                                <input type="text" id="part_name" class="form-control text-capitalize @error('part_name') is-invalid @enderror" name="part_name" value="{{old('part_name')}}" required>   
+                                                <input type="text" id="part_name" class="form-control text-capitalize @error('part_name') is-invalid @enderror" name="part_name" maxlength="40" value="{{old('part_name')}}" required>   
                                             </div>
                                         </div>
                                     </div>

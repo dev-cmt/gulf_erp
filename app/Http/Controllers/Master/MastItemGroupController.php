@@ -75,7 +75,7 @@ class MastItemGroupController extends Controller
     public function edit($id)
     {
         $data = MastItemGroup::find($id);
-        $item_cat = MastItemCategory::orderBy('cat_name','ASC')->get();
+        $item_cat = MastItemCategory::orderBy('cat_name','ASC')->where('status', 1)->get();
         return view('layouts.pages.master.item_group.edit', compact('data', 'item_cat'));
     }
 

@@ -25,7 +25,7 @@
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <div class="col-md-6">
-                                                <input type="text" id="cat_name" class="form-control text-capitalize @error('cat_name') is-invalid @enderror" name="cat_name" value="{{old('cat_name')}}" pattern="[a-zA-Z]+.*" title="Cat. name must start with alphabets then others" autofocus required>   
+                                                <input type="text" id="cat_name" class="form-control text-capitalize @error('cat_name') is-invalid @enderror" name="cat_name" value="{{old('cat_name')}}" pattern="[a-zA-Z]+.*" maxlength="40" title="Cat. name must start with alphabets then others" autofocus required>   
                                             </div>
                                         </div>
                                     </div>
@@ -38,7 +38,7 @@
                                             <div class="row">
                                                 <label for="" class="col-md-4 col-form-label">Description:</label>
                                                 <div class="col-md-6">
-                                                    <textarea class="text form-control" id="description" name="description" rows="1"></textarea>
+                                                    <textarea class="text form-control" id="description" name="description" rows="1" maxlength="250"></textarea>
                                                 </div>
                                             </div>
                                         </div>
