@@ -93,7 +93,7 @@
                                         <span class="text-danger">*</span>
                                     </label>
                                     <div class="col-md-7">
-                                        <select name="from_store_id" class="form-control dropdwon_select">
+                                        <select name="from_store_id" class="form-control dropdwon_select" id="from_store_id">
                                             @foreach ($store as $item)
                                                 <option value="{{$item->id}}">{{$item->store_name}}</option>
                                             @endforeach
@@ -155,10 +155,10 @@
                                         <thead class="thead-primary">
                                             <tr>
                                                 <th width="23%">Part Name</th>
-                                                <th width="20%">Part No</th>
+                                                <th width="15%">Part No</th>
                                                 <th width="15%">Pkg. Qty.</th>
                                                 <th width="15%">Unit</th>
-                                                <th width="10%">Qty</th>
+                                                <th width="15%">Qty</th>
                                                 <th width="12%" class="text-center table_action">Action</th>
                                             </tr>
                                         </thead>
@@ -360,6 +360,7 @@
             $("#vat").prop("disabled", false);
             $("#tax").prop("disabled", false);
             $('#remarks').prop("disabled", false);
+            $('#from_store_id').prop("disabled", false);
             $('#mast_work_station_id').prop("disabled", false);
 
             
@@ -374,6 +375,7 @@
             $("#vat").prop("disabled", true);
             $("#tax").prop("disabled", true);
             $('#remarks').prop("disabled", true);
+            $('#from_store_id').prop("disabled", true);
             $('#mast_work_station_id').prop("disabled", true);
 
             $('.table_action').hide();

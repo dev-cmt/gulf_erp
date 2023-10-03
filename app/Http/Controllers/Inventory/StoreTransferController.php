@@ -24,7 +24,7 @@ class StoreTransferController extends Controller
         $store = MastWorkStation::where('status', 1)->orderBy('store_name', 'asc')->get();
         $item_category = MastItemCategory::where('status', 1)->get();
         
-        $data=StoreTransfer::where('mast_item_category_id', $type)->orderBy('id', 'desc')->latest()->get();
+        $data=StoreTransfer::where('mast_item_category_id', $type)->where('mast_work_station_id', Auth::user()->mast_work_station_id)->orderBy('id', 'desc')->latest()->get();
         return view('layouts.pages.inventory.store_transfer.index',compact('type','data','item_group','store','item_category'));
     }
 
@@ -148,7 +148,7 @@ class StoreTransferController extends Controller
      *=====================================
      */
     function storeTransferApprove () {
-        $data=StoreTransfer::where('status', 0)->orderBy('id', 'desc')->latest()->get();
+        $data=StoreTransfer::where('status', 0)->where('from_store_id', Auth::user()->mast_work_station_id)->orderBy('id', 'desc')->latest()->get();
         return view('layouts.pages.inventory.store_transfer.store_transfer_approve',compact('data'));
     }
     public function getStoreTransferApproveDetails(Request $request)

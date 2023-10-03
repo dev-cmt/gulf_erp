@@ -37,6 +37,7 @@ use App\Http\Controllers\Master\MastUnitController;
 use App\Http\Controllers\Master\MastItemCategoryController;
 use App\Http\Controllers\Master\MastItemGroupController;
 use App\Http\Controllers\Master\MastItemRegisterController;
+use App\Http\Controllers\Master\MastSupplierController;
 
 use App\Http\Controllers\Master\MastCompliantTypeController;
 use App\Http\Controllers\Master\MastTechnicianController;
@@ -145,7 +146,6 @@ Route::group(['middleware' => ['auth']], function(){
 
     Route::get('inv/check-serial-number', [MovementController::class, 'checkSerialNumber'])->name('checkSerialNumber');
     Route::get('inv/purchase-parsial/{id}/details', [MovementController::class, 'parsialPurchaseDetails'])->name('purchase-details-parsial');
-    Route::get('report/purchase-receive/{id}/pdf/download', [MovementController::class, 'generatePurchaseReceive'])->name('report-purchase-receive-parsial.download');
     /**______________________________________________________________________________________________
      * Inventory => Sales Delivery
      * ______________________________________________________________________________________________
@@ -158,7 +158,6 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('inv/sales-delivery-parsial/{id}/details', [MovementController::class, 'parsialSalesDeliveryDetails'])->name('sales-delivery-details-parsial');
     Route::get('inv/get-serial-no', [MovementController::class,'getSerialNumber'])->name('get-serial-no');
     Route::get('get-sales-delivery/slno', [MovementController::class,'getSalesDeliverySlNo'])->name('get-sales-delivery-slno');
-    Route::get('report/sales-delivery/{id}/pdf/download', [MovementController::class, 'generateSalesDeliver'])->name('report-sales-delivery-parsial.download');
     /**______________________________________________________________________________________________
      * Inventory => Requstion Delivery
      * ______________________________________________________________________________________________
@@ -169,7 +168,6 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('inv/get-requstion-delivery/details', [MovementController::class, 'getStoreTransferDetails'])->name('get_store_transfer_details');
     
     Route::get('inv/requstion-delivery-parsial/{id}/details', [MovementController::class, 'parsialRequstionDeliveryDetails'])->name('requstion-delivery-details-parsial');
-    Route::get('report/requstion-delivery/{id}/pdf/download', [MovementController::class, 'generateRequstionDeliver'])->name('report-requstion-delivery.download');
     /**______________________________________________________________________________________________
      * Inventory => Purchase
      * ______________________________________________________________________________________________
@@ -208,9 +206,22 @@ Route::group(['middleware' => ['auth']], function(){
      * Inventory => Reports
      * ______________________________________________________________________________________________
      */
-     Route::get('report-purchase/recived',[ReportsController::class,'purchaseReceive'])->name('report-purchase-recived');
-     Route::get('report-sales/delivery',[ReportsController::class,'salesDelivery'])->name('report-sales-delivery');
-     Route::get('report-requstion/delivery',[ReportsController::class,'requstionDelivery'])->name('report-requstion-delivery');
+     Route::get('parsial-purchase/details',[ReportsController::class,'parsialPurchaseDetails'])->name('parsial-purchase-details');
+     Route::get('download/purchase-receive/{id}/pdf', [ReportsController::class, 'generatePurchaseReceive'])->name('purchase-receive.download');
+     Route::get('download/parsial-purchase/recived/{data}/{id}',[ReportsController::class,'generatePurchaseReceiveDetails'])->name('parsial-purchase-recived.download');
+
+
+     //-----------------------------SALES DELIVERY
+     Route::get('parsial-sales/details',[ReportsController::class,'salesDeliveryDetails'])->name('parsial-sales-details');
+     Route::get('download/sales-delivery/{id}/pdf', [ReportsController::class, 'generateSalesDelivery'])->name('sales-delivery.download');
+     Route::get('download/sales-delivery/details/{data}/{id}',[ReportsController::class,'generateSalesDeliveryDetails'])->name('parsial-sales-delivery.download');
+
+     //-----------------------------REQUSTION DELIVERY
+     Route::get('parsial-requstion/parsial',[ReportsController::class,'requstionDelivery'])->name('parsial-requstion-parsial');
+     Route::get('report/requstion-delivery/{id}/pdf/download', [ReportsController::class, 'generateRequstionDeliver'])->name('report-requstion-delivery.download');
+
+
+     
     /**______________________________________________________________________________________________
      * Sales => Sales Quotation
      * ______________________________________________________________________________________________
@@ -344,10 +355,11 @@ Route::group(['middleware' => ['auth']], function(){
      * INVENTORY MASTER
      * ______________________________________________________________________________________________
      */
-    Route::resource('mast_unit', MastUnitController::class);
     Route::resource('mast_item_category', MastItemCategoryController::class);
     Route::resource('mast_item_group', MastItemGroupController::class);
     Route::resource('mast_item_register', MastItemRegisterController::class);
+    Route::resource('mast_unit', MastUnitController::class);
+    Route::resource('mast_supplier', MastSupplierController::class);
     Route::get('get-part/name',[MastItemRegisterController::class,'getPartName'])->name('get-part-name');
     Route::get('/pdf/download', [MastItemRegisterController::class, 'generateBarcode'])->name('item_pdf.download');
     Route::get('/item_export/excel', [MastItemRegisterController::class, 'export'])->name('item_export.excel');

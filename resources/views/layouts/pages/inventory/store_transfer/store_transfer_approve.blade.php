@@ -14,7 +14,7 @@
                                     <th>SL#</th>
                                     <th>Invoice No</th>
                                     <th>Invoice Date</th>
-                                    <th>Customer Name</th>
+                                    <th>Store Name</th>
                                     <th>Invoice Type</th>
                                     <th>Total</th>
                                     <th class="text-center">Action</th>
@@ -57,7 +57,7 @@
 
             <!--============//Show Modal Data//================-->
             <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
-                <div class="modal-dialog modal-xl">
+                <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Purchase Details</h5>
@@ -67,26 +67,26 @@
                             <div class="row">
                                 <div class="col-md-6 col-sm-12">
                                     <div class="row">
-                                        <label class="col-6 col-form-label"><strong> Invoice No :</strong></label>
-                                        <label class="col-6 col-form-label" id="inv_no"></label>
+                                        <label class="col-5 col-form-label"><strong> Invoice No :</strong></label>
+                                        <label class="col-7 col-form-label" id="inv_no"></label>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-sm-12">
                                     <div class="row">
-                                        <label class="col-6 col-form-label"><strong>Invoice Date :</strong></label>
-                                        <label class="col-6 col-form-label" id="inv_date"></label>
+                                        <label class="col-5 col-form-label"><strong>Invoice Date :</strong></label>
+                                        <label class="col-7 col-form-label" id="inv_date"></label>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-sm-12">
                                     <div class="row">
-                                        <label class="col-6 col-form-label"><strong>To Store :</strong></label>
-                                        <label class="col-6 col-form-label" id="mast_work_station_id"></label>
+                                        <label class="col-5 col-form-label"><strong>To Store :</strong></label>
+                                        <label class="col-7 col-form-label" id="mast_work_station_id"></label>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-sm-12">
                                     <div class="row">
-                                        <label class="col-6 col-form-label"><strong>From Store :</strong></label>
-                                        <label class="col-6 col-form-label" id="from_store"></label>
+                                        <label class="col-5 col-form-label"><strong>From Store :</strong></label>
+                                        <label class="col-7 col-form-label" id="from_store"></label>
                                     </div>
                                 </div>
                             </div>
@@ -99,20 +99,11 @@
                                             <th>Category</th>
                                             <th>Group Name</th>
                                             <th>Part No.</th>
-                                            <th>Price</th>
                                             <th>Qty</th>
-                                            <th>Sub Total</th>
                                         </tr>
                                     </thead>
                                     <tbody id="table-body"></tbody>
                                 </table>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12 pt-4">
-                                    <div class="float-right">
-                                        <h6>Total <span style="border: 1px solid #2222;padding: 10px 40px;margin-left:10px" id="total">0.00</span></h6>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                         
@@ -153,9 +144,7 @@
                     row += '<td>' + item.cat_name + '</td>'; // Add Category column
                     row += '<td>' + item.part_name + '</td>'; // Add Group Name column
                     row += '<td>' + item.part_no + '</td>';
-                    row += '<td>' + item.price + '</td>';
                     row += '<td>' + item.qty + '</td>';
-                    row += '<td>' + subtotal + '</td>';
                     row += '</tr>';
                     $('#table-body').append(row);
 

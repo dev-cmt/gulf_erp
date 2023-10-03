@@ -35,7 +35,7 @@
                                 <th>Category</th>
                                 <th>Group Name</th>
                                 <th>Part No.</th>
-                                <th>Action</th>
+                                <th>Date</th>
                             </tr>
                             </thead>
                             <tbody>

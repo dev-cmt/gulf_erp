@@ -332,7 +332,7 @@
             var newRow = $('<tr>' +
                 '<td><label class="form-label">'+rowCount+'</label></td>' +
                 '<td><label class="form-label part_number">'+partNumber+'</label></td>' +
-                '<td><input type="text" name="moreFile['+i+'][serial_no]" id="serial_no" class="form-control val_serial_no" placeholder="XXXXXXXXXX"></td>' +
+                '<td><input type="text" name="moreFile['+i+'][serial_no]" class="form-control val_serial_no" placeholder="XXXXXXXXXX"></td>' +
                 '<td class="text-center">' +
                     '<button type="button" title="Add New" class="btn btn-icon btn-outline-warning border-0 btn-xs add-row"><span class="fa fa-plus"></span></button>' +
                     '<button type="button" title="Remove" class="btn btn-icon btn-outline-danger btn-xs border-0 remove-row"><span class="fa fa-trash"></span></button>' +
@@ -347,7 +347,7 @@
                 });
             });
 
-            //--Serial number already exists
+            //--Serial number already exists database
             newRow.find('.val_serial_no').on('change', function () {
                 var serialNumber = $(this).val();
                 var currentRow = $(this).closest('tr');
@@ -362,14 +362,26 @@
                         if (response.exists) {
                             alert('Serial number already exists.');
                             serialInput.val('');
-                        } else {
-                            currentRow.find('.serial_no_error').text('');
                         }
                     },
                     error: function (xhr, textStatus, errorThrown) {
                         console.error(errorThrown);
                     }
                 });
+
+                // Check for duplicates on the frontend
+                var duplicate = false;
+                $('.val_serial_no').not(this).each(function() {
+                    if ($(this).val() === serialNumber) {
+                        duplicate = true;
+                        return false;
+                    }
+                });
+
+                if (duplicate) {
+                    alert('Serial number already exists.');
+                    serialInput.val('');
+                }
             });
         }
         //======Remove ROW

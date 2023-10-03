@@ -57,7 +57,7 @@
                                     </td>
                                     <td class="text-right">
                                         <a href="{{ route('purchase-details-parsial', $row->id) }}" class="btn btn-sm btn-info p-1 mt-1 px-2"><i class="fa fa-info"></i></i><span class="btn-icon-add"></span>Details</a>
-                                        <a href="#" class="btn btn-sm btn-secondary p-1 px-2"><i class="fa fa-print"></i></i><span class="btn-icon-add"></span>Print</a>
+                                        <a href="{{ route('purchase-receive.download', $row->id)}}" class="btn btn-sm btn-secondary p-1 mt-1 px-2"><i class="fa fa-print"></i></i><span class="btn-icon-add"></span>Print</a>
                                     </td>
                                 </tr>
                                 @endforeach

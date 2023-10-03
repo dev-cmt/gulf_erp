@@ -408,6 +408,7 @@
                 $('#mast_supplier_id').prop("disabled", true);
                 $('#mast_work_station_id').prop("disabled", true);
 
+                $('#edit_add_show').hide();
                 $('.table_action').hide();
                 $('.submit_btn').hide();
             }

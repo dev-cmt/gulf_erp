@@ -4,12 +4,11 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title">Purchase Recived (<span class="text-success">New</span>)</h4>
-                    <a href="#" class="btn btn-sm btn-secondary p-1 px-2"><i class="fa fa-print"></i></i><span class="btn-icon-add"></span>Print</a>
                 </div>
 
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table id="example3" class="display " style="min-width: 845px">
+                        <table id="example" class="display " style="min-width: 845px">
                             <thead>
                             <tr>
                                 <th>SL#</th>
@@ -62,7 +61,6 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title">Purchase Recived (<span class="text-warning">Parsial</span>)</h4>
-                    <a href="#" class="btn btn-sm btn-secondary p-1 px-2"><i class="fa fa-print"></i></i><span class="btn-icon-add"></span>Print</a>
                 </div>
 
                 <div class="card-body">
@@ -103,7 +101,7 @@
                                     {{-- <td>{{$qty }}</td> --}}
                                     <td>{{$total }}</td>
                                     <td class="text-right">
-                                        <a href="{{ route('report-purchase-receive-parsial.download', $row->id)}}" class="btn btn-sm btn-secondary p-1 mt-1 px-2"><i class="fa fa-print"></i></i><span class="btn-icon-add"></span>Print</a>
+                                        <a href="{{ route('purchase-receive.download', $row->id)}}" class="btn btn-sm btn-secondary p-1 mt-1 px-2"><i class="fa fa-print"></i></i><span class="btn-icon-add"></span>Print</a>
                                         <a href="{{ route('purchase-details-parsial', $row->id) }}" class="btn btn-sm btn-info p-1 mt-1 px-2"><i class="fa fa-info"></i></i><span class="btn-icon-add"></span>Details</a>
                                         @if ($row->status == 3)
                                         <a href="{{ route('grn-purchase-details', $row->id) }}" class="btn btn-primary p-1 mt-1 px-2"><i class="fa fa-plus"></i></i><span class="btn-icon-add"></span>Add New</a>
@@ -233,6 +231,7 @@
             });
         });
     </script>
+    
     @endpush
 
 </x-app-layout>

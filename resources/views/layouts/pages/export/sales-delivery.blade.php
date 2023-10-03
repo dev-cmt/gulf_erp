@@ -3,12 +3,8 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title text-success">Purchase Order Challan</h4>
+                    <h4 class="card-title text-success">Delivery Challan</h4>
                 </div>
-                {{-- @php
-                    $latestDate = $data->groupBy('created_at')->keys()->last();
-                    $latestData = $data->where('created_at', date("Y-m-d", strtotime($latestDate)));
-                @endphp --}}
                 @php
                     $latestDate = $data->groupBy(function($item) {
                         return $item->created_at->format('Y-m-d');
@@ -25,7 +21,7 @@
                         <label class="col-3 col-form-label"><strong>Invoice Date</strong></label>
                         <label class="col-6 col-form-label">: {{date("j F, Y", strtotime($purchase->inv_date))}}</label>
                         <label class="col-3 col-form-label"><strong>Supplier Name</strong></label>
-                        <label class="col-6 col-form-label">: {{$purchase->mastSupplier->supplier_name}}</label>
+                        <label class="col-6 col-form-label">: {{$purchase->mastCustomer->name}}</label>
                         <label class="col-3 col-form-label"><strong> Receive Data</strong></label>
                         <label class="col-6 col-form-label">: {{date("j F, Y", strtotime($latestDate))}}</label>
                     </div>
@@ -39,7 +35,7 @@
                                 <th>Category</th>
                                 <th>Group Name</th>
                                 <th>Part No.</th>
-                                <th>Action</th>
+                                <th>Date</th>
                             </tr>
                             </thead>
                             <tbody>

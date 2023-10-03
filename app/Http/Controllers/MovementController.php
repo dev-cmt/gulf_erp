@@ -12,8 +12,6 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\BarcodeExport;
 use App\Exports\ItemExport;
 use PDF;
-use Milon\Barcode\DNS1D;
-use Milon\Barcode\DNS2D;
 use App\Models\Master\MastItemCategory;
 use App\Models\Master\MastItemGroup;
 use App\Models\Master\MastWorkStation;
@@ -55,60 +53,65 @@ class MovementController extends Controller
         return view('layouts.pages.inventory.purchase_receive.grn_receive',compact('data','purchase'));
     }
     function grnPurchaseStore(Request $request) {
-
-        if (isset($request->moreFile[0]['serial_no']) && !empty($request->moreFile[0]['serial_no'])) {
-            foreach ($request->moreFile as $item) {
-                $serialNumber = $item['serial_no'];
-                $exists = SlMovement::where('serial_no', $serialNumber)->exists();
-                if ($exists) {
-                    return response()->json(['error' => 'Serial number already exists.'], 422);
+        try {
+            if (isset($request->moreFile[0]['serial_no']) && !empty($request->moreFile[0]['serial_no'])) {
+                foreach ($request->moreFile as $item) {
+                    $serialNumber = $item['serial_no'];
+                    $exists = SlMovement::where('serial_no', $serialNumber)->exists();
+                    if ($exists) {
+                        return response()->json(['error' => 'Serial number already exists.'], 422);
+                    }
                 }
-            }
+        
+                foreach ($request->moreFile as $item) {
+                    $data = new SlMovement();
+                    $data->serial_no = $item['serial_no'];
+                    $data->reference_id = $request->purchase_id;
+                    $data->reference_type_id = 1; //1=> Purchase || 2=> Sales || 3=> Store Transfer || 4=> Sales Return
+                    $data->status = 1;
+                    $data->mast_item_register_id = $request->item_register_id;
+                    $data->mast_work_station_id = $request->work_station_id;
+                    $data->user_id = Auth::user()->id;
+                    $data->save();
+                }
     
-            foreach ($request->moreFile as $item) {
-                $data = new SlMovement();
-                $data->serial_no = $item['serial_no'];
-                $data->reference_id = $request->purchase_id;
-                $data->reference_type_id = 1; //1=> Purchase || 2=> Sales || 3=> Store Transfer || 4=> Sales Return
-                $data->status = 1;
-                $data->mast_item_register_id = $request->item_register_id;
-                $data->mast_work_station_id = $request->work_station_id;
-                $data->user_id = Auth::user()->id;
-                $data->save();
-            }
-
-            //___________Purchase Update
-            $purchaseDetails = PurchaseDetails::findOrFail($request->purchase_details_id);
-            $purchaseDetails->rcv_qty = $request->rcv_qty;
-            $purchaseDetails->save();
-            
-            $checkPurchase = PurchaseDetails::where('purchase_id', $purchaseDetails->purchase_id)->get();
-            $allTrue = true;
-            foreach ($checkPurchase as $key => $value) {
-                if ($value->qty != $value->rcv_qty) {
-                    $allTrue = false;
-                    break;
+                //___________Purchase Update
+                $purchaseDetails = PurchaseDetails::findOrFail($request->purchase_details_id);
+                $purchaseDetails->rcv_qty = $request->rcv_qty;
+                $purchaseDetails->save();
+                
+                $checkPurchase = PurchaseDetails::where('purchase_id', $purchaseDetails->purchase_id)->get();
+                $allTrue = true;
+                foreach ($checkPurchase as $key => $value) {
+                    if ($value->qty != $value->rcv_qty) {
+                        $allTrue = false;
+                        break;
+                    }
                 }
-            }
-            if ($allTrue){
-                $purchaseUpdate = Purchase::findOrFail($purchaseDetails->purchase_id);
-                $purchaseUpdate->status = 4; // Pendding => 0 || Success => 1 || Cencel => 2 || Parsial => 3 || Complete => 4
-                $variable = SlMovement::where('reference_id', $purchaseDetails->purchase_id)->where('reference_type_id', 1)
-                        ->whereDate('created_at', '!=', date('Y-m-d'))->where('status', 1)->count();
-                if($variable){
-                    $purchaseUpdate->is_parsial = 1;
+                if ($allTrue){
+                    $purchaseUpdate = Purchase::findOrFail($purchaseDetails->purchase_id);
+                    $purchaseUpdate->status = 4; // Pendding => 0 || Success => 1 || Cencel => 2 || Parsial => 3 || Complete => 4
+                    $variable = SlMovement::where('reference_id', $purchaseDetails->purchase_id)->where('reference_type_id', 1)
+                            ->whereDate('created_at', '!=', date('Y-m-d'))->where('status', 1)->count();
+                    if($variable){
+                        $purchaseUpdate->is_parsial = 1;
+                    }else{
+                        $purchaseUpdate->is_parsial = 0;
+                    }
+                    $purchaseUpdate->save();
                 }else{
-                    $purchaseUpdate->is_parsial = 0;
+                    $purchaseUpdate = Purchase::findOrFail($purchaseDetails->purchase_id);
+                    $purchaseUpdate->status = 3; // Pendding => 0 || Success => 1 || Cencel => 2 || Parsial => 3 || Complete => 4
+                    $purchaseUpdate->is_parsial = 1;
+                    $purchaseUpdate->save();
                 }
-                $purchaseUpdate->save();
-            }else{
-                $purchaseUpdate = Purchase::findOrFail($purchaseDetails->purchase_id);
-                $purchaseUpdate->status = 3; // Pendding => 0 || Success => 1 || Cencel => 2 || Parsial => 3 || Complete => 4
-                $purchaseUpdate->is_parsial = 1;
-                $purchaseUpdate->save();
+                return response()->json(['success' => 'Data saved successfully.']);
             }
-            return response()->json(['success' => 'Data saved successfully.']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'An error occurred while saving data: ' . $e->getMessage()], 500);
         }
+
+        
     }
     function parsialPurchaseDetails($id) { 
         $purchase = Purchase::where('id', $id)->orderBy('id', 'asc')->first();
@@ -141,7 +144,7 @@ class MovementController extends Controller
     public function salesDeliveryDetails($id)
     {
         $sales = Sales::where('id', $id)->first();
-        $data = SalesDetails::where('sales_details.status', 1)->where('sales_id', $id)
+        $data = SalesDetails::where('sales_id', $id)
         ->join('sales', 'sales.id', 'sales_details.sales_id')
         ->join('mast_item_registers', 'mast_item_registers.id', 'sales_details.mast_item_register_id')
         ->join('mast_item_groups', 'mast_item_groups.id', 'mast_item_registers.mast_item_group_id')
@@ -153,69 +156,75 @@ class MovementController extends Controller
     }
     function salesDeliveryStore(Request $request) {
         
-        if (isset($request->moreFile[0]['serial_no']) && !empty($request->moreFile[0]['serial_no'])) {
-            $salesDetails = SalesDetails::findOrFail($request->sales_details_id);
-            $salesDetails->deli_qty = $request->deli_qty;
-            $salesDetails->status = 1;
-            $salesDetails->save();
-            
-            foreach($request->moreFile as $item){
-                $dataUpdate = SlMovement::findOrFail($item['serial_no']);
-                $dataUpdate->status = 0;
-                $dataUpdate->out_date = date('Y-m-d');
-                $dataUpdate->save();
-                $data = new SlMovement();
-                $data->serial_no = $dataUpdate->serial_no;
-                $data->reference_id = $request->sales_id;
-                $data->reference_type_id = 2; //1=> Purchase 2=> Sales 3=> Store Transfer 4=> Return
-                $data->status = 0;
-                $data->mast_item_register_id = $request->item_register_id;
-                $data->mast_work_station_id = Auth::user()->id;
-                $data->user_id = Auth::user()->id;
-                $data->save();
+        try {
+            $warranty = MastItemRegister::where('id',$request->item_register_id)->first()->warranty;
 
-                //______Delivery Save Data
-                $delivery = new Delivery();
-                $delivery->serial_no = $dataUpdate->serial_no;
-                $delivery->deli_date = date('Y-m-d');
-                $delivery->warranty = 6; //--
-                $delivery->price = 7500; //--
-                $delivery->status = 1;
-                $delivery->mast_work_station_id = Auth::user()->mast_work_station_id;
-                $delivery->sales_id = $request->sales_id;
-                $delivery->mast_customer_id = $request->mast_customer_id;
-                $delivery->mast_item_register_id = $request->item_register_id;
-                $delivery->user_id = Auth::user()->id;
-                $delivery->save();
+            if (isset($request->moreFile[0]['serial_no']) && !empty($request->moreFile[0]['serial_no'])) {
+                $salesDetails = SalesDetails::findOrFail($request->sales_details_id);
+                $salesDetails->deli_qty = $request->deli_qty;
+                $salesDetails->status = 1;
+                $salesDetails->save();
+                
+                foreach($request->moreFile as $item){
+                    $dataUpdate = SlMovement::findOrFail($item['serial_no']);
+                    $dataUpdate->status = 0;
+                    $dataUpdate->out_date = date('Y-m-d');
+                    $dataUpdate->save();
+                    $data = new SlMovement();
+                    $data->serial_no = $dataUpdate->serial_no;
+                    $data->reference_id = $request->sales_id;
+                    $data->reference_type_id = 2; //1=> Purchase 2=> Sales 3=> Store Transfer 4=> Return
+                    $data->status = 0;
+                    $data->mast_item_register_id = $request->item_register_id;
+                    $data->mast_work_station_id = Auth::user()->id;
+                    $data->user_id = Auth::user()->id;
+                    $data->save();
+
+                    //______Delivery Save Data
+                    $delivery = new Delivery();
+                    $delivery->serial_no = $dataUpdate->serial_no;
+                    $delivery->deli_date = date('Y-m-d');
+                    $delivery->warranty = $warranty;
+                    $delivery->price = $request->price;
+                    $delivery->status = 1;
+                    $delivery->mast_work_station_id = Auth::user()->mast_work_station_id;
+                    $delivery->sales_id = $request->sales_id;
+                    $delivery->mast_customer_id = $request->mast_customer_id;
+                    $delivery->mast_item_register_id = $request->item_register_id;
+                    $delivery->user_id = Auth::user()->id;
+                    $delivery->save();
+                }
             }
-        }
-        //___________ Sales Status Update
-        $checkSales = SalesDetails::where('sales_id', $salesDetails->sales_id)->get();
-        $allTrue = true;
-        foreach ($checkSales as $key => $value) {
-            if ($value->qty != $value->deli_qty) {
-                $allTrue = false;
-                break;
+            //___________ Sales Status Update
+            $checkSales = SalesDetails::where('sales_id', $salesDetails->sales_id)->get();
+            $allTrue = true;
+            foreach ($checkSales as $key => $value) {
+                if ($value->qty != $value->deli_qty) {
+                    $allTrue = false;
+                    break;
+                }
             }
-        }
-        if ($allTrue){
-            $salesUpdate = Sales::findOrFail($salesDetails->sales_id);
-            $salesUpdate->status = 4; // Pendding => 0 || Success => 1 || Cencel => 2 || Parsial => 3 || Complete => 4
-            $variable = SlMovement::where('reference_id', $salesDetails->sales_id)->where('reference_type_id', 2)
-                    ->whereDate('created_at', '!=', date('Y-m-d'))->where('status', 0)->count();
-            if($variable){
-                $salesUpdate->is_parsial = 1;
+            if ($allTrue){
+                $salesUpdate = Sales::findOrFail($salesDetails->sales_id);
+                $salesUpdate->status = 4; // Pendding => 0 || Success => 1 || Cencel => 2 || Parsial => 3 || Complete => 4
+                $variable = SlMovement::where('reference_id', $salesDetails->sales_id)->where('reference_type_id', 2)
+                        ->whereDate('created_at', '!=', date('Y-m-d'))->where('status', 0)->count();
+                if($variable){
+                    $salesUpdate->is_parsial = 1;
+                }else{
+                    $salesUpdate->is_parsial = 0;
+                }
+                $salesUpdate->save();
             }else{
-                $salesUpdate->is_parsial = 0;
+                $salesUpdate = Sales::findOrFail($salesDetails->sales_id);
+                $salesUpdate->status = 3; // Pendding => 0 || Success => 1 || Cencel => 2 || Parsial => 3 || Complete => 4
+                $salesUpdate->is_parsial = 1;
+                $salesUpdate->save();
             }
-            $salesUpdate->save();
-        }else{
-            $salesUpdate = Sales::findOrFail($salesDetails->sales_id);
-            $salesUpdate->status = 3; // Pendding => 0 || Success => 1 || Cencel => 2 || Parsial => 3 || Complete => 4
-            $salesUpdate->is_parsial = 1;
-            $salesUpdate->save();
+            return response()->json(['message' => 'Data saved successfully'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'An error occurred while saving data: ' . $e->getMessage()], 500);
         }
-        return response()->json('success');
     }
     function parsialSalesDeliveryDetails($id) { 
         $sales = Sales::where('id', $id)->orderBy('id', 'asc')->first();
@@ -254,55 +263,60 @@ class MovementController extends Controller
         return view('layouts.pages.inventory.requstion_delivery.delivery_details', compact('data','sales'));
     }
     function requstionDeliveryStore(Request $request) {
-        
-        $storeTransferDetails = StoreTransferDetails::findOrFail($request->store_transfer_details_id);
-        $storeTransferDetails->deli_qty = $request->deli_qty;
-        $storeTransferDetails->save();
-        
-        if (isset($request->moreFile[0]['serial_no']) && !empty($request->moreFile[0]['serial_no'])) {
-            foreach($request->moreFile as $item){
-                $dataUpdate = SlMovement::findOrFail($item['serial_no']);
-                $dataUpdate->status = 0;
-                $dataUpdate->out_date = date('Y-m-d');
-                $dataUpdate->save();
-                $data = new SlMovement();
-                $data->serial_no = $dataUpdate->serial_no;
-                $data->reference_id = $request->store_transfer_id;
-                $data->reference_type_id = 3; //1=> Purchase || 2=> Sales || 3=> Store Transfer || 4=> Return
-                $data->status = 1;
-                $data->mast_item_register_id = $request->item_register_id;
-                $data->mast_work_station_id = $request->mast_work_station_id;
-                $data->user_id = Auth::user()->id;
-                $data->save();
+        try {
+            $storeTransferDetails = StoreTransferDetails::findOrFail($request->store_transfer_details_id);
+            $storeTransferDetails->deli_qty = $request->deli_qty;
+            $storeTransferDetails->save();
+            
+            if (isset($request->moreFile[0]['serial_no']) && !empty($request->moreFile[0]['serial_no'])) {
+                foreach($request->moreFile as $item){
+                    $dataUpdate = SlMovement::findOrFail($item['serial_no']);
+                    $dataUpdate->status = 0;
+                    $dataUpdate->out_date = date('Y-m-d');
+                    $dataUpdate->save();
+                    $data = new SlMovement();
+                    $data->serial_no = $dataUpdate->serial_no;
+                    $data->reference_id = $request->store_transfer_id;
+                    $data->reference_type_id = 3; //1=> Purchase || 2=> Sales || 3=> Store Transfer || 4=> Return
+                    $data->status = 1;
+                    $data->mast_item_register_id = $request->item_register_id;
+                    $data->mast_work_station_id = $request->mast_work_station_id;
+                    $data->user_id = Auth::user()->id;
+                    $data->save();
+                }
             }
-        }
-        //___________ Store Transfer Status Update
-        $checkStoreTransfer = StoreTransferDetails::where('store_transfer_id', $storeTransferDetails->store_transfer_id)->get();
-        $allTrue = true;
-        foreach ($checkStoreTransfer as $key => $value) {
-            if ($value->qty != $value->deli_qty) {
-                $allTrue = false;
-                break;
+            //___________ Store Transfer Status Update
+            $checkStoreTransfer = StoreTransferDetails::where('store_transfer_id', $storeTransferDetails->store_transfer_id)->get();
+            $allTrue = true;
+            foreach ($checkStoreTransfer as $key => $value) {
+                if ($value->qty != $value->deli_qty) {
+                    $allTrue = false;
+                    break;
+                }
             }
-        }
-        if ($allTrue){
-            $storeTransferUpdate = StoreTransfer::findOrFail($storeTransferDetails->store_transfer_id);
-            $storeTransferUpdate->status = 4; // Pendding => 0 || Success => 1 || Cencel => 2 || Parsial => 3 || Complete => 4
-            $variable = SlMovement::where('reference_id', $storeTransferDetails->store_transfer_id)->where('reference_type_id', 3)
-                    ->whereDate('created_at', '!=', date('Y-m-d'))->where('status', 1)->count();
-            if($variable){
-                $storeTransferUpdate->is_parsial = 1;
+            if ($allTrue){
+                $storeTransferUpdate = StoreTransfer::findOrFail($storeTransferDetails->store_transfer_id);
+                $storeTransferUpdate->status = 4; // Pendding => 0 || Success => 1 || Cencel => 2 || Parsial => 3 || Complete => 4
+                $variable = SlMovement::where('reference_id', $storeTransferDetails->store_transfer_id)->where('reference_type_id', 3)
+                        ->whereDate('created_at', '!=', date('Y-m-d'))->where('status', 1)->count();
+                if($variable){
+                    $storeTransferUpdate->is_parsial = 1;
+                }else{
+                    $storeTransferUpdate->is_parsial = 0;
+                }
+                $storeTransferUpdate->save();
             }else{
-                $storeTransferUpdate->is_parsial = 0;
+                $storeTransferUpdate = StoreTransfer::findOrFail($storeTransferDetails->store_transfer_id);
+                $storeTransferUpdate->status = 3; // Pendding => 0 || Success => 1 || Cencel => 2 || Parsial => 3 || Complete => 4
+                $storeTransferUpdate->is_parsial = 1;
+                $storeTransferUpdate->save();
             }
-            $storeTransferUpdate->save();
-        }else{
-            $storeTransferUpdate = StoreTransfer::findOrFail($storeTransferDetails->store_transfer_id);
-            $storeTransferUpdate->status = 3; // Pendding => 0 || Success => 1 || Cencel => 2 || Parsial => 3 || Complete => 4
-            $storeTransferUpdate->is_parsial = 1;
-            $storeTransferUpdate->save();
+            return response()->json(['message' => 'Data saved successfully'], 200);
+        } catch (\Exception $e) {
+            // Handle the error and return an error JSON response
+            return response()->json(['error' => 'An error occurred while saving data: ' . $e->getMessage()], 500);
         }
-        return response()->json('success');
+        
     }
     function parsialRequstionDeliveryDetails($id) { 
         $storeTransfer = StoreTransfer::where('id', $id)->orderBy('id', 'asc')->first();
@@ -350,64 +364,69 @@ class MovementController extends Controller
     }
     function salesReceiveStore(Request $request) 
     {
-        $salesReturnDetails = SalesReturnDetails::findOrFail($request->sales_return_details_id);
-        $salesReturnDetails->rcv_qty = $request->rcv_qty;
-        $salesReturnDetails->save();
+        try {
+            $salesReturnDetails = SalesReturnDetails::findOrFail($request->sales_return_details_id);
+            $salesReturnDetails->rcv_qty = $request->rcv_qty;
+            $salesReturnDetails->save();
 
-        //___________ Sales Details Status Update
-        $findSalesId = SalesReturn::findOrFail($salesReturnDetails->sales_return_id);
-        $salesDetails = SalesDetails::where('sales_id', $findSalesId->sales_id)->where('mast_item_register_id', $request->item_register_id)->first();
-        $salesDetails->deli_qty = $salesDetails->deli_qty - $request->rcv_qty;
-        if($salesDetails->deli_qty <= 0 ){
-            $salesDetails->status = 0;
-            $salesDetails->deli_qty = 0;
-        }
-        $salesDetails->save();
-        
-        if (isset($request->moreFile[0]['serial_no']) && !empty($request->moreFile[0]['serial_no'])) {
-            foreach($request->moreFile as $item){
-                $dataUpdate = SlMovement::findOrFail($item['serial_no']);
-                $dataUpdate->status = 4;
-                $dataUpdate->save();
-                $data = new SlMovement();
-                $data->serial_no = $dataUpdate->serial_no;
-                $data->reference_id = $request->sales_return_id;
-                $data->reference_type_id = 4; //1=> Purchase || 2=> Sales || 3=> Store Transfer || 4=> Return
-                $data->status = 1;
-                $data->mast_item_register_id = $request->item_register_id;
-                $data->mast_work_station_id = $findSalesId->mast_work_station_id;
-                $data->user_id = Auth::user()->id;
-                $data->save();
+            //___________ Sales Details Status Update
+            $findSalesId = SalesReturn::findOrFail($salesReturnDetails->sales_return_id);
+            $salesDetails = SalesDetails::where('sales_id', $findSalesId->sales_id)->where('mast_item_register_id', $request->item_register_id)->first();
+            $salesDetails->deli_qty = $salesDetails->deli_qty - $request->rcv_qty;
+            if($salesDetails->deli_qty <= 0 ){
+                $salesDetails->status = 0;
+                $salesDetails->deli_qty = 0;
             }
-        }
+            $salesDetails->save();
+            
+            if (isset($request->moreFile[0]['serial_no']) && !empty($request->moreFile[0]['serial_no'])) {
+                foreach($request->moreFile as $item){
+                    $dataUpdate = SlMovement::findOrFail($item['serial_no']);
+                    $dataUpdate->status = 4;
+                    $dataUpdate->save();
+                    $data = new SlMovement();
+                    $data->serial_no = $dataUpdate->serial_no;
+                    $data->reference_id = $request->sales_return_id;
+                    $data->reference_type_id = 4; //1=> Purchase || 2=> Sales || 3=> Store Transfer || 4=> Return
+                    $data->status = 1;
+                    $data->mast_item_register_id = $request->item_register_id;
+                    $data->mast_work_station_id = $findSalesId->mast_work_station_id;
+                    $data->user_id = Auth::user()->id;
+                    $data->save();
+                }
+            }
 
-        //___________ Sales Return Status Update
-        $checkStoreTransfer = SalesReturnDetails::where('sales_return_id', $salesReturnDetails->sales_return_id)->get();
-        $allTrue = true;
-        foreach ($checkStoreTransfer as $key => $value) {
-            if ($value->qty != $value->rcv_qty) {
-                $allTrue = false;
-                break;
+            //___________ Sales Return Status Update
+            $checkStoreTransfer = SalesReturnDetails::where('sales_return_id', $salesReturnDetails->sales_return_id)->get();
+            $allTrue = true;
+            foreach ($checkStoreTransfer as $key => $value) {
+                if ($value->qty != $value->rcv_qty) {
+                    $allTrue = false;
+                    break;
+                }
             }
-        }
-        if ($allTrue){
-            $salesReturnUpdate = SalesReturn::findOrFail($salesReturnDetails->sales_return_id);
-            $salesReturnUpdate->status = 4; // Pendding => 0 || Success => 1 || Cencel => 2 || Parsial => 3 || Complete => 4
-            $variable = SlMovement::where('reference_id', $salesReturnDetails->sales_return_id)->where('reference_type_id', 4)
-                    ->whereDate('created_at', '!=', date('Y-m-d'))->where('status', 1)->count();
-            if($variable){
-                $salesReturnUpdate->is_parsial = 1;
+            if ($allTrue){
+                $salesReturnUpdate = SalesReturn::findOrFail($salesReturnDetails->sales_return_id);
+                $salesReturnUpdate->status = 4; // Pendding => 0 || Success => 1 || Cencel => 2 || Parsial => 3 || Complete => 4
+                $variable = SlMovement::where('reference_id', $salesReturnDetails->sales_return_id)->where('reference_type_id', 4)
+                        ->whereDate('created_at', '!=', date('Y-m-d'))->where('status', 1)->count();
+                if($variable){
+                    $salesReturnUpdate->is_parsial = 1;
+                }else{
+                    $salesReturnUpdate->is_parsial = 0;
+                }
+                $salesReturnUpdate->save();
             }else{
-                $salesReturnUpdate->is_parsial = 0;
+                $salesReturnUpdate = SalesReturn::findOrFail($salesReturnDetails->sales_return_id);
+                $salesReturnUpdate->status = 3; // Pendding => 0 || Success => 1 || Cencel => 2 || Parsial => 3 || Complete => 4
+                $salesReturnUpdate->is_parsial = 1;
+                $salesReturnUpdate->save();
             }
-            $salesReturnUpdate->save();
-        }else{
-            $salesReturnUpdate = SalesReturn::findOrFail($salesReturnDetails->sales_return_id);
-            $salesReturnUpdate->status = 3; // Pendding => 0 || Success => 1 || Cencel => 2 || Parsial => 3 || Complete => 4
-            $salesReturnUpdate->is_parsial = 1;
-            $salesReturnUpdate->save();
+            return response()->json(['message' => 'Data saved successfully'], 200);
+        } catch (\Exception $e) {
+            // Handle the error and return an error JSON response
+            return response()->json(['error' => 'An error occurred while saving data: ' . $e->getMessage()], 500);
         }
-        return response()->json('success');
     }
     // function parsialRequstionDeliveryDetails($id) { 
     //     $storeTransfer = StoreTransfer::where('id', $id)->orderBy('id', 'asc')->first();
@@ -439,7 +458,7 @@ class MovementController extends Controller
     }
     public function getSalesDetails(Request $request)
     {
-        $data = SalesDetails::where('sales_details.status', 1)->where('sales_details.id', $request->id)
+        $data = SalesDetails::where('sales_details.id', $request->id)
         ->join('sales', 'sales.id', 'sales_details.sales_id')
         ->join('mast_item_categories', 'mast_item_categories.id', 'sales.mast_item_category_id')
         ->join('mast_item_registers', 'mast_item_registers.id', 'sales_details.mast_item_register_id')
@@ -521,56 +540,4 @@ class MovementController extends Controller
 
         return response()->json(['data' => $data]);
     }
-
-    /**___________________________________________________________________
-     * Dwonload File, Excel, Pdf
-     * ___________________________________________________________________
-     */
-    public function generatePurchaseReceive($id){
-        $purchase = Purchase::where('id', $id)->orderBy('id', 'asc')->first();
-        
-        $data = SlMovement::where('sl_movements.reference_id', $id)->where('sl_movements.reference_type_id', 1)
-        ->join('purchases', 'purchases.id', 'sl_movements.reference_id')
-        ->join('mast_item_registers', 'mast_item_registers.id', 'sl_movements.mast_item_register_id')
-        ->join('mast_item_groups', 'mast_item_groups.id', 'mast_item_registers.mast_item_group_id')
-        ->join('mast_item_categories', 'mast_item_categories.id', 'mast_item_groups.mast_item_category_id')
-        ->select('sl_movements.*','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
-        ->orderBy('id', 'asc')->get();
-       
-        $pdf = PDF::loadView('layouts.pages.export.parsial-purchase-receive', compact('purchase','data'))->setPaper('a4', 'portrait');
-        return $pdf->download('items6.pdf');
-        // return view('layouts.pages.export.parsial-purchase-receive', compact('purchase','data'));
-    }
-    public function generateSalesDeliver($id){
-        $purchase = Sales::where('id', $id)->orderBy('id', 'asc')->first();
-        
-        $data = SlMovement::where('sl_movements.reference_id', $id)->where('sl_movements.reference_type_id', 2)
-        ->join('sales', 'sales.id', 'sl_movements.reference_id')
-        ->join('mast_item_registers', 'mast_item_registers.id', 'sl_movements.mast_item_register_id')
-        ->join('mast_item_groups', 'mast_item_groups.id', 'mast_item_registers.mast_item_group_id')
-        ->join('mast_item_categories', 'mast_item_categories.id', 'mast_item_groups.mast_item_category_id')
-        ->select('sl_movements.*','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
-        ->orderBy('id', 'asc')->get();
-       
-        $pdf = PDF::loadView('layouts.pages.export.parsial-sales-delivery', compact('purchase','data'))->setPaper('a4', 'portrait');
-        return $pdf->download('items6.pdf');
-        // return view('layouts.pages.export.parsial-purchase-receive', compact('purchase','data'));
-    }
-    public function generateRequstionDeliver($id){
-        $storeTransfer = StoreTransfer::where('id', $id)->orderBy('id', 'asc')->first();
-        
-        $data = SlMovement::where('sl_movements.reference_id', $id)->where('sl_movements.reference_type_id', 3)
-        ->join('store_transfers', 'store_transfers.id', 'sl_movements.reference_id')
-        ->join('mast_item_registers', 'mast_item_registers.id', 'sl_movements.mast_item_register_id')
-        ->join('mast_item_groups', 'mast_item_groups.id', 'mast_item_registers.mast_item_group_id')
-        ->join('mast_item_categories', 'mast_item_categories.id', 'mast_item_groups.mast_item_category_id')
-        ->select('sl_movements.*','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
-        ->orderBy('id', 'asc')->get();
-
-       
-        $pdf = PDF::loadView('layouts.pages.export.parsial-requstion-delivery', compact('storeTransfer','data'))->setPaper('a4', 'portrait');
-        return $pdf->download('items6.pdf');
-        // return view('layouts.pages.export.parsial-requstion-delivery', compact('storeTransfer','data'));
-    }
-
 }

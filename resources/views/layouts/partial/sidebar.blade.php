@@ -67,8 +67,8 @@
                         @canany(['Hr setting access'])
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Data Setting</a>
                             <ul aria-expanded="false">
-                                <li><a href="{{route('mast_department.index')}}">Depertment</a></li>
-                                <li><a href="{{route('mast_designation.index')}}">Desgination</a></li>
+                                <li><a href="{{route('mast_department.index')}}">Department</a></li>
+                                <li><a href="{{route('mast_designation.index')}}">Designation</a></li>
                                 <li><a href="{{route('mast_leave.index')}}">Leave Type</a></li>
                                 <li><a href="{{route('must_employee_category.index')}}">Employee Category</a></li>
                             </ul>
@@ -107,17 +107,18 @@
                                 <li><a href="{{ route('requstion-delivery.index')}}">Requisition Delivery</a></li>
                             </ul>
                         </li>
-                        <li><a href="#">Stock Update</a></li>
-                        <li><a href="#">Stock Possition</a></li>
+                        <!-- <li><a href="#">Stock Update</a></li> -->
+                        <li><a href="#">Stock Position</a></li>
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Reports</a>
                             <ul aria-expanded="false">
-                                <li><a href="{{route('report-purchase-recived')}}">Purchase Recived</a></li>
-                                <li><a href="{{route('report-sales-delivery')}}">Sales Delivery</a></li>
-                                <li><a href="{{ route('report-requstion-delivery')}}">Requisition Delivery</a></li>
+                                <li><a href="{{route('parsial-purchase-details')}}">Purchase Received</a></li>
+                                <li><a href="{{route('parsial-sales-details')}}">Sales Delivery</a></li>
+                                <li><a href="{{ route('parsial-requstion-parsial')}}">Requisition Delivery</a></li>
                             </ul>
                         </li>
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Data Setting</a>
                             <ul aria-expanded="false">
+                                <li><a href="{{route('mast_supplier.index')}}">Supplier List</a></li>
                                 <li><a href="{{route('mast_item_category.index')}}">Item Category</a></li>
                                 <li><a href="{{route('mast_item_group.index')}}">Parts Register</a></li>
                                 <li><a href="{{route('mast_item_register.index')}}">Item Register</a></li>

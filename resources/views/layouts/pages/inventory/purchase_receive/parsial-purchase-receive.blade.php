@@ -11,7 +11,9 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title">Purchase Recived (<span class="text-info">{{date("j F, Y", strtotime($date))}}</span>)</h4>
-                    <a href="#" class="btn btn-sm btn-secondary p-1 px-2"><i class="fa fa-print"></i></i><span class="btn-icon-add"></span>Print</a>
+                    <a href="{{ route('parsial-purchase-recived.download', ['data' => $date, 'id' => $purchase->id]) }}" class="btn btn-sm btn-secondary p-1 px-2">
+                        <i class="fa fa-print"></i><span class="btn-icon-add"></span>Print
+                    </a>
                 </div>
                 <div class="card-body">
                     <div class="row">
