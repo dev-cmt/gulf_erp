@@ -31,9 +31,10 @@ use App\Helpers\Helper;
 class ReportsController extends Controller
 {
     /**___________________________________________________________________
-     * Inventory
+     * Inventory => Report
      * ___________________________________________________________________
      */
+    //--------- Purchase Receive
     public function parsialPurchaseDetails(){
         $data = Purchase::where('status', 4)->whereIn('is_parsial', [0, 1])->orderBy('id', 'asc')->get();
         return view('layouts.pages.inventory.reports.purchase-recived',compact('data'));
@@ -49,9 +50,9 @@ class ReportsController extends Controller
         ->select('sl_movements.*','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
         ->orderBy('id', 'asc')->get();
        
-        $pdf = PDF::loadView('layouts.pages.export.purchase-receive', compact('purchase','data'))->setPaper('a4', 'portrait');
-        return $pdf->download('items6.pdf');
-        // return view('layouts.pages.export.purchase-receive-parsial', compact('purchase','data'));
+        $pdf = PDF::loadView('layouts.pages.export.parsial-purchase-receive', compact('purchase','data'))->setPaper('a4', 'portrait');
+        return $pdf->download('Purchase-Receive.pdf');
+        // return view('layouts.pages.export.parsial-purchase-receive', compact('purchase','data'));
     }
     public function generatePurchaseReceiveDetails($date, $id){
         $purchase = Purchase::where('id', $id)->orderBy('id', 'asc')->first();
@@ -64,12 +65,12 @@ class ReportsController extends Controller
         ->select('sl_movements.*','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
         ->orderBy('id', 'asc')->get();
        
-        $pdf = PDF::loadView('layouts.pages.export.purchase-receive-parsial', compact('purchase','data'))->setPaper('a4', 'portrait');
+        $pdf = PDF::loadView('layouts.pages.export.parsial-purchase-receive', compact('purchase','data'))->setPaper('a4', 'portrait');
         return $pdf->download($date . '.pdf');
-        // return view('layouts.pages.export.purchase-receive', compact('purchase','data'));
+        // return view('layouts.pages.export.parsial-purchase-receive', compact('purchase','data'));
     }
     
-    //--------Sales
+    //--------Sales Delivery
     public function salesDeliveryDetails(){
         $data= Sales::where('status', 4)->whereIn('is_parsial', [0, 1])->orderBy('id', 'asc')->get();
         return view('layouts.pages.inventory.reports.sales-delivery',compact('data'));
@@ -85,9 +86,9 @@ class ReportsController extends Controller
         ->select('sl_movements.*','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
         ->orderBy('id', 'asc')->get();
        
-        $pdf = PDF::loadView('layouts.pages.export.sales-delivery', compact('purchase','data'))->setPaper('a4', 'portrait');
-        return $pdf->download('items6.pdf');
-        // return view('layouts.pages.export.parsial-purchase-receive', compact('purchase','data'));
+        $pdf = PDF::loadView('layouts.pages.export.parsial-sales-delivery', compact('purchase','data'))->setPaper('a4', 'portrait');
+        return $pdf->download('Sales-Delivery.pdf');
+        // return view('layouts.pages.export.parsial-sales-delivery', compact('purchase','data'));
     }
     public function generateSalesDeliveryDetails($date, $id){
         $purchase = Sales::where('id', $id)->orderBy('id', 'asc')->first();
@@ -100,16 +101,16 @@ class ReportsController extends Controller
         ->select('sl_movements.*','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
         ->orderBy('id', 'asc')->get();
        
-        $pdf = PDF::loadView('layouts.pages.export.sales-delivery-parsial', compact('purchase','data'))->setPaper('a4', 'portrait');
-        return $pdf->download('items6.pdf');
-        // return view('layouts.pages.export.parsial-purchase-receive', compact('purchase','data'));
+        $pdf = PDF::loadView('layouts.pages.export.parsial-sales-delivery', compact('purchase','data'))->setPaper('a4', 'portrait');
+        return $pdf->download($date . '.pdf');
+        // return view('layouts.pages.export.parsial-sales-delivery', compact('purchase','data'));
     }
-    //--------Sales
-    public function requstionDelivery(){
-        $data= StoreTransfer::where('status', 4)->whereIn('is_parsial', [0, 1])->orderBy('id', 'asc')->get();
+    //--------Store Delivery
+    public function storeDelivery(){
+        $data= StoreTransfer::where('status', 3)->whereIn('is_parsial', [0, 1])->where('from_store_id', Auth::user()->mast_work_station_id)->orderBy('id', 'asc')->get();
         return view('layouts.pages.inventory.reports.requstion-delivery',compact('data'));
     }
-    public function generateRequstionDeliver($id){
+    public function generateStoreDelivery($id){
         $storeTransfer = StoreTransfer::where('id', $id)->orderBy('id', 'asc')->first();
         
         $data = SlMovement::where('sl_movements.reference_id', $id)->where('sl_movements.reference_type_id', 3)
@@ -119,11 +120,25 @@ class ReportsController extends Controller
         ->join('mast_item_categories', 'mast_item_categories.id', 'mast_item_groups.mast_item_category_id')
         ->select('sl_movements.*','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
         ->orderBy('id', 'asc')->get();
-
        
-        $pdf = PDF::loadView('layouts.pages.export.parsial-requstion-delivery', compact('storeTransfer','data'))->setPaper('a4', 'portrait');
-        return $pdf->download('items6.pdf');
-        // return view('layouts.pages.export.parsial-requstion-delivery', compact('storeTransfer','data'));
+        $pdf = PDF::loadView('layouts.pages.export.parsial-store-delivery', compact('storeTransfer','data'))->setPaper('a4', 'portrait');
+        return $pdf->download('Store-Delivery.pdf');
+        // return view('layouts.pages.export.parsial-store-delivery', compact('storeTransfer','data'));
+    }
+    public function generateStoreDeliveryDetails($date, $id){
+        $storeTransfer = StoreTransfer::where('id', $id)->orderBy('id', 'asc')->first();
+        
+        $data = SlMovement::where('sl_movements.reference_id', $id)->where('sl_movements.reference_type_id', 3)->whereDate('sl_movements.created_at', $date)
+        ->join('store_transfers', 'store_transfers.id', 'sl_movements.reference_id')
+        ->join('mast_item_registers', 'mast_item_registers.id', 'sl_movements.mast_item_register_id')
+        ->join('mast_item_groups', 'mast_item_groups.id', 'mast_item_registers.mast_item_group_id')
+        ->join('mast_item_categories', 'mast_item_categories.id', 'mast_item_groups.mast_item_category_id')
+        ->select('sl_movements.*','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
+        ->orderBy('id', 'asc')->get();
+       
+        $pdf = PDF::loadView('layouts.pages.export.parsial-store-delivery', compact('storeTransfer','data'))->setPaper('a4', 'portrait');
+        return $pdf->download($date . '.pdf');
+        // return view('layouts.pages.export.parsial-store-delivery', compact('storeTransfer','data'));
     }
     /**___________________________________________________________________
      * Sales

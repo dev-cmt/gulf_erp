@@ -159,15 +159,15 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('inv/get-serial-no', [MovementController::class,'getSerialNumber'])->name('get-serial-no');
     Route::get('get-sales-delivery/slno', [MovementController::class,'getSalesDeliverySlNo'])->name('get-sales-delivery-slno');
     /**______________________________________________________________________________________________
-     * Inventory => Requstion Delivery
+     * Inventory => Store Delivery
      * ______________________________________________________________________________________________
      */
-    Route::get('inv/requstion-delivery/index', [MovementController::class, 'requstionDeliveryIndex'])->name('requstion-delivery.index');
-    Route::get('inv/requstion-delivery/details/{id}', [MovementController::class, 'requstionDeliveryDetails'])->name('requstion-delivery-details');
-    Route::post('inv/requstion-delivery/store', [MovementController::class, 'requstionDeliveryStore'])->name('requstion-delivery.store');
-    Route::get('inv/get-requstion-delivery/details', [MovementController::class, 'getStoreTransferDetails'])->name('get_store_transfer_details');
+    Route::get('inv/store-delivery/index', [MovementController::class, 'storeDeliveryIndex'])->name('store-delivery.index');
+    Route::get('inv/store-delivery/details/{id}', [MovementController::class, 'storeDeliveryDetails'])->name('store-delivery-details');
+    Route::post('inv/store-delivery/store', [MovementController::class, 'storeDeliveryStore'])->name('store-delivery.store');
+    Route::get('inv/get-store-delivery/details', [MovementController::class, 'getStoreTransferDetails'])->name('get_store_transfer_details');
     
-    Route::get('inv/requstion-delivery-parsial/{id}/details', [MovementController::class, 'parsialRequstionDeliveryDetails'])->name('requstion-delivery-details-parsial');
+    Route::get('inv/store-delivery-parsial/{id}/details', [MovementController::class, 'parsialstoreDeliveryDetails'])->name('store-delivery-details-parsial');
     /**______________________________________________________________________________________________
      * Inventory => Purchase
      * ______________________________________________________________________________________________
@@ -201,6 +201,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('store/transfer/approve_list', [StoreTransferController::class, 'storeTransferApprove'])->name('store_transfer_approve.create');
     Route::PATCH('store/transfer/approve/{id}', [StoreTransferController::class, 'approve'])->name('store_transfer.approve');
     Route::PATCH('store/transfer/canceled/{id}', [StoreTransferController::class, 'decline'])->name('store_transfer.canceled');
+    Route::PATCH('store/transfer/receive/{id}', [StoreTransferController::class, 'receive'])->name('store_transfer.receive');
     Route::get('get/store-transfer/approve/details', [StoreTransferController::class, 'getStoreTransferApproveDetails'])->name('get_store_transfer_approve_details');
     /**______________________________________________________________________________________________
      * Inventory => Reports
@@ -210,16 +211,15 @@ Route::group(['middleware' => ['auth']], function(){
      Route::get('download/purchase-receive/{id}/pdf', [ReportsController::class, 'generatePurchaseReceive'])->name('purchase-receive.download');
      Route::get('download/parsial-purchase/recived/{data}/{id}',[ReportsController::class,'generatePurchaseReceiveDetails'])->name('parsial-purchase-recived.download');
 
-
      //-----------------------------SALES DELIVERY
      Route::get('parsial-sales/details',[ReportsController::class,'salesDeliveryDetails'])->name('parsial-sales-details');
      Route::get('download/sales-delivery/{id}/pdf', [ReportsController::class, 'generateSalesDelivery'])->name('sales-delivery.download');
      Route::get('download/sales-delivery/details/{data}/{id}',[ReportsController::class,'generateSalesDeliveryDetails'])->name('parsial-sales-delivery.download');
 
      //-----------------------------REQUSTION DELIVERY
-     Route::get('parsial-requstion/parsial',[ReportsController::class,'requstionDelivery'])->name('parsial-requstion-parsial');
-     Route::get('report/requstion-delivery/{id}/pdf/download', [ReportsController::class, 'generateRequstionDeliver'])->name('report-requstion-delivery.download');
-
+     Route::get('parsial-store/parsial',[ReportsController::class,'storeDelivery'])->name('parsial-store-delivery');
+     Route::get('download/store-delivery/{id}/pdf/download', [ReportsController::class, 'generateStoreDelivery'])->name('store-delivery.download');
+     Route::get('download/store-delivery/details/{data}/{id}',[ReportsController::class,'generateStoreDeliveryDetails'])->name('parsial-store-delivery.download');
 
      
     /**______________________________________________________________________________________________

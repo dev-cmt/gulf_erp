@@ -4,15 +4,16 @@
             <a href="{{ url()->previous() }}" class="btn btn-sm btn-primary float-right"><i class="fa fa-reply"></i><span class="btn-icon-add"></span>Back</a>
         </div>
     </div>
-
     @foreach($data->groupBy(function($item) {return $item->created_at->format('Y-m-d');}) as $date => $groupedData)
     {{-- @foreach($data->groupBy('created_at') as $date => $groupedData) --}}
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Purchase Recived (<span class="text-info">{{date("j F, Y", strtotime($date))}}</span>)</h4>
-                    <a href="#" class="btn btn-sm btn-secondary p-1 px-2"><i class="fa fa-print"></i></i><span class="btn-icon-add"></span>Print</a>
+                    <h4 class="card-title">Store Transfer (<span class="text-info">{{date("j F, Y", strtotime($date))}}</span>)</h4>
+                    <a href="{{ route('parsial-store-delivery.download', ['data' => $date, 'id' => $storeTransfer->id]) }}" class="btn btn-sm btn-secondary p-1 px-2">
+                        <i class="fa fa-print"></i><span class="btn-icon-add"></span>Print
+                    </a>
                 </div>
                 <div class="card-body">
                     <div class="row">

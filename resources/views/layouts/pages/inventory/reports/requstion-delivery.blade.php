@@ -3,7 +3,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Requstion Delivery</h4>
+                    <h4 class="card-title">Requstion Delivery Reports</h4>
                 </div>
 
                 <div class="card-body">
@@ -17,8 +17,7 @@
                                     <th>Customer Name</th>
                                     <th>Type</th>
                                     <th>Item</th>
-                                    {{-- <th>Qty</th> --}}
-                                    <th>Total</th>
+                                    <th>Total Qty</th>
                                     <th class="text-center">Action</th>
                                 </tr>
                             </thead>
@@ -41,14 +40,10 @@
                                     <td>{{$row->mastWorkStation->store_name ?? 'NULL'}}</td>
                                     <td>{{$row->mastItemCategory->cat_name ?? 'NULL'}}</td>
                                     <td id="details_data" data-id="{{ $row->id }}"><span style="cursor: pointer" class="badge badge-pill badge-success badge-rounded">{{ $item }}</span></td>
-                                    {{-- <td>{{$qty }}</td> --}}
-                                    <td>{{$total }}</td>
+                                    <td>{{$qty }}</td>
                                     <td class="text-right">
-                                        <a href="{{ route('report-requstion-delivery.download', $row->id)}}" class="btn btn-sm btn-secondary p-1 mt-1 px-2"><i class="fa fa-print"></i></i><span class="btn-icon-add"></span>Print</a>
-                                        <a href="{{ route('requstion-delivery-details-parsial', $row->id) }}" class="btn btn-sm btn-info p-1 mt-1 px-2"><i class="fa fa-info"></i></i><span class="btn-icon-add"></span>Details</a>
-                                        @if ($row->status == 3)
-                                        <a href="{{ route('requstion-delivery-details', $row->id) }}" class="btn btn-primary p-1 mt-1 px-2"><i class="fa fa-plus"></i></i><span class="btn-icon-add"></span>Add New</a>
-                                        @endif
+                                        <a href="{{ route('store-delivery.download', $row->id)}}" class="btn btn-sm btn-secondary p-1 mt-1 px-2"><i class="fa fa-print"></i></i><span class="btn-icon-add"></span>Print</a>
+                                        <a href="{{ route('store-delivery-details-parsial', $row->id) }}" class="btn btn-sm btn-info p-1 mt-1 px-2"><i class="fa fa-info"></i></i><span class="btn-icon-add"></span>Details</a>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -60,7 +55,7 @@
 
             <!--============//Show Modal Data//================-->
             <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
-                <div class="modal-dialog modal-xl">
+                <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Requstion Details</h5>
@@ -102,9 +97,7 @@
                                             <th>Category</th>
                                             <th>Group Name</th>
                                             <th>Part No.</th>
-                                            <th>Price</th>
                                             <th>Qty</th>
-                                            <th>Sub Total</th>
                                         </tr>
                                     </thead>
                                     <tbody id="table-body"></tbody>
@@ -157,9 +150,7 @@
                     row += '<td>' + item.cat_name + '</td>'; // Add Category column
                     row += '<td>' + item.part_name + '</td>'; // Add Group Name column
                     row += '<td>' + item.part_no + '</td>';
-                    row += '<td>' + item.price + '</td>';
                     row += '<td>' + item.qty + '</td>';
-                    row += '<td>' + subtotal + '</td>';
                     row += '</tr>';
                     $('#table-body').append(row);
 

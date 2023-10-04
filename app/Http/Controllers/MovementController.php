@@ -243,13 +243,13 @@ class MovementController extends Controller
      * Requstion Delivery (Store Transfer)
      * ___________________________________________________________________
      */
-    public function requstionDeliveryIndex()
+    public function storeDeliveryIndex()
     {
-        $data= StoreTransfer::where('status', 1)->orderBy('id', 'asc')->get();
-        $dataParsial = StoreTransfer::whereIn('status', [3, 4])->where('is_parsial', 1)->orderBy('id', 'asc')->get();
-        return view('layouts.pages.inventory.requstion_delivery.index',compact('data','dataParsial'));
+        $data= StoreTransfer::where('status', 1)->where('from_store_id', Auth::user()->mast_work_station_id)->orderBy('id', 'asc')->get();
+        $dataParsial = StoreTransfer::whereIn('status', [2, 3])->where('from_store_id', Auth::user()->mast_work_station_id)->where('is_parsial', 1)->orderBy('id', 'asc')->get();
+        return view('layouts.pages.inventory.store_delivery.index',compact('data','dataParsial'));
     }
-    public function requstionDeliveryDetails($id)
+    public function storeDeliveryDetails($id)
     {
         $sales = StoreTransfer::where('id', $id)->first();
         $data = StoreTransferDetails::where('store_transfer_details.status', 1)->where('store_transfer_id', $id)
@@ -260,9 +260,9 @@ class MovementController extends Controller
         ->select('store_transfer_details.*','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
         ->get();
         
-        return view('layouts.pages.inventory.requstion_delivery.delivery_details', compact('data','sales'));
+        return view('layouts.pages.inventory.store_delivery.delivery_details', compact('data','sales'));
     }
-    function requstionDeliveryStore(Request $request) {
+    function storeDeliveryStore(Request $request) {
         try {
             $storeTransferDetails = StoreTransferDetails::findOrFail($request->store_transfer_details_id);
             $storeTransferDetails->deli_qty = $request->deli_qty;
@@ -278,7 +278,7 @@ class MovementController extends Controller
                     $data->serial_no = $dataUpdate->serial_no;
                     $data->reference_id = $request->store_transfer_id;
                     $data->reference_type_id = 3; //1=> Purchase || 2=> Sales || 3=> Store Transfer || 4=> Return
-                    $data->status = 1;
+                    $data->status = 0;
                     $data->mast_item_register_id = $request->item_register_id;
                     $data->mast_work_station_id = $request->mast_work_station_id;
                     $data->user_id = Auth::user()->id;
@@ -296,9 +296,9 @@ class MovementController extends Controller
             }
             if ($allTrue){
                 $storeTransferUpdate = StoreTransfer::findOrFail($storeTransferDetails->store_transfer_id);
-                $storeTransferUpdate->status = 4; // Pendding => 0 || Success => 1 || Cencel => 2 || Parsial => 3 || Complete => 4
+                $storeTransferUpdate->status = 3; // Pendding => 0 || In Stock => 1 || In Transit => Parsial->2, 3 || Receive => 4 || Cencel => 5
                 $variable = SlMovement::where('reference_id', $storeTransferDetails->store_transfer_id)->where('reference_type_id', 3)
-                        ->whereDate('created_at', '!=', date('Y-m-d'))->where('status', 1)->count();
+                        ->whereDate('created_at', '!=', date('Y-m-d'))->where('status', 0)->count();
                 if($variable){
                     $storeTransferUpdate->is_parsial = 1;
                 }else{
@@ -307,7 +307,7 @@ class MovementController extends Controller
                 $storeTransferUpdate->save();
             }else{
                 $storeTransferUpdate = StoreTransfer::findOrFail($storeTransferDetails->store_transfer_id);
-                $storeTransferUpdate->status = 3; // Pendding => 0 || Success => 1 || Cencel => 2 || Parsial => 3 || Complete => 4
+                $storeTransferUpdate->status = 2; // Pendding => 0 || In Stock => 1 || In Transit => Parsial->2, 3 || Receive => 4 || Cencel => 5
                 $storeTransferUpdate->is_parsial = 1;
                 $storeTransferUpdate->save();
             }
@@ -318,7 +318,7 @@ class MovementController extends Controller
         }
         
     }
-    function parsialRequstionDeliveryDetails($id) { 
+    function parsialstoreDeliveryDetails($id) { 
         $storeTransfer = StoreTransfer::where('id', $id)->orderBy('id', 'asc')->first();
         
         $data = SlMovement::where('sl_movements.reference_id', $id)->where('sl_movements.reference_type_id', 3)
@@ -328,7 +328,7 @@ class MovementController extends Controller
         ->join('mast_item_categories', 'mast_item_categories.id', 'mast_item_groups.mast_item_category_id')
         ->select('sl_movements.*','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
         ->orderBy('id', 'asc')->get();
-        return view('layouts.pages.inventory.requstion_delivery.parsial-requstion-delivery',compact('storeTransfer','data'));
+        return view('layouts.pages.inventory.store_delivery.parsial-requstion-delivery',compact('storeTransfer','data'));
     }
     /**___________________________________________________________________
      * Return Receive
@@ -428,7 +428,7 @@ class MovementController extends Controller
             return response()->json(['error' => 'An error occurred while saving data: ' . $e->getMessage()], 500);
         }
     }
-    // function parsialRequstionDeliveryDetails($id) { 
+    // function parsialstoreDeliveryDetails($id) { 
     //     $storeTransfer = StoreTransfer::where('id', $id)->orderBy('id', 'asc')->first();
         
     //     $data = SlMovement::where('sl_movements.reference_id', $id)->where('sl_movements.reference_type_id', 3)
@@ -438,7 +438,7 @@ class MovementController extends Controller
     //     ->join('mast_item_categories', 'mast_item_categories.id', 'mast_item_groups.mast_item_category_id')
     //     ->select('sl_movements.*','mast_item_registers.part_no','mast_item_groups.part_name','mast_item_categories.cat_name')
     //     ->orderBy('id', 'asc')->get();
-    //     return view('layouts.pages.inventory.requstion_delivery.parsial-requstion-delivery',compact('storeTransfer','data'));
+    //     return view('layouts.pages.inventory.store_delivery.parsial-requstion-delivery',compact('storeTransfer','data'));
     // }
 
     /**___________________________________________________________________

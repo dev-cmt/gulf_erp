@@ -3,7 +3,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title text-success">Delivery Challan</h4>
+                    <h4 class="card-title text-success">Reqution Delivery Challan</h4>
                 </div>
                 @php
                     $latestDate = $data->groupBy(function($item) {
@@ -17,11 +17,11 @@
                 <div class="card-body pt-2">
                     <div class="row">
                         <label class="col-3 col-form-label"><strong> Invoice No </strong></label>
-                        <label class="col-6 col-form-label">: {{$purchase->inv_no}}</label>
+                        <label class="col-6 col-form-label">: {{$storeTransfer->inv_no}}</label>
                         <label class="col-3 col-form-label"><strong>Invoice Date</strong></label>
-                        <label class="col-6 col-form-label">: {{date("j F, Y", strtotime($purchase->inv_date))}}</label>
+                        <label class="col-6 col-form-label">: {{date("j F, Y", strtotime($storeTransfer->inv_date))}}</label>
                         <label class="col-3 col-form-label"><strong>Supplier Name</strong></label>
-                        <label class="col-6 col-form-label">: {{$purchase->mastCustomer->name}}</label>
+                        <label class="col-6 col-form-label">{{$storeTransfer->mastWorkStation->store_name}}</label>
                         <label class="col-3 col-form-label"><strong> Receive Data</strong></label>
                         <label class="col-6 col-form-label">: {{date("j F, Y", strtotime($latestDate))}}</label>
                     </div>
@@ -35,7 +35,7 @@
                                 <th>Category</th>
                                 <th>Group Name</th>
                                 <th>Part No.</th>
-                                <th>Date</th>
+                                <th>Action</th>
                             </tr>
                             </thead>
                             <tbody>

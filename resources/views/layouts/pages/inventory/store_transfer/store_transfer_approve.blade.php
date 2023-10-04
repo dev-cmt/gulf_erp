@@ -16,7 +16,6 @@
                                     <th>Invoice Date</th>
                                     <th>Store Name</th>
                                     <th>Invoice Type</th>
-                                    <th>Total</th>
                                     <th class="text-center">Action</th>
                                 </tr>
                             </thead>
@@ -34,7 +33,6 @@
                                     <td>{{$row->inv_date}}</td>
                                     <td>{{$row->mastWorkStation->store_name ?? 'NULL'}}</td>
                                     <td>{{$row->mastItemCategory->cat_name ?? 'NULL'}}</td>
-                                    <td>{{$total }}</td>
                                     <td class="d-flex justify-content-end">
                                         <form action="{{route('store_transfer.approve', $row->id)}}" method="post">
                                             <button class="btn btn-sm btn-info p-1 mr-1">Approve</i></button>

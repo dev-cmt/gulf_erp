@@ -26,6 +26,10 @@ class StoreTransfer extends Model
     ];
     public function mastWorkStation()
     {
+        return $this->belongsTo(MastWorkStation::class, 'mast_work_station_id');
+    }
+    public function fromWorkStation()
+    {
         return $this->belongsTo(MastWorkStation::class, 'from_store_id');
     }
     public function mastItemCategory()

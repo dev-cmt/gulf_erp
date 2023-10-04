@@ -20,45 +20,73 @@
                                 <th></th>
                                 <th>Invoice No</th>
                                 <th>Invoice Date</th>
-                                <th>Customer Name</th>
+                                <th>Store Name</th>
                                 <th>Invoice Type</th>
                                 <th>Item</th>
                                 <th>Status</th>
-                                <th class="text-center">Action</th>
+                                <th class="text-right">Action</th>
                             </tr>
                             </thead>
                             <tbody id="sales_tbody">
                                 @foreach ($data as $key=> $row)
                                 @php
+                                    $total = 0;
                                     $qty = 0;
+                                    $item = 0;
                                     foreach ($row->storeTransferDetails as $key => $value) {
-                                        $qty += 1;
+                                        $total += $value->qty * $value->price;
+                                        $qty += $value->qty;
+                                        $item += 1;
                                     }
+
+                                    $slMovement = DB::table('sl_movements')->where('reference_id', $row->id)->where('reference_type_id', 3);
+                                    $checkStock = $slMovement->where('status', 0)->count();
+                                    $checkDelivery = $slMovement->count();
+
                                 @endphp
+
                                 <tr id="row_master_table_{{ $row->id}}">
                                     <td></td>
                                     <td>{{$row->inv_no}}</td>
                                     <td>{{$row->inv_date}}</td>
-                                    <td>{{$row->mastWorkStation->store_name ?? 'NULL'}}</td>
+                                    <td>{{$row->fromWorkStation->store_name ?? 'NULL'}}</td>
                                     <td>{{$row->mastItemCategory->cat_name ?? 'NULL'}}</td>
-                                    <td>{{$qty }}</td>
+                                    <td>{{$qty }} / {{$checkDelivery}} / {{$checkStock}}</td>
                                     <td>@if($row->status == 0)
                                         <span class="badge light badge-warning">
                                             <i class="fa fa-circle text-warning mr-1"></i>Pending
                                         </span>
-                                        @elseif($row->status == 2)
-                                        <span class="badge light badge-danger">
-                                            <i class="fa fa-circle text-danger mr-1"></i>Canceled
+                                        @elseif($row->status == 1)
+                                        <span class="badge light badge-info">
+                                            <i class="fa fa-circle text-info mr-1"></i>In Stock
                                         </span>
-                                        @else
+                                        @elseif($row->status == 2 || $row->status == 3)
+                                        <span class="badge light badge-info">
+                                            <i class="fa fa-circle text-info mr-1"></i>In Transit
+                                        </span>
+                                        @elseif($row->status == 4)
                                         <span class="badge light badge-success">
                                             <i class="fa fa-circle text-success mr-1"></i>Successful
                                         </span>
+                                        @else
+                                        <span class="badge light badge-danger">
+                                            <i class="fa fa-circle text-danger mr-1"></i>Canceled
+                                        </span>
                                         @endif
                                     </td>
-                                    <td style="width:210px">
-                                        <button type="button" class="btn btn-sm btn-success p-1 px-2" id="edit_data" data-id="{{ $row->id }}" {{$row->status !=0 ? 'disabled':''}}><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button>
-                                        <button type="button" class="btn btn-sm btn-info p-1 px-2" id="view_data" data-id="{{ $row->id }}"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</button>
+                                    <td class="d-flex justify-content-end">
+                                        @if($row->status == 0)
+                                        <button type="button" class="btn btn-sm btn-success p-1 px-2 m-1" id="edit_data" data-id="{{ $row->id }}" {{$row->status !=0 ? 'disabled':''}} style="width:75px"><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button>
+                                        @elseif($row->status == 2 || $row->status == 3)
+                                        <div>
+                                            <form action="{{route('store_transfer.receive', $row->id)}}" method="post">
+                                                <button type="submit" class="btn btn-sm btn-secondary p-1 px-2 m-1" {{$checkStock != 0 ? '' : 'disabled'}} style="width:92px"><i class="fa fa-random"></i></i><span class="btn-icon-add"></span>Receive</button>
+                                                @csrf
+                                                @method('PATCH')
+                                            </form>
+                                        </div>
+                                        @endif
+                                        <button type="button" class="btn btn-sm btn-info p-1 px-2 m-1" id="view_data" data-id="{{ $row->id }}" style="width:75px"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</button>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -208,7 +236,7 @@
         $("#vat").prop("disabled", false);
         $("#tax").prop("disabled", false);
         $('#remarks').prop("disabled", false);
-        $('#mast_work_station_id').prop("disabled", false);
+        $('#from_store_id').prop("disabled", false);
         $('#mast_work_station_id').html(getWorkStation);
 
         $(".modal-title").html('@if($type == 1) Add AC Requsition @elseif($type == 2) Add AC Spare Parts Requsition @else Add Car Spare Parts Requsition @endif');
@@ -276,7 +304,7 @@
                         else if(add_mastRow.status == 2)
                             row += '<span class="badge light badge-danger"><i class="fa fa-circle text-danger mr-1"></i>Canceled</span>';
                         row += '</td>';
-                        row += '<td style="width:210px"><button type="button" class="btn btn-sm btn-success p-1 px-2 mr-1" id="edit_data" data-id="'+add_mastRow.id+'"><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button><button type="button" class="btn btn-sm btn-info p-1 px-2" id="view_data" data-id="'+add_mastRow.id+'"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</button></td>';
+                        row += '<td  class="d-flex justify-content-end"><button type="button" class="btn btn-sm btn-success p-1 px-2 m-1" id="edit_data" data-id="'+add_mastRow.id+'"><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button><button type="button" class="btn btn-sm btn-info p-1 px-2 m-1" id="view_data" data-id="'+add_mastRow.id+'"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</button></td>';
 
                         if($("#storeTransferId").val()){
                             $("#row_master_table_" + add_mastRow.id).replaceWith(row);

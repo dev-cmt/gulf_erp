@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Models\Master\MastItemCategory;
 use App\Models\Master\MastItemGroup;
 use App\Models\Master\MastItemRegister;
@@ -14,6 +15,7 @@ use App\Models\Master\MastWorkStation;
 use App\Models\Master\MastCustomerType;
 use App\Models\Inventory\StoreTransfer;
 use App\Models\Inventory\StoreTransferDetails;
+use App\Models\SlMovement;
 use App\Helpers\Helper;
 
 class StoreTransferController extends Controller
@@ -49,7 +51,7 @@ class StoreTransferController extends Controller
         }
         $transferStore->inv_date = $request->inv_date;
         $transferStore->remarks = $request->remarks;
-        $transferStore->status = 0; // 1 => Approve || 2 => Cancel || 3 => ReceiveDone
+        $transferStore->status = 0; // Pendding => 0 || In Stock => 1 || In Transit => Parsial->2, 3 || Receive => 4 || Cencel => 5
         $transferStore->mast_item_category_id = $type;
         $transferStore->from_store_id = $request->from_store_id;
         $transferStore->mast_work_station_id = $request->mast_work_station_id;
@@ -177,7 +179,7 @@ class StoreTransferController extends Controller
     public function approve($id)
     {
         $data = StoreTransfer::findOrFail($id);
-        $data->status = 1;
+        $data->status = 1; // Pendding => 0 || In Stock => 1 || In Transit => Parsial->2, 3 || Receive => 4 || Cencel => 5
         $data->save();
 
         $notification=array('messege'=>'Approve successfully!','alert-type'=>'success');
@@ -186,12 +188,47 @@ class StoreTransferController extends Controller
 
     public function decline($id){
         $data = StoreTransfer::findOrFail($id);
-        $data->status = 2;
+        $data->status = 5; // Pendding => 0 || In Stock => 1 || In Transit => Parsial->2, 3 || Receive => 4 || Cencel => 5
         $data->save();
 
         $notification=array('messege'=>'Canceled successfully!','alert-type'=>'success');
         return redirect()->back()->with($notification);
     }
+    public function receive($id){
+        DB::beginTransaction();
+        try {
+            $deliveryCheck = SlMovement::where('reference_id', $id)->where('reference_type_id', 3)->count();
+        
+            //--- Store Transfer Update Status
+            $data = StoreTransfer::findOrFail($id);
+
+            $qty = 0;
+            foreach ($data->storeTransferDetails as $key => $value) {
+                $qty += $value->qty;
+            }
+
+            if($deliveryCheck == $qty){
+                $data->status = 4;
+            }
+            $data->save();
+        
+            // Update the status of SlMovement objects
+            $dataUpdate = SlMovement::where('reference_id', $id)->where('reference_type_id', 3)->get();
+
+            foreach ($dataUpdate as $item) {
+                $item->status = 1;
+                $item->save();
+            }
+
+            DB::commit();
+            $notification = array('message' => 'Canceled successfully!', 'alert-type' => 'success');
+            return redirect()->back()->with($notification);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'An error occurred while saving data: ' . $e->getMessage());
+        }
+    }
+    
     /*=====================================
      *   Ajax Call Data Change
      *=====================================

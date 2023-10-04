@@ -104,7 +104,7 @@
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Delivery</a>
                             <ul aria-expanded="false">
                                 <li><a href="{{route('sales-delivery.index')}}">Sales Delivery</a></li>
-                                <li><a href="{{ route('requstion-delivery.index')}}">Requisition Delivery</a></li>
+                                <li><a href="{{ route('store-delivery.index')}}">Store Delivery</a></li>
                             </ul>
                         </li>
                         <!-- <li><a href="#">Stock Update</a></li> -->
@@ -113,7 +113,7 @@
                             <ul aria-expanded="false">
                                 <li><a href="{{route('parsial-purchase-details')}}">Purchase Received</a></li>
                                 <li><a href="{{route('parsial-sales-details')}}">Sales Delivery</a></li>
-                                <li><a href="{{ route('parsial-requstion-parsial')}}">Requisition Delivery</a></li>
+                                <li><a href="{{ route('parsial-store-delivery')}}">Store Delivery</a></li>
                             </ul>
                         </li>
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Data Setting</a>

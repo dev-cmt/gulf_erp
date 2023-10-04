@@ -4,7 +4,7 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title">Requstion Delivery Details</h4>
-                    <a href="{{ route('requstion-delivery.index') }}" class="btn btn-sm btn-primary"><i class="fa fa-reply"></i><span class="btn-icon-add"></span>Back</a>
+                    <a href="{{ route('store-delivery.index') }}" class="btn btn-sm btn-primary"><i class="fa fa-reply"></i><span class="btn-icon-add"></span>Back</a>
                 </div>
 
                 <div class="card-body pt-2">
@@ -109,7 +109,7 @@
                     <h5 class="modal-title">Add New Delivery </h5>
                     <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                 </div>
-                <form class="form-valide" data-action="{{ route('requstion-delivery.store') }}" method="POST" enctype="multipart/form-data" id="add-user-form">
+                <form class="form-valide" data-action="{{ route('store-delivery.store') }}" method="POST" enctype="multipart/form-data" id="add-user-form">
                     @csrf
                     <div class="modal-body py-2">
                         <div class="row" id="main-row-data">
@@ -177,7 +177,7 @@
                             <input type="hidden" id="itemRegisterId" name="item_register_id">
                             <input type="hidden" id="storeTransferId" name="store_transfer_id">
                             <input type="hidden" id="storeTransferDetailsId" name="store_transfer_details_id">
-                            <input type="hidden" id="fromStoreId" name="mast_work_station_id">
+                            <input type="hidden" id="toStoreId" name="mast_work_station_id">
                         </div>
 
                         <div class="row">
@@ -235,7 +235,7 @@
                 $('#getPartNo').html(response.part_no);
                 $('#storeTransferId').val(response.store_transfer_id);
                 $('#storeTransferDetailsId').val(response.id);
-                $("#fromStoreId").val(response.from_store_id);
+                $("#toStoreId").val(response.mast_work_station_id);
 
                 var storeId = $("#invCheckItem").val();
                 getSlNo(response.item_register_id, storeId);
