@@ -51,7 +51,7 @@ class StoreTransferController extends Controller
         }
         $transferStore->inv_date = $request->inv_date;
         $transferStore->remarks = $request->remarks;
-        $transferStore->status = 0; // Pendding => 0 || In Stock => 1 || In Transit => Parsial->2, 3 || Receive => 4 || Cencel => 5
+        $transferStore->status = 0; // Pendding => 0 || In Stock => 1 || In Transit => Parsial-> 2, 3 || Receive => 4 || Cencel => 5
         $transferStore->mast_item_category_id = $type;
         $transferStore->from_store_id = $request->from_store_id;
         $transferStore->mast_work_station_id = $request->mast_work_station_id;
