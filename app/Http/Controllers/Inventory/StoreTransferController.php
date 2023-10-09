@@ -198,10 +198,8 @@ class StoreTransferController extends Controller
         DB::beginTransaction();
         try {
             $deliveryCheck = SlMovement::where('reference_id', $id)->where('reference_type_id', 3)->count();
-        
             //--- Store Transfer Update Status
             $data = StoreTransfer::findOrFail($id);
-
             $qty = 0;
             foreach ($data->storeTransferDetails as $key => $value) {
                 $qty += $value->qty;
@@ -214,7 +212,6 @@ class StoreTransferController extends Controller
         
             // Update the status of SlMovement objects
             $dataUpdate = SlMovement::where('reference_id', $id)->where('reference_type_id', 3)->get();
-
             foreach ($dataUpdate as $item) {
                 $item->status = 1;
                 $item->save();

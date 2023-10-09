@@ -32,16 +32,25 @@
                                 @php
                                     $total = 0;
                                     $qty = 0;
+                                    $rec = 0;
                                     $item = 0;
                                     foreach ($row->storeTransferDetails as $key => $value) {
                                         $total += $value->qty * $value->price;
                                         $qty += $value->qty;
+                                        $rec += $value->deli_qty;
                                         $item += 1;
                                     }
 
                                     $slMovement = DB::table('sl_movements')->where('reference_id', $row->id)->where('reference_type_id', 3);
-                                    $checkStock = $slMovement->where('status', 0)->count();
-                                    $checkDelivery = $slMovement->count();
+                                    $checkStockQuery = clone $slMovement;
+                                    $checkDeliveryQuery = clone $slMovement;
+
+                                    $checkStock = $checkStockQuery->where('status', 0)->count();
+                                    $checkDelivery = $checkDeliveryQuery->where('sl_movements.status', 1)
+                                    ->join('mast_item_registers', 'mast_item_registers.id', 'sl_movements.mast_item_register_id')
+                                    ->join('mast_item_groups', 'mast_item_groups.id', 'mast_item_registers.mast_item_group_id')
+                                    ->select('sl_movements.*', 'mast_item_registers.part_no', 'mast_item_groups.part_name')
+                                    ->get();
 
                                 @endphp
 
@@ -51,7 +60,7 @@
                                     <td>{{$row->inv_date}}</td>
                                     <td>{{$row->fromWorkStation->store_name ?? 'NULL'}}</td>
                                     <td>{{$row->mastItemCategory->cat_name ?? 'NULL'}}</td>
-                                    <td>{{$qty }} / {{$checkDelivery}} / {{$checkStock}}</td>
+                                    <td>{{$qty }} / {{$rec}}</td>
                                     <td>@if($row->status == 0)
                                         <span class="badge light badge-warning">
                                             <i class="fa fa-circle text-warning mr-1"></i>Pending
@@ -78,16 +87,68 @@
                                         @if($row->status == 0)
                                         <button type="button" class="btn btn-sm btn-success p-1 px-2 m-1" id="edit_data" data-id="{{ $row->id }}" {{$row->status !=0 ? 'disabled':''}} style="width:75px"><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button>
                                         @elseif($row->status == 2 || $row->status == 3)
-                                        <div>
-                                            <form action="{{route('store_transfer.receive', $row->id)}}" method="post">
-                                                <button type="submit" class="btn btn-sm btn-secondary p-1 px-2 m-1" {{$checkStock != 0 ? '' : 'disabled'}} style="width:92px"><i class="fa fa-random"></i></i><span class="btn-icon-add"></span>Receive</button>
-                                                @csrf
-                                                @method('PATCH')
-                                            </form>
-                                        </div>
+                                        <button type="button" class="btn btn-sm btn-secondary p-1 px-2 m-1"data-toggle="modal" data-target="#exampleModalCenter" style="width:92px;position: relative;"><i class="fa fa-random"></i></i><span class="btn-icon-add"></span>Receive 
+                                            @if ($checkStock != 0)
+                                            <span style="position: absolute; background: #ff0000; border-radius: 100%; width: 20px; top: -10px; left:-10px">{{$checkStock}}</span>
+                                            @endif
+                                        </button>
                                         @endif
                                         <button type="button" class="btn btn-sm btn-info p-1 px-2 m-1" id="view_data" data-id="{{ $row->id }}" style="width:75px"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</button>
+                                    
+                                    
+                                    <!-- Modal -->
+                                        <div class="modal fade" id="exampleModalCenter">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Item Receive History</h5>
+                                                        <button type="button" class="close" data-dismiss="modal"><span>&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body p-0">
+                                                         <!--=====//Table//=====-->
+                                                        <div class="table-responsive">
+                                                            <table class="table table-bordered mb-0">
+                                                                <thead class="thead-light">
+                                                                    <tr>
+                                                                        <th width="35%">Part Name</th>
+                                                                        <th width="35%">Part No.</th>
+                                                                        <th width="30%">Serial No.</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @foreach ($checkDelivery as $value)
+                                                                        <tr>
+                                                                            <td>{{ $value->part_name }}</td>
+                                                                            <td>{{ $value->part_no }}</td>
+                                                                            <td>{{ $value->serial_no }}</td>
+                                                                        </tr>
+                                                                    @endforeach
+
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-danger light" data-dismiss="modal">Close</button>
+                                                        @if($row->status == 2 || $row->status == 3)
+                                                        <div>
+                                                            <form action="{{route('store_transfer.receive', $row->id)}}" method="post">
+                                                                <button type="submit" class="btn btn-primary" {{$checkStock != 0 ? '' : 'disabled'}}>Receive Item</button>
+                                                                @csrf
+                                                                @method('PATCH')
+                                                            </form>
+                                                        </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    
                                     </td>
+
+                                    
+                                    
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -767,9 +828,3 @@
         }
     @endif
 </script>
-
-
-
-
-
-
