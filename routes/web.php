@@ -11,10 +11,11 @@ use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\Admin\BackViewController;
 use App\Http\Controllers\Admin\InfoEmployeeController;
 use App\Http\Controllers\Admin\LeaveApplicationController;
-use App\Http\Controllers\Admin\ManualAttendanceController;
+use App\Http\Controllers\Admin\AttendanceController;
 //--Inventory
 use App\Http\Controllers\Inventory\PurchaseController;
 use App\Http\Controllers\Inventory\StoreTransferController;
+use App\Http\Controllers\Inventory\StockPositionController;
 //--Sales
 use App\Http\Controllers\Sales\SalesQuotationController;
 use App\Http\Controllers\Sales\SalesController;
@@ -51,9 +52,9 @@ use App\Http\Controllers\Master\MastTechnicianController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/', function () {
-    return view('auth.login');
-});
+// Route::get('/', function () {
+//     return view('auth.login');
+// });
 
 //==================// Location //==================//
 Route::get('/location', [LocationController::class, 'index'])->name('location');
@@ -64,7 +65,7 @@ Route::get('/get-thana', [LocationController::class, 'getThanas'])->name('get_th
 
 //____________________// START \\_________________//
 Route::middleware([ 'auth:sanctum','verified', config('jetstream.auth_session')])->group(function () {
-    Route::get('/dashboard', [BackViewController::class, 'dashboard'])->name('dashboard')->middleware('auth');
+    Route::get('/', [BackViewController::class, 'dashboard'])->name('dashboard')->middleware('auth');
     Route::get('/coming_soon', [BackViewController::class, 'coming_soon'])->name('coming_soon')->middleware('auth');
     Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class);
@@ -120,20 +121,20 @@ Route::group(['middleware' => ['auth']], function(){
      * HR & ADMIN => Attendances
      * ______________________________________________________________________________________________
      */
-    // Route::resource('manual_attendances', ManualAttendanceController::class);
-    Route::get('manual_attendances/index', [ManualAttendanceController::class, 'index'])->name('manual_attendances.index');
-    Route::post('manual_attendances/store', [ManualAttendanceController::class, 'store'])->name('manual_attendances.store');
-    Route::post('attendances/attendanceId_store', [ManualAttendanceController::class, 'setUpAttendanceID'])->name('setup-attendance-store');
-    Route::get('attendance/approve_list', [ManualAttendanceController::class, 'attendance_approve_list'])->name('attendance_approve.create');
-    Route::PATCH('attendance/approve/{id}', [ManualAttendanceController::class, 'attendance_approve'])->name('attendance.approve');
-    Route::PATCH('attendance/canceled/{id}', [ManualAttendanceController::class, 'decline'])->name('attendance.canceled');
-    Route::get('get/get_attendance_repot/{id}', [ManualAttendanceController::class,'getAttendanceRepot'])->name('get_attendance_repot');
-    Route::get('get/attendance/filter', [ManualAttendanceController::class, 'filterDate'])->name('get-attendance-filter');
+    // Route::resource('manual_attendances', AttendanceController::class);
+    Route::get('manual_attendances/index', [AttendanceController::class, 'index'])->name('manual_attendances.index');
+    Route::post('manual_attendances/store', [AttendanceController::class, 'store'])->name('manual_attendances.store');
+    Route::post('attendances/attendanceId_store', [AttendanceController::class, 'setUpAttendanceID'])->name('setup-attendance-store');
+    Route::get('attendance/approve_list', [AttendanceController::class, 'attendance_approve_list'])->name('attendance_approve.create');
+    Route::PATCH('attendance/approve/{id}', [AttendanceController::class, 'attendance_approve'])->name('attendance.approve');
+    Route::PATCH('attendance/canceled/{id}', [AttendanceController::class, 'decline'])->name('attendance.canceled');
+    Route::get('get/get_attendance_repot/{id}', [AttendanceController::class,'getAttendanceRepot'])->name('get_attendance_repot');
+    Route::get('get/attendance/filter', [AttendanceController::class, 'filterDate'])->name('get-attendance-filter');
 
     //--Attendances Imports or Exports Excel
-    Route::get('attendance/import', [ManualAttendanceController::class, 'importAttendance'])->name('attendance.import');
-    Route::post('attendance/upload', [ManualAttendanceController::class, 'uploadAttendance'])->name('attendance.upload');    
-    Route::get('attendance/export', [ManualAttendanceController::class, 'exportAttendance'])->name('attendance.export'); 
+    Route::get('attendance/import', [AttendanceController::class, 'importAttendance'])->name('attendance.import');
+    Route::post('attendance/upload', [AttendanceController::class, 'uploadAttendance'])->name('attendance.upload');    
+    Route::get('attendance/export', [AttendanceController::class, 'exportAttendance'])->name('attendance.export'); 
     
     /**______________________________________________________________________________________________
      * Inventory => GRN
@@ -203,6 +204,12 @@ Route::group(['middleware' => ['auth']], function(){
     Route::PATCH('store/transfer/canceled/{id}', [StoreTransferController::class, 'decline'])->name('store_transfer.canceled');
     Route::PATCH('store/transfer/receive/{id}', [StoreTransferController::class, 'receive'])->name('store_transfer.receive');
     Route::get('get/store-transfer/approve/details', [StoreTransferController::class, 'getStoreTransferApproveDetails'])->name('get_store_transfer_approve_details');
+    /**______________________________________________________________________________________________
+     * Inventory => Stock Position
+     * ______________________________________________________________________________________________
+     */
+     Route::get('stock-position/index',[StockPositionController::class,'index'])->name('stock-position.index');
+
     /**______________________________________________________________________________________________
      * Inventory => Reports
      * ______________________________________________________________________________________________

@@ -598,6 +598,8 @@
                     total += subtotal;
                 });
                 $('#total').text(total.toFixed(2));
+
+                $('#edit_add_show').hide();
             }
         }
     

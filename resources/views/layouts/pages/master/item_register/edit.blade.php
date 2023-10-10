@@ -72,6 +72,40 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <div class="row">
+                                        <label for="" class="col-md-4 col-form-label">Box Quantity
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="col-md-8">
+                                            <input type="number" class="form-control @error('box_qty') is-invalid @enderror" name="box_qty" id="box_qty" value="{{$data->box_qty}}" required>
+                                            @error('box_qty')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label for="" class="col-md-4 col-form-label">Item Category
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="col-md-8">
+                                            <select class="form-control dropdwon_select" name="mast_item_category_id" id="productName" required>
+                                                <option value="" selected disabled>-- Select Category --</option>
+                                                <option value="1" {{$data->mast_item_category_id == 1 ? 'selected' : '' }}>AC</option>
+                                                <option value="2" {{$data->mast_item_category_id == 2 ? 'selected' : '' }}>AC Spare parts</option>
+                                                <option value="3" {{$data->mast_item_category_id == 3 ? 'selected' : '' }}>Car spare parts</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <div class="row">
                                         <label for="" class="col-md-4 col-form-label">Part Name
                                             <span class="text-danger">*</span>
                                         </label>

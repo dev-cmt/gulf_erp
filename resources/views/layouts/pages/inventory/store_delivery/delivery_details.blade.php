@@ -37,10 +37,8 @@
                                 <th>Category</th>
                                 <th>Group Name</th>
                                 <th>Part No.</th>
-                                <th>Price</th>
                                 <th>Qty</th>
                                 <th>Deli. Qty</th>
-                                <th>Total</th>
                                 <th class="text-right">Action</th>
                             </tr>
                             </thead>
@@ -51,10 +49,8 @@
                                     <td>{{$row->cat_name}}</td>
                                     <td>{{$row->part_name}}</td>
                                     <td>{{$row->part_no}}</td>
-                                    <td>{{$row->price}}</td>
                                     <td>{{$row->qty}}</td>
                                     <td>{{$row->deli_qty ?? '0' }}</td>
-                                    <td>{{$row->qty * $row->price}}</td>
                                     <td class="text-right">
                                         @if ($row->qty == $row->deli_qty)  
                                         <span class="badge light badge-success">
@@ -62,7 +58,7 @@
                                         </span>
                                         @else
                                             <button type="button" class="btn btn-sm btn-success p-1 px-2" id="edit_data" data-id="{{ $row->id }}"><i class="fa fa-plus"></i></i><span class="btn-icon-add"></span>Add</button>
-                                            <button type="button" class="btn btn-sm btn-primary p-1 px-2" id="upload_excel" data-id="{{ $row->id }}"><i class="fa fa-paperclip"></i></i><span class="btn-icon-add"></span>Upload</button>
+                                            {{-- <button type="button" class="btn btn-sm btn-primary p-1 px-2" id="upload_excel" data-id="{{ $row->id }}"><i class="fa fa-paperclip"></i></i><span class="btn-icon-add"></span>Upload</button> --}}
                                         @endif
                                     </td>
                                 </tr>
@@ -270,7 +266,7 @@
                 var data_sl = response.data;
                 var serial_number_dr = $('#items-table tbody').find("tr:last #serialNumber")
                 serial_number_dr.empty();
-                serial_number_dr.append('<option selected>--Select--</option>');
+                serial_number_dr.append('<option selected disabled>--Select--</option>');
                 $.each(data_sl, function(index, option) {
                     serial_number_dr.append('<option value="' + option.id + '">' + option.serial_no + '</option>');
                 });

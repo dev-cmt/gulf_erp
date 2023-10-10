@@ -22,7 +22,7 @@
                                 <th>Invoice Date</th>
                                 <th>Store Name</th>
                                 <th>Invoice Type</th>
-                                <th>Item</th>
+                                <th>Receive</th>
                                 <th>Status</th>
                                 <th class="text-right">Action</th>
                             </tr>
@@ -44,12 +44,16 @@
                                     $slMovement = DB::table('sl_movements')->where('reference_id', $row->id)->where('reference_type_id', 3);
                                     $checkStockQuery = clone $slMovement;
                                     $checkDeliveryQuery = clone $slMovement;
+                                    $checkReceiveQuery = clone $slMovement;
 
                                     $checkStock = $checkStockQuery->where('status', 0)->count();
-                                    $checkDelivery = $checkDeliveryQuery->where('sl_movements.status', 1)
+                                    $checkReceive = $checkReceiveQuery->where('status', 1)->count();
+                                    $checkDelivery = $checkDeliveryQuery
                                     ->join('mast_item_registers', 'mast_item_registers.id', 'sl_movements.mast_item_register_id')
                                     ->join('mast_item_groups', 'mast_item_groups.id', 'mast_item_registers.mast_item_group_id')
                                     ->select('sl_movements.*', 'mast_item_registers.part_no', 'mast_item_groups.part_name')
+                                    ->orderByRaw('CASE WHEN sl_movements.status = 1 THEN 0 ELSE 1 END, sl_movements.status ASC')
+                                    ->orderBy('mast_item_registers.part_no', 'asc')
                                     ->get();
 
                                 @endphp
@@ -60,7 +64,7 @@
                                     <td>{{$row->inv_date}}</td>
                                     <td>{{$row->fromWorkStation->store_name ?? 'NULL'}}</td>
                                     <td>{{$row->mastItemCategory->cat_name ?? 'NULL'}}</td>
-                                    <td>{{$qty }} / {{$rec}}</td>
+                                    <td>{{$qty }} / {{$checkReceive}}</td>
                                     <td>@if($row->status == 0)
                                         <span class="badge light badge-warning">
                                             <i class="fa fa-circle text-warning mr-1"></i>Pending
@@ -87,7 +91,7 @@
                                         @if($row->status == 0)
                                         <button type="button" class="btn btn-sm btn-success p-1 px-2 m-1" id="edit_data" data-id="{{ $row->id }}" {{$row->status !=0 ? 'disabled':''}} style="width:75px"><i class="fa fa-pencil"></i></i><span class="btn-icon-add"></span>Edit</button>
                                         @elseif($row->status == 2 || $row->status == 3)
-                                        <button type="button" class="btn btn-sm btn-secondary p-1 px-2 m-1"data-toggle="modal" data-target="#exampleModalCenter" style="width:92px;position: relative;"><i class="fa fa-random"></i></i><span class="btn-icon-add"></span>Receive 
+                                        <button type="button" class="btn btn-sm btn-secondary p-1 px-2 m-1" data-toggle="modal" data-target="#exampleModalCenter{{ $key }}" style="width:92px;position: relative;"><i class="fa fa-random"></i></i><span class="btn-icon-add"></span>Receive 
                                             @if ($checkStock != 0)
                                             <span style="position: absolute; background: #ff0000; border-radius: 100%; width: 20px; top: -10px; left:-10px">{{$checkStock}}</span>
                                             @endif
@@ -96,8 +100,8 @@
                                         <button type="button" class="btn btn-sm btn-info p-1 px-2 m-1" id="view_data" data-id="{{ $row->id }}" style="width:75px"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</button>
                                     
                                     
-                                    <!-- Modal -->
-                                        <div class="modal fade" id="exampleModalCenter">
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="exampleModalCenter{{ $key }}">
                                             <div class="modal-dialog modal-dialog-centered" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
@@ -112,8 +116,9 @@
                                                                 <thead class="thead-light">
                                                                     <tr>
                                                                         <th width="35%">Part Name</th>
-                                                                        <th width="35%">Part No.</th>
-                                                                        <th width="30%">Serial No.</th>
+                                                                        <th width="30%">Part No.</th>
+                                                                        <th width="20%">Serial No.</th>
+                                                                        <th width="15%">Status</th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
@@ -122,6 +127,17 @@
                                                                             <td>{{ $value->part_name }}</td>
                                                                             <td>{{ $value->part_no }}</td>
                                                                             <td>{{ $value->serial_no }}</td>
+                                                                            <td>
+                                                                                @if($value->status == 0)
+                                                                                <span class="badge light badge-warning">
+                                                                                    <i class="fa fa-circle text-warning mr-1"></i>Pending
+                                                                                </span>
+                                                                                @elseif($value->status == 1)
+                                                                                <span class="badge light badge-success">
+                                                                                    <i class="fa fa-circle text-success mr-1"></i>Received
+                                                                                </span>
+                                                                                @endif
+                                                                            </td>
                                                                         </tr>
                                                                     @endforeach
 
@@ -356,7 +372,7 @@
                         row += '<td>' + add_mastRow.inv_date + '</td>';
                         row += '<td>' + response.mastWorkStation.store_name + '</td>';
                         row += '<td>' + response.mastItemCategory.cat_name + '</td>';
-                        row += '<td>' + response.qty + '</td>';
+                        row += '<td>' + response.qty + ' / 0 </td>';
                         row += '<td>';
                         if(add_mastRow.status == 0)
                             row += '<span class="badge light badge-warning"><i class="fa fa-circle text-warning mr-1"></i>Pending</span>';
@@ -566,6 +582,8 @@
                 total += subtotal;
             });
             $('#total').text(total.toFixed(2));
+            
+            $('#edit_add_show').hide();
         }
     }
 

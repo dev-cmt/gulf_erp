@@ -108,7 +108,7 @@
                             </ul>
                         </li>
                         <!-- <li><a href="#">Stock Update</a></li> -->
-                        <li><a href="#">Stock Position</a></li>
+                        <li><a href="{{route('stock-position.index')}}">Stock Position</a></li>
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Reports</a>
                             <ul aria-expanded="false">
                                 <li><a href="{{route('parsial-purchase-details')}}">Purchase Received</a></li>

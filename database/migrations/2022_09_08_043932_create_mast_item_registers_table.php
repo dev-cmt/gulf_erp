@@ -22,10 +22,10 @@ return new class extends Migration
             $table->decimal('price')->nullable();
             $table->string('image')->nullable();
             $table->integer('warranty')->nullable();
-            $table->integer('cat_id')->nullable();
             $table->string('bar_code')->nullable();
             $table->text('description')->nullable();
 
+            $table->unsignedBigInteger('mast_item_category_id')->nullable();
             $table->unsignedBigInteger('mast_item_group_id');
             $table->foreign('mast_item_group_id')->references('id')->on('mast_item_groups')->onDelete('cascade');
             $table->unsignedBigInteger('unit_id');

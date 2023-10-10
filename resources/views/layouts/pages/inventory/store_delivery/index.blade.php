@@ -3,8 +3,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Requstion Delivery (<span class="text-success">New</span>)</h4>
-                    <a href="#" class="btn btn-sm btn-secondary p-1 px-2"><i class="fa fa-print"></i></i><span class="btn-icon-add"></span>Print</a>
+                    <h4 class="card-title">Store Transfer Delivery (<span class="text-success">New</span>)</h4>
                 </div>
 
                 <div class="card-body">
@@ -59,7 +58,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Requstion Delivery (<span class="text-warning">Parsial</span>)</h4>
+                    <h4 class="card-title">Store Transfer (<span class="text-warning">Parsial</span>)</h4>
                 </div>
 
                 <div class="card-body">
@@ -117,7 +116,7 @@
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Requstion Details</h5>
+                            <h5 class="modal-title">Store Transfer Details</h5>
                             <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                         </div>
                         <div class="card-body pt-2">

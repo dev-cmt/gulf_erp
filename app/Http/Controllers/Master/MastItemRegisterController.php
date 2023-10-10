@@ -102,6 +102,7 @@ class MastItemRegisterController extends Controller
         $data->warranty = $request->warranty;
         $data->price = $request->price;
         $data->unit_id = $request->unit_id;
+        $data->mast_item_category_id = $request->mast_item_category_id;
         $data->mast_item_group_id = $request->mast_item_group_id;
         $data->user_id = Auth::user()->id;
         $data->bar_code = $number;
@@ -211,6 +212,7 @@ class MastItemRegisterController extends Controller
         $data->price = $request->price;
         $data->warranty = $request->warranty;
         $data->unit_id = $request->unit_id;
+        $data->mast_item_category_id = $request->mast_item_category_id;
         $data->mast_item_group_id = $request->mast_item_group_id;
         $data->user_id = Auth::user()->id;
         $data->save();

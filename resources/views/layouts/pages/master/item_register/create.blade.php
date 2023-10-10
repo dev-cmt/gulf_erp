@@ -94,8 +94,8 @@
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <div class="col-md-8">
-                                                <select class="form-control dropdwon_select" name="" id="productName" required>
-                                                    <option value="" selected disabled>Please Select product Name</option>
+                                                <select class="form-control dropdwon_select" name="mast_item_category_id" id="productName" required>
+                                                    <option value="" selected disabled>-- Select Category --</option>
                                                     <option value="1">AC</option>
                                                     <option value="2">AC Spare parts</option>
                                                     <option value="3">Car spare parts</option>
@@ -124,7 +124,7 @@
                                             </label>
                                             <div class="col-md-8">
                                                 <select class="form-control dropdwon_select" name="unit_id" required>
-                                                    <option value="" selected disabled>Please Select Unit Name</option>
+                                                    <option value="" selected disabled>-- Select --</option>
                                                     @foreach ($unit as $row)
                                                         <option value="{{$row->id}}"{{ old('unit_id') == $row->id ? 'selected' : '' }}>{{ $row->unit_name}}</option>
                                                      @endforeach
@@ -231,7 +231,6 @@
     @push('script')
     <script type="text/javascript">
         $(document).on('change','#productName',function () {
-            alert('productId');
             var productId = $(this).val();
             $.ajax({
                 url:'{{route('get-part-name')}}',

@@ -3,7 +3,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Reqution Store Transfer Approve</h4>
+                    <h4 class="card-title">Store Transfer Approve</h4>
                 </div>
 
                 <div class="card-body">
@@ -58,7 +58,7 @@
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Purchase Details</h5>
+                            <h5 class="modal-title">Store Transfer Details</h5>
                             <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                         </div>
                         <div class="card-body pt-2">

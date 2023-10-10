@@ -4,7 +4,6 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title">Sales Delivery (<span class="text-success">New</span>)</h4>
-                    <a href="#" class="btn btn-sm btn-secondary p-1 px-2"><i class="fa fa-print"></i></i><span class="btn-icon-add"></span>Print</a>
                 </div>
 
                 <div class="card-body">

@@ -8,6 +8,26 @@ use App\Models\Master\Designation;
 use DB;
 class DesignationController extends Controller
 {
+    public function yourControllerMethod()
+    {
+        DB::beginTransaction();
+
+        try {
+            // Commit the transaction if everything is successful
+            DB::commit();
+
+            return 'Cash transaction successful';
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            \Log::error('Cash transaction error: ' . $e->getMessage());
+            return 'An error occurred during the cash transaction: ' . $e->getMessage();
+        }
+    }
+
+
+
+
     public function _index()
     {
         // $data=DB::table('subcategories')
