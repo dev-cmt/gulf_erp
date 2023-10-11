@@ -15,7 +15,7 @@
                             <thead>
                                 <tr>
                                     <th>SL No</th>
-                                    <th>Working Station Name</th>
+                                    <th>Station Name</th>
                                     <th>Contact Number</th>
                                     <th>Location</th>
                                     <th>Description</th>
@@ -24,17 +24,17 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($station as $data)
+                                @foreach($data as $item)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>										
-                                    <td>{{ $data->working_station_name }}</td>										
-                                    <td>{{ $data->contact_number }}</td>										
-                                    <td>{{ $data->location }}</td>										
-                                    <td>{{ $data->description }}</td>										
-                                    <td>{{ $data->status == 1 ? 'active' : 'inactive'  }}</td>																			
+                                    <td>{{ $item->store_name }}</td>										
+                                    <td>{{ $item->contact_number }}</td>										
+                                    <td>{{ $item->location }}</td>										
+                                    <td><span  class="description_2">{{ $item->description }}</span> </td>										
+                                    <td>{{ $item->status == 1 ? 'Active' : 'Inactive'  }}</td>																			
                                     <td class="float-right">                                
-                                        <a href="{{ route('mast_working_station.edit', $data->id) }}" class="btn btn-success btn-sm">Edit</a>
-                                        <a href="{{ route('mast_working_station.show', $data->id) }}" class="btn btn-info btn-sm">View</a>                                                              
+                                        <a href="{{ route('mast_working_station.edit', $item->id) }}" class="btn btn-success btn-sm m-1">Edit</a>
+                                        <a href="{{ route('mast_working_station.show', $item->id) }}" class="btn btn-info btn-sm  m-1">View</a>                                                              
                                     </td>
                                 </tr>
                                 @endforeach

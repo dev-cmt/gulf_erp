@@ -14,7 +14,9 @@
     <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Roboto:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Roboto:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+        rel="stylesheet">
 
     <!-- Vendor CSS Files -->
     <link href="assets/vendor/animate.css/animate.min.css" rel="stylesheet">
@@ -22,8 +24,9 @@
     <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
     <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
     <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
-    <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <!-- <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet"> -->
 
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css'>
     <!-- Owl Carousel Assets -->
     <link href="assets/vendor/owl-carousel/owl.carousel.css" rel="stylesheet">
     <link href="assets/vendor/owl-carousel/owl.theme.css" rel="stylesheet">
@@ -42,6 +45,69 @@
     * Author: Motiur Rahman (01909302126)
     * License: https://iconisl.com/license/
     ======================================================== -->
+
+    <style>
+        .swiper-slide-active {
+            filter: blur(0px) !important;
+        }
+
+        .section-gallery {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .slider-gallery {
+            width: 300px;
+            height: 400px;
+            filter: blur(1px);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: end;
+            align-items: self-start;
+        }
+
+
+        .slider-gallery span {
+            text-transform: uppercase;
+            color: #fff;
+            background: #1b7402;
+            padding: 7px 18px 7px 25px;
+            display: inline-block;
+            border-radius: 0 20px 20px 0px;
+            letter-spacing: 2px;
+            font-size: 0.8rem;
+            font-family: "Open Sans", sans-serif;
+        }
+
+        .slider-gallery h2 {
+            color: #fff;
+            font-family: "Roboto", sans-serif;
+            font-weight: 400;
+            font-size: 1.3rem;
+            line-height: 1.4;
+            margin-bottom: 15px;
+            padding: 25px 45px 0 25px;
+        }
+
+        .slider-gallery p {
+            color: #fff;
+            font-family: "Roboto", sans-serif;
+            font-weight: 300;
+            display: flex;
+            align-items: center;
+            padding: 0 25px 35px 25px;
+        }
+
+        .slider-gallery p i {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+    </style>
 </head>
 
 <body>
@@ -112,7 +178,13 @@
         <div class="hero-container">
             <div id="heroCarousel" data-bs-interval="5000" class="carousel slide carousel-fade" data-bs-ride="carousel">
 
-                <ol class="carousel-indicators" id="hero-carousel-indicators"></ol>
+                <!-- <ol class="carousel-indicators" id="hero-carousel-indicators"></ol> -->
+                <ol class="carousel-indicators">
+                    <li data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></li>
+                    <li data-bs-target="#heroCarousel" data-bs-slide-to="1"></li>
+                    <li data-bs-target="#heroCarousel" data-bs-slide-to="2"></li>
+                    <li data-bs-target="#heroCarousel" data-bs-slide-to="3"></li>
+                </ol>
 
                 <div class="carousel-inner" role="listbox">
                     <!-- Slide 1 -->
@@ -198,6 +270,7 @@
                     <span class="carousel-control-next-icon bi bi-chevron-right" aria-hidden="true"></span>
                 </a>
 
+                
             </div>
         </div>
     </section><!-- End Hero -->
@@ -711,39 +784,45 @@
                     <div class="blog-slider__wrp swiper-wrapper">
                         <div class="blog-slider__item swiper-slide">
                             <div class="blog-slider__img">
-                                <img src="https://res.cloudinary.com/muhammederdem/image/upload/q_60/v1535759872/kuldar-kalvik-799168-unsplash.webp" alt="">
+                                <img src="https://res.cloudinary.com/muhammederdem/image/upload/q_60/v1535759872/kuldar-kalvik-799168-unsplash.webp"
+                                    alt="">
                             </div>
                             <div class="blog-slider__content">
                                 <span class="blog-slider__code">26 December 2019</span>
                                 <div class="blog-slider__title">Lorem Ipsum Dolor</div>
-                                <div class="blog-slider__text">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae voluptate repellendus magni illo ea animi? </div>
+                                <div class="blog-slider__text">Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                                    Recusandae voluptate repellendus magni illo ea animi? </div>
                                 <a href="#" class="blog-slider__button">READ MORE</a>
                             </div>
                         </div>
                         <div class="blog-slider__item swiper-slide">
                             <div class="blog-slider__img">
-                                <img src="https://res.cloudinary.com/muhammederdem/image/upload/q_60/v1535759871/jason-leung-798979-unsplash.webp" alt="">
+                                <img src="https://res.cloudinary.com/muhammederdem/image/upload/q_60/v1535759871/jason-leung-798979-unsplash.webp"
+                                    alt="">
                             </div>
                             <div class="blog-slider__content">
                                 <span class="blog-slider__code">26 December 2019</span>
                                 <div class="blog-slider__title">Lorem Ipsum Dolor2</div>
-                                <div class="blog-slider__text">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae voluptate repellendus magni illo ea animi?</div>
+                                <div class="blog-slider__text">Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                                    Recusandae voluptate repellendus magni illo ea animi?</div>
                                 <a href="#" class="blog-slider__button">READ MORE</a>
                             </div>
                         </div>
-    
+
                         <div class="blog-slider__item swiper-slide">
                             <div class="blog-slider__img">
-                                <img src="https://res.cloudinary.com/muhammederdem/image/upload/q_60/v1535759871/alessandro-capuzzi-799180-unsplash.webp" alt="">
+                                <img src="https://res.cloudinary.com/muhammederdem/image/upload/q_60/v1535759871/alessandro-capuzzi-799180-unsplash.webp"
+                                    alt="">
                             </div>
                             <div class="blog-slider__content">
                                 <span class="blog-slider__code">26 December 2019</span>
                                 <div class="blog-slider__title">Lorem Ipsum Dolor</div>
-                                <div class="blog-slider__text">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae voluptate repellendus magni illo ea animi?</div>
+                                <div class="blog-slider__text">Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                                    Recusandae voluptate repellendus magni illo ea animi?</div>
                                 <a href="#" class="blog-slider__button">READ MORE</a>
                             </div>
                         </div>
-    
+
                     </div>
                     <div class="blog-slider__pagination"></div>
                 </div>
@@ -752,58 +831,66 @@
         </section><!-- End Event Section -->
 
         <!-- ======= Gallery Section ======= -->
-        <section id="gallery" class="gallery section-bg">
-            <div class="container">
-                <div class="section-title">
-                    <h2>Our <span class="color">Gallery</span></h2>
-                    <div class="border"></div>
-                    <p>A Portfolio can show, What we do and How we solve your Problem.</p>
-                </div>
-                <!-- Gallery Slider -->
-                <div class="row">
-                    <div class="col-lg-3 col-sm-6">
-                        <div class="thumbnail-classic"><a class="thumbnail-classic-figure" data-lightgallery="item"
-                                href="assets/img/team/team-1.jpg"><img src="assets/img/team/team-1.jpg" alt="" width="480"
-                                    height="175" /></a>
-                            <div class="thumbnail-classic-caption">
-                                <h5 class="thumbnail-classic-title">Dream Village</h5>
-                                <time class="thumbnail-classic-time" datetime="2019-09-19">Sep 19, 2019</time>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-sm-6">
-                        <div class="thumbnail-classic"><a class="thumbnail-classic-figure" data-lightgallery="item"
-                                href="images/image-original-02-1200x800.jpg"><img src="images/home1-06-480x350.jpg" alt="" width="480"
-                                    height="175" /></a>
-                            <div class="thumbnail-classic-caption">
-                                <h5 class="thumbnail-classic-title">ULTRA MUSIC FESTIVAL</h5>
-                                <time class="thumbnail-classic-time" datetime="2019-09-19">Sep 19, 2019</time>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-sm-6">
-                        <div class="thumbnail-classic"><a class="thumbnail-classic-figure" data-lightgallery="item"
-                                href="images/image-original-03-1200x800.jpg"><img src="images/home1-07-480x350.jpg" alt="" width="480"
-                                    height="175" /></a>
-                            <div class="thumbnail-classic-caption">
-                                <h5 class="thumbnail-classic-title">electric Zoo</h5>
-                                <time class="thumbnail-classic-time" datetime="2019-09-19">Sep 19, 2019</time>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-sm-6">
-                        <div class="thumbnail-classic"><a class="thumbnail-classic-figure" data-lightgallery="item"
-                                href="images/image-original-04-1200x800.jpg"><img src="images/home1-08-480x350.jpg" alt="" width="480"
-                                    height="175" /></a>
-                            <div class="thumbnail-classic-caption">
-                                <h5 class="thumbnail-classic-title">life in color festival</h5>
-                                <time class="thumbnail-classic-time" datetime="2019-09-19">Sep 19, 2019</time>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- End Gallery Slider -->
+        <section id="gallery" class="gallery">
+            <div class="section-title">
+                <h2>Our <span class="color">Gallery</span></h2>
+                <div class="border"></div>
             </div>
+            
+            <!-- Gallery Slider -->
+            <div class="swiper section-gallery">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide slider-gallery" style="background: linear-gradient(to top, #0f2027, #203a4300, #2c536400),
+                url(https://images.unsplash.com/photo-1556206079-747a7a424d3d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=871&q=80)
+                    no-repeat 50% 50% / cover;">
+                        <span>domestic</span>
+                        <div>
+                            <h2>The most popular yachting destination</h2>
+                            <p><i class="bi bi-geo-alt"></i>Whitsunday Islands, Australia</p>
+                        </div>
+                    </div>
+                    <div class="swiper-slide slider-gallery" style="background: linear-gradient(to top, #0f2027, #203a4300, #2c536400),
+                url(https://images.unsplash.com/photo-1571900670723-a317a66e3fb7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=423&q=80)
+                    no-repeat 50% 50% / cover;">
+                        <span>subtropical</span>
+                        <div>
+                            <h2>The most popular yachting destination</h2>
+                            <p><i class="bi bi-geo-alt"></i>Whitsunday Islands, Australia</p>
+                        </div>
+                    </div>
+
+                    <div class="swiper-slide slider-gallery" style="background: linear-gradient(to top, #0f2027, #203a4300, #2c536400),
+                url(https://images.unsplash.com/photo-1549144511-f099e773c147?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80)
+                    no-repeat 50% 50% / cover;">
+                        <span>history</span>
+                        <div>
+                            <h2>The most popular yachting destination</h2>
+                            <p><i class="bi bi-geo-alt"></i>Whitsunday Islands, Australia</p>
+                        </div>
+                    </div>
+
+                    <div class="swiper-slide slider-gallery" style="background: linear-gradient(to top, #0f2027, #203a4300, #2c536400),
+                url(https://images.unsplash.com/photo-1650367310179-e1b5b8e453c3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80)
+                    no-repeat 50% 50% / cover;">
+                        <span>Mayans</span>
+                        <div>
+                            <h2>The most popular yachting destination</h2>
+                            <p><i class="bi bi-geo-alt"></i>Whitsunday Islands, Australia</p>
+                        </div>
+                    </div>
+
+                    <div class="swiper-slide slider-gallery" style="background: linear-gradient(to top, #0f2027, #203a4300, #2c536400),
+                url(https://images.unsplash.com/photo-1596521864207-13d46b1a0c78?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80)
+                    no-repeat 50% 50% / cover;">
+                        <span>native</span>
+                        <div>
+                            <h2>The most popular yachting destination</h2>
+                            <p><i class="bi bi-geo-alt"></i>Whitsunday Islands, Australia</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Gallery Slider -->
         </section><!-- End Gallery Section -->
 
         <!-- ======= Contact Section ======= -->
@@ -906,17 +993,19 @@
                 </div>
             </div>
         </div>
-        
+
 
         <div class="container">
             <div class="copyright">
                 &copy; Copyright <strong><span>ICON ISL</span></strong>. All Rights Reserved
             </div>
-            <div class="credits">Designed by <a href="#"><img src="assets/img/logo.png" width="50" class="p-1 rounded-1 bg-white" alt=""></a></div>
+            <div class="credits">Designed by <a href="#"><img src="assets/img/logo.png" width="50"
+                        class="p-1 rounded-1 bg-white" alt=""></a></div>
         </div>
     </footer><!-- End Footer -->
 
-    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+            class="bi bi-arrow-up-short"></i></a>
 
     <script src="assets/js/jquery-3.7.1.min.js"></script>
     <!-- Vendor JS Files -->
@@ -924,9 +1013,10 @@
     <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
     <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
-    <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+    <!-- <script src="assets/vendor/swiper/swiper-bundle.min.js"></script> -->
     <script src="assets/vendor/owl-carousel/owl.carousel.js"></script>
 
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.5/swiper-bundle.min.js'></script>
     <!-- Template JS File -->
     <script src="assets/js/gsap.min.js"></script>
     <script src="assets/js/ScrollTrigger.min.js"></script>
@@ -964,6 +1054,28 @@
             // Select the preloader element by its ID and hide it
             var preloader = document.getElementById('loading');
             preloader.style.display = 'none';
+        });
+    </script>
+
+    <script>
+        var swiper = new Swiper(".swiper", {
+            effect: "coverflow",
+            grabCursor: true,
+            centeredSlides: true,
+            slidesPerView: "auto",
+            coverflowEffect: {
+                rotate: 0,
+                stretch: 0,
+                depth: 100,
+                modifier: 2,
+                slideShadows: true
+            },
+            spaceBetween: 60,
+            loop: true,
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true
+            }
         });
     </script>
 

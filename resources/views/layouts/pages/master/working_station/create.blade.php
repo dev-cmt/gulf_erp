@@ -26,13 +26,13 @@
 
                                     <!-- this is for designation name -->
                                     <div class="form-group col">
-                                        <label class="row-lg col-form-label">Working Station Name
+                                        <label class="row-lg col-form-label">Store Name
                                             <span class="text-danger">*</span>
                                         </label>
                                         <div class="row-lg">
-                                            <input type="text" id="working_station_name" class="form-control @error('working_station_name') is-invalid @enderror" name="working_station_name" placeholder="" value="{{old('working_station_name')}}">
+                                            <input type="text" id="store_name" class="form-control @error('store_name') is-invalid @enderror" name="store_name" placeholder="" value="{{old('store_name')}}">
 
-                                            @error('working_station_name')
+                                            @error('store_name')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
@@ -82,7 +82,7 @@
                                             <span class="text-danger">*</span>
                                         </label>
                                         <div class="row-lg">
-                                            <select class="form-control" id="status" name="status">
+                                            <select class="form-control default-select" id="status" name="status">
                                                 <option value="1">Active</option>
                                                 <option value="0">Inactive</option>
                                             </select>

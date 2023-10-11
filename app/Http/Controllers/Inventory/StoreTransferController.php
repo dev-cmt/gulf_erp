@@ -107,7 +107,7 @@ class StoreTransferController extends Controller
         $qty = 0;
         foreach ($storeTransferDetails as $key => $value) {
             // $total += $value->qty * $value->price;
-            $qty += $value->qty;
+            $qty += $value->qty;  
         }
 
         return response()->json([
