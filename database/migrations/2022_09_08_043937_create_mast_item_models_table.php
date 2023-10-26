@@ -13,12 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('mast_units', function (Blueprint $table) {
+        Schema::create('mast_item_models', function (Blueprint $table) {
             $table->id();
-            $table->string('unit_name')->nullable();
-            $table->text('description')->nullable();
-            $table->unsignedBigInteger('mast_item_category_id')->nullable();
-            $table->foreign('mast_item_category_id')->references('id')->on('mast_item_categories')->onDelete('cascade');
+            $table->string('ton')->nullable();
+            $table->string('coling_capacity')->nullable();
+            $table->string('indoor')->nullable();
+            $table->string('outdoor')->nullable();
+            $table->string('full_set')->nullable();
+            $table->unsignedBigInteger('mast_item_group_id');
+            $table->foreign('mast_item_group_id')->references('id')->on('mast_item_groups')->onDelete('cascade');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->tinyInteger('status')->default(false);
@@ -33,6 +36,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mast_units');
+        Schema::dropIfExists('mast_item_models');
     }
 };

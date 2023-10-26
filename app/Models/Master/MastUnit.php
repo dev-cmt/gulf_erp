@@ -14,6 +14,6 @@ class MastUnit extends Model
         'description',
         'status',
         'user_id',
-        'cat_id'
+        'mast_item_category_id'
     ];
 }

@@ -356,183 +356,6 @@ class ImportSeeder extends Seeder
             'user_id'=>'1'
         ]);
         //____________________________________//
-        MastPackage::create([
-            'pkg_name'=>'1 X 1',
-            'pkg_size'=>'1',
-            'description'=>'',
-            'status'=>'1',
-            'user_id'=>'1'
-        ]);
-        MastPackage::create([
-            'pkg_name'=>'1 X 4',
-            'pkg_size'=>'4',
-            'description'=>'',
-            'status'=>'1',
-            'user_id'=>'1'
-        ]);
-        MastPackage::create([
-            'pkg_name'=>'1 X 6',
-            'pkg_size'=>'6',
-            'description'=>'',
-            'status'=>'1',
-            'user_id'=>'1'
-        ]);
-        MastPackage::create([
-            'pkg_name'=>'1 X 8',
-            'pkg_size'=>'8',
-            'description'=>'',
-            'status'=>'1',
-            'user_id'=>'1'
-        ]);
-        MastPackage::create([
-            'pkg_name'=>'1 X 10',
-            'pkg_size'=>'10',
-            'description'=>'',
-            'status'=>'1',
-            'user_id'=>'1'
-        ]);
-        MastPackage::create([
-            'pkg_name'=>'1 X 12',
-            'pkg_size'=>'12',
-            'description'=>'',
-            'status'=>'1',
-            'user_id'=>'1'
-        ]);
-        MastPackage::create([
-            'pkg_name'=>'1 X 16',
-            'pkg_size'=>'16',
-            'description'=>'',
-            'status'=>'1',
-            'user_id'=>'1'
-        ]);
-        MastPackage::create([
-            'pkg_name'=>'1 X 20',
-            'pkg_size'=>'20',
-            'description'=>'',
-            'status'=>'1',
-            'user_id'=>'1'
-        ]);
-        MastPackage::create([
-            'pkg_name'=>'1 X 24',
-            'pkg_size'=>'24',
-            'description'=>'',
-            'status'=>'1',
-            'user_id'=>'1'
-        ]);
-        MastPackage::create([
-            'pkg_name'=>'1 X 36',
-            'pkg_size'=>'36',
-            'description'=>'',
-            'status'=>'1',
-            'user_id'=>'1'
-        ]);
-        MastPackage::create([
-            'pkg_name'=>'1 X 48',
-            'pkg_size'=>'48',
-            'description'=>'',
-            'status'=>'1',
-            'user_id'=>'1'
-        ]);
-        //____________________________________//
-        MastUnit::create([
-            'unit_name'=>'Milligram (mg)',
-            'description'=>'Weight/Mass',
-            'status'=>'1',
-            'mast_item_category_id'=> '1',
-            'user_id'=>'1'
-        ]);
-        MastUnit::create([
-            'unit_name'=>'Gram (g)',
-            'description'=>'Weight/Mass',
-            'status'=>'1',
-            'mast_item_category_id'=> '1',
-            'user_id'=>'1'
-        ]);
-        MastUnit::create([
-            'unit_name'=>'Kilogram (kg)',
-            'description'=>'Weight/Mass',
-            'status'=>'1',
-            'mast_item_category_id'=> '1',
-            'user_id'=>'1'
-        ]);
-        MastUnit::create([
-            'unit_name'=>'Metric Ton (MT)',
-            'description'=>'Weight/Mass',
-            'status'=>'1',
-            'mast_item_category_id'=> '1',
-            'user_id'=>'1'
-        ]);
-        MastUnit::create([
-            'unit_name'=>'Ounce (oz)',
-            'description'=>'Weight/Mass',
-            'status'=>'1',
-            'mast_item_category_id'=> '1',
-            'user_id'=>'1'
-        ]);
-        MastUnit::create([
-            'unit_name'=>'Pound (lb)',
-            'description'=>'Weight/Mass',
-            'status'=>'1',
-            'mast_item_category_id'=> '1',
-            'user_id'=>'1'
-        ]);
-        MastUnit::create([
-            'unit_name'=>'Square Meter (m²)',
-            'description'=>'Area',
-            'status'=>'1',
-            'mast_item_category_id'=> '1',
-            'user_id'=>'1'
-        ]);
-        MastUnit::create([
-            'unit_name'=>'Square Foot (sq ft)',
-            'description'=>'Area',
-            'status'=>'1',
-            'mast_item_category_id'=> '1',
-            'user_id'=>'1'
-        ]);
-        MastUnit::create([
-            'unit_name'=>'Acre (ac)',
-            'description'=>'Area',
-            'status'=>'1',
-            'mast_item_category_id'=> '1',
-            'user_id'=>'1'
-        ]);
-        MastUnit::create([
-            'unit_name'=>'Square Kilometer (sq km)',
-            'description'=>'Area',
-            'status'=>'1',
-            'mast_item_category_id'=> '1',
-            'user_id'=>'1'
-        ]);
-        MastUnit::create([
-            'unit_name'=>'Piece (pcs)',
-            'description'=>'Count',
-            'status'=>'1',
-            'mast_item_category_id'=> '1',
-            'user_id'=>'1'
-        ]);
-        MastUnit::create([
-            'unit_name'=>'Dozen (doz)',
-            'description'=>'Count',
-            'status'=>'1',
-            'mast_item_category_id'=> '1',
-            'user_id'=>'1'
-        ]);
-        MastUnit::create([
-            'unit_name'=>'Pack (pk)',
-            'description'=>'Count',
-            'status'=>'1',
-            'mast_item_category_id'=> '1',
-            'user_id'=>'1'
-        ]);
-        MastUnit::create([
-            'unit_name'=>'Set (set)',
-            'description'=>'Count',
-            'status'=>'1',
-            'mast_item_category_id'=> '1',
-            'user_id'=>'1'
-        ]);
-        //____________________________________//
         MastItemCategory::create([
             'cat_name'=>'AC',
             'description'=>'',
@@ -634,6 +457,183 @@ class ImportSeeder extends Seeder
             'status'=>'1',
             'user_id'=>'1',
             'mast_item_category_id'=>'3'
+        ]);
+        //____________________________________//
+        MastPackage::create([
+            'pkg_name'=>'1 X 1',
+            'pkg_size'=>'1',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1'
+        ]);
+        MastPackage::create([
+            'pkg_name'=>'1 X 4',
+            'pkg_size'=>'4',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1'
+        ]);
+        MastPackage::create([
+            'pkg_name'=>'1 X 6',
+            'pkg_size'=>'6',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1'
+        ]);
+        MastPackage::create([
+            'pkg_name'=>'1 X 8',
+            'pkg_size'=>'8',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1'
+        ]);
+        MastPackage::create([
+            'pkg_name'=>'1 X 10',
+            'pkg_size'=>'10',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1'
+        ]);
+        MastPackage::create([
+            'pkg_name'=>'1 X 12',
+            'pkg_size'=>'12',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1'
+        ]);
+        MastPackage::create([
+            'pkg_name'=>'1 X 16',
+            'pkg_size'=>'16',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1'
+        ]);
+        MastPackage::create([
+            'pkg_name'=>'1 X 20',
+            'pkg_size'=>'20',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1'
+        ]);
+        MastPackage::create([
+            'pkg_name'=>'1 X 24',
+            'pkg_size'=>'24',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1'
+        ]);
+        MastPackage::create([
+            'pkg_name'=>'1 X 36',
+            'pkg_size'=>'36',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1'
+        ]);
+        MastPackage::create([
+            'pkg_name'=>'1 X 48',
+            'pkg_size'=>'48',
+            'description'=>'',
+            'status'=>'1',
+            'user_id'=>'1'
+        ]);
+        //____________________________________//
+        MastUnit::create([
+            'unit_name'=>'Set (set)',
+            'description'=>'Count',
+            'status'=>'1',
+            'mast_item_category_id'=> '1',
+            'user_id'=>'1'
+        ]);
+        MastUnit::create([
+            'unit_name'=>'Piece (pcs)',
+            'description'=>'Count',
+            'status'=>'1',
+            'mast_item_category_id'=> '1',
+            'user_id'=>'1'
+        ]);
+        MastUnit::create([
+            'unit_name'=>'Dozen (doz)',
+            'description'=>'Count',
+            'status'=>'2',
+            'mast_item_category_id'=> '2',
+            'user_id'=>'1'
+        ]);
+        MastUnit::create([
+            'unit_name'=>'Pack (pk)',
+            'description'=>'Count',
+            'status'=>'1',
+            'mast_item_category_id'=> '3',
+            'user_id'=>'1'
+        ]);
+        MastUnit::create([
+            'unit_name'=>'Milligram (mg)',
+            'description'=>'Weight/Mass',
+            'mast_item_category_id'=> '3',
+            'user_id'=>'1',
+            'status'=>'1',
+        ]);
+        MastUnit::create([
+            'unit_name'=>'Gram (g)',
+            'description'=>'Weight/Mass',
+            'mast_item_category_id'=> '3',
+            'user_id'=>'1',
+            'status'=>'1',
+        ]);
+        MastUnit::create([
+            'unit_name'=>'Kilogram (kg)',
+            'description'=>'Weight/Mass',
+            'mast_item_category_id'=> '2',
+            'user_id'=>'1',
+            'status'=>'1',
+        ]);
+        MastUnit::create([
+            'unit_name'=>'Metric Ton (MT)',
+            'description'=>'Weight/Mass',
+            'mast_item_category_id'=> '2',
+            'user_id'=>'1',
+            'status'=>'1',
+        ]);
+        MastUnit::create([
+            'unit_name'=>'Ounce (oz)',
+            'description'=>'Weight/Mass',
+            'mast_item_category_id'=> '2',
+            'user_id'=>'1',
+            'status'=>'1',
+        ]);
+        MastUnit::create([
+            'unit_name'=>'Pound (lb)',
+            'description'=>'Weight/Mass',
+            'mast_item_category_id'=> '2',
+            'user_id'=>'1',
+            'status'=>'1',
+        ]);
+        MastUnit::create([
+            'unit_name'=>'Square Meter (m²)',
+            'description'=>'Area',
+            'mast_item_category_id'=> '2',
+            'user_id'=>'1',
+            'status'=>'1',
+        ]);
+        MastUnit::create([
+            'unit_name'=>'Square Foot (sq ft)',
+            'description'=>'Area',
+            'mast_item_category_id'=> '3',
+            'user_id'=>'1',
+            'status'=>'1',
+        ]);
+        MastUnit::create([
+            'unit_name'=>'Acre (ac)',
+            'description'=>'Area',
+            'mast_item_category_id'=> '3',
+            'user_id'=>'1',
+            'status'=>'1',
+        ]);
+        MastUnit::create([
+            'unit_name'=>'Square Kilometer (sq km)',
+            'description'=>'Area',
+            'status'=>'1',
+            'mast_item_category_id'=> '2',
+            'user_id'=>'1'
         ]);
         //____________________________________//
         MastItemRegister::create([

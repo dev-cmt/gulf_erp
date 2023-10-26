@@ -43,7 +43,7 @@
                                     <div class="form-group col">
                                         <label class="row-lg col-form-label" for="status">Status</label>
                                         <div class="row-lg">
-                                            <select class="form-control" id="status" name="status">
+                                            <select class="form-control default-select" id="status" name="status">
                                                 <option value="1">Active</option>
                                                 <option value="0">Inactive</option>
                                             </select>

@@ -21,6 +21,108 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <div class="row">
+                                            <label for="" class="col-md-4 col-form-label">Item Category
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-md-8">
+                                                <select class="form-control dropdwon_select" name="mast_item_category_id" id="itemCategory" required>
+                                                    <option value="" selected disabled>-- Select Category --</option>
+                                                    <option value="1">AC</option>
+                                                    <option value="2">AC Spare parts</option>
+                                                    <option value="3">Car spare parts</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <label for="" class="col-md-4 col-form-label">Part Name
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-md-8">
+                                                <select class="form-control dropdwon_select" id="itemGroup" name="mast_item_group_id" required></select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 ac">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <label for="" class="col-md-4 col-form-label">Ton/Capacities</label>
+                                            <div class="col-md-8">
+                                                <select class="form-control dropdwon_select" name="mast_item_models_id" id="loadTon"></select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <label for="" class="col-md-4 col-form-label">Unit
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-md-8">
+                                                <select class="form-control dropdwon_select" id="loadUnit" name="unit_id" required></select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 ac">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <label for="" class="col-md-4 col-form-label">Type (Optional)
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-md-8">
+                                                <select class="form-control dropdwon_select" name="unit_type" id="unitType" disabled>
+                                                    <option value="" selected>-- Select --</option>
+                                                    <option value="1">Indoor</option>
+                                                    <option value="2">Outdoor</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <label for="" class="col-md-4 col-form-label">Part Number
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-md-8">
+                                                <input type="text" class="form-control @error('part_no') is-invalid @enderror" name="part_no" id="part_no" value="{{old('part_no')}}" required>
+                                                @error('part_no')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <label for="" class="col-md-4 col-form-label">Quantity
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-md-8">
+                                                <input type="number" class="form-control @error('box_qty') is-invalid @enderror" name="box_qty" id="box_qty" value="{{old('box_qty')}}" required>
+                                                @error('box_qty')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <div class="row">
                                             <label for="" class="col-md-4 col-form-label">Box Code
                                                 <span class="text-danger">*</span>
                                             </label>
@@ -44,101 +146,6 @@
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control @error('gulf_code') is-invalid @enderror" name="gulf_code" id="gulf_code" value="{{old('gulf_code')}}" min="1" required>
                                                 @error('gulf_code')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <label for="" class="col-md-4 col-form-label">Part Number
-                                                <span class="text-danger">*</span>
-                                            </label>
-                                            <div class="col-md-8">
-                                                <input type="number" class="form-control @error('part_no') is-invalid @enderror" name="part_no" id="part_no" value="{{old('part_no')}}" required>
-                                                @error('part_no')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <label for="" class="col-md-4 col-form-label">Box Quantity
-                                                <span class="text-danger">*</span>
-                                            </label>
-                                            <div class="col-md-8">
-                                                <input type="number" class="form-control @error('box_qty') is-invalid @enderror" name="box_qty" id="box_qty" value="{{old('box_qty')}}" required>
-                                                @error('box_qty')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <label for="" class="col-md-4 col-form-label">Item Category
-                                                <span class="text-danger">*</span>
-                                            </label>
-                                            <div class="col-md-8">
-                                                <select class="form-control dropdwon_select" name="mast_item_category_id" id="productName" required>
-                                                    <option value="" selected disabled>-- Select Category --</option>
-                                                    <option value="1">AC</option>
-                                                    <option value="2">AC Spare parts</option>
-                                                    <option value="3">Car spare parts</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <label for="" class="col-md-4 col-form-label">Part Name
-                                                <span class="text-danger">*</span>
-                                            </label>
-                                            <div class="col-md-8">
-                                                <select class="form-control dropdwon_select" id="loadPartName" name="mast_item_group_id" required></select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <label for="" class="col-md-4 col-form-label">Unit Type
-                                                <span class="text-danger">*</span>
-                                            </label>
-                                            <div class="col-md-8">
-                                                <select class="form-control dropdwon_select" name="unit_id" required>
-                                                    <option value="" selected disabled>-- Select --</option>
-                                                    @foreach ($unit as $row)
-                                                        <option value="{{$row->id}}"{{ old('unit_id') == $row->id ? 'selected' : '' }}>{{ $row->unit_name}}</option>
-                                                     @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div><div class="col-sm-6">
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <label for="image" class="col-md-4 col-form-label">Image</label>
-                                            <div class="col-md-8">
-                                                <input type="file" name="image" class="form-controlf @error('image') is-invalid @enderror" alt="" accept=".jpg, .jpeg, .png, .gif">
-                                                @error('image')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
@@ -201,6 +208,21 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <div class="row">
+                                            <label for="image" class="col-md-4 col-form-label">Image</label>
+                                            <div class="col-md-8">
+                                                <input type="file" name="image" class="form-controlf @error('image') is-invalid @enderror" alt="" accept=".jpg, .jpeg, .png, .gif">
+                                                @error('image')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <div class="row">
                                             <label for="" class="col-md-4 col-form-label">Description</label>
                                             <div class="col-md-8">
                                                 <textarea name="description" class="text form-control @error('description') is-invalid @enderror" rows="1">{{old('description')}}</textarea>
@@ -230,19 +252,109 @@
     </div>
     @push('script')
     <script type="text/javascript">
-        $(document).on('change','#productName',function () {
-            var productId = $(this).val();
+        $(document).on('change','#itemCategory',function () {
+            var itemCategory = $(this).val();
             $.ajax({
                 url:'{{route('get-part-name')}}',
                 method:'GET',
                 dataType:"html",
-                data:{'part_name': productId},
+                data:{'id': itemCategory},
                 success: function(data){
-                    console.log(data)
-                        $('#loadPartName').html(data);
-                    }
+                    $('#itemGroup').html(data);
+                }
+            });
+            if(itemCategory==1){
+                $('.ac').show();
+            }else{
+                $('.ac').hide();
+            }
+        });
+        $(document).on('change', '#itemGroup', function () {
+            var itemCategory = $('#itemCategory').val();
+            var id = $(this).val();
+            // Send an AJAX request to the server to get data
+            $.ajax({
+                url: '{{ route('get-unit-name') }}',
+                method: 'GET',
+                dataType: 'json',
+                data: { 'mast_item_category_id': itemCategory, 'mast_item_group_id': id },
+                success: function (data) {
+                    // SET TON
+                    var loadTonSelect = $('#loadTon');
+                    loadTonSelect.empty();
+                    loadTonSelect.append('<option value="" selected disabled>-- Select --</option>');
+
+                    $.each(data.mastItemModels, function (index, row) {
+                        loadTonSelect.append('<option value="' + row.id + '">' + row.ton + '</option>');
+                    });
+                    
+                    // SET UNIT
+                    var loadUnitSelect = $('#loadUnit');
+                    loadUnitSelect.empty();
+
+                    $.each(data.mstUnit, function (index, row) {
+                        var selected = (row.id == '{{ old('mast_item_group_id') }}') ? 'selected' : '';
+                        loadUnitSelect.append('<option value="' + row.id + '" ' + selected + '>' + row.unit_name + '</option>');
+                    });
+                    
+                },
+                error: function () {
+                    alert('Fail');
+                }
             });
         });
+
+
+
+        $(document).on('change','#loadTon',function () {
+            var id = $(this).val();
+            getItemModels(id);
+        });
+        $(document).on('change','#loadUnit',function () {
+            var id = $(this).val();
+            var unitType = $('#unitType').html();
+            alert(id)
+            if(id == 1){//Unit -> 1 => Set
+                var loadTon = $('#loadTon').val();
+                getItemModels(loadTon);
+                $('#unitType').prop("disabled", true);
+                $('#unitType').html(unitType);
+            }else if(id == 2){// Unit -> 2 => Pices
+                $('#part_no').val('');
+                $('#unitType').prop("disabled", false);
+            }
+        });
+        $(document).on('change','#unitType',function () {
+            var loadTon = $('#loadTon').val();
+            getItemModels(loadTon);
+        });
+
+        function getItemModels(id){
+            $.ajax({
+                url: '{{ route('get-item-models')}}',
+                method: 'GET',
+                dataType: 'JSON',
+                data: { 'id': id },
+                success: function(data) {
+                    var unitType = $('#unitType').val();
+                    if(unitType == 1){
+                        $('#part_no').val(data.indoor);
+                    }else if(unitType == 2){
+                        $('#part_no').val(data.outdoor);
+                    }else{
+                        var unit_id = $('#loadUnit').val();
+                        if(unit_id == 1){
+                            $('#part_no').val(data.full_set);
+                        }else{
+                            $('#part_no').val('');
+                        }
+                    }
+                },
+                error: function() {
+                    alert('Fail');
+                }
+            });
+        }
 
         //----Validation
         $(document).ready(function() {

@@ -21,6 +21,26 @@
                                 <div class="col-sm-12">
                                     <div class="form-group">
                                         <div class="row">
+                                            <label for="" class="col-md-4 col-form-label">Item Category
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-md-8">
+                                                <select class="form-control dropdwon_select" name="mast_item_category_id" required>
+                                                    <option value="" selected disabled>-- Select Category --</option>
+                                                    <option value="1">AC</option>
+                                                    <option value="2">AC Spare parts</option>
+                                                    <option value="3">Car spare parts</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <div class="row">
                                             <label for="" class="col-md-4 col-form-label">Unit Name:
                                                 <span class="text-danger">*</span>
                                             </label>

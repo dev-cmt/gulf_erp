@@ -20,7 +20,7 @@
 
                         </div>
                         <div class="row mt-1">
-                            <label for="" class="text-black col-md-4">status</label>
+                            <label for="" class="text-black col-md-4">Status</label>
                             <div class="col-md-8">
                                <select name="status" id="" class="form-control">
                                     <option value="1" {{ $compliantEdit->status == 1?'selected':'' }}>Active</option>

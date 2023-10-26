@@ -9,83 +9,15 @@
                 </div>
                 <!-- card body -->
                 <div class="card-body">
-                    <div class="form-validation">
-                        <!-- this is for validation checking message -->
-                        @if (session()->has('success'))
-                            <strong class="text-success">{{session()->get('success')}}</strong>
-                        @endif
-                        <!-- this is from -->
-                        <form class="form-valide row" action="{{route('mast_item_register.update', $data->id)}}" method="POST" enctype="multipart/form-data">
+                    <!-- this is for validation checking message -->
+                    @if (session()->has('success'))
+                        <strong class="text-success">{{session()->get('success')}}</strong>
+                    @endif
+                    <!-- this is from -->
+                    <form action="{{route('mast_item_register.update', $data->id)}}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <div class="row">
-                                        <label for="" class="col-md-4 col-form-label">Box Code
-                                            <span class="text-danger">*</span>
-                                        </label>
-                                        <div class="col-md-8">
-                                            <input type="number" class="form-control  @error('box_code') is-invalid @enderror" name="box_code" value="{{$data->box_code}}" min="1" required> 
-                                            @error('box_code')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <div class="row">
-                                        <label for="" class="col-md-4 col-form-label">Gulf Code
-                                            <span class="text-danger">*</span>
-                                        </label>
-                                        <div class="col-md-8">
-                                            <input type="number" class="form-control @error('gulf_code') is-invalid @enderror" name="gulf_code" value="{{$data->gulf_code}}" min="1" required>  
-                                            @error('gulf_code')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror 
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <div class="row">
-                                        <label for="" class="col-md-4 col-form-label">Part Number
-                                            <span class="text-danger">*</span>
-                                        </label>
-                                        <div class="col-md-8">
-                                            <input type="number" class="form-control @error('part_no') is-invalid @enderror" name="part_no" value="{{$data->part_no}}" required>  
-                                            @error('part_no')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror 
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <div class="row">
-                                        <label for="" class="col-md-4 col-form-label">Box Quantity
-                                            <span class="text-danger">*</span>
-                                        </label>
-                                        <div class="col-md-8">
-                                            <input type="number" class="form-control @error('box_qty') is-invalid @enderror" name="box_qty" id="box_qty" value="{{$data->box_qty}}" required>
-                                            @error('box_qty')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <div class="row">
@@ -93,7 +25,7 @@
                                             <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-md-8">
-                                            <select class="form-control dropdwon_select" name="mast_item_category_id" id="productName" required>
+                                            <select class="form-control dropdwon_select" name="mast_item_category_id" id="itemCategory" required>
                                                 <option value="" selected disabled>-- Select Category --</option>
                                                 <option value="1" {{$data->mast_item_category_id == 1 ? 'selected' : '' }}>AC</option>
                                                 <option value="2" {{$data->mast_item_category_id == 2 ? 'selected' : '' }}>AC Spare parts</option>
@@ -110,29 +42,129 @@
                                             <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-md-8">
-                                            <select class="form-control dropdwon_select" name="mast_item_group_id">
-                                                <option value="" selected disabled>Please Select Parts Name</option>
+                                            <select class="form-control dropdwon_select" id="itemGroup" name="mast_item_group_id" required>
+                                                <option value="" selected disabled>-- Select --</option>
                                                 @foreach ($item_group as $row)
-                                                    <option value="{{$row->id}}" {{$data->mast_item_group_id == $row->id ? 'selected' : '' }}>{{ $row->part_name}}</option>
-                                                 @endforeach
+                                                    <option value="{{$row->id}}" {{ $data->mast_item_group_id == $row->id ? 'selected' : '' }}>{{ $row->part_name}}</option>
+                                                @endforeach
                                             </select>
-                                        </div> 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 ac">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label for="" class="col-md-4 col-form-label">Ton/Capacities</label>
+                                        <div class="col-md-8">
+                                            <select class="form-control dropdwon_select" name="mast_item_models_id" id="loadTon">
+                                                <option value="" selected disabled>-- Select --</option>
+                                                @foreach ($mastItemModels as $row)
+                                                    <option value="{{$row->id}}" {{ $data->mast_item_models_id == $row->id ? 'selected' : '' }}>{{ $row->ton}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <div class="row">
-                                        <label for="" class="col-md-4 col-form-label">Unit Type           
+                                        <label for="" class="col-md-4 col-form-label">Unit
                                             <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-md-8">
-                                            <select class="form-control dropdwon_select" name="unit_id">
-                                                <option value="" selected disabled>Please Select Unit Name</option>
+                                            <select class="form-control dropdwon_select" id="loadUnit" name="unit_id" required>
+                                                <option value="" selected disabled>-- Select --</option>
                                                 @foreach ($unit as $row)
                                                     <option value="{{$row->id}}" {{ $data->unit_id == $row->id ? 'selected' : '' }}>{{ $row->unit_name}}</option>
-                                                 @endforeach
+                                                @endforeach
                                             </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 ac">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label for="" class="col-md-4 col-form-label">Type (Optional)
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="col-md-8">
+                                            <select class="form-control dropdwon_select" name="unit_type" id="unitType" disabled>
+                                                <option value="" selected>-- Select --</option>
+                                                <option value="1">Indoor</option>
+                                                <option value="2">Outdoor</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label for="" class="col-md-4 col-form-label">Part Number
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control @error('part_no') is-invalid @enderror" name="part_no" id="part_no" value="{{$data->part_no}}" required>
+                                            @error('part_no')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label for="" class="col-md-4 col-form-label">Quantity
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="col-md-8">
+                                            <input type="number" class="form-control @error('box_qty') is-invalid @enderror" name="box_qty" id="box_qty" value="{{$data->box_qty}}" required>
+                                            @error('box_qty')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label for="" class="col-md-4 col-form-label">Box Code
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="col-md-8">
+                                            <input type="number" class="form-control  @error('box_code') is-invalid @enderror" name="box_code" id="box_code" value="{{$data->box_code}}" min="1" required>
+                                            @error('box_code')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label for="" class="col-md-4 col-form-label">Gulf Code
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control @error('gulf_code') is-invalid @enderror" name="gulf_code" id="gulf_code" value="{{$data->gulf_code}}" min="1" required>
+                                            @error('gulf_code')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
                                         </div>
                                     </div>
                                 </div>
@@ -144,7 +176,7 @@
                                             <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-md-8">
-                                            <input type="number" class="form-control @error('price') is-invalid @enderror" name="price" value="{{$data->price}}">
+                                            <input type="number" class="form-control @error('price') is-invalid @enderror" name="price" id="price" value="{{$data->price}}" step="any" required>
                                             @error('price')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -157,24 +189,9 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <div class="row">
-                                        <label for="" class="col-md-4 col-form-label">Box Quantity
+                                        <label class="col-md-4 col-form-label">Warranty
                                             <span class="text-danger">*</span>
                                         </label>
-                                        <div class="col-md-8">
-                                            <input type="number" class="form-control @error('box_qty') is-invalid @enderror" name="box_qty" value="{{$data->box_qty}}">
-                                            @error('box_qty')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror  
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <div class="row">
-                                        <label class="col-md-4 col-form-label">Warranty</label>
                                         <div class="col-md-8">
                                             <select name="warranty" class="form-control default-select @error('warranty') is-invalid @enderror">
                                                 <option selected="">Choose...</option>
@@ -223,7 +240,7 @@
                                     <div class="row">
                                         <label for="" class="col-md-4 col-form-label">Description</label>
                                         <div class="col-md-8">
-                                            <textarea name="description" class="text form-control @error('description') is-invalid @enderror">{{$data->description}}</textarea> 
+                                            <textarea name="description" class="text form-control @error('description') is-invalid @enderror" rows="1">{{$data->description}}</textarea>
                                             @error('description')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -233,14 +250,151 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Submit Button -->
+
+                        </div>
+                        <!-- Submit Button -->
+                        <div class="row">
                             <div class="col-md-12">
                                 <button type="submit" class="btn btn-success btn-sm float-right">Update</button>
                             </div>
-                        <form>
-                    </div>
+                        </div>                    
+                    <form>
                 </div>
             </div>
         </div>
     </div>
+    @push('script')
+    <script type="text/javascript">
+        $(document).on('change','#itemCategory',function () {
+            var itemCategory = $(this).val();
+            $('#itemGroup').empty();
+            $('#loadTon').empty();
+            $('#loadUnit').empty();
+            $('#part_no').val('');
+            $.ajax({
+                url:'{{route('get-part-name')}}',
+                method:'GET',
+                dataType:"html",
+                data:{'id': itemCategory},
+                success: function(data){
+                    $('#itemGroup').html(data);
+                }
+            });
+            if(itemCategory==1){
+                $('.ac').show();
+            }else{
+                $('.ac').hide();
+            }
+        });
+        $(document).on('change', '#itemGroup', function () {
+            var itemCategory = $('#itemCategory').val();
+            var id = $(this).val();
+            // Send an AJAX request to the server to get data
+            $.ajax({
+                url: '{{ route('get-unit-name') }}',
+                method: 'GET',
+                dataType: 'json',
+                data: { 'mast_item_category_id': itemCategory, 'mast_item_group_id': id },
+                success: function (data) {
+                    // SET TON
+                    var loadTonSelect = $('#loadTon');
+                    loadTonSelect.empty();
+                    loadTonSelect.append('<option value="" selected disabled>-- Select --</option>');
+
+                    $.each(data.mastItemModels, function (index, row) {
+                        loadTonSelect.append('<option value="' + row.id + '">' + row.ton + '</option>');
+                    });
+                    
+                    // SET UNIT
+                    var loadUnitSelect = $('#loadUnit');
+                    loadUnitSelect.empty();
+
+                    $.each(data.mstUnit, function (index, row) {
+                        var selected = (row.id == '{{ old('mast_item_group_id') }}') ? 'selected' : '';
+                        loadUnitSelect.append('<option value="' + row.id + '" ' + selected + '>' + row.unit_name + '</option>');
+                    });
+                    
+                },
+                error: function () {
+                    alert('Fail');
+                }
+            });
+        });
+
+
+
+        $(document).on('change','#loadTon',function () {
+            var id = $(this).val();
+            getItemModels(id);
+        });
+        $(document).on('change','#loadUnit',function () {
+            var id = $(this).val();
+            var unitType = $('#unitType').html();
+            alert(id)
+            if(id == 1){//Unit -> 1 => Set
+                var loadTon = $('#loadTon').val();
+                getItemModels(loadTon);
+                $('#unitType').prop("disabled", true);
+                $('#unitType').html(unitType);
+            }else if(id == 2){// Unit -> 2 => Pices
+                $('#part_no').val('');
+                $('#unitType').prop("disabled", false);
+            }
+        });
+        $(document).on('change','#unitType',function () {
+            var loadTon = $('#loadTon').val();
+            getItemModels(loadTon);
+        });
+
+        function getItemModels(id){
+            $.ajax({
+                url: '{{ route('get-item-models')}}',
+                method: 'GET',
+                dataType: 'JSON',
+                data: { 'id': id },
+                success: function(data) {
+                    var unitType = $('#unitType').val();
+                    if(unitType == 1){
+                        $('#part_no').val(data.indoor);
+                    }else if(unitType == 2){
+                        $('#part_no').val(data.outdoor);
+                    }else{
+                        var unit_id = $('#loadUnit').val();
+                        if(unit_id == 1){
+                            $('#part_no').val(data.full_set);
+                        }else{
+                            $('#part_no').val('');
+                        }
+                    }
+                },
+                error: function() {
+                    alert('Fail');
+                }
+            });
+        }
+
+        //----Validation
+        $(document).ready(function() {
+            const inputBC = $("#box_code");
+            const inputGC = $("#gulf_code");
+            const inputPO = $("#part_no");
+            const inputBQ = $("#box_qty");
+            const inputPC = $("#price");
+            
+            const maskBC = new IMask(inputBC[0], { mask: "000000000" });
+            const maskGC = new IMask(inputGC[0], { mask: "000000000" });
+            const maskPO = new IMask(inputPO[0], { mask: "000000000" });
+            const maskBQ = new IMask(inputBQ[0], { mask: "000000000" });
+            const maskPC = new IMask(inputPC[0], { mask: "000000000" });
+            
+            // You can access unmasked values like this:
+            // const unmaskedBC = maskBC.unmaskedValue;
+            // const unmaskedGC = maskGC.unmaskedValue;
+            // const unmaskedPO = maskPO.unmaskedValue;
+            // const unmaskedBQ = maskBQ.unmaskedValue;
+            // const unmaskedPC = maskPC.unmaskedValue;
+        });
+    </script>
+
+    @endpush
 </x-app-layout>

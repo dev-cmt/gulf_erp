@@ -24,12 +24,14 @@ return new class extends Migration
             $table->integer('warranty')->nullable();
             $table->string('bar_code')->nullable();
             $table->text('description')->nullable();
-
+            
+            $table->tinyInteger('unit_type')->default(false);
+            $table->unsignedBigInteger('unit_id');
+            $table->foreign('unit_id')->references('id')->on('mast_units')->onDelete('cascade');
+            $table->unsignedBigInteger('mast_item_models_id')->nullable();
             $table->unsignedBigInteger('mast_item_category_id')->nullable();
             $table->unsignedBigInteger('mast_item_group_id');
             $table->foreign('mast_item_group_id')->references('id')->on('mast_item_groups')->onDelete('cascade');
-            $table->unsignedBigInteger('unit_id');
-            $table->foreign('unit_id')->references('id')->on('mast_units')->onDelete('cascade');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->tinyInteger('status')->default(true);

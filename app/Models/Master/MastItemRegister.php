@@ -23,6 +23,8 @@ class MastItemRegister extends Model
         'image',
         'warranty',
         'bar_code',
+        'unit_type',
+        'mast_item_models_id',
         'mast_item_category_id',
         'mast_item_group_id',
         'unit_id',

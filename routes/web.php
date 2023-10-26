@@ -40,6 +40,7 @@ use App\Http\Controllers\Master\MastItemCategoryController;
 use App\Http\Controllers\Master\MastItemGroupController;
 use App\Http\Controllers\Master\MastItemRegisterController;
 use App\Http\Controllers\Master\MastSupplierController;
+use App\Http\Controllers\Master\MastItemModelsController;
 
 use App\Http\Controllers\Master\MastCompliantTypeController;
 use App\Http\Controllers\Master\MastTechnicianController;
@@ -369,8 +370,11 @@ Route::group(['middleware' => ['auth']], function(){
     Route::resource('mast_unit', MastUnitController::class);
     Route::resource('mast_working_station', MastWorkStationController::class);
     Route::resource('mast_supplier', MastSupplierController::class);
+    Route::resource('mast_item_models', MastItemModelsController::class);
 
     Route::get('get-part/name',[MastItemRegisterController::class,'getPartName'])->name('get-part-name');
+    Route::get('get-unit/name',[MastItemRegisterController::class,'getUnitName'])->name('get-unit-name');
+    Route::get('get-item/models',[MastItemRegisterController::class,'getItemModels'])->name('get-item-models');
     Route::get('/pdf/download', [MastItemRegisterController::class, 'generateBarcode'])->name('item_pdf.download');
     Route::get('/item_export/excel', [MastItemRegisterController::class, 'export'])->name('item_export.excel');
     /**______________________________________________________________________________________________

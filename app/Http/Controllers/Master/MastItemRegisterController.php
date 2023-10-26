@@ -18,6 +18,7 @@ use App\Models\Master\MastItemRegister;
 use App\Models\Master\MastUnit;
 use App\Models\Master\MastItemGroup;
 use App\Models\Master\MastItemCategory;
+use App\Models\Master\MastItemModels;
 use App\Models\User;
 
 
@@ -41,10 +42,7 @@ class MastItemRegisterController extends Controller
      */
     public function create()
     {
-        $unit = MastUnit::orderBy('unit_name', 'asc')->get();
-        $item_group = MastItemGroup::orderBy('part_name', 'asc')->get();
-        // $item_category = MastItemCategory::all();
-        return view('layouts.pages.master.item_register.create' , compact('unit', 'item_group'));
+        return view('layouts.pages.master.item_register.create');
     }
 
     /**
@@ -101,11 +99,13 @@ class MastItemRegisterController extends Controller
         $data->box_qty = $request->box_qty;
         $data->warranty = $request->warranty;
         $data->price = $request->price;
+        $data->bar_code = $number;
         $data->unit_id = $request->unit_id;
+        $data->unit_type = $request->unit_type; // 1 => Indoor & 2 => Outdoor
+        $data->mast_item_models_id = $request->mast_item_models_id; // Capacities/Ton
         $data->mast_item_category_id = $request->mast_item_category_id;
         $data->mast_item_group_id = $request->mast_item_group_id;
         $data->user_id = Auth::user()->id;
-        $data->bar_code = $number;
         $data->save();
         $notification = array('messege' => 'Item register data save successfully.', 'alert-type' => 'success');
         return redirect()->route('mast_item_register.index')->with($notification);
@@ -156,10 +156,11 @@ class MastItemRegisterController extends Controller
     public function edit($id)
     {
         $data = MastItemRegister::with('unit', 'mastItemGroup')->find($id);
-        $unit = MastUnit::get();
-        $item_group = MastItemGroup::get();
+        $unit = MastUnit::where('mast_item_category_id', $data->mast_item_category_id)->orderBy('unit_name', 'asc')->where('status', 1)->get();
+        $item_group = MastItemGroup::where('mast_item_category_id', $data->mast_item_category_id)->orderBy('part_name', 'asc')->where('status', 1)->get();
+        $mastItemModels = MastItemModels::where('mast_item_group_id', $data->mastItemGroup->id)->get();
 
-        return view('layouts.pages.master.item_register.edit', compact('data','unit','item_group'));
+        return view('layouts.pages.master.item_register.edit', compact('data','unit','item_group', 'mastItemModels'));
     }
 
     /**
@@ -212,6 +213,8 @@ class MastItemRegisterController extends Controller
         $data->price = $request->price;
         $data->warranty = $request->warranty;
         $data->unit_id = $request->unit_id;
+        $data->unit_type = $request->unit_type; // 1 => Indoor & 2 => Outdoor
+        $data->mast_item_models_id = $request->mast_item_models_id; // Capacities/Ton
         $data->mast_item_category_id = $request->mast_item_category_id;
         $data->mast_item_group_id = $request->mast_item_group_id;
         $data->user_id = Auth::user()->id;
@@ -233,7 +236,21 @@ class MastItemRegisterController extends Controller
     
     public function getPartName(Request $request)
     {
-        $getpartName = MastItemGroup::where('mast_item_category_id', $request->part_name)->orderBy('part_name', 'asc')->get();
-        return view('layouts.pages.master.item_register.load-part-name',compact('getpartName'));
+        $getpartName = MastItemGroup::where('mast_item_category_id', $request->id)->orderBy('part_name', 'asc')->get();
+        return view('layouts.pages.master.item_register.load-part-name', compact('getpartName'));
+    }
+    public function getUnitName(Request $request)
+    {
+        $mstUnit = MastUnit::where('mast_item_category_id', $request->mast_item_category_id)->get();
+        $mastItemModels = MastItemModels::where('mast_item_group_id', $request->mast_item_group_id)->get();
+        return response()->json([
+            'mstUnit' => $mstUnit,
+            'mastItemModels' => $mastItemModels,
+        ]);
+    }
+    public function getItemModels(Request $request)
+    {
+        $data = MastItemModels::where('id', $request->id)->first();
+        return response()->json($data);
     }
 }

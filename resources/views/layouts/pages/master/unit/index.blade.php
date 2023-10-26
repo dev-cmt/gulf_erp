@@ -18,7 +18,7 @@
                                     <th>Unit Name</th>
                                     <th>Description</th>
                                     <th>Status</th>
-                                    <th class="text-right pr-4">Action</th>
+                                    <th class="text-right">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -28,8 +28,9 @@
                                     <td>{{ $row->unit_name}}</td>
                                     <td>{{ $row->description }}</td>										
                                     <td>{{ $row->status == 1 ? 'Active' : 'Inactive'  }}</td>																			
-                                    <td class="float-right" style="width:100px">                                
-                                        <a href="{{ route('mast_unit.edit', $row->id) }}" class="btn btn-success btn-xm p-2">Edit</a>
+                                    <td class="text-right">
+                                        <a href="{{ route('mast_unit.edit', $row->id) }}"><button class="btn btn-success btn-xm p-2" {{ $row->id == 1 || $row->id == 2 ? 'disabled' : '' }}>Edit</button></a>                               
+                                        
                                         <a href="{{ route('mast_unit.show', $row->id) }}" class="btn btn-info btn-xm p-2">View</a>                                                             
                                     </td>
                                 </tr>

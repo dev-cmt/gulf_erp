@@ -45,10 +45,11 @@ class MastUnitController extends Controller
         $data = new MastUnit();
         $data->unit_name = $request->unit_name;
         $data->description = $request->description;
+        $data->mast_item_category_id = $request->mast_item_category_id;
         $data->status = $request->status;
         $data->user_id = Auth::user()->id;
         $data->save();
-        $notification = array('messege' => 'Unit data save successfully.', 'alert-type' => 'success');
+        $notification = array('messege' => 'Data save successfully.', 'alert-type' => 'success');
         return redirect()->route('mast_unit.index', compact('data'))->with($notification);
     }
 
@@ -88,6 +89,7 @@ class MastUnitController extends Controller
         $data = MastUnit::find($id);
         $data->unit_name = $request->unit_name;
         $data->description = $request->description;
+        $data->mast_item_category_id = $request->mast_item_category_id;
         $data->status = $request->status;
         $data->user_id = Auth::user()->id;
         $data->save();
