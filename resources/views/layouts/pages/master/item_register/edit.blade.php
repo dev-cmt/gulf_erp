@@ -84,7 +84,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6 ac">
+                            <div class="col-sm-6 unitSH" style="display: none">
                                 <div class="form-group">
                                     <div class="row">
                                         <label for="" class="col-md-4 col-form-label">Type (Optional)
@@ -103,11 +103,12 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <div class="row">
-                                        <label for="" class="col-md-4 col-form-label">Part Number
+                                        <label for="" class="col-md-4 col-form-label model_name">Model Number
                                             <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-md-8">
-                                            <input type="text" class="form-control @error('part_no') is-invalid @enderror" name="part_no" id="part_no" value="{{$data->part_no}}" required>
+                                            <input type="text" class="form-control" id="partNo" disabled value="{{$data->part_no}}">
+                                            <input type="text" class="form-control @error('part_no') is-invalid @enderror" name="part_no" id="part_no" value="{{$data->part_no}}" style="display: none">
                                             @error('part_no')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -117,7 +118,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <div class="row">
@@ -135,14 +135,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-6 none_ac" style="display: none">
                                 <div class="form-group">
                                     <div class="row">
                                         <label for="" class="col-md-4 col-form-label">Box Code
                                             <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-md-8">
-                                            <input type="number" class="form-control  @error('box_code') is-invalid @enderror" name="box_code" id="box_code" value="{{$data->box_code}}" min="1" required>
+                                            <input type="number" class="form-control  @error('box_code') is-invalid @enderror" name="box_code" id="box_code" value="{{$data->box_code}}" min="1">
                                             @error('box_code')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -152,14 +152,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-6 none_ac" style="display: none">
                                 <div class="form-group">
                                     <div class="row">
                                         <label for="" class="col-md-4 col-form-label">Gulf Code
                                             <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-md-8">
-                                            <input type="text" class="form-control @error('gulf_code') is-invalid @enderror" name="gulf_code" id="gulf_code" value="{{$data->gulf_code}}" min="1" required>
+                                            <input type="text" class="form-control @error('gulf_code') is-invalid @enderror" name="gulf_code" id="gulf_code" value="{{$data->gulf_code}}" min="1">
                                             @error('gulf_code')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -219,7 +219,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-6 none_ac" style="display: none">
                                 <div class="form-group">
                                     <div class="row"> 
                                         <label for="image" class="col-md-4 col-form-label">Image</label>
@@ -267,10 +267,6 @@
     <script type="text/javascript">
         $(document).on('change','#itemCategory',function () {
             var itemCategory = $(this).val();
-            $('#itemGroup').empty();
-            $('#loadTon').empty();
-            $('#loadUnit').empty();
-            $('#part_no').val('');
             $.ajax({
                 url:'{{route('get-part-name')}}',
                 method:'GET',
@@ -282,8 +278,16 @@
             });
             if(itemCategory==1){
                 $('.ac').show();
+                $('.none_ac').hide();
+                $('#partNo').show();
+                $('#part_no').hide();
+                $('.model_name').text("Model Number");
             }else{
                 $('.ac').hide();
+                $('.none_ac').show();
+                $('#partNo').hide();
+                $('#part_no').show();
+                $('.model_name').text("Part Number");
             }
         });
         $(document).on('change', '#itemGroup', function () {
@@ -329,16 +333,16 @@
         });
         $(document).on('change','#loadUnit',function () {
             var id = $(this).val();
-            var unitType = $('#unitType').html();
-            alert(id)
             if(id == 1){//Unit -> 1 => Set
                 var loadTon = $('#loadTon').val();
                 getItemModels(loadTon);
-                $('#unitType').prop("disabled", true);
-                $('#unitType').html(unitType);
+                $('.unitSH').hide();
+                // $('#unitType').prop("disabled", true);
             }else if(id == 2){// Unit -> 2 => Pices
                 $('#part_no').val('');
-                $('#unitType').prop("disabled", false);
+                $('#partNo').val('');
+                $('.unitSH').show();
+                // $('#unitType').prop("disabled", false);
             }
         });
         $(document).on('change','#unitType',function () {
@@ -353,19 +357,24 @@
                 dataType: 'JSON',
                 data: { 'id': id },
                 success: function(data) {
-                    var unitType = $('#unitType').val();
-                    if(unitType == 1){
-                        $('#part_no').val(data.indoor);
-                    }else if(unitType == 2){
-                        $('#part_no').val(data.outdoor);
+                    var unit_id = $('#loadUnit').val();
+                    if(unit_id == 1){
+                        $('#partNo').val(data.full_set);
+                        $('#part_no').val(data.full_set);
                     }else{
-                        var unit_id = $('#loadUnit').val();
-                        if(unit_id == 1){
-                            $('#part_no').val(data.full_set);
+                        $('#part_no').val('');
+
+                        var unitType = $('#unitType').val();
+                        if(unitType == 1){
+                            $('#partNo').val(data.indoor);
+                            $('#part_no').val(data.indoor);
+                        }else if(unitType == 2){
+                            $('#partNo').val(data.outdoor);
+                            $('#part_no').val(data.outdoor);
                         }else{
                             $('#part_no').val('');
                         }
-                    }
+                    } 
                 },
                 error: function() {
                     alert('Fail');
@@ -377,13 +386,13 @@
         $(document).ready(function() {
             const inputBC = $("#box_code");
             const inputGC = $("#gulf_code");
-            const inputPO = $("#part_no");
+            // const inputPO = $("#part_no");
             const inputBQ = $("#box_qty");
             const inputPC = $("#price");
             
             const maskBC = new IMask(inputBC[0], { mask: "000000000" });
             const maskGC = new IMask(inputGC[0], { mask: "000000000" });
-            const maskPO = new IMask(inputPO[0], { mask: "000000000" });
+            // const maskPO = new IMask(inputPO[0], { mask: "000000000" });
             const maskBQ = new IMask(inputBQ[0], { mask: "000000000" });
             const maskPC = new IMask(inputPC[0], { mask: "000000000" });
             

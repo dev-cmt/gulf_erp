@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('bar_code')->nullable();
             $table->text('description')->nullable();
             
-            $table->tinyInteger('unit_type')->default(false);
+            $table->tinyInteger('unit_type')->nullable();
             $table->unsignedBigInteger('unit_id');
             $table->foreign('unit_id')->references('id')->on('mast_units')->onDelete('cascade');
             $table->unsignedBigInteger('mast_item_models_id')->nullable();

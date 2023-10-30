@@ -54,8 +54,6 @@ class MastItemRegisterController extends Controller
     public function store(Request $request)
     {
         $validated=$request -> validate([
-            'box_code'=> 'required|max:255',
-            'gulf_code'=> 'required',
             'part_no'=> 'required',
             'warranty'=> 'required',
             'box_qty'=> 'required',
@@ -174,8 +172,6 @@ class MastItemRegisterController extends Controller
     {
         $data = MastItemRegister::find($id);
         $validated=$request -> validate([
-            'box_code'=> 'required|max:255',
-            'gulf_code'=> 'required',
             'part_no'=> 'required',
             'warranty'=> 'required',
             'box_qty'=> 'required',
