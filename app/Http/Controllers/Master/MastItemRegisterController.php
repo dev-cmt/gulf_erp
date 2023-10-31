@@ -139,10 +139,11 @@ class MastItemRegisterController extends Controller
     public function show($id)
     {
         $data = MastItemRegister::with('unit', 'mastItemGroup')->find($id);
-        $unit = MastUnit::get();
-        $item_group = MastItemGroup::get();
+        $unit = MastUnit::where('mast_item_category_id', $data->mast_item_category_id)->orderBy('unit_name', 'asc')->where('status', 1)->get();
+        $item_group = MastItemGroup::where('mast_item_category_id', $data->mast_item_category_id)->orderBy('part_name', 'asc')->where('status', 1)->get();
+        $mastItemModels = MastItemModels::where('mast_item_group_id', $data->mastItemGroup->id)->get();
 
-        return view('layouts.pages.master.item_register.show', compact('data','unit','item_group'));
+        return view('layouts.pages.master.item_register.show', compact('data','unit','item_group', 'mastItemModels'));
     }
 
     /**
@@ -175,7 +176,8 @@ class MastItemRegisterController extends Controller
             'part_no'=> 'required',
             'warranty'=> 'required',
             'box_qty'=> 'required',
-            'price' => ['required', 'numeric', 'regex:/^\d{1,6}(\.\d{1,2})?$/'],
+            'price'=> 'required',
+            // 'price' => ['required', 'numeric', 'regex:/^\d{1,6}(\.\d{1,2})?$/'],
         ]);
         if($request->hasFile("image")){
             if (File::exists("public/images/car-parts/".$data->image)) {

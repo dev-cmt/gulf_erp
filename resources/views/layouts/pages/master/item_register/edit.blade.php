@@ -52,7 +52,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6 ac">
+                            <div class="col-sm-6 ac" @if($data->mast_item_category_id != 1) style="display: none;" @endif>
                                 <div class="form-group">
                                     <div class="row">
                                         <label for="" class="col-md-4 col-form-label">Ton/Capacities</label>
@@ -91,7 +91,7 @@
                                             <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-md-8">
-                                            <select class="form-control dropdwon_select" name="unit_type" id="unitType" disabled>
+                                            <select class="form-control dropdwon_select" name="unit_type" id="unitType">
                                                 <option value="" selected>-- Select --</option>
                                                 <option value="1">Indoor</option>
                                                 <option value="2">Outdoor</option>
@@ -107,8 +107,8 @@
                                             <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-md-8">
-                                            <input type="text" class="form-control" id="partNo" disabled value="{{$data->part_no}}">
-                                            <input type="text" class="form-control @error('part_no') is-invalid @enderror" name="part_no" id="part_no" value="{{$data->part_no}}" style="display: none">
+                                            <input type="text" class="form-control" id="partNo" disabled value="{{$data->part_no}}" @if($data->mast_item_category_id != 1) style="display: none;" @endif>
+                                            <input type="text" class="form-control @error('part_no') is-invalid @enderror" name="part_no" id="part_no" value="{{$data->part_no}}" @if($data->mast_item_category_id == 1) style="display: none;" @endif>
                                             @error('part_no')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -135,7 +135,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6 none_ac" style="display: none">
+                            <div class="col-sm-6 none_ac" @if($data->mast_item_category_id == 1) style="display: none;" @endif>
                                 <div class="form-group">
                                     <div class="row">
                                         <label for="" class="col-md-4 col-form-label">Box Code
@@ -152,7 +152,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6 none_ac" style="display: none">
+                            <div class="col-sm-6 none_ac" @if($data->mast_item_category_id == 1) style="display: none;" @endif>
                                 <div class="form-group">
                                     <div class="row">
                                         <label for="" class="col-md-4 col-form-label">Gulf Code
@@ -219,14 +219,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6 none_ac" style="display: none">
+                            <div class="col-sm-6">
                                 <div class="form-group">
-                                    <div class="row"> 
-                                        <label for="image" class="col-md-4 col-form-label">Image</label>
+                                    <div class="row">
+                                        <label for="" class="col-md-4 col-form-label">Description</label>
                                         <div class="col-md-8">
-                                            <input type="file" name="image" class="form-control-file @error('image') is-invalid @enderror">
-                                            <img src="{{asset('public')}}/images/car-parts/{{ $data->image }}" alt="" width="100%">
-                                            @error('image')
+                                            <textarea name="description" class="text form-control @error('description') is-invalid @enderror" rows="1">{{$data->description}}</textarea>
+                                            @error('description')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
@@ -235,13 +234,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-6 none_ac" @if($data->mast_item_category_id == 1) style="display: none;" @endif>
                                 <div class="form-group">
-                                    <div class="row">
-                                        <label for="" class="col-md-4 col-form-label">Description</label>
+                                    <div class="row"> 
+                                        <label for="image" class="col-md-4 col-form-label">Image</label>
                                         <div class="col-md-8">
-                                            <textarea name="description" class="text form-control @error('description') is-invalid @enderror" rows="1">{{$data->description}}</textarea>
-                                            @error('description')
+                                            <input type="file" name="image" class="form-control-file @error('image') is-invalid @enderror">
+                                            <img src="{{asset('public')}}/images/car-parts/{{ $data->image }}" alt="" width="100%">
+                                            @error('image')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
@@ -284,9 +284,11 @@
                 $('.model_name').text("Model Number");
             }else{
                 $('.ac').hide();
+                $('.unitSH').hide();
                 $('.none_ac').show();
                 $('#partNo').hide();
                 $('#part_no').show();
+                $('#part_no').val('');
                 $('.model_name').text("Part Number");
             }
         });
@@ -388,13 +390,13 @@
             const inputGC = $("#gulf_code");
             // const inputPO = $("#part_no");
             const inputBQ = $("#box_qty");
-            const inputPC = $("#price");
+            // const inputPC = $("#price");
             
             const maskBC = new IMask(inputBC[0], { mask: "000000000" });
             const maskGC = new IMask(inputGC[0], { mask: "000000000" });
             // const maskPO = new IMask(inputPO[0], { mask: "000000000" });
             const maskBQ = new IMask(inputBQ[0], { mask: "000000000" });
-            const maskPC = new IMask(inputPC[0], { mask: "000000000" });
+            // const maskPC = new IMask(inputPC[0], { mask: "000000000" });
             
             // You can access unmasked values like this:
             // const unmaskedBC = maskBC.unmaskedValue;
@@ -404,6 +406,5 @@
             // const unmaskedPC = maskPC.unmaskedValue;
         });
     </script>
-
     @endpush
 </x-app-layout>

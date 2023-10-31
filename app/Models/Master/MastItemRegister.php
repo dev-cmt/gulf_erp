@@ -35,6 +35,10 @@ class MastItemRegister extends Model
     {
         return $this->belongsTo(MastUnit::class);
     }
+    public function mastItemCategory()
+    {
+        return $this->belongsTo(MastItemCategory::class);
+    }
     public function mastItemGroup()
     {
         return $this->belongsTo(MastItemGroup::class);

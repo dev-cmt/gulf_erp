@@ -19,15 +19,16 @@
                             <thead>
                                 <tr>
                                     <th>SL#</th>
-                                    <th>Image</th>
-                                    <th>Box No.</th>
-                                    <th>Gulf Code</th>
+                                    {{-- <th>Image</th> --}}
+                                    {{-- <th>Box No.</th>
+                                    <th>Gulf Code</th> --}}
+                                    <th>Category</th>
                                     <th>Part Number</th>
                                     <th>Part Name</th>
                                     <th>Description</th>
                                     <th>Box Qty.</th>
                                     <th>Pirce</th>
-                                    <th>Barcode</th>
+                                    {{-- <th>Barcode</th> --}}
                                     <th class="text-right pr-4">Action</th>
                                 </tr>
                             </thead>
@@ -35,15 +36,16 @@
                                 @foreach($data as $row)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>										
-                                        <td class="sorting_1"><img src="{{asset('public')}}/images/car-parts/{{ $row->image }}" width="35" height="35" alt=""></td>
-                                        <td>{{ $row->box_code }}</td>
-                                        <td>{{ $row->gulf_code }}</td>
+                                        {{-- <td class="sorting_1"><img src="{{asset('public')}}/images/car-parts/{{ $row->image }}" width="35" height="35" alt=""></td> --}}
+                                        {{-- <td>{{ $row->box_code }}</td>
+                                        <td>{{ $row->gulf_code }}</td> --}}
+                                        <td>{{ $row->mastItemCategory->cat_name }}</td>
                                         <td>{{ $row->part_no }}</td>
                                         <td>{{ $row->mastItemGroup->part_name ?? 'N/A' }}</td>
                                         <td>{{ $row->description }}</td>
                                         <td>{{ $row->box_qty }}</td>
                                         <td>{{ $row->price }}</td>
-                                        <td>{!! DNS1D::getBarcodeHTML("$row->bar_code", 'PHARMA') !!} GULF-{{$row->bar_code}} </td>
+                                        {{-- <td>{!! DNS1D::getBarcodeHTML("$row->bar_code", 'PHARMA') !!} GULF-{{$row->bar_code}} </td> --}}
                                         {{-- <td>{!! DNS1D::getBarcodeHTML("$row->bar_code", 'PHARMA2T',3,33,'green', true) !!}</td> --}}
                                         <td class="float-right" style="width:100px">                                
                                             <a href="{{ route('mast_item_register.edit', $row->id) }}" class="btn btn-success btn-sm btn-xm p-2">Edit</a>

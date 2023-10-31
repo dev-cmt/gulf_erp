@@ -56,7 +56,7 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <div class="row">
-                                            <label for="" class="col-md-4 col-form-label">Coling Capacity
+                                            <label for="" class="col-md-4 col-form-label">Cooling Capacity
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <div class="col-md-8">

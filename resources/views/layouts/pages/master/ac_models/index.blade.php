@@ -17,7 +17,7 @@
                                     <th>SL No</th>
                                     <th>Group Name</th>
                                     <th>Ton</th>
-                                    <th>Coling Capacity</th>
+                                    <th>Cooling Capacity</th>
                                     <th>Indoor</th>
                                     <th>Outdoor</th>
                                     <th>Full Set</th>
