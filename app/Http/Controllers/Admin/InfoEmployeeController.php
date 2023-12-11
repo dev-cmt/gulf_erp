@@ -46,24 +46,26 @@ class InfoEmployeeController extends Controller
         $infoNominee = $user->infoNominee;
         //--Personal Information
         $infoPersonal = InfoPersonal::where('emp_id', $id)->first();
-        $reporting_boss = $infoPersonal->reportingBoss;
-        $department = $infoPersonal->mastDepartment;
-        $designation = $infoPersonal->mastDesignation;
-        $employee_type = $infoPersonal->mastEmployeeType;
-        $work_station = $infoPersonal->mastWorkStation;
+        
+        $reporting_boss = optional($infoPersonal)->reportingBoss;
+        $department = optional($infoPersonal)->mastDepartment;
+        $designation = optional($infoPersonal)->mastDesignation;
+        $employee_type = optional($infoPersonal)->mastEmployeeType;
+        $work_station = optional($infoPersonal)->mastWorkStation;
+    
+        $joiningDate = optional($infoPersonal)->joining_date;
+        $serviceLength = $joiningDate ? $this->calculateServiceLength($joiningDate) : null;
 
-        $joiningDate = $infoPersonal->joining_date;
-        $serviceLength = $this->calculateServiceLength($joiningDate);
-
-        //---Address (Divistion)
-        $divisions = DB::table('divisions')->where('id', $infoPersonal->division_present)->first();
-        $districts = DB::table('districts')->where('id', $infoPersonal->district_present)->first();
-        $upazilas = DB::table('upazilas')->where('id', $infoPersonal->upazila_present)->first();
-        $unions = DB::table('unions')->where('id', $infoPersonal->union_present)->first();
-        $divisions_permanent = DB::table('divisions')->where('id', $infoPersonal->division_permanent)->first();
-        $districts_permanent = DB::table('districts')->where('id', $infoPersonal->district_permanent)->first();
-        $upazilas_permanent = DB::table('upazilas')->where('id', $infoPersonal->upazila_permanent)->first();
-        $unions_permanent = DB::table('unions')->where('id', $infoPersonal->union_permanent)->first();
+        //---Address (Division)
+        $divisions = DB::table('divisions')->where('id', optional($infoPersonal)->division_present)->first();
+        $districts = DB::table('districts')->where('id', optional($infoPersonal)->district_present)->first();
+        $upazilas = DB::table('upazilas')->where('id', optional($infoPersonal)->upazila_present)->first();
+        $unions = DB::table('unions')->where('id', optional($infoPersonal)->union_present)->first();
+        $divisions_permanent = DB::table('divisions')->where('id', optional($infoPersonal)->division_permanent)->first();
+        $districts_permanent = DB::table('districts')->where('id', optional($infoPersonal)->district_permanent)->first();
+        $upazilas_permanent = DB::table('upazilas')->where('id', optional($infoPersonal)->upazila_permanent)->first();
+        $unions_permanent = DB::table('unions')->where('id', optional($infoPersonal)->union_permanent)->first();
+    
         $data = [
             'department' => $department,
             'designation' => $designation,
@@ -182,21 +184,21 @@ class InfoEmployeeController extends Controller
         
         //--Personal Information
         $infoPersonal = InfoPersonal::where('emp_id', $id)->first();
-        $reporting_boss = $infoPersonal->reportingBoss;
-        $department = $infoPersonal->mastDepartment;
-        $designation = $infoPersonal->mastDesignation;
-        $employee_type = $infoPersonal->mastEmployeeType;
-        $work_station = $infoPersonal->mastWorkStation;
+        $reporting_boss = optional($infoPersonal)->reportingBoss;
+        $department = optional($infoPersonal)->mastDepartment;
+        $designation = optional($infoPersonal)->mastDesignation;
+        $employee_type = optional($infoPersonal)->mastEmployeeType;
+        $work_station = optional($infoPersonal)->mastWorkStation;
 
         //---Address (Divistion)
-        $divisions = DB::table('divisions')->where('id', $infoPersonal->division_present)->first();
-        $districts = DB::table('districts')->where('id', $infoPersonal->district_present)->first();
-        $upazilas = DB::table('upazilas')->where('id', $infoPersonal->upazila_present)->first();
-        $unions = DB::table('unions')->where('id', $infoPersonal->thana_present)->first();
-        $divisions_permanent = DB::table('divisions')->where('id', $infoPersonal->division_permanent)->first();
-        $districts_permanent = DB::table('districts')->where('id', $infoPersonal->district_permanent)->first();
-        $upazilas_permanent = DB::table('upazilas')->where('id', $infoPersonal->upazila_permanent)->first();
-        $unions_permanent = DB::table('unions')->where('id', $infoPersonal->thana_permanent)->first();
+        $divisions = DB::table('divisions')->where('id', optional($infoPersonal)->division_present)->first();
+        $districts = DB::table('districts')->where('id', optional($infoPersonal)->district_present)->first();
+        $upazilas = DB::table('upazilas')->where('id', optional($infoPersonal)->upazila_present)->first();
+        $unions = DB::table('unions')->where('id', optional($infoPersonal)->thana_present)->first();
+        $divisions_permanent = DB::table('divisions')->where('id', optional($infoPersonal)->division_permanent)->first();
+        $districts_permanent = DB::table('districts')->where('id', optional($infoPersonal)->district_permanent)->first();
+        $upazilas_permanent = DB::table('upazilas')->where('id', optional($infoPersonal)->upazila_permanent)->first();
+        $unions_permanent = DB::table('unions')->where('id', optional($infoPersonal)->thana_permanent)->first();
         $data = [
             'user' => $user,
             'infoPersonal' => $infoPersonal,
@@ -225,52 +227,63 @@ class InfoEmployeeController extends Controller
     }
     public function employee_update(Request $request, $id)
     {
-        $data=InfoPersonal::find($id);
-        $data->emp_id= $id;
-        $data->user_id = Auth::user()->id;
-        
-        $data->date_of_birth=$request->date_of_birth;
-        $data->employee_gender=$request->employee_gender;
-        $data->nid_no=$request->nid_no;
-        $data->blood_group=$request->blood_group;
-        $data->mast_department_id=$request->mast_department_id;
-        $data->mast_designation_id=$request->mast_designation_id;
-        $data->mast_employee_type_id=$request->mast_employee_type_id;
-        $data->mast_work_station_id=$request->mast_work_station_id;
+        DB::beginTransaction();
 
-        $data->number_official=$request->number_official;
-        $data->email_official=$request->email_official;
-        $data->joining_date=$request->joining_date;
-        $data->is_reporting_boss=$request->is_reporting_boss;
-        $data->gross_salary=$request->gross_salary;
-        $data->reporting_boss=$request->reporting_boss;
+        try {
+            $data = InfoPersonal::where('emp_id', $id)->first();
+            $data->user_id = Auth::user()->id;
+            
+            $data->date_of_birth=$request->date_of_birth;
+            $data->employee_gender=$request->employee_gender;
+            $data->nid_no=$request->nid_no;
+            $data->blood_group=$request->blood_group;
+            $data->mast_department_id=$request->mast_department_id;
+            $data->mast_designation_id=$request->mast_designation_id;
+            $data->mast_employee_type_id=$request->mast_employee_type_id;
+            $data->mast_work_station_id=$request->mast_work_station_id;
 
-        // $data->division_present=$request->division_present;
-        // $data->district_present=$request->district_present;
-        // $data->upazila_present=$request->upazila_present;
-        // $data->thana_present=$request->thana_present;
-        $data->address_present=$request->address_present;
-        // $data->division_permanent=$request->division_permanent;
-        // $data->district_permanent=$request->district_permanent;
-        // $data->upazila_permanent=$request->upazila_permanent;
-        // $data->thana_permanent=$request->thana_permanent;
-        $data->address_permanent=$request->address_permanent;
+            $data->number_official=$request->number_official;
+            $data->email_official=$request->email_official;
+            $data->joining_date=$request->joining_date;
+            $data->is_reporting_boss=$request->is_reporting_boss;
+            $data->gross_salary=$request->gross_salary;
+            $data->reporting_boss=$request->reporting_boss;
 
-        $data->passport_no=$request->passport_no;
-        $data->driving_license=$request->driving_license;
-        $data->marital_status=$request->marital_status;
-        $data->house_phone=$request->house_phone;
-        $data->father_name=$request->father_name;
-        $data->mother_name=$request->mother_name;
-        $data->birth_certificate_no=$request->birth_certificate_no;
-        $data->emg_person_name=$request->emg_person_name;
-        $data->emg_phone_number=$request->emg_phone_number;
-        $data->emg_relationship=$request->emg_relationship;
-        $data->emg_address=$request->emg_address;
-        $data->save();
-        
-        $notification=array('messege'=>'Personal info save successfully!','alert-type'=>'success');
-        return redirect()->back()->with($notification);
+            // $data->division_present=$request->division_present;
+            // $data->district_present=$request->district_present;
+            // $data->upazila_present=$request->upazila_present;
+            // $data->thana_present=$request->thana_present;
+            $data->address_present=$request->address_present;
+            // $data->division_permanent=$request->division_permanent;
+            // $data->district_permanent=$request->district_permanent;
+            // $data->upazila_permanent=$request->upazila_permanent;
+            // $data->thana_permanent=$request->thana_permanent;
+            $data->address_permanent=$request->address_permanent;
+
+            $data->passport_no=$request->passport_no;
+            $data->driving_license=$request->driving_license;
+            $data->marital_status=$request->marital_status;
+            $data->house_phone=$request->house_phone;
+            $data->father_name=$request->father_name;
+            $data->mother_name=$request->mother_name;
+            $data->birth_certificate_no=$request->birth_certificate_no;
+            $data->emg_person_name=$request->emg_person_name;
+            $data->emg_phone_number=$request->emg_phone_number;
+            $data->emg_relationship=$request->emg_relationship;
+            $data->emg_address=$request->emg_address;
+            $data->save();
+
+            // Commit if everything is successful
+            DB::commit();
+            
+            $notification=array('messege'=>'Personal info save successfully!','alert-type'=>'success');
+            return redirect()->back()->with($notification);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            \Log::error('An error occurred: ' . $e->getMessage());
+            return 'An error occurred: ' . $e->getMessage();
+        }
     }
     /**___________________________________________________________________
      * Employee Register Process

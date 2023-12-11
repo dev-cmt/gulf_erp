@@ -67,7 +67,6 @@
                         @canany(['Hr setting access'])
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Data Setting</a>
                             <ul aria-expanded="false">
-                                <li><a href="{{route('mast_working_station.index')}}">Work Station</a></li>
                                 <li><a href="{{route('mast_department.index')}}">Department</a></li>
                                 <li><a href="{{route('mast_designation.index')}}">Designation</a></li>
                                 <li><a href="{{route('mast_leave.index')}}">Leave Type</a></li>
@@ -120,6 +119,7 @@
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Data Setting</a>
                             <ul aria-expanded="false">
                                 <li><a href="{{route('mast_supplier.index')}}">Supplier List</a></li>
+                                <li><a href="{{route('mast_working_station.index')}}">Work Station</a></li>
                                 <li><a href="{{route('mast_item_category.index')}}">Item Category</a></li>
                                 <li><a href="{{route('mast_item_group.index')}}">Item Group</a></li>
                                 <li><a href="{{route('mast_unit.index')}}">Units Setting</a></li>

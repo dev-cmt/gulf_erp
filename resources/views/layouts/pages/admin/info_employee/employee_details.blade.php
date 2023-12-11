@@ -46,7 +46,10 @@
                         </div>
                         <div class="media-body mb-5 text-white">
                             <h4 class="text-white">{{$user->name}}</h4>
-                            <p class="small mb-5"><i class="fa fa-calendar-o mr-2"></i>{{date("j F Y", strtotime($infoPersonal->joining_date))}}</p>
+                            <p class="small mb-5">
+                                <i class="fa fa-calendar-o mr-2"></i>
+                                {{ optional($infoPersonal)->joining_date ? date("j F Y", strtotime($infoPersonal->joining_date)) : '' }}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -63,8 +66,8 @@
 
                             <div class="tab-content">
                                 <div id="my-posts" class="tab-pane fade {{Session::has('messege') || $errors->any() ? '' : 'active show'}}">
-                                    <!--=====// Personal Information//=====-->
-                                    <div class="row">
+                                     <!--=====// Personal Information//=====-->
+                                     <div class="row">
                                         <div class="col-md-12">
                                             <h6 class="text-primary my-3">Personal Information</h6>
                                         </div>
@@ -110,7 +113,13 @@
                                                 <div class="col-sm-6 col-5">
                                                     <h6 class="f-w-500">Date Of Birth <span class="pull-right">:</span></h6>
                                                 </div>
-                                                <div class="col-sm-6 col-7"><span>{{date("j F Y", strtotime($infoPersonal->date_of_birth))}}</span></div>
+                                                <div class="col-sm-6 col-7">
+                                                    @if ($infoPersonal && $infoPersonal->date_of_birth)
+                                                        <span>{{ date("j F Y", strtotime($infoPersonal->date_of_birth)) }}</span>
+                                                    @else
+                                                        <span>N/A</span>
+                                                    @endif
+                                                </div>
                                             </div>
                                         </div>
                                         <!--Item-->
@@ -120,10 +129,14 @@
                                                     <h6 class="f-w-500">Gender<span class="pull-right">:</span></h6>
                                                 </div>
                                                 <div class="col-sm-6 col-7">
-                                                    @if ($infoPersonal->employee_gender == 0)
-                                                    <span>Male</span>
+                                                    @if ($infoPersonal && $infoPersonal->employee_gender !== null)
+                                                        @if ($infoPersonal->employee_gender == 0)
+                                                            <span>Male</span>
+                                                        @else
+                                                            <span>Female</span>
+                                                        @endif
                                                     @else
-                                                    <span>Female</span>
+                                                        <span>N/A</span>
                                                     @endif
                                                 </div>
                                             </div>
@@ -134,7 +147,7 @@
                                                 <div class="col-sm-6 col-5">
                                                     <h6 class="f-w-500">NID No. <span class="pull-right">:</span></h6>
                                                 </div>
-                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->nid_no }}</span></div>
+                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->nid_no ?? 'N/A'}}</span></div>
                                             </div>
                                         </div>
                                         <!--Item-->
@@ -144,24 +157,30 @@
                                                     <h6 class="f-w-500">Blood Group <span class="pull-right">:</span></h6>
                                                 </div>
                                                 <div class="col-sm-6 col-7">
-                                                    @if ($infoPersonal->blood_group ==1)
-                                                    <span>O Positive (0+)</span>
-                                                    @elseif ($infoPersonal->blood_group ==2)
-                                                    <span>O Negative (0-)</span>
-                                                    @elseif ($infoPersonal->blood_group ==3)
-                                                    <span>A Positive (A+)</span>
-                                                    @elseif ($infoPersonal->blood_group ==4)
-                                                    <span>A Negative (A-)</span>
-                                                    @elseif ($infoPersonal->blood_group ==5)
-                                                    <span>B Positive (B+)</span>
-                                                    @elseif ($infoPersonal->blood_group ==6)
-                                                    <span>B Negative (B-)</span>
-                                                    @elseif ($infoPersonal->blood_group ==7)
-                                                    <span>AB Positive (AB+)</span>
-                                                    @elseif ($infoPersonal->blood_group ==8)
-                                                    <span>AB Negative (AB-)</span>
+                                                    @if ($infoPersonal && $infoPersonal->blood_group !== null)
+                                                        @if ($infoPersonal->blood_group == 1)
+                                                            <span>O Positive (0+)</span>
+                                                        @elseif ($infoPersonal->blood_group == 2)
+                                                            <span>O Negative (0-)</span>
+                                                        @elseif ($infoPersonal->blood_group == 3)
+                                                            <span>A Positive (A+)</span>
+                                                        @elseif ($infoPersonal->blood_group == 4)
+                                                            <span>A Negative (A-)</span>
+                                                        @elseif ($infoPersonal->blood_group == 5)
+                                                            <span>B Positive (B+)</span>
+                                                        @elseif ($infoPersonal->blood_group == 6)
+                                                            <span>B Negative (B-)</span>
+                                                        @elseif ($infoPersonal->blood_group == 7)
+                                                            <span>AB Positive (AB+)</span>
+                                                        @elseif ($infoPersonal->blood_group == 8)
+                                                            <span>AB Negative (AB-)</span>
+                                                        @else
+                                                            <span>Unknown Blood Group</span>
+                                                        @endif
+                                                    @else
+                                                        <span>No Blood Group Available</span>
                                                     @endif
-                                                </div>
+                                                </div>                                                
                                             </div>
                                         </div>
                                     </div>
@@ -176,7 +195,7 @@
                                                 <div class="col-sm-6 col-5">
                                                     <h6 class="f-w-500">Department<span class="pull-right">:</span></h6>
                                                 </div>
-                                                <div class="col-sm-6 col-7"><span>{{$data['department']->dept_name}}</span></div>
+                                                <div class="col-sm-6 col-7"><span>{{$data['department']->dept_name ?? 'NA' }}</span></div>
                                             </div>
                                         </div>
                                         <!--Item-->
@@ -185,7 +204,7 @@
                                                 <div class="col-sm-6 col-5">
                                                     <h6 class="f-w-500">Designation<span class="pull-right">:</span></h6>
                                                 </div>
-                                                <div class="col-sm-6 col-7"><span>{{$data['designation']->desig_name}}</span></div>
+                                                <div class="col-sm-6 col-7"><span>{{$data['designation']->desig_name ?? 'NA' }}</span></div>
                                             </div>
                                         </div>
                                         <!--Item-->
@@ -194,7 +213,7 @@
                                                 <div class="col-sm-6 col-5">
                                                     <h6 class="f-w-500">Employee Type<span class="pull-right">:</span></h6>
                                                 </div>
-                                                <div class="col-sm-6 col-7"><span>{{ $data['employee_type']->cat_name }}</span></div>
+                                                <div class="col-sm-6 col-7"><span>{{ $data['employee_type']->cat_name ?? 'NA'  }}</span></div>
                                             </div>
                                         </div>
                                         <!--Item-->
@@ -203,7 +222,7 @@
                                                 <div class="col-sm-6 col-5">
                                                     <h6 class="f-w-500">Work Station<span class="pull-right">:</span></h6>
                                                 </div>
-                                                <div class="col-sm-6 col-7"><span>{{ $data['work_station']->store_name }}</span></div>
+                                                <div class="col-sm-6 col-7"><span>{{ $data['work_station']->store_name ?? 'NA'  }}</span></div>
                                             </div>
                                         </div>
                                         <!--Item-->
@@ -212,7 +231,7 @@
                                                 <div class="col-sm-6 col-5">
                                                     <h6 class="f-w-500">Mobile (Official)<span class="pull-right">:</span></h6>
                                                 </div>
-                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->number_official }}</span></div>
+                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->number_official ?? 'N/A' }}</span></div>
                                             </div>
                                         </div>
                                         <!--Item-->
@@ -221,7 +240,7 @@
                                                 <div class="col-sm-6 col-5">
                                                     <h6 class="f-w-500">Email (Official)<span class="pull-right">:</span></h6>
                                                 </div>
-                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->email_official }}</span></div>
+                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->email_official ?? 'N/A' }}</span></div>
                                             </div>
                                         </div>
                                         <!--Item-->
@@ -230,7 +249,13 @@
                                                 <div class="col-sm-6 col-5">
                                                     <h6 class="f-w-500">Joining Data<span class="pull-right">:</span></h6>
                                                 </div>
-                                                <div class="col-sm-6 col-7"><span>{{date("j F Y", strtotime($infoPersonal->joining_date))}}</span></div>
+                                                <div class="col-sm-6 col-7">
+                                                    @if ($infoPersonal && $infoPersonal->joining_date)
+                                                        <span>{{ date("j F Y", strtotime($infoPersonal->joining_date)) }}</span>
+                                                    @else
+                                                        <span>N/A</span>
+                                                    @endif
+                                                </div>                                                                                             
                                             </div>
                                         </div>
                                         <!--Item-->
@@ -239,7 +264,7 @@
                                                 <div class="col-sm-6 col-5">
                                                     <h6 class="f-w-500">Service Length<span class="pull-right">:</span></h6>
                                                 </div>
-                                                <div class="col-sm-6 col-7"><span>{{ $serviceLength }}</span></div>
+                                                <div class="col-sm-6 col-7"><span>{{ $serviceLength ?? 'N/A' }}</span></div>
                                             </div>
                                         </div>
                                         <!--Item-->
@@ -248,7 +273,7 @@
                                                 <div class="col-sm-6 col-5">
                                                     <h6 class="f-w-500">Gross Salary <span class="pull-right">:</span></h6>
                                                 </div>
-                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->gross_salary }}</span></div>
+                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->gross_salary ?? 'N/A' }}</span></div>
                                             </div>
                                         </div>
                                         <!--Item-->
@@ -280,7 +305,7 @@
                                                 <div class="col-sm-6 col-5">
                                                     <h6 class="f-w-500">Address Details<span class="pull-right">:</span></h6>
                                                 </div>
-                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->address_present }}</span></div>
+                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->address_present ?? 'N/A' }}</span></div>
                                             </div>
                                         </div>
                                         <!--Item-->
@@ -295,7 +320,7 @@
                                                 <div class="col-sm-6 col-5">
                                                     <h6 class="f-w-500">Address Details<span class="pull-right">:</span></h6>
                                                 </div>
-                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->address_permanent }}</span></div>
+                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->address_permanent ?? 'N/A' }}</span></div>
                                             </div>
                                         </div>
                                     </div>
@@ -310,7 +335,7 @@
                                                 <div class="col-sm-6 col-5">
                                                     <h6 class="f-w-500">Father Name<span class="pull-right">:</span></h6>
                                                 </div>
-                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->father_name }}</span></div>
+                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->father_name ?? 'N/A' }}</span></div>
                                             </div>
                                         </div>
                                         <!--Item-->
@@ -319,7 +344,7 @@
                                                 <div class="col-sm-6 col-5">
                                                     <h6 class="f-w-500">Mother Name<span class="pull-right">:</span></h6>
                                                 </div>
-                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->mother_name }}</span></div>
+                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->mother_name ?? 'N/A' }}</span></div>
                                             </div>
                                         </div>
                                         <!--Item-->
@@ -328,7 +353,7 @@
                                                 <div class="col-sm-6 col-5">
                                                     <h6 class="f-w-500">Passport No.<span class="pull-right">:</span></h6>
                                                 </div>
-                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->passport_no }}</span></div>
+                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->passport_no ?? 'N/A' }}</span></div>
                                             </div>
                                         </div>
                                         <!--Item-->
@@ -337,7 +362,7 @@
                                                 <div class="col-sm-6 col-5">
                                                     <h6 class="f-w-500">Driving License No.<span class="pull-right">:</span></h6>
                                                 </div>
-                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->driving_license }}</span></div>
+                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->driving_license ?? 'N/A' }}</span></div>
                                             </div>
                                         </div>
                                         <!--Item-->
@@ -347,11 +372,20 @@
                                                     <h6 class="f-w-500">Marital Status<span class="pull-right">:</span></h6>
                                                 </div>
                                                 <div class="col-sm-6 col-7">
-                                                    @if ($infoPersonal->marital_status == 1)Married
-                                                    @elseif ($infoPersonal->marital_status == 2)Divorce
-                                                    @elseif ($infoPersonal->marital_status == 3)Widowed 
+                                                    @if ($infoPersonal && $infoPersonal->marital_status !== null)
+                                                        @if ($infoPersonal->marital_status == 0) 
+                                                            Unmarried
+                                                        @elseif ($infoPersonal->marital_status == 1) 
+                                                            Married
+                                                        @elseif ($infoPersonal->marital_status == 2) 
+                                                            Divorced
+                                                        @elseif ($infoPersonal->marital_status == 3) 
+                                                            Widowed 
+                                                        @endif
+                                                    @else
+                                                        N/A
                                                     @endif
-                                                </div>
+                                                </div>                                                
                                             </div>
                                         </div>
                                         <!--Item-->
@@ -360,7 +394,7 @@
                                                 <div class="col-sm-6 col-5">
                                                     <h6 class="f-w-500">Home Phone<span class="pull-right">:</span></h6>
                                                 </div>
-                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->house_phone }}</span></div>
+                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->house_phone ?? 'N/A' }}</span></div>
                                             </div>
                                         </div>
                                         <!--Item-->
@@ -369,7 +403,7 @@
                                                 <div class="col-sm-6 col-5">
                                                     <h6 class="f-w-500">Birth Certificate No.<span class="pull-right">:</span></h6>
                                                 </div>
-                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->birth_certificate_no }}</span></div>
+                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->birth_certificate_no ?? 'N/A' }}</span></div>
                                             </div>
                                         </div>
                                     </div>
@@ -384,7 +418,7 @@
                                                 <div class="col-sm-6 col-5">
                                                     <h6 class="f-w-500">Person Name<span class="pull-right">:</span></h6>
                                                 </div>
-                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->emg_person_name }}</span></div>
+                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->emg_person_name ?? 'N/A' }}</span></div>
                                             </div>
                                         </div>
                                         <!--Item-->
@@ -393,7 +427,7 @@
                                                 <div class="col-sm-6 col-5">
                                                     <h6 class="f-w-500">Phone Number<span class="pull-right">:</span></h6>
                                                 </div>
-                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->emg_phone_number }}</span></div>
+                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->emg_phone_number ?? 'N/A' }}</span></div>
                                             </div>
                                         </div>
                                         <!--Item-->
@@ -402,7 +436,7 @@
                                                 <div class="col-sm-6 col-5">
                                                     <h6 class="f-w-500">Relationship<span class="pull-right">:</span></h6>
                                                 </div>
-                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->emg_relationship }}</span></div>
+                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->emg_relationship ?? 'N/A' }}</span></div>
                                             </div>
                                         </div>
                                         <!--Item-->
@@ -411,7 +445,7 @@
                                                 <div class="col-sm-6 col-5">
                                                     <h6 class="f-w-500">Address<span class="pull-right">:</span></h6>
                                                 </div>
-                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->emg_address }}</span></div>
+                                                <div class="col-sm-6 col-7"><span>{{ $infoPersonal->emg_address ?? 'N/A' }}</span></div>
                                             </div>
                                         </div>
                                     </div>

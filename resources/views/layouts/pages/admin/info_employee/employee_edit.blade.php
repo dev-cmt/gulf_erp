@@ -56,7 +56,7 @@
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <div class="col-lg-7">
-                                                    <input type="date" name="date_of_birth" id="date_of_birth" class="form-control @error('date_of_birth') is-invalid @enderror" placeholder="" value="{{$data['infoPersonal']->date_of_birth}}" />
+                                                    <input type="date" name="date_of_birth" id="date_of_birth" class="form-control @error('date_of_birth') is-invalid @enderror" placeholder="" value="{{$data['infoPersonal']->date_of_birth ?? ''}}" />
                                                     @error('date_of_birth')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -69,10 +69,11 @@
                                             <div class="form-group row">
                                                 <label class="col-lg-4 col-form-label">Gender</label>
                                                 <div class="col-lg-7">
-                                                    <select name="employee_gender" class="form-control default-select  @error('employee_gender') is-invalid @enderror" style="height: 40px;">
-                                                        <option value="0" {{$data['infoPersonal']->employee_gender == 0 ? 'selected' : '' }}>Male</option>
-                                                        <option value="1" {{$data['infoPersonal']->employee_gender == 1 ? 'selected' : '' }}>Female</option>
-                                                    </select>                                                
+                                                    <select name="employee_gender" class="form-control default-select @error('employee_gender') is-invalid @enderror" style="height: 40px;">
+                                                        <option value="0" {{ optional($data['infoPersonal'])->employee_gender == 0 ? 'selected' : '' }}>Male</option>
+                                                        <option value="1" {{ optional($data['infoPersonal'])->employee_gender == 1 ? 'selected' : '' }}>Female</option>
+                                                    </select>                                                    
+                                                                                                  
                                                     @error('employee_gender')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -87,7 +88,7 @@
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <div class="col-lg-7">
-                                                    <input type="number" name="nid_no" id="nid_no" class="form-control @error('nid_no') is-invalid @enderror" placeholder="XXX-XXX-XXXX" value="{{$data['infoPersonal']->nid_no}}" />
+                                                    <input type="number" name="nid_no" id="nid_no" class="form-control @error('nid_no') is-invalid @enderror" placeholder="XXX-XXX-XXXX" value="{{ optional($data['infoPersonal'])->nid_no }}" />
                                                     @error('nid_no')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -104,15 +105,15 @@
                                                 <div class="col-lg-7">
                                                     <select name="blood_group" id="blood_group" class="form-control default-select @error('blood_group') is-invalid @enderror" style="height: 40px;">
                                                         <option value="" selected>Select</option>
-                                                        <option value="1" {{$data['infoPersonal']->blood_group ==1 ? 'selected' : '' }} >O Positive (0+)</option>
-                                                        <option value="2" {{$data['infoPersonal']->blood_group ==2 ? 'selected' : '' }} >O Negative (0-)</option>
-                                                        <option value="3" {{$data['infoPersonal']->blood_group ==3 ? 'selected' : '' }} >A Positive (A+)</option>
-                                                        <option value="4" {{$data['infoPersonal']->blood_group ==4 ? 'selected' : '' }} >A Negative (A-)</option>
-                                                        <option value="5" {{$data['infoPersonal']->blood_group ==5 ? 'selected' : '' }} >B Positive (B+)</option>
-                                                        <option value="6" {{$data['infoPersonal']->blood_group ==6 ? 'selected' : '' }} >B Negative (B-)</option>
-                                                        <option value="7" {{$data['infoPersonal']->blood_group ==7 ? 'selected' : '' }} >AB Positive (AB+)</option>
-                                                        <option value="8" {{$data['infoPersonal']->blood_group ==8 ? 'selected' : '' }} >AB Negative (AB-)</option>
-                                                    </select>
+                                                        <option value="1" {{ optional($data['infoPersonal'])->blood_group == 1 ? 'selected' : '' }}>O Positive (0+)</option>
+                                                        <option value="2" {{ optional($data['infoPersonal'])->blood_group == 2 ? 'selected' : '' }}>O Negative (0-)</option>
+                                                        <option value="3" {{ optional($data['infoPersonal'])->blood_group == 3 ? 'selected' : '' }}>A Positive (A+)</option>
+                                                        <option value="4" {{ optional($data['infoPersonal'])->blood_group == 4 ? 'selected' : '' }}>A Negative (A-)</option>
+                                                        <option value="5" {{ optional($data['infoPersonal'])->blood_group == 5 ? 'selected' : '' }}>B Positive (B+)</option>
+                                                        <option value="6" {{ optional($data['infoPersonal'])->blood_group == 6 ? 'selected' : '' }}>B Negative (B-)</option>
+                                                        <option value="7" {{ optional($data['infoPersonal'])->blood_group == 7 ? 'selected' : '' }}>AB Positive (AB+)</option>
+                                                        <option value="8" {{ optional($data['infoPersonal'])->blood_group == 8 ? 'selected' : '' }}>AB Negative (AB-)</option>
+                                                    </select>                                                    
                                                     @error('blood_group')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -134,11 +135,13 @@
                                                 </label>
                                                 <div class="col-lg-7">
                                                     <select class="form-control default-select" id="department" name="mast_department_id">
-                                                        <option value="0" selected>Please select</option>
+                                                        <option value="0" {{ optional($data['department'])->id == 0 ? 'selected' : '' }}>Please select</option>
                                                         @foreach ($old_data['department'] as $row)
-                                                            <option value="{{$row->id}}" {{$row->id == $data['department']->id ? 'selected' : '' }}>{{$row->dept_name}}</option>
+                                                            <option value="{{ $row->id }}" {{ optional($data['department'])->id == $row->id ? 'selected' : '' }}>
+                                                                {{ $row->dept_name }}
+                                                            </option>
                                                         @endforeach
-                                                    </select>                                                
+                                                    </select>                                                                                                
                                                     @error('department')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -154,11 +157,13 @@
                                                 </label>
                                                 <div class="col-lg-7">
                                                     <select class="form-control default-select" id="designation" name="mast_designation_id">
-                                                        <option value="0" selected>Please select</option>
+                                                        <option value="0" {{ optional($data['designation'])->id == 0 ? 'selected' : '' }}>Please select</option>
                                                         @foreach ($old_data['designation'] as $row)
-                                                            <option value="{{$row->id}}" {{$row->id == $data['designation']->id ? 'selected' : '' }}>{{$row->desig_name}}</option>
+                                                            <option value="{{ $row->id }}" {{ optional($data['designation'])->id == $row->id ? 'selected' : '' }}>
+                                                                {{ $row->desig_name }}
+                                                            </option>
                                                         @endforeach
-                                                    </select>
+                                                    </select>                                                    
                                                     @error('designation')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -174,11 +179,13 @@
                                                 </label>
                                                 <div class="col-lg-7">
                                                     <select class="form-control default-select" id="employee_type" name="mast_employee_type_id">
-                                                        <option value="0" selected>Please select</option>
+                                                        <option value="0" {{ optional($data['employee_type'])->id == 0 ? 'selected' : '' }}>Please select</option>
                                                         @foreach ($old_data['employee_type'] as $row)
-                                                            <option value="{{$row->id}}" {{$row->id == $data['employee_type']->id ? 'selected' : '' }}>{{$row->cat_name}}</option>
+                                                            <option value="{{ $row->id }}" {{ optional($data['employee_type'])->id == $row->id ? 'selected' : '' }}>
+                                                                {{ $row->cat_name }}
+                                                            </option>
                                                         @endforeach
-                                                    </select> 
+                                                    </select>                                                    
                                                     @error('employee_type')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -194,11 +201,13 @@
                                                 </label>
                                                 <div class="col-lg-7">
                                                     <select class="form-control default-select" name="mast_work_station_id" id="work_station">
-                                                        <option value="0" selected>Please select</option>
+                                                        <option value="0" {{ optional($data['work_station'])->id == 0 ? 'selected' : '' }}>Please select</option>
                                                         @foreach ($old_data['work_station'] as $row)
-                                                            <option value="{{$row->id}}" {{$row->id == $data['work_station']->id ? 'selected' : '' }}>{{$row->store_name}}</option>
+                                                            <option value="{{ $row->id }}" {{ optional($data['work_station'])->id == $row->id ? 'selected' : '' }}>
+                                                                {{ $row->store_name }}
+                                                            </option>
                                                         @endforeach
-                                                    </select>
+                                                    </select>                                                    
                                                     @error('work_station')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -211,7 +220,7 @@
                                             <div class="form-group row">
                                                 <label class="col-lg-4 col-form-label">Mobile (Official)</label>
                                                 <div class="col-lg-7">
-                                                    <input type="number" name="number_official" class="form-control @error('name') is-invalid @enderror" placeholder="" value="{{$data['infoPersonal']->number_official}}" />
+                                                    <input type="number" name="number_official" class="form-control @error('name') is-invalid @enderror" placeholder="" value="{{ optional($data['infoPersonal'])->number_official ?? '' }}" />
                                                     @error('number_official')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -224,7 +233,7 @@
                                             <div class="form-group row">
                                                 <label class="col-lg-4 col-form-label">Email (Official)</label>
                                                 <div class="col-lg-7">
-                                                    <input type="email" name="email_official" class="form-control @error('email_official') is-invalid @enderror" placeholder="" value="{{$data['infoPersonal']->email_official}}" />
+                                                    <input type="email" name="email_official" class="form-control @error('email_official') is-invalid @enderror" placeholder="" value="{{ optional($data['infoPersonal'])->email_official ?? '' }}" />
                                                     @error('email_official')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -239,7 +248,7 @@
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <div class="col-lg-7">
-                                                    <input type="date" name="joining_date" id="joining_date" class="form-control @error('joining_date') is-invalid @enderror" placeholder="" value="{{$data['infoPersonal']->joining_date}}" />
+                                                    <input type="date" name="joining_date" id="joining_date" class="form-control @error('joining_date') is-invalid @enderror" placeholder="" value="{{ optional($data['infoPersonal'])->joining_date ?? '' }}" />
                                                     @error('joining_date')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -254,7 +263,7 @@
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <div class="col-lg-7">
-                                                    <input type="number" name="gross_salary" id="gross_salary" class="form-control @error('gross_salary') is-invalid @enderror" placeholder="" value="{{$data['infoPersonal']->gross_salary}}" />
+                                                    <input type="number" name="gross_salary" id="gross_salary" class="form-control @error('gross_salary') is-invalid @enderror" placeholder="" value="{{ optional($data['infoPersonal'])->gross_salary ?? '' }}" />
                                                     @error('gross_salary')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -267,12 +276,12 @@
                                             <div class="form-group row">
                                                 <label class="col-lg-4 col-form-label">Reporting Boss</label>
                                                 <div class="col-lg-7">
-                                                    <select name="reporting_boss" class="form-control dropdwon_select  @error('reporting_boss') is-invalid @enderror" style="height: 40px;">
+                                                    <select name="reporting_boss" class="form-control dropdwon_select @error('reporting_boss') is-invalid @enderror" style="height: 40px;">
                                                         <option value="" selected>Select Reporting Boss</option>
                                                         @foreach ($old_data['reporting_boss'] as $row)
-                                                            <option value="{{$row->id}}" {{isset($data['reporting_boss']) && $row->id == $data['reporting_boss']->id ? 'selected' : '' }}>{{$row->name}}</option>
+                                                            <option value="{{ $row->id }}" {{ optional($data['reporting_boss'])->id == $row->id ? 'selected' : '' }}>{{ $row->name }}</option>
                                                         @endforeach
-                                                    </select>
+                                                    </select>                                                    
                                                     @error('reporting_boss')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -285,9 +294,9 @@
                                             <div class="form-group row">
                                                 <div class="col-lg-7 ml-4">
                                                     <input type="hidden" name="is_reporting_boss" value="0">
-                                                    <input type="checkbox" class="form-check-input" name="is_reporting_boss" value="1"  @if($data['infoPersonal']->is_reporting_boss) checked @endif>
+                                                    <input type="checkbox" class="form-check-input" name="is_reporting_boss" value="1" {{ optional($data['infoPersonal'])->is_reporting_boss ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="check-reporting-boss">Is Reporting Boss?</label>
-                                                </div>
+                                                </div>                                                
                                             </div>
                                         </div>
                                     </div>
@@ -300,7 +309,7 @@
                                             <div class="form-group row">
                                                 <label class="col-lg-4 col-form-label">Present Address</label>
                                                 <div class="col-lg-7">
-                                                    <textarea name="address_present" class="form-control @error('address_present') is-invalid @enderror" rows="2" placeholder="Write your present address details!" id="address-present">{{$data['infoPersonal']->address_present}}</textarea>
+                                                    <textarea name="address_present" class="form-control @error('address_present') is-invalid @enderror" rows="2" placeholder="Write your present address details!" id="address-present">{{ $data['infoPersonal']->address_present ?? '' }}</textarea>
                                                     @error('address_present')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -313,7 +322,7 @@
                                             <div class="form-group row">
                                                 <label class="col-lg-4 col-form-label">Permanent Address</label>
                                                 <div class="col-lg-7">
-                                                    <textarea name="address_permanent" class="form-control  @error('address_permanent') is-invalid @enderror" rows="2" placeholder="Write your permanent address details!" id="address-permanent">{{$data['infoPersonal']->address_permanent}}</textarea>
+                                                    <textarea name="address_permanent" class="form-control @error('address_permanent') is-invalid @enderror" rows="2" placeholder="Write your permanent address details!" id="address-permanent">{{ $data['infoPersonal']->address_permanent ?? '' }}</textarea>
                                                     @error('address_permanent')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -323,6 +332,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    
                                     <!-- Step 4 input fields {Personal}-->
                                     <div class="row py-0 accordion__body--text">
                                         <div class="col-lg-12">
@@ -334,7 +344,7 @@
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <div class="col-lg-7">
-                                                    <input type="test" name="father_name" id="father_name" class="form-control @error('father_name') is-invalid @enderror" placeholder="" value="{{$data['infoPersonal']->father_name}}" />
+                                                    <input type="test" name="father_name" id="father_name" class="form-control @error('father_name') is-invalid @enderror" placeholder="" value="{{ $data['infoPersonal']->father_name ?? '' }}" />
                                                     @error('father_name')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -349,7 +359,7 @@
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <div class="col-lg-7">
-                                                    <input type="test" name="mother_name" id="mother_name" class="form-control @error('mother_name') is-invalid @enderror" placeholder="" value="{{$data['infoPersonal']->mother_name}}"/>
+                                                    <input type="test" name="mother_name" id="mother_name" class="form-control @error('mother_name') is-invalid @enderror" placeholder="" value="{{ $data['infoPersonal']->mother_name ?? '' }}"/>
                                                     @error('mother_name')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -362,7 +372,7 @@
                                             <div class="form-group row">
                                                 <label class="col-lg-4 col-form-label">Passport No.</label>
                                                 <div class="col-lg-7">
-                                                    <input type="number" name="passport_no" class="form-control @error('passport_no') is-invalid @enderror" placeholder="" value="{{$data['infoPersonal']->passport_no}}" />
+                                                    <input type="number" name="passport_no" class="form-control @error('passport_no') is-invalid @enderror" placeholder="" value="{{ $data['infoPersonal']->passport_no ?? '' }}" />
                                                     @error('passport_no')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -375,7 +385,7 @@
                                             <div class="form-group row">
                                                 <label class="col-lg-4 col-form-label">Driving License No.</label>
                                                 <div class="col-lg-7">
-                                                    <input type="number" name="driving_license" class="form-control @error('driving_license') is-invalid @enderror" placeholder="" value="{{$data['infoPersonal']->driving_license}}" />
+                                                    <input type="number" name="driving_license" class="form-control @error('driving_license') is-invalid @enderror" placeholder="" value="{{ $data['infoPersonal']->driving_license ?? '' }}" />
                                                     @error('driving_license')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -388,12 +398,12 @@
                                             <div class="form-group row">
                                                 <label class="col-lg-4 col-form-label">Marital Status</label>
                                                 <div class="col-lg-7">
-                                                    <select name="marital_status" class="form-control default-select  @error('marital_status') is-invalid @enderror" style="height: 40px;">
-                                                        <option value="0" selected>Unmarried</option>
-                                                        <option value="1" {{ $data['infoPersonal']->marital_status == '1' ? 'selected' : '' }}>Married</option>
-                                                        <option value="2" {{ $data['infoPersonal']->marital_status == '2' ? 'selected' : '' }}>Divorce</option>
-                                                        <option value="3" {{ $data['infoPersonal']->marital_status == '3' ? 'selected' : '' }}>Widowed</option>
-                                                    </select>
+                                                    <select name="marital_status" class="form-control default-select @error('marital_status') is-invalid @enderror" style="height: 40px;">
+                                                        <option value="0" {{ optional($data['infoPersonal'])->marital_status == '0' ? 'selected' : '' }}>Unmarried</option>
+                                                        <option value="1" {{ optional($data['infoPersonal'])->marital_status == '1' ? 'selected' : '' }}>Married</option>
+                                                        <option value="2" {{ optional($data['infoPersonal'])->marital_status == '2' ? 'selected' : '' }}>Divorce</option>
+                                                        <option value="3" {{ optional($data['infoPersonal'])->marital_status == '3' ? 'selected' : '' }}>Widowed</option>
+                                                    </select>                                                    
                                                     @error('marital_status')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -406,7 +416,7 @@
                                             <div class="form-group row">
                                                 <label class="col-lg-4 col-form-label">Home Phone</label>
                                                 <div class="col-lg-7">
-                                                    <input type="test" name="house_phone" class="form-control @error('house_phone') is-invalid @enderror" placeholder="" value="{{$data['infoPersonal']->house_phone}}" />
+                                                    <input type="test" name="house_phone" class="form-control @error('house_phone') is-invalid @enderror" placeholder="" value="{{ $data['infoPersonal']->house_phone ?? '' }}" />
                                                     @error('house_phone')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -419,7 +429,7 @@
                                             <div class="form-group row">
                                                 <label class="col-lg-4 col-form-label">Birth Certificate No.</label>
                                                 <div class="col-lg-7">
-                                                    <input type="test" name="birth_certificate_no" class="form-control @error('birth_certificate_no') is-invalid @enderror" placeholder="" value="{{$data['infoPersonal']->birth_certificate_no}}" />
+                                                    <input type="test" name="birth_certificate_no" class="form-control @error('birth_certificate_no') is-invalid @enderror" placeholder="" value="{{ $data['infoPersonal']->birth_certificate_no ?? '' }}" />
                                                     @error('birth_certificate_no')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -437,7 +447,7 @@
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <div class="col-lg-7">
-                                                    <input type="test" name="emg_person_name" id="emg_person_name" class="form-control @error('emg_person_name') is-invalid @enderror" placeholder="" value="{{$data['infoPersonal']->emg_person_name}}" />
+                                                    <input type="test" name="emg_person_name" id="emg_person_name" class="form-control @error('emg_person_name') is-invalid @enderror" placeholder="" value="{{ $data['infoPersonal']->emg_person_name ?? '' }}" />
                                                     @error('emg_person_name')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -452,7 +462,7 @@
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <div class="col-lg-7">
-                                                    <input type="test" name="emg_phone_number" id="emg_phone_number" class="form-control @error('emg_phone_number') is-invalid @enderror" placeholder="" value="{{$data['infoPersonal']->emg_phone_number}}" />
+                                                    <input type="test" name="emg_phone_number" id="emg_phone_number" class="form-control @error('emg_phone_number') is-invalid @enderror" placeholder="" value="{{ $data['infoPersonal']->emg_phone_number ?? '' }}" />
                                                     @error('emg_phone_number')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -465,7 +475,7 @@
                                             <div class="form-group row">
                                                 <label class="col-lg-4 col-form-label">Relationship</label>
                                                 <div class="col-lg-7">
-                                                    <input type="test" name="emg_relationship" class="form-control @error('emg_relationship') is-invalid @enderror" placeholder="" value="{{$data['infoPersonal']->emg_relationship}}" />
+                                                    <input type="test" name="emg_relationship" class="form-control @error('emg_relationship') is-invalid @enderror" placeholder="" value="{{ $data['infoPersonal']->emg_relationship ?? '' }}" />
                                                     @error('emg_relationship')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -478,7 +488,7 @@
                                             <div class="form-group row">
                                                 <label class="col-lg-4 col-form-label">Address</label>
                                                 <div class="col-lg-7">
-                                                    <input type="test" name="emg_address" class="form-control @error('emg_address') is-invalid @enderror" placeholder="" value="{{$data['infoPersonal']->emg_address}}" />
+                                                    <input type="test" name="emg_address" class="form-control @error('emg_address') is-invalid @enderror" placeholder="" value="{{ $data['infoPersonal']->emg_address ?? '' }}" />
                                                     @error('emg_address')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -495,6 +505,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    
                                 </div>
                             </div>
                         </form>

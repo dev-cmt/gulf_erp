@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Aug 31, 2023 at 01:34 AM
+-- Generation Time: Dec 11, 2023 at 02:22 AM
 -- Server version: 10.3.39-MariaDB-cll-lve
 -- PHP Version: 7.4.30
 
@@ -21,61 +21,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `erpiconisl_gulf`
 --
-
--- --------------------------------------------------------
-
---
--- Table structure for table `complaints`
---
-
-CREATE TABLE `complaints` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `issue_date` date DEFAULT NULL,
-  `issue_no` varchar(255) DEFAULT NULL,
-  `remarks` text DEFAULT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 0,
-  `mast_customer_id` bigint(20) UNSIGNED NOT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `complaint_details`
---
-
-CREATE TABLE `complaint_details` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 0,
-  `delivery_id` int(11) DEFAULT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `deliveries`
---
-
-CREATE TABLE `deliveries` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `serial_no` varchar(255) DEFAULT NULL,
-  `deli_date` date DEFAULT NULL,
-  `warranty` int(10) UNSIGNED NOT NULL DEFAULT 0,
-  `price` decimal(8,2) DEFAULT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 0,
-  `from_store` int(11) DEFAULT NULL,
-  `sales_id` bigint(20) UNSIGNED NOT NULL,
-  `mast_work_station_id` bigint(20) UNSIGNED NOT NULL,
-  `mast_item_register_id` bigint(20) UNSIGNED NOT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -221,16 +166,16 @@ CREATE TABLE `hr_attendances` (
   `date` date DEFAULT NULL,
   `in_time` time DEFAULT NULL,
   `out_time` time DEFAULT NULL,
-  `attendance_type` tinyint(4) NOT NULL DEFAULT 0,
   `location` text DEFAULT NULL,
   `description` text DEFAULT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 0,
-  `late` tinyint(4) NOT NULL DEFAULT 0,
+  `attendance_type` tinyint(4) NOT NULL DEFAULT 0,
   `user_name` varchar(255) DEFAULT NULL,
   `finger_id` int(11) DEFAULT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `late` tinyint(4) NOT NULL DEFAULT 0,
+  `status` tinyint(4) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -241,17 +186,17 @@ CREATE TABLE `hr_attendances` (
 
 CREATE TABLE `hr_leave_applications` (
   `id` bigint(20) UNSIGNED NOT NULL,
+  `purpose` text DEFAULT NULL,
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
   `leave_contact` varchar(255) DEFAULT NULL,
   `leave_location` varchar(255) DEFAULT NULL,
-  `purpose` text DEFAULT NULL,
-  `status` int(11) NOT NULL DEFAULT 1,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
   `mast_leave_id` bigint(20) UNSIGNED NOT NULL,
+  `emp_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `emp_id` bigint(20) UNSIGNED NOT NULL
+  `status` int(11) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -267,11 +212,11 @@ CREATE TABLE `info_banks` (
   `acount_name` varchar(255) DEFAULT NULL,
   `acount_no` int(11) DEFAULT NULL,
   `acount_type` int(11) DEFAULT NULL,
+  `emp_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
   `status` tinyint(4) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
-  `emp_id` bigint(20) UNSIGNED NOT NULL
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -287,23 +232,24 @@ CREATE TABLE `info_educationals` (
   `passing_year` date DEFAULT NULL,
   `out_of` int(11) DEFAULT NULL,
   `grade` double(8,2) DEFAULT 0.00,
+  `emp_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
   `status` tinyint(4) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
-  `emp_id` bigint(20) UNSIGNED NOT NULL
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `info_educationals`
 --
 
-INSERT INTO `info_educationals` (`id`, `qualification`, `institute_name`, `passing_year`, `out_of`, `grade`, `status`, `created_at`, `updated_at`, `user_id`, `emp_id`) VALUES
-(1, 2, 'Valuka Govt. Collage', '2020-01-01', NULL, 4.00, 1, '2023-08-02 10:17:07', '2023-08-02 10:17:07', 1, 5),
-(2, 4, 'World University of Bangladesh', '2014-01-01', NULL, 3.00, 1, '2023-08-05 14:22:30', '2023-08-05 14:22:30', 1, 6),
-(3, 2, 'Gov. Shahid Suhrawardi College, Dhaka.', '2014-01-01', NULL, 3.40, 1, '2023-08-07 11:32:20', '2023-08-07 11:32:20', 1, 9),
-(4, 2, 'Dhaka Udyan Gov. College', '2019-01-01', NULL, 3.00, 1, '2023-08-08 11:50:42', '2023-08-08 11:50:42', 1, 10),
-(5, 4, 'Gov. Titumir College', '2013-01-01', NULL, 3.00, 1, '2023-08-08 12:03:56', '2023-08-08 12:03:56', 1, 11);
+INSERT INTO `info_educationals` (`id`, `qualification`, `institute_name`, `passing_year`, `out_of`, `grade`, `emp_id`, `user_id`, `status`, `created_at`, `updated_at`) VALUES
+(1, 2, 'Valuka Govt. Collage', '2020-01-01', NULL, 4.00, 12, 1, 1, '2023-08-02 02:17:07', '2023-08-02 02:17:07'),
+(2, 4, 'World University of Bangladesh', '2014-01-01', NULL, 3.00, 13, 1, 1, '2023-08-05 06:22:30', '2023-08-05 06:22:30'),
+(3, 2, 'Gov. Shahid Suhrawardi College, Dhaka.', '2014-01-01', NULL, 3.40, 15, 1, 1, '2023-08-07 03:32:20', '2023-08-07 03:32:20'),
+(4, 2, 'Dhaka Udyan Gov. College', '2019-01-01', NULL, 3.00, 16, 1, 1, '2023-08-08 03:50:42', '2023-08-08 03:50:42'),
+(5, 4, 'Gov. Titumir College', '2013-01-01', NULL, 3.00, 17, 1, 1, '2023-08-08 04:03:56', '2023-08-08 04:03:56'),
+(6, 3, 'Faridpur Polytecnic', '1998-01-01', NULL, 2.00, 20, 2, 1, '2023-10-01 12:13:39', '2023-10-01 12:13:39');
 
 -- --------------------------------------------------------
 
@@ -319,11 +265,11 @@ CREATE TABLE `info_nominees` (
   `mobile_no` varchar(255) DEFAULT NULL,
   `nominee_percentage` int(11) DEFAULT NULL,
   `profile_image` varchar(255) DEFAULT NULL,
+  `emp_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
   `status` tinyint(4) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
-  `emp_id` bigint(20) UNSIGNED NOT NULL
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -359,8 +305,8 @@ CREATE TABLE `info_personals` (
   `thana_permanent` varchar(255) DEFAULT NULL,
   `post_code_permanent` int(11) DEFAULT NULL,
   `address_permanent` varchar(255) DEFAULT NULL,
-  `passport_no` varchar(20) DEFAULT NULL,
-  `driving_license` varchar(20) DEFAULT NULL,
+  `passport_no` varchar(255) DEFAULT NULL,
+  `driving_license` varchar(255) DEFAULT NULL,
   `marital_status` int(11) DEFAULT NULL,
   `house_phone` varchar(255) DEFAULT NULL,
   `father_name` varchar(255) DEFAULT NULL,
@@ -370,30 +316,30 @@ CREATE TABLE `info_personals` (
   `emg_phone_number` varchar(255) DEFAULT NULL,
   `emg_relationship` varchar(255) DEFAULT NULL,
   `emg_address` text DEFAULT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 1,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
   `mast_department_id` bigint(20) UNSIGNED NOT NULL,
   `mast_designation_id` bigint(20) UNSIGNED NOT NULL,
   `mast_employee_type_id` bigint(20) UNSIGNED NOT NULL,
   `mast_work_station_id` bigint(20) UNSIGNED NOT NULL,
+  `emp_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `emp_id` bigint(20) UNSIGNED NOT NULL
+  `status` tinyint(4) NOT NULL DEFAULT 1,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `info_personals`
 --
 
-INSERT INTO `info_personals` (`id`, `date_of_birth`, `employee_gender`, `nid_no`, `blood_group`, `number_official`, `email_official`, `joining_date`, `service_length`, `gross_salary`, `reporting_boss`, `is_reporting_boss`, `division_present`, `district_present`, `upazila_present`, `union_present`, `thana_present`, `post_code_present`, `address_present`, `division_permanent`, `district_permanent`, `upazila_permanent`, `union_permanent`, `thana_permanent`, `post_code_permanent`, `address_permanent`, `passport_no`, `driving_license`, `marital_status`, `house_phone`, `father_name`, `mother_name`, `birth_certificate_no`, `emg_person_name`, `emg_phone_number`, `emg_relationship`, `emg_address`, `status`, `created_at`, `updated_at`, `mast_department_id`, `mast_designation_id`, `mast_employee_type_id`, `mast_work_station_id`, `user_id`, `emp_id`) VALUES
-(1, '2002-01-01', 0, '25745545458', 3, '0195275932', 'motiur@gulf.com', '2022-11-01', 2, 15000, 0, 1, 6, 42, 322, 2887, NULL, NULL, 'Khilgoan, Domshar, Shariatpur', 6, 42, 322, 2887, NULL, NULL, 'Khilgoan, Domshar, Shariatpur', '1185344689', '415441482', 0, '01922437143', 'Mosharraf Khan', 'Shilpy Begum', 20222145678938, 'Sagour', '01995275933', 'Brother', 'Shariatpur', 1, '2023-07-24 03:22:54', '2023-07-24 03:22:54', 1, 5, 2, 2, 1, 1),
-(2, '2001-01-01', 0, '7363434569', 3, NULL, NULL, '2021-12-12', NULL, 12500, NULL, 1, 6, 47, 492, 4557, 'Badda', 1212, 'Shahid Hasan Uddin Road (Old Thana Road), North Badda, Badda.', 6, 44, 344, 3096, 'Dhanbari', 1997, 'Baroipara, Ukhariya Bari.', NULL, NULL, 0, NULL, 'Md. Rayhan Uddin', 'Sumi Khatun', NULL, 'MD.Rayhan Uddin', '01632618877', 'Father', NULL, 1, '2023-08-02 10:15:12', '2023-08-02 10:15:12', 3, 27, 1, 1, 1, 5),
-(3, '1992-01-08', 0, '1497818664', 5, '01768227788', 'gulfservice121@gmail.com', '2017-12-05', NULL, 24000, NULL, 1, 6, 46, 360, 3231, 'Manikgonj', 1802, NULL, 6, 46, 360, 3231, 'Manikgonj', 1802, NULL, NULL, NULL, 1, NULL, 'Md. Malek Mia', 'Hajera Begum', NULL, 'Md. Emon', '01721406285', 'Elder Brother', 'Gultia, Mulzam, Manikgonj.', 1, '2023-08-05 14:20:41', '2023-08-05 14:20:41', 2, 10, 1, 1, 1, 6),
-(4, '1995-11-25', 0, '2406520086', 5, NULL, NULL, '2007-05-01', NULL, 14000, NULL, 1, 6, 46, 361, 3241, 'Gior', 1800, 'Vill: East Kosonda, P.O: Pecharkanda.', 6, 47, 492, 4548, 'Gulshan', 1212, 'Gulf Staff Quotar', NULL, NULL, 1, NULL, 'Md. Tajomddin', 'Mrs. Mohila', NULL, 'Tahiya', '01922-595983', 'Daughter', NULL, 1, '2023-08-07 09:57:25', '2023-08-07 09:57:25', 3, 21, 1, 1, 1, 7),
-(5, '1996-07-01', 0, '2840825307', 5, '01709927554', NULL, '2014-11-26', NULL, 14000, NULL, 1, 6, 51, 389, 3563, 'Batikmari', 8141, 'Holding- Shekh Bari, Vill- Batikmari', 6, 47, 492, 4548, 'Gulshan', 1212, 'Gulf Staff Quater', NULL, NULL, 0, NULL, 'Md. Jafor Shekh', 'Rojiya Begum', NULL, 'Md. Faruk Khondokar', '01711538759', 'Mothernel Unkel (Mama)', 'R-04, H-42, B-E, Banasree, Dhaka.', 1, '2023-08-07 11:31:24', '2023-08-07 11:31:24', 2, 12, 1, 1, 1, 9),
-(6, '2001-11-05', 0, '6011975114', 5, NULL, NULL, '2022-01-01', NULL, 10000, NULL, 1, 6, 47, 365, 3282, 'Amin Bazar.', 1348, 'Vill- Begunbari, P.O- Aminbazar.', 6, 47, 492, 4548, 'Gulshan', 1212, 'GSQ', NULL, NULL, 0, NULL, 'Md. Humayon Kabir', 'Mrs. Taslima Begum', NULL, 'Md. Mosharraf', '01557304169', 'Brother (Contact No Confermation)', 'Begunbari, Aminbazar, Savar, Dhaka-1348', 1, '2023-08-08 11:49:55', '2023-08-08 11:49:55', 4, 12, 1, 1, 1, 10),
-(7, '1989-12-31', 0, '19895614623172738', 3, NULL, NULL, '2009-01-01', NULL, 14000, NULL, 1, 1, 1, 9, 107, 'Muradnagar', 3545, 'Vill- kodalkata, P.O- Pak Gazipur.', 6, 47, 492, 4548, 'Gulshan', 1212, 'GSQ', NULL, NULL, 1, NULL, 'Joynal Abedin', 'Ranuara Begum', NULL, 'Abdul Alim', '01711843395', 'Brother', 'Gultiya, Muljan, Manikgonj.', 1, '2023-08-08 12:02:44', '2023-08-08 12:02:44', 7, 12, 1, 1, 1, 11),
-(8, '2004-01-01', 0, '4214670061', NULL, NULL, NULL, '2022-02-26', NULL, 8500, NULL, 1, 1, 6, 56, 518, 'Motlab.', 3602, 'Holding- Hamid Ali Miji Bari, Vill- Digholdi, P.O- Munsirhat.', 6, 47, 492, 4548, 'Gulshan', 1212, 'GSQ', NULL, NULL, 0, NULL, 'Billal Hosen', 'Shahanara', NULL, 'Md. Riyad Hossain', '01886453570', 'Elder Brother', 'Hamid Ali Miji Bari, Motlab Dokkhin, Chandpur (Same as Permanent Address)', 1, '2023-08-08 12:51:33', '2023-08-08 12:51:33', 2, 16, 1, 1, 1, 12);
+INSERT INTO `info_personals` (`id`, `date_of_birth`, `employee_gender`, `nid_no`, `blood_group`, `number_official`, `email_official`, `joining_date`, `service_length`, `gross_salary`, `reporting_boss`, `is_reporting_boss`, `division_present`, `district_present`, `upazila_present`, `union_present`, `thana_present`, `post_code_present`, `address_present`, `division_permanent`, `district_permanent`, `upazila_permanent`, `union_permanent`, `thana_permanent`, `post_code_permanent`, `address_permanent`, `passport_no`, `driving_license`, `marital_status`, `house_phone`, `father_name`, `mother_name`, `birth_certificate_no`, `emg_person_name`, `emg_phone_number`, `emg_relationship`, `emg_address`, `mast_department_id`, `mast_designation_id`, `mast_employee_type_id`, `mast_work_station_id`, `emp_id`, `user_id`, `status`, `created_at`, `updated_at`) VALUES
+(1, '2001-01-01', 0, '7363434569', 3, NULL, NULL, '2021-12-12', NULL, 12500, NULL, 1, 6, 47, 492, 4557, 'Badda', 1212, 'Shahid Hasan Uddin Road (Old Thana Road), North Badda, Badda.', 6, 44, 344, 3096, 'Dhanbari', 1997, 'Baroipara, Ukhariya Bari.', NULL, NULL, 0, NULL, 'Md. Rayhan Uddin', 'Sumi Khatun', NULL, 'MD.Rayhan Uddin', '01632618877', 'Father', NULL, 3, 20, 1, 1, 12, 1, 1, '2023-08-02 02:15:12', '2023-08-02 02:15:12'),
+(2, '1992-01-08', 0, '1497818664', 5, '01768227788', 'gulfservice121@gmail.com', '2017-12-05', NULL, 24000, NULL, 1, 6, 46, 360, 3231, 'Manikgonj', 1802, NULL, 6, 46, 360, 3231, 'Manikgonj', 1802, NULL, NULL, NULL, 1, NULL, 'Md. Malek Mia', 'Hajera Begum', NULL, 'Md. Emon', '01721406285', 'Elder Brother', 'Gultia, Mulzam, Manikgonj.', 2, 10, 1, 1, 13, 1, 1, '2023-08-05 06:20:41', '2023-08-05 06:20:41'),
+(3, '1995-11-25', 0, '2406520086', 5, NULL, NULL, '2007-05-01', NULL, 14000, NULL, 1, 6, 46, 361, 3241, 'Gior', 1800, 'Vill: East Kosonda, P.O: Pecharkanda.', 6, 47, 492, 4548, 'Gulshan', 1212, 'Gulf Staff Quotar', NULL, NULL, 1, NULL, 'Md. Tajomddin', 'Mrs. Mohila', NULL, 'Tahiya', '01922-595983', 'Daughter', NULL, 3, 21, 1, 1, 14, 1, 1, '2023-08-07 01:57:25', '2023-08-07 01:57:25'),
+(4, '1996-07-01', 0, '2840825307', 5, '01709927554', NULL, '2014-11-26', NULL, 14000, NULL, 1, 6, 51, 389, 3563, 'Batikmari', 8141, 'Holding- Shekh Bari, Vill- Batikmari', 6, 47, 492, 4548, 'Gulshan', 1212, 'Gulf Staff Quater', NULL, NULL, 0, NULL, 'Md. Jafor Shekh', 'Rojiya Begum', NULL, 'Md. Faruk Khondokar', '01711538759', 'Mothernel Unkel (Mama)', 'R-04, H-42, B-E, Banasree, Dhaka.', 2, 12, 1, 1, 15, 1, 1, '2023-08-07 03:31:24', '2023-08-07 03:31:24'),
+(5, '2001-11-05', 0, '6011975114', 5, NULL, NULL, '2022-01-01', NULL, 10000, NULL, 1, 6, 47, 365, 3282, 'Amin Bazar.', 1348, 'Vill- Begunbari, P.O- Aminbazar.', 6, 47, 492, 4548, 'Gulshan', 1212, 'GSQ', NULL, NULL, 0, NULL, 'Md. Humayon Kabir', 'Mrs. Taslima Begum', NULL, 'Md. Mosharraf', '01557304169', 'Brother (Contact No Confermation)', 'Begunbari, Aminbazar, Savar, Dhaka-1348', 4, 12, 1, 1, 16, 1, 1, '2023-08-08 03:49:55', '2023-08-08 03:49:55'),
+(6, '1989-12-31', 0, '19895614623172738', 3, NULL, NULL, '2009-01-01', NULL, 14000, NULL, 1, 1, 1, 9, 107, 'Muradnagar', 3545, 'Vill- kodalkata, P.O- Pak Gazipur.', 6, 47, 492, 4548, 'Gulshan', 1212, 'GSQ', NULL, NULL, 1, NULL, 'Joynal Abedin', 'Ranuara Begum', NULL, 'Abdul Alim', '01711843395', 'Brother', 'Gultiya, Muljan, Manikgonj.', 7, 12, 1, 1, 17, 1, 1, '2023-08-08 04:02:44', '2023-08-08 04:02:44'),
+(7, '2004-01-01', 0, '4214670061', NULL, NULL, NULL, '2022-02-26', NULL, 8500, NULL, 1, 1, 6, 56, 518, 'Motlab.', 3602, 'Holding- Hamid Ali Miji Bari, Vill- Digholdi, P.O- Munsirhat.', 6, 47, 492, 4548, 'Gulshan', 1212, 'GSQ', NULL, NULL, 0, NULL, 'Billal Hosen', 'Shahanara', NULL, 'Md. Riyad Hossain', '01886453570', 'Elder Brother', 'Hamid Ali Miji Bari, Motlab Dokkhin, Chandpur (Same as Permanent Address)', 2, 16, 1, 1, 18, 1, 1, '2023-08-08 04:51:33', '2023-08-08 04:51:33'),
+(9, '1979-01-05', 0, '4641232634', 5, '01709927559', 'shahidulislam24gulf@gmail.com', '2000-01-01', NULL, 24000, NULL, 1, 6, 47, 492, 4568, 'Kadamtoli', 1236, 'H- 1981, Road- Hazi Salauddin Road, Doniya, Dhaka.', 6, 47, 492, 4568, 'Kadamtoli', 1236, 'H- 1981, Road- Hazi Salauddin Road, Doniya, Dhaka.', NULL, NULL, 0, NULL, 'Md. Abul Hashem Hawlader', 'Shamson Nahar', NULL, 'Md. Shamsul Islam', '01816672576', 'Brother', 'Same as parmanent address', 4, 3, 1, 2, 20, 2, 1, '2023-10-01 12:09:41', '2023-10-01 12:09:41');
 
 -- --------------------------------------------------------
 
@@ -408,21 +354,21 @@ CREATE TABLE `info_work_experiences` (
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
   `job_description` text DEFAULT NULL,
+  `emp_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
   `status` tinyint(4) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
-  `emp_id` bigint(20) UNSIGNED NOT NULL
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `info_work_experiences`
 --
 
-INSERT INTO `info_work_experiences` (`id`, `company_name`, `designation`, `start_date`, `end_date`, `job_description`, `status`, `created_at`, `updated_at`, `user_id`, `emp_id`) VALUES
-(1, 'Paramount Insurance Company ltd.', 'Underwriting Officer', '2018-04-01', '2021-11-24', NULL, 1, '2023-08-02 10:19:30', '2023-08-02 10:19:30', 1, 5),
-(2, 'Prama Group', 'Production Engineer', '2014-05-01', '2017-01-01', NULL, 1, '2023-08-05 14:24:04', '2023-08-05 14:24:04', 1, 6),
-(3, 'National Board Revinue (NBR)', 'Data Entry Officer', '2017-01-01', '2022-12-05', NULL, 1, '2023-08-08 11:51:41', '2023-08-08 11:51:41', 1, 10);
+INSERT INTO `info_work_experiences` (`id`, `company_name`, `designation`, `start_date`, `end_date`, `job_description`, `emp_id`, `user_id`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Paramount Insurance Company ltd.', 'Underwriting Officer', '2018-04-01', '2021-11-24', NULL, 12, 1, 1, '2023-08-01 22:19:30', '2023-08-01 22:19:30'),
+(2, 'Prama Group', 'Production Engineer', '2014-05-01', '2017-01-01', NULL, 13, 1, 1, '2023-08-05 02:24:04', '2023-08-05 02:24:04'),
+(3, 'National Board Revinue (NBR)', 'Data Entry Officer', '2017-01-01', '2022-12-05', NULL, 16, 1, 1, '2023-08-07 23:51:41', '2023-08-07 23:51:41');
 
 -- --------------------------------------------------------
 
@@ -443,12 +389,23 @@ CREATE TABLE `mast_customers` (
   `web_address` text DEFAULT NULL,
   `credit_limit` int(11) DEFAULT NULL,
   `remarks` text DEFAULT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 0,
   `mast_customer_type_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `mast_customers`
+--
+
+INSERT INTO `mast_customers` (`id`, `name`, `email`, `phone`, `address`, `cont_person`, `cont_designation`, `cont_phone`, `cont_email`, `web_address`, `credit_limit`, `remarks`, `mast_customer_type_id`, `user_id`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Motiur Rahman', 'motiur.cmt@gmail.com', '01913954378', 'Shariatpur', 'Sagour Khan', 'Teacher', '01922437143', 'sagour@gmail.com', '', 1000000, 'Test Only', 1, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(2, 'Sabbir', 'tayfa@gmail.com', '01913954378', 'Shariatpur', 'Alam Khan', 'Teacher', '01922437143', 'sagour@gmail.com', '', 1000000, 'Test Only', 1, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(3, 'Minhaz', 'tayfa@gmail.com', '01913954378', 'Shariatpur', 'Sagour Khan', 'Teacher', '01922437143', 'tamim@gmail.com', '', 1000000, 'Test Only', 1, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(4, 'Tamim', 'tayfa@gmail.com', '01913954378', 'Shariatpur', 'Motiur Khan', 'Teacher', '01922437143', 'sagour@gmail.com', '', 1000000, 'Test Only', 2, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(5, 'Tayfa Islam', 'tayfa@gmail.com', '01913954378', 'Shariatpur', 'Sagour Khan', 'Teacher', '01922437143', 'koli@gmail.com', '', 1000000, 'Test Only', 3, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56');
 
 -- --------------------------------------------------------
 
@@ -464,6 +421,15 @@ CREATE TABLE `mast_customer_types` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `mast_customer_types`
+--
+
+INSERT INTO `mast_customer_types` (`id`, `name`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Corporate', 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(2, 'Distributer', 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(3, 'Retailer', 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56');
+
 -- --------------------------------------------------------
 
 --
@@ -473,26 +439,26 @@ CREATE TABLE `mast_customer_types` (
 CREATE TABLE `mast_departments` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `dept_name` varchar(255) DEFAULT NULL,
-  `dept_head` int(11) NOT NULL DEFAULT 0,
+  `dept_head` bigint(20) UNSIGNED DEFAULT NULL,
   `description` text DEFAULT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
   `status` int(11) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `mast_departments`
 --
 
-INSERT INTO `mast_departments` (`id`, `dept_name`, `dept_head`, `description`, `status`, `created_at`, `updated_at`, `user_id`) VALUES
-(1, 'Air Condition Sales', 1, NULL, 1, '2023-07-30 11:22:09', '2023-07-30 11:22:09', 1),
-(2, 'Air Condition Service', 1, NULL, 1, '2023-07-30 11:23:19', '2023-07-30 11:23:19', 1),
-(3, 'HR & Admin', 1, NULL, 1, '2023-07-30 11:24:01', '2023-07-30 11:24:01', 1),
-(4, 'Car Spear Parts', 1, NULL, 1, '2023-07-30 11:24:41', '2023-07-30 11:24:41', 1),
-(5, 'Store', 1, NULL, 1, '2023-07-30 11:25:32', '2023-07-30 11:25:32', 1),
-(6, 'Wear House', 1, NULL, 1, '2023-07-30 11:26:07', '2023-07-30 11:26:07', 1),
-(7, 'Accounts & Finnance', 1, NULL, 1, '2023-07-30 11:27:41', '2023-07-30 11:27:41', 1);
+INSERT INTO `mast_departments` (`id`, `dept_name`, `dept_head`, `description`, `user_id`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Air Condition Sales', 1, NULL, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(2, 'Air Condition Service', 1, NULL, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(3, 'HR & Admin', 1, NULL, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(4, 'Car Spear Parts', 1, NULL, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(5, 'Store', 1, NULL, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(6, 'Wear House', 1, NULL, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(7, 'Accounts & Finnance', 1, NULL, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56');
 
 -- --------------------------------------------------------
 
@@ -504,44 +470,42 @@ CREATE TABLE `mast_designations` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `desig_name` varchar(255) DEFAULT NULL,
   `description` text DEFAULT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
   `status` int(11) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `mast_designations`
 --
 
-INSERT INTO `mast_designations` (`id`, `desig_name`, `description`, `status`, `created_at`, `updated_at`, `user_id`) VALUES
-(1, 'G.M (Sales & Admin)', NULL, 1, '2023-07-30 11:34:10', '2023-07-30 11:34:10', 1),
-(2, 'AGM Finance & Accounts', NULL, 1, '2023-07-30 11:34:56', '2023-07-30 11:35:38', 1),
-(3, 'Jr. Manager', NULL, 1, '2023-07-30 11:36:06', '2023-07-30 11:36:06', 1),
-(4, 'Executive Officer (Sales & Service)', NULL, 1, '2023-07-30 11:36:55', '2023-07-30 11:37:19', 1),
-(5, 'Sales Excecutive', NULL, 1, '2023-07-30 11:39:00', '2023-07-30 11:39:00', 1),
-(6, 'Manager Sales', NULL, 1, '2023-07-30 11:40:30', '2023-07-30 11:40:30', 1),
-(7, 'Sr. Manager Sales', NULL, 1, '2023-07-30 11:41:16', '2023-07-30 11:41:16', 1),
-(8, 'General Manager (Commercial Division)', NULL, 1, '2023-07-30 11:41:44', '2023-07-30 11:41:44', 1),
-(9, 'Managing Director', NULL, 1, '2023-07-30 11:42:21', '2023-07-30 11:47:15', 1),
-(10, 'Head of Engineer (Service Section)', NULL, 1, '2023-07-30 11:42:22', '2023-07-30 11:42:22', 1),
-(11, 'A.G.M Sales', NULL, 1, '2023-07-30 11:42:57', '2023-07-30 11:42:57', 1),
-(12, 'Excecutive (Accounts)', NULL, 1, '2023-07-30 11:43:34', '2023-07-30 11:43:34', 1),
-(13, 'Tecnichian', NULL, 1, '2023-07-30 11:44:50', '2023-07-30 11:44:50', 1),
-(14, 'Director', NULL, 1, '2023-07-30 11:47:38', '2023-07-30 11:47:38', 1),
-(15, 'Store In-Charge', NULL, 1, '2023-07-30 11:48:08', '2023-07-30 11:48:08', 1),
-(16, 'Helper', NULL, 1, '2023-07-30 11:48:37', '2023-07-30 11:48:37', 1),
-(17, 'Security', NULL, 1, '2023-07-30 11:49:01', '2023-07-30 11:49:01', 1),
-(18, 'Store Keper', NULL, 1, '2023-07-30 11:51:26', '2023-07-30 11:51:26', 1),
-(19, 'Electronics Tec.', NULL, 1, '2023-07-30 11:51:46', '2023-07-30 11:51:46', 1),
-(20, 'Service Supervisor (Sr. Tec)', NULL, 1, '2023-07-30 11:52:11', '2023-07-30 11:52:11', 1),
-(21, 'Peon', NULL, 1, '2023-07-30 11:52:31', '2023-07-30 11:52:31', 1),
-(22, 'Welding Technician', NULL, 1, '2023-07-30 11:52:55', '2023-07-30 11:52:55', 1),
-(23, 'Driver', NULL, 1, '2023-07-30 11:53:20', '2023-07-30 11:53:20', 1),
-(24, 'Security In-charge', NULL, 1, '2023-07-30 11:53:59', '2023-07-30 11:53:59', 1),
-(25, 'Imam', NULL, 1, '2023-07-30 11:54:20', '2023-07-30 11:54:20', 1),
-(26, 'Chef', NULL, 1, '2023-07-30 11:56:49', '2023-07-30 11:56:49', 1),
-(27, 'Computer Oparetor', NULL, 1, '2023-07-30 11:57:35', '2023-07-30 11:57:35', 1);
+INSERT INTO `mast_designations` (`id`, `desig_name`, `description`, `user_id`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'G.M (Sales & Admin)', NULL, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(2, 'AGM Finance & Accounts', NULL, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(3, 'Jr. Manager', NULL, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(4, 'Executive Officer (Sales & Service)', NULL, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(5, 'Sales Excecutive', NULL, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(6, 'Manager Sales', NULL, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(7, 'Sr. Manager Sales', NULL, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(8, 'General Manager (Commercial Division)', NULL, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(9, 'Managing Director', NULL, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(10, 'Head of Engineer (Service Section)', NULL, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(11, 'A.G.M Sales', NULL, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(12, 'Excecutive (Accounts)', NULL, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(13, 'Tecnichian', NULL, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(14, 'Director', NULL, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(15, 'Store In-Charge', NULL, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(16, 'Helper', NULL, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(17, 'Security', NULL, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(18, 'Store Keper', NULL, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(19, 'Electronics Tec.', NULL, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(20, 'Service Supervisor (Sr. Tec)', NULL, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(21, 'Peon', NULL, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(22, 'Welding Technician', NULL, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(23, 'Driver', NULL, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(24, 'Security In-charge', NULL, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(25, 'Imam', NULL, 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56');
 
 -- --------------------------------------------------------
 
@@ -554,19 +518,23 @@ CREATE TABLE `mast_employee_types` (
   `cat_name` varchar(255) DEFAULT NULL,
   `cat_type` varchar(255) DEFAULT NULL,
   `description` text DEFAULT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
   `status` int(11) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `mast_employee_types`
 --
 
-INSERT INTO `mast_employee_types` (`id`, `cat_name`, `cat_type`, `description`, `status`, `created_at`, `updated_at`, `user_id`) VALUES
-(1, 'Full-Time', '1', NULL, 1, '2023-07-30 12:14:08', '2023-07-30 12:14:08', 1),
-(2, 'Half-Time', '1', NULL, 1, '2023-07-30 12:14:33', '2023-07-30 12:14:33', 1);
+INSERT INTO `mast_employee_types` (`id`, `cat_name`, `cat_type`, `description`, `user_id`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Full-Time', '1', 'These are employees who work for the company on a regular basis and are typically paid a salary or an hourly wage. They may be eligible for benefits such as health insurance, retirement plans, and paid time off.', 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(2, 'Half-Time', '1', 'These are employees who work for the company on a part-time basis, usually less than 40 hours per week. They may be paid an hourly wage and may or may not be eligible for benefits depending on the company policies.', 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(3, 'Contract', '1', 'These are individuals who work for the company on a temporary basis and are usually hired to perform a specific job or task. They may be paid a flat fee or an hourly rate and are typically not eligible for benefits.', 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(4, 'Interns', '1', 'These are students or recent graduates who work for the company on a temporary basis to gain work experience and develop skills. They may be paid a stipend or may work for free, and are typically not eligible for benefits.', 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(5, 'Consultants', '1', 'These are individuals or firms who are hired by the company to provide specialized expertise or services on a project basis. They may be paid a flat fee or an hourly rate and are typically not eligible for benefits.', 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(6, 'Seasonal Employees', '1', 'These are employees who work for the company during specific times of the year when there is a higher demand for the companys products or services. They may be paid an hourly wage and may or may not be eligible for benefits depending on the companys policies.', 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56');
 
 -- --------------------------------------------------------
 
@@ -578,11 +546,21 @@ CREATE TABLE `mast_item_categories` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `cat_name` varchar(255) DEFAULT NULL,
   `description` text DEFAULT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
   `status` tinyint(4) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `mast_item_categories`
+--
+
+INSERT INTO `mast_item_categories` (`id`, `cat_name`, `description`, `user_id`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'AC', '', 1, 1, '2023-10-31 00:16:35', '2023-10-31 00:16:35'),
+(2, 'AC Spare Parts', '', 1, 1, '2023-10-31 00:16:35', '2023-10-31 00:16:35'),
+(3, 'Car Spare Parts', '', 1, 1, '2023-10-31 00:16:35', '2023-10-31 00:16:35'),
+(4, 'Tools Requisition', '', 1, 1, '2023-10-31 00:16:35', '2023-10-31 00:16:35');
 
 -- --------------------------------------------------------
 
@@ -594,12 +572,158 @@ CREATE TABLE `mast_item_groups` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `part_name` varchar(255) DEFAULT NULL,
   `description` text DEFAULT NULL,
+  `mast_item_category_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
   `status` tinyint(4) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
-  `mast_item_category_id` bigint(20) UNSIGNED NOT NULL
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `mast_item_groups`
+--
+
+INSERT INTO `mast_item_groups` (`id`, `part_name`, `description`, `mast_item_category_id`, `user_id`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Split Wall Type', 'A split system air conditioner is made up of two “split” units—a wall-mounted indoor unit that blows conditioned air into the home, and an outdoor unit that expels the heat gathered from the indoor system.', 1, 2, 1, '2023-11-02 08:59:07', '2023-11-05 12:19:52'),
+(2, 'Split Ceiling Type', 'A ceiling cassette split system is a type of air conditioner that is designed to be installed on the ceiling. It consists of two main components – the indoor unit, which is mounted on or near the ceiling, and the outdoor unit, which contains the compressor and condenser.', 1, 2, 1, '2023-11-02 08:59:38', '2023-11-05 12:20:35'),
+(3, 'Split Cassette Type', 'Ceiling cassettes are a type of split aircon system, which means they consist of two units. It\'s easy to recognise a ceiling cassette aircon because its indoor unit is installed on the ceiling. The conduit that connects the indoor and outdoor units are hidden within the ceiling (hence the name).', 1, 2, 1, '2023-11-05 12:21:24', '2023-11-05 12:21:24'),
+(4, 'Floor Standing Type', 'Floor standing air conditioners are air conditioners that are installed on or near the floor or recessed in spots like unused fireplaces. Floor standing air conditioners are easy to access and maintain and are popular in homes with little wall space or high ceilings.', 1, 2, 1, '2023-11-05 14:39:13', '2023-11-05 14:39:13'),
+(5, 'Duct Type', '(Central Air Conditioning) Air is sent through ducts from one central location to heat and cool all rooms. All rooms are air conditioned uniformly at the same temperature settings.', 1, 2, 1, '2023-11-05 14:40:28', '2023-11-05 14:40:28'),
+(6, 'Window Type', 'Window air conditioner is sometimes referred to as room air conditioner as well. It is the simplest form of an air conditioning system and is mounted on windows or walls. It is a single unit that is assembled in a casing where all the components are located.', 1, 2, 1, '2023-11-05 14:41:30', '2023-11-05 14:41:30'),
+(7, 'Rooftop Package Type', 'A packaged rooftop unit, or RTU, is a type of HVAC system that contains all the components needed to provide conditioned air in one compact unit. You typically use packaged rooftop units in light and large commercial applications. They are very popular with retail and industrial properties.', 1, 2, 1, '2023-11-05 14:44:25', '2023-11-05 14:44:25'),
+(8, 'BUSHING', NULL, 3, 2, 1, '2023-11-08 11:28:24', '2023-11-08 11:31:23'),
+(9, 'CENTER BEARING', NULL, 3, 2, 1, '2023-11-08 11:29:39', '2023-11-08 11:30:54'),
+(10, 'ENGINE INSULATOR', NULL, 3, 2, 1, '2023-11-08 11:30:23', '2023-11-08 11:30:23'),
+(11, 'ENGINE BUSHING', NULL, 3, 2, 1, '2023-11-08 11:32:01', '2023-11-08 11:32:01'),
+(12, 'ENGINE MOUNTING', NULL, 3, 2, 1, '2023-11-08 11:32:34', '2023-11-08 11:32:34'),
+(13, 'SHOCK  ABSORVER MOUNTING', NULL, 3, 2, 1, '2023-11-08 11:35:06', '2023-11-08 11:35:06'),
+(14, 'SHOCK  ABSORVER BUMPER', NULL, 3, 2, 1, '2023-11-08 11:35:48', '2023-11-08 11:35:48'),
+(15, 'SHOCK DUS COVER', NULL, 3, 2, 1, '2023-11-08 11:36:20', '2023-11-08 11:36:20'),
+(16, 'AIR HOSE', NULL, 3, 2, 1, '2023-11-09 09:58:41', '2023-11-09 09:58:41'),
+(17, 'CUSHION STEERING GEAR', NULL, 3, 2, 1, '2023-11-09 09:59:21', '2023-11-09 09:59:21'),
+(18, 'STABILIZER SHAFT RUBBER', NULL, 3, 2, 1, '2023-11-09 10:00:09', '2023-11-09 10:00:09'),
+(19, 'STABILIZER LINK', NULL, 3, 2, 1, '2023-11-09 10:00:41', '2023-11-09 10:00:41'),
+(20, 'DRIVE SHAFT BOOT', NULL, 3, 2, 1, '2023-11-09 10:01:11', '2023-11-09 10:01:11'),
+(21, 'STEERING BOOT', NULL, 3, 2, 1, '2023-11-09 10:01:54', '2023-11-09 10:01:54'),
+(22, 'DIAPHRAGM', NULL, 3, 2, 1, '2023-11-09 11:33:45', '2023-11-09 11:33:45'),
+(23, 'EXHAST PIPE SUPPORT', NULL, 3, 2, 1, '2023-11-09 11:34:27', '2023-11-09 11:34:27'),
+(24, 'SPRING BUMPER', NULL, 3, 2, 1, '2023-11-09 11:36:11', '2023-11-09 11:36:11'),
+(25, 'STRUT BAR BUSH', NULL, 3, 2, 1, '2023-11-09 11:36:48', '2023-11-09 11:36:48'),
+(26, 'GEAR BOOT', NULL, 3, 2, 1, '2023-11-09 11:37:16', '2023-11-09 11:37:16'),
+(27, 'LASTIC SHOCK', NULL, 3, 2, 1, '2023-11-09 11:37:46', '2023-11-09 11:37:46'),
+(28, 'RADIATOR CAP', NULL, 3, 2, 1, '2023-11-09 11:38:18', '2023-11-09 11:38:18'),
+(29, 'HYDRAULIC BRAKE & CLUTCH MASTER', NULL, 3, 2, 1, '2023-11-09 11:39:15', '2023-11-09 11:39:15'),
+(30, 'COUPLING ASSY FLEXIBLE', NULL, 3, 2, 1, '2023-11-09 11:40:07', '2023-11-09 11:40:07'),
+(31, 'LASTIC PLUG', NULL, 3, 2, 1, '2023-11-09 11:40:41', '2023-11-09 11:40:41'),
+(32, 'DISC BRAKE SEAL KIT', NULL, 3, 2, 1, '2023-11-09 11:41:19', '2023-11-09 11:41:19'),
+(33, 'SPRING KIT, REAR BRAKE', NULL, 3, 2, 1, '2023-11-09 11:41:55', '2023-11-09 11:41:55'),
+(34, 'LINK ASSY', NULL, 3, 2, 1, '2023-11-09 11:42:22', '2023-11-09 11:42:22'),
+(35, 'COIL SPRING BUMPER RUBBER', NULL, 3, 2, 1, '2023-11-09 11:43:03', '2023-11-09 11:43:03'),
+(36, 'CYLINDER HEAD COVER', NULL, 3, 2, 1, '2023-11-09 11:43:37', '2023-11-09 11:43:37'),
+(37, 'PEDAL PAD BRAKE & CLUTCH', NULL, 3, 2, 1, '2023-11-09 11:44:16', '2023-11-09 11:44:16'),
+(38, 'FROK SUB-ASSY, CLUTCH', NULL, 3, 2, 1, '2023-11-09 11:44:48', '2023-11-09 11:44:48'),
+(39, 'RUBBER GROMMET', NULL, 3, 2, 1, '2023-11-09 11:45:21', '2023-11-09 11:45:21'),
+(40, 'Copper Pipe', NULL, 2, 2, 1, '2023-11-09 11:47:52', '2023-11-09 11:47:52'),
+(41, 'Insulation', NULL, 2, 2, 1, '2023-11-09 11:48:21', '2023-11-09 11:48:21'),
+(42, 'Wire', NULL, 2, 2, 1, '2023-11-09 11:48:46', '2023-11-09 11:48:46'),
+(43, 'Grill', NULL, 2, 2, 1, '2023-11-09 11:49:33', '2023-11-09 11:49:33'),
+(44, 'Hata Clum', NULL, 2, 2, 1, '2023-11-09 11:50:40', '2023-11-09 11:50:40'),
+(45, 'Hanging Clum', NULL, 2, 2, 1, '2023-11-09 11:51:14', '2023-11-09 11:51:14'),
+(46, 'Royal Bolt', NULL, 2, 2, 1, '2023-11-09 11:51:44', '2023-11-09 11:51:44'),
+(47, 'Nut', NULL, 3, 2, 1, '2023-11-09 11:52:07', '2023-11-09 11:52:07'),
+(48, 'Compressor Nut', NULL, 2, 2, 1, '2023-11-09 11:52:38', '2023-11-09 11:52:38'),
+(49, 'Black Tape', NULL, 2, 2, 1, '2023-11-09 11:53:14', '2023-11-09 11:53:14'),
+(50, 'Package Tape', NULL, 2, 2, 1, '2023-11-09 11:53:42', '2023-11-09 11:53:42'),
+(51, 'Thread Tape', NULL, 2, 2, 1, '2023-11-09 11:54:56', '2023-11-09 11:54:56'),
+(52, 'Maskin Tape', NULL, 2, 2, 1, '2023-11-09 11:55:30', '2023-11-09 11:55:30'),
+(53, 'Side Tape', NULL, 2, 2, 1, '2023-11-09 11:55:53', '2023-11-09 11:55:53'),
+(54, 'Water Pipe', NULL, 2, 2, 1, '2023-11-09 11:56:31', '2023-11-09 11:56:31'),
+(55, 'PVC Pipe', NULL, 2, 2, 1, '2023-11-09 11:56:56', '2023-11-09 11:56:56'),
+(56, 'Flaxible Pipe', NULL, 2, 2, 1, '2023-11-09 11:57:22', '2023-11-09 11:57:22'),
+(57, 'Brazing Rod', NULL, 2, 2, 1, '2023-11-09 11:57:50', '2023-11-09 11:57:50'),
+(58, 'Stainer', NULL, 2, 2, 1, '2023-11-09 11:58:23', '2023-11-09 11:58:23'),
+(59, 'Capilery', NULL, 2, 2, 1, '2023-11-09 11:58:51', '2023-11-09 11:58:51'),
+(60, 'Draier', NULL, 2, 2, 1, '2023-11-09 11:59:16', '2023-11-09 11:59:16'),
+(61, 'Magnetic Contact', NULL, 2, 2, 1, '2023-11-09 11:59:53', '2023-11-09 11:59:53'),
+(62, 'Expansion Valve', NULL, 2, 2, 1, '2023-11-09 12:00:29', '2023-11-09 12:00:29'),
+(63, 'Running Capacitor', NULL, 2, 2, 1, '2023-11-09 12:00:57', '2023-11-09 12:00:57'),
+(64, 'Flaring Nut', NULL, 2, 2, 1, '2023-11-09 12:01:32', '2023-11-09 12:01:32'),
+(65, 'Fan Capacitor', NULL, 2, 2, 1, '2023-11-09 12:06:12', '2023-11-09 12:06:12'),
+(66, 'Fan Blade', NULL, 2, 2, 1, '2023-11-09 12:06:39', '2023-11-09 12:06:39'),
+(67, 'Royal Plug', NULL, 2, 2, 1, '2023-11-09 12:21:53', '2023-11-09 12:21:53'),
+(68, 'Cut Screw', NULL, 2, 2, 1, '2023-11-09 12:22:54', '2023-11-09 12:22:54'),
+(69, 'Charging Valve', NULL, 2, 2, 1, '2023-11-09 12:23:28', '2023-11-09 12:23:28'),
+(70, 'Service Valve', NULL, 2, 2, 1, '2023-11-09 12:24:00', '2023-11-09 12:24:00'),
+(71, 'Bearing', NULL, 2, 2, 1, '2023-11-09 12:24:25', '2023-11-09 12:24:25'),
+(72, 'Swing Motor', NULL, 2, 2, 1, '2023-11-09 12:24:54', '2023-11-09 12:24:54'),
+(73, 'Gas', NULL, 2, 2, 1, '2023-11-09 12:25:24', '2023-11-09 12:25:24'),
+(74, 'Union', NULL, 2, 2, 1, '2023-11-09 12:26:57', '2023-11-09 12:26:57'),
+(75, 'Connector', NULL, 2, 2, 1, '2023-11-09 12:27:51', '2023-11-09 12:27:51'),
+(76, 'Spray', NULL, 2, 2, 1, '2023-11-09 12:28:26', '2023-11-09 12:28:26'),
+(77, 'Polish Cutter', NULL, 2, 2, 1, '2023-11-09 12:29:00', '2023-11-09 12:29:00'),
+(78, 'Siriz Paper', NULL, 2, 2, 1, '2023-11-09 12:29:23', '2023-11-09 12:29:23'),
+(79, 'Jute', NULL, 2, 2, 1, '2023-11-09 12:29:51', '2023-11-09 12:29:51');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mast_item_models`
+--
+
+CREATE TABLE `mast_item_models` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `ton` varchar(255) DEFAULT NULL,
+  `coling_capacity` varchar(255) DEFAULT NULL,
+  `indoor` varchar(255) DEFAULT NULL,
+  `outdoor` varchar(255) DEFAULT NULL,
+  `full_set` varchar(255) DEFAULT NULL,
+  `mast_item_group_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `mast_item_models`
+--
+
+INSERT INTO `mast_item_models` (`id`, `ton`, `coling_capacity`, `indoor`, `outdoor`, `full_set`, `mast_item_group_id`, `user_id`, `status`, `created_at`, `updated_at`) VALUES
+(1, '1.0', '13700', 'WAS-012', 'SPCS-012', 'WAS-012/SPCS-012', 1, 2, 1, '2023-11-02 09:01:55', '2023-11-02 09:01:55'),
+(2, '1.5', '18700', 'WAS-018', 'SPCS-018', 'WAS-018/SPCS-018', 1, 2, 1, '2023-11-02 09:02:39', '2023-11-02 09:02:39'),
+(3, '2.0', '25900', 'WAS-024', 'SPCS-024', 'WAS-024/SPCS-024', 1, 2, 1, '2023-11-05 12:15:59', '2023-11-05 12:15:59'),
+(4, '2.5', '30800', 'WAS-030', 'SPCS-030', 'WAS-030/SPCS-030', 1, 2, 1, '2023-11-07 09:24:07', '2023-11-07 09:24:07'),
+(5, '3.0', '39100', 'WAS-036', 'SPCS-036', 'WAS-036/SPCS-036', 1, 2, 1, '2023-11-07 09:25:24', '2023-11-07 09:25:24'),
+(6, '1.0', '13700', 'CPJS-012', 'SPCS-012', 'CPJS-012/SPCS-012', 2, 2, 1, '2023-11-07 09:26:27', '2023-11-07 09:26:27'),
+(7, '1.5', '18700', 'CPJS-018', 'SPCS-018', 'CPJS-018/SPCS-018', 2, 2, 1, '2023-11-07 09:27:10', '2023-11-07 09:27:10'),
+(8, '2.0', '25900', 'CPJS-024', 'SPCS-024', 'CPJS-024/SPCS-024', 2, 2, 1, '2023-11-07 09:27:56', '2023-11-07 09:27:56'),
+(9, '2.5', '30800', 'CPJS-030', 'SPCS-030', 'CPJS-030/SPCS-030', 2, 2, 1, '2023-11-07 09:30:00', '2023-11-07 09:30:41'),
+(10, '3.0', '39900', 'CPJS-036', 'SPCS-036L', 'CPJS-036/SPCS-036L', 2, 2, 1, '2023-11-07 09:32:39', '2023-11-07 09:32:39'),
+(11, '4.0', '51000', 'CPJS-048', 'SPCS-048', 'CPJS-048/SPCS-048', 2, 2, 1, '2023-11-07 09:33:29', '2023-11-07 09:33:29'),
+(12, '5.0', '60900', 'CPJS-060', 'SPCS-060', 'CPJS-060/SPCS-060', 2, 2, 1, '2023-11-07 09:34:16', '2023-11-07 09:34:16'),
+(13, '1.5', '18700', 'CCS-018', 'SPCS-018', 'CCS-018/SPCS-018', 3, 2, 1, '2023-11-07 09:36:14', '2023-11-07 09:36:14'),
+(14, '2.0', '25900', 'CCS-024', 'SPCS-024', 'CCS-024/SPCS-024', 3, 2, 1, '2023-11-07 09:37:01', '2023-11-07 09:37:01'),
+(15, '2.5', '30800', 'CCS-030', 'SPCS-030', 'CCS-030/SPCS-030', 3, 2, 1, '2023-11-07 09:37:42', '2023-11-07 09:37:42'),
+(16, '3.0', '39100', 'CCS-036', 'SPCS-036', 'CCS-036/SPCS-036', 3, 2, 1, '2023-11-07 09:39:12', '2023-11-07 09:39:12'),
+(17, '4.0', '51000', 'CCS-048', 'SPCS-048', 'CCS-048/SPCS-048', 3, 2, 1, '2023-11-07 09:40:40', '2023-11-07 09:40:40'),
+(18, '5.0', '60900', 'CCS-060', 'SPCS-060', 'CCS-060/SPCS-060', 3, 2, 1, '2023-11-07 09:41:40', '2023-11-07 09:41:40'),
+(19, '3.0', '39100', 'APEF-036', 'SPCS-036L', 'APEF-036/SPCS-036L', 4, 2, 1, '2023-11-07 09:44:02', '2023-11-07 09:44:02'),
+(20, '4.0', '51000', 'APEF-048', 'SPCS-048', 'APEF-048/SPCS-048', 4, 2, 1, '2023-11-07 09:45:02', '2023-11-07 09:45:02'),
+(21, '5.0', '60900', 'APEF-060', 'SPCS-060', 'APEF-060/SPCS-060', 4, 2, 1, '2023-11-07 09:46:02', '2023-11-07 09:46:02'),
+(22, '10.0', '120000', 'APEF-120', 'SPCS-120', 'APEF-120/SPCS-120', 4, 2, 1, '2023-11-07 09:47:24', '2023-11-07 09:47:24'),
+(23, '1.0', '13700', 'AHD-012', 'SPCS-012', 'AHD-012/SPCS-012', 5, 2, 1, '2023-11-07 09:48:44', '2023-11-07 09:48:44'),
+(24, '1.5', '18700', 'AHD-018', 'SPCS-018', 'AHD-018/SPCS-018', 5, 2, 1, '2023-11-07 09:49:37', '2023-11-07 09:49:37'),
+(25, '2.0', '25900', 'AHD-024', 'SPCS-024', 'AHD-024/SPCS-024', 5, 2, 1, '2023-11-07 09:50:29', '2023-11-07 09:50:29'),
+(26, '2.530', '30800', 'AHD-030', 'SPCS-030', 'AHD-030/SPCS-030', 5, 2, 1, '2023-11-07 09:51:38', '2023-11-07 09:51:38'),
+(27, '3.0', '39900', 'AHD-036', 'SPCS-036L', 'AHD-036/SPCS-036L', 5, 2, 1, '2023-11-07 09:52:52', '2023-11-07 09:52:52'),
+(28, '4.0', '51000', 'AHD-048', 'SPCS-048', 'AHD-048/SPCS-048', 5, 2, 1, '2023-11-07 09:54:02', '2023-11-07 09:54:02'),
+(29, '5.0', '60900', 'AHD-060', 'SPCS-060', 'AHD-060/SPCS-060', 5, 2, 1, '2023-11-07 09:55:15', '2023-11-07 09:55:15'),
+(30, '10.0', '120000', 'AHD-120', 'SPCS-120', 'AHD-120/SPCS-120', 5, 2, 1, '2023-11-07 09:56:20', '2023-11-07 09:56:20'),
+(31, '10.0', '120800', 'ASR-120', 'SPCS-120', 'ASR-120/SPCS-120', 7, 2, 1, '2023-11-07 09:57:45', '2023-11-07 09:57:45'),
+(32, '15.0', '147600', 'ASR-140', 'SPCS-140', 'ASR-140/SPCS-140', 7, 2, 1, '2023-11-07 09:59:14', '2023-11-07 09:59:14'),
+(33, '20.0', '239700', 'ASR-240', 'SPCS-240', 'ASR-240/SPCS-240', 7, 2, 1, '2023-11-07 10:00:56', '2023-11-07 10:00:56'),
+(34, '1.5', '18700', '-', '-', 'RAW-018', 6, 2, 1, '2023-11-07 10:01:42', '2023-11-07 10:01:42'),
+(35, '2.0', '25900', '-', '-', 'RAW-024', 6, 2, 1, '2023-11-07 10:07:03', '2023-11-07 10:07:03');
 
 -- --------------------------------------------------------
 
@@ -612,19 +736,29 @@ CREATE TABLE `mast_item_registers` (
   `box_code` int(11) DEFAULT NULL,
   `gulf_code` int(11) DEFAULT NULL,
   `part_no` varchar(255) DEFAULT NULL,
-  `description` text DEFAULT NULL,
   `box_qty` int(11) DEFAULT NULL,
-  `price` decimal(8,2) DEFAULT NULL,
+  `price` decimal(10,2) DEFAULT NULL,
   `image` varchar(255) DEFAULT NULL,
   `warranty` int(11) DEFAULT NULL,
-  `cat_id` int(11) DEFAULT NULL,
   `bar_code` varchar(255) DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `description` text DEFAULT NULL,
+  `unit_type` tinyint(4) DEFAULT NULL,
+  `unit_id` bigint(20) UNSIGNED NOT NULL,
+  `mast_item_models_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `mast_item_category_id` bigint(20) UNSIGNED DEFAULT NULL,
   `mast_item_group_id` bigint(20) UNSIGNED NOT NULL,
-  `unit_id` bigint(20) UNSIGNED NOT NULL
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 1,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `mast_item_registers`
+--
+
+INSERT INTO `mast_item_registers` (`id`, `box_code`, `gulf_code`, `part_no`, `box_qty`, `price`, `image`, `warranty`, `bar_code`, `description`, `unit_type`, `unit_id`, `mast_item_models_id`, `mast_item_category_id`, `mast_item_group_id`, `user_id`, `status`, `created_at`, `updated_at`) VALUES
+(1, NULL, NULL, 'RAW-024', 1, '110000.00', NULL, 24, '1531082923', NULL, 1, 1, 35, 1, 6, 2, 1, '2023-11-02 09:05:16', '2023-11-07 10:11:16');
 
 -- --------------------------------------------------------
 
@@ -639,23 +773,23 @@ CREATE TABLE `mast_leaves` (
   `max_limit` int(11) DEFAULT NULL,
   `yearly_limit` int(11) DEFAULT NULL,
   `description` text DEFAULT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
   `status` int(11) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `mast_leaves`
 --
 
-INSERT INTO `mast_leaves` (`id`, `leave_name`, `leave_code`, `max_limit`, `yearly_limit`, `description`, `status`, `created_at`, `updated_at`, `user_id`) VALUES
-(1, 'Personal Reason', '01', 5, 2, NULL, 1, '2023-07-30 12:03:02', '2023-07-30 12:10:34', 1),
-(2, 'Sick', '02', 20, 3, NULL, 1, '2023-07-30 12:03:49', '2023-07-30 12:03:49', 1),
-(3, 'Casual', '03', 10, 2, NULL, 1, '2023-07-30 12:05:08', '2023-07-30 12:05:08', 1),
-(4, 'Vacation leave (Annual leave)', '04', 6, 1, NULL, 1, '2023-07-30 12:05:09', '2023-07-30 12:07:13', 1),
-(5, 'Unpaid leave (or leave without pay)', '05', 3, 5, NULL, 1, '2023-07-30 12:08:36', '2023-07-30 12:08:36', 1),
-(6, 'Study leave', '06', 40, 2, NULL, 1, '2023-07-30 12:09:56', '2023-07-30 12:09:56', 1);
+INSERT INTO `mast_leaves` (`id`, `leave_name`, `leave_code`, `max_limit`, `yearly_limit`, `description`, `user_id`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Personal Leave', '01', 5, 2, 'N/A', 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(2, 'Sick Leave', '02', 20, 3, 'N/A', 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(3, 'Casual', '03', 10, 2, 'N/A', 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(4, 'Vacation leave (Annual leave)', '04', 6, 1, 'N/A', 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(5, 'Unpaid leave (or leave without pay)', '05', 3, 5, 'N/A', 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(6, 'Study leave', '06', 40, 2, 'N/A', 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56');
 
 -- --------------------------------------------------------
 
@@ -668,11 +802,28 @@ CREATE TABLE `mast_packages` (
   `pkg_name` varchar(255) DEFAULT NULL,
   `pkg_size` int(11) DEFAULT NULL,
   `description` text DEFAULT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
   `status` tinyint(4) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `mast_packages`
+--
+
+INSERT INTO `mast_packages` (`id`, `pkg_name`, `pkg_size`, `description`, `user_id`, `status`, `created_at`, `updated_at`) VALUES
+(1, '1 X 1', 1, '', 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(2, '1 X 4', 4, '', 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(3, '1 X 6', 6, '', 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(4, '1 X 8', 8, '', 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(5, '1 X 10', 10, '', 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(6, '1 X 12', 12, '', 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(7, '1 X 16', 16, '', 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(8, '1 X 20', 20, '', 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(9, '1 X 24', 24, '', 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(10, '1 X 36', 36, '', 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(11, '1 X 48', 48, '', 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56');
 
 -- --------------------------------------------------------
 
@@ -687,11 +838,19 @@ CREATE TABLE `mast_suppliers` (
   `email` varchar(255) DEFAULT NULL,
   `phone_number` varchar(255) DEFAULT NULL,
   `address` text DEFAULT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
   `status` tinyint(4) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `mast_suppliers`
+--
+
+INSERT INTO `mast_suppliers` (`id`, `supplier_name`, `contact_person`, `email`, `phone_number`, `address`, `user_id`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Unicom Auto Parts Co., Ltd', 'Official', 'info@unicomethailand.com', '(+66) 36 909999', '39/2 MOO5 TAMBOL NONGYAW AMPOR MUENG ARABURI,18000 THAILAND.', 2, 1, '2023-11-07 10:23:20', '2023-11-07 10:23:20'),
+(2, 'Saijo Denki International Co., Ltd', 'Official', 'https://5330-th.all.biz/contacts', '+66 2 832 1999', '39/9 MOO 9, SOI DUANGMANEE, NGAMWONGWAN RD, BANGKHEN, MUANG, NONTHABURI, THAILAND', 2, 1, '2023-11-07 11:27:13', '2023-11-07 11:27:13');
 
 -- --------------------------------------------------------
 
@@ -703,12 +862,36 @@ CREATE TABLE `mast_units` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `unit_name` varchar(255) DEFAULT NULL,
   `description` text DEFAULT NULL,
-  `mast_item_category_id` int(11) DEFAULT NULL,
+  `mast_item_category_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
   `status` tinyint(4) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `mast_units`
+--
+
+INSERT INTO `mast_units` (`id`, `unit_name`, `description`, `mast_item_category_id`, `user_id`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Set (set)', 'Count', 1, 1, 1, '2023-10-31 00:16:35', '2023-10-31 00:16:35'),
+(2, 'Piece (pcs)', 'Count', 1, 1, 1, '2023-10-31 00:16:35', '2023-10-31 00:16:35'),
+(3, 'Dozen (doz)', 'Count', 2, 1, 2, '2023-10-31 00:16:35', '2023-10-31 00:16:35'),
+(4, 'Pack (pk)', 'Count', 3, 1, 1, '2023-10-31 00:16:35', '2023-10-31 00:16:35'),
+(5, 'Milligram (mg)', 'Weight/Mass', 3, 1, 1, '2023-10-31 00:16:35', '2023-10-31 00:16:35'),
+(6, 'Gram (g)', 'Weight/Mass', 3, 1, 1, '2023-10-31 00:16:35', '2023-10-31 00:16:35'),
+(7, 'Kilogram (kg)', 'Weight/Mass', 2, 1, 1, '2023-10-31 00:16:35', '2023-10-31 00:16:35'),
+(8, 'Metric Ton (MT)', 'Weight/Mass', 2, 1, 1, '2023-10-31 00:16:35', '2023-10-31 00:16:35'),
+(9, 'Ounce (oz)', 'Weight/Mass', 2, 1, 1, '2023-10-31 00:16:35', '2023-10-31 00:16:35'),
+(10, 'Pound (lb)', 'Weight/Mass', 2, 1, 1, '2023-10-31 00:16:35', '2023-10-31 00:16:35'),
+(11, 'Square Meter (m²)', 'Area', 2, 1, 1, '2023-10-31 00:16:35', '2023-10-31 00:16:35'),
+(12, 'Square Foot (sq ft)', 'Area', 3, 1, 1, '2023-10-31 00:16:35', '2023-10-31 00:16:35'),
+(13, 'Acre (ac)', 'Area', 3, 1, 1, '2023-10-31 00:16:35', '2023-10-31 00:16:35'),
+(14, 'Square Kilometer (sq km)', 'Area', 2, 1, 1, '2023-10-31 00:16:35', '2023-10-31 00:16:35'),
+(15, 'NOS', NULL, 1, 2, 1, '2023-11-07 10:04:33', '2023-11-07 10:05:07'),
+(16, 'Pc', NULL, 3, 2, 1, '2023-11-07 10:14:11', '2023-11-07 10:14:39'),
+(17, 'Set', NULL, 3, 2, 1, '2023-11-07 10:15:05', '2023-11-07 10:15:05'),
+(18, 'Box', NULL, 3, 2, 1, '2023-11-07 10:15:39', '2023-11-07 10:15:39');
 
 -- --------------------------------------------------------
 
@@ -722,18 +905,20 @@ CREATE TABLE `mast_work_stations` (
   `contact_number` varchar(255) DEFAULT NULL,
   `location` text DEFAULT NULL,
   `description` text DEFAULT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
   `status` tinyint(4) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `mast_work_stations`
 --
 
-INSERT INTO `mast_work_stations` (`id`, `store_name`, `contact_number`, `location`, `description`, `status`, `created_at`, `updated_at`, `user_id`) VALUES
-(1, 'Central Storehouse', '01909302126', 'Gulshan', 'Test Only', 1, '2023-08-02 15:27:28', '2023-08-02 15:27:23', 1);
+INSERT INTO `mast_work_stations` (`id`, `store_name`, `contact_number`, `location`, `description`, `user_id`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Central Storehouse', '01995275933', 'Gulshan', 'This is time off that a female employee can take before and after childbirth. Maternity leave may be paid or unpaid, depending on the company policies.', 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(2, 'Gulf international associates ltd.', '01995275933', 'Gulshan', 'This is time off that a female employee can take before and after childbirth. Maternity leave may be paid or unpaid, depending on the company policies.', 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(3, 'Icon information Systems ltd.', '01995275933', 'Mirpur', 'This is time off that a female employee can take before and after childbirth. Maternity leave may be paid or unpaid, depending on the company policies.', 1, 1, '2023-10-10 04:26:56', '2023-10-10 04:26:56');
 
 -- --------------------------------------------------------
 
@@ -773,28 +958,37 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (19, '2022_09_08_043933_create_mast_suppliers_table', 1),
 (20, '2022_09_08_043934_create_mast_customer_types_table', 1),
 (21, '2022_09_08_043935_create_mast_customers_table', 1),
-(22, '2023_04_16_081138_create_info_personals_table', 1),
-(23, '2023_04_27_063610_create_info_educationals_table', 1),
-(24, '2023_04_27_063611_create_info_work_experiences_table', 1),
-(25, '2023_04_27_063612_create_info_banks_table', 1),
-(26, '2023_04_27_063613_create_info_nominees_table', 1),
-(27, '2023_04_30_034227_create_hr_leave_applications_table', 1),
-(28, '2023_05_07_045208_create_hr_attendances_table', 1),
-(29, '2023_05_15_052417_create_purchases_table', 1),
-(30, '2023_05_17_053821_create_purchase_details_table', 1),
-(31, '2023_06_05_104849_create_quotations_table', 1),
-(32, '2023_06_05_104850_create_quotation_details_table', 1),
-(33, '2023_06_05_104851_create_sales_table', 1),
-(34, '2023_06_05_115459_create_sales_details_table', 1),
-(35, '2023_07_09_083700_create_store_transfers_table', 1),
-(36, '2023_07_09_101840_create_store_transfer_details_table', 1),
-(37, '2023_07_09_101841_create_deliveries_table', 1),
-(38, '2023_07_16_083217_create_sales_returns_table', 1),
-(39, '2023_07_16_093835_create_sales_return_details_table', 1),
-(40, '2023_07_24_085305_create_complaints_table', 1),
-(41, '2023_07_24_091704_create_complaint_details_table', 1),
-(42, '2023_08_08_062121_create_reference_types_table', 1),
-(43, '2023_08_09_052658_create_sl_movements_table', 1);
+(22, '2022_09_08_043936_create_mast_complaint_types_table', 1),
+(23, '2023_04_16_081138_create_info_personals_table', 1),
+(24, '2023_04_27_063610_create_info_educationals_table', 1),
+(25, '2023_04_27_063611_create_info_work_experiences_table', 1),
+(26, '2023_04_27_063612_create_info_banks_table', 1),
+(27, '2023_04_27_063613_create_info_nominees_table', 1),
+(28, '2023_04_30_034227_create_hr_leave_applications_table', 1),
+(29, '2023_05_07_045208_create_hr_attendances_table', 1),
+(30, '2023_05_15_052417_create_purchases_table', 1),
+(31, '2023_05_17_053821_create_purchase_details_table', 1),
+(32, '2023_06_05_104849_create_quotations_table', 1),
+(33, '2023_06_05_104850_create_quotation_details_table', 1),
+(34, '2023_06_05_104851_create_sales_table', 1),
+(35, '2023_06_05_115459_create_sales_details_table', 1),
+(36, '2023_07_09_083700_create_store_transfers_table', 1),
+(37, '2023_07_09_101840_create_store_transfer_details_table', 1),
+(38, '2023_07_09_101841_create_deliveries_table', 1),
+(39, '2023_07_16_083217_create_sales_returns_table', 1),
+(40, '2023_07_16_093835_create_sales_return_details_table', 1),
+(41, '2023_07_24_085305_create_complaints_table', 1),
+(42, '2023_07_24_091704_create_complaint_details_table', 1),
+(43, '2023_07_24_091706_create_job_cards_table', 1),
+(44, '2023_07_25_084447_create_service_bills_table', 1),
+(45, '2023_07_25_085132_create_service_bill_details_table', 1),
+(46, '2023_07_26_105439_create_spares_table', 1),
+(47, '2023_07_26_110113_create_spare_details_table', 1),
+(48, '2023_07_27_052142_create_requisitions_table', 1),
+(49, '2023_07_27_052212_create_requisition_details_table', 1),
+(50, '2023_08_08_062121_create_reference_types_table', 1),
+(51, '2023_08_09_052658_create_sl_movements_table', 1),
+(52, '2023_08_10_063321_create_setups_table', 1);
 
 -- --------------------------------------------------------
 
@@ -825,7 +1019,8 @@ CREATE TABLE `model_has_roles` (
 --
 
 INSERT INTO `model_has_roles` (`role_id`, `model_type`, `model_id`) VALUES
-(1, 'App\\Models\\User', 1);
+(1, 'App\\Models\\User', 1),
+(2, 'App\\Models\\User', 2);
 
 -- --------------------------------------------------------
 
@@ -858,25 +1053,56 @@ CREATE TABLE `permissions` (
 --
 
 INSERT INTO `permissions` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VALUES
-(1, 'Setting access', 'web', '2023-07-24 03:22:39', '2023-07-24 03:22:39'),
-(2, 'Pages access', 'web', '2023-07-24 03:22:39', '2023-07-24 03:22:39'),
-(3, 'Gallery access', 'web', '2023-07-24 03:22:39', '2023-07-24 03:22:39'),
-(4, 'Gallery create', 'web', '2023-07-24 03:22:40', '2023-07-24 03:22:40'),
-(5, 'Gallery edit', 'web', '2023-07-24 03:22:40', '2023-07-24 03:22:40'),
-(6, 'Gallery delete', 'web', '2023-07-24 03:22:40', '2023-07-24 03:22:40'),
-(7, 'Member access', 'web', '2023-07-24 03:22:40', '2023-07-24 03:22:40'),
-(8, 'Approve Member', 'web', '2023-07-24 03:22:40', '2023-07-24 03:22:40'),
-(9, 'Member create', 'web', '2023-07-24 03:22:40', '2023-07-24 03:22:40'),
-(10, 'Member edit', 'web', '2023-07-24 03:22:40', '2023-07-24 03:22:40'),
-(11, 'Member delete', 'web', '2023-07-24 03:22:41', '2023-07-24 03:22:41'),
-(12, 'User access', 'web', '2023-07-24 03:22:41', '2023-07-24 03:22:41'),
-(13, 'User create', 'web', '2023-07-24 03:22:41', '2023-07-24 03:22:41'),
-(14, 'User edit', 'web', '2023-07-24 03:22:41', '2023-07-24 03:22:41'),
-(15, 'User delete', 'web', '2023-07-24 03:22:41', '2023-07-24 03:22:41'),
-(16, 'Role access', 'web', '2023-07-24 03:22:42', '2023-07-24 03:22:42'),
-(17, 'Role create', 'web', '2023-07-24 03:22:42', '2023-07-24 03:22:42'),
-(18, 'Role edit', 'web', '2023-07-24 03:22:42', '2023-07-24 03:22:42'),
-(19, 'Role delete', 'web', '2023-07-24 03:22:42', '2023-07-24 03:22:42');
+(1, 'Super-Admin', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(2, 'Admin', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(3, 'Moderator', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(4, 'Manager', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(5, 'Supervisor', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(6, 'Employee', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(7, 'Viewer', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(8, 'Editor', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(9, 'Customer', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(10, 'Sales', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(11, 'Support', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(12, 'Developer', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(13, 'Analyst', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(14, 'Tester', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(15, 'Guest', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(16, 'Marketing', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(17, 'Finance', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(18, 'HR', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(19, 'Hr access', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(20, 'Inventory access', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(21, 'Sales access', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(22, 'Warrenty access', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(23, 'Employee access', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(24, 'Employee create', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(25, 'Employee edit', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(26, 'Employee delete', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(27, 'Leave access', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(28, 'Leave create', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(29, 'Leave edit', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(30, 'Leave delete', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(31, 'Attendance access', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(32, 'Attendance create', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(33, 'Attendance edit', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(34, 'Attendance delete', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(35, 'Salary access', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(36, 'Salary create', 'web', '2023-10-10 04:26:55', '2023-10-10 04:26:55'),
+(37, 'Salary edit', 'web', '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(38, 'Salary delete', 'web', '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(39, 'Hr setting access', 'web', '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(40, 'Inventory setting access', 'web', '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(41, 'Sales setting access', 'web', '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(42, 'Warrenty setting access', 'web', '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(43, 'User access', 'web', '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(44, 'User create', 'web', '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(45, 'User edit', 'web', '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(46, 'User delete', 'web', '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(47, 'Role access', 'web', '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(48, 'Role create', 'web', '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(49, 'Role edit', 'web', '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(50, 'Role delete', 'web', '2023-10-10 04:26:56', '2023-10-10 04:26:56');
 
 -- --------------------------------------------------------
 
@@ -907,16 +1133,15 @@ CREATE TABLE `purchases` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `inv_date` date DEFAULT NULL,
   `inv_no` varchar(255) DEFAULT NULL,
-  `lc_no` varchar(255) DEFAULT NULL,
   `vat` double(8,2) DEFAULT 0.00,
   `tax` double(8,2) DEFAULT 0.00,
   `remarks` text DEFAULT NULL,
-  `mast_item_category_id` int(11) DEFAULT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 0,
-  `is_parsial` tinyint(4) NOT NULL DEFAULT 0,
+  `mast_item_category_id` bigint(20) UNSIGNED NOT NULL,
   `mast_work_station_id` bigint(20) UNSIGNED NOT NULL,
   `mast_supplier_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
+  `is_parsial` tinyint(4) NOT NULL DEFAULT 0,
+  `status` tinyint(4) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -932,11 +1157,11 @@ CREATE TABLE `purchase_details` (
   `qty` int(11) DEFAULT NULL,
   `price` decimal(8,2) DEFAULT NULL,
   `rcv_qty` int(11) DEFAULT NULL,
-  `cat_id` bigint(20) DEFAULT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 1,
+  `mast_item_category_id` bigint(20) UNSIGNED DEFAULT NULL,
   `purchase_id` bigint(20) UNSIGNED NOT NULL,
   `mast_item_register_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -949,17 +1174,16 @@ CREATE TABLE `purchase_details` (
 
 CREATE TABLE `quotations` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `offer_date` date DEFAULT NULL,
-  `ref_no` varchar(255) DEFAULT NULL,
-  `order_no` varchar(255) DEFAULT NULL,
-  `order_date` date DEFAULT NULL,
+  `quot_date` date DEFAULT NULL,
+  `quot_no` varchar(255) DEFAULT NULL,
   `vat` double(8,2) DEFAULT 0.00,
   `tax` double(8,2) DEFAULT 0.00,
   `remarks` text DEFAULT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 0,
   `mast_item_category_id` bigint(20) UNSIGNED NOT NULL,
   `mast_customer_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
+  `is_sales` tinyint(4) NOT NULL DEFAULT 0,
+  `status` tinyint(4) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -974,10 +1198,11 @@ CREATE TABLE `quotation_details` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `qty` int(11) DEFAULT NULL,
   `price` decimal(8,2) DEFAULT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 1,
+  `mast_item_category_id` bigint(20) UNSIGNED DEFAULT NULL,
   `quotation_id` bigint(20) UNSIGNED NOT NULL,
   `mast_item_register_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1001,10 +1226,49 @@ CREATE TABLE `reference_types` (
 --
 
 INSERT INTO `reference_types` (`id`, `name`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Purchase', 1, '2023-07-24 03:22:47', '2023-07-24 03:22:47'),
-(2, 'Sales', 1, '2023-07-24 03:22:47', '2023-07-24 03:22:47'),
-(3, 'Store Transfer', 1, '2023-07-24 03:22:47', '2023-07-24 03:22:47'),
-(4, 'Sales Return', 1, '2023-07-24 03:22:48', '2023-07-24 03:22:48');
+(1, 'Purchase', 1, '2023-11-05 05:19:53', '2023-11-05 05:19:53'),
+(2, 'Sales', 1, '2023-11-05 05:19:53', '2023-11-05 05:19:53'),
+(3, 'Store Transfer', 1, '2023-11-05 05:19:53', '2023-11-05 05:19:53'),
+(4, 'Sales Return', 1, '2023-11-05 05:19:53', '2023-11-05 05:19:53');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `requisitions`
+--
+
+CREATE TABLE `requisitions` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `requ_no` varchar(255) DEFAULT NULL,
+  `requ_date` date DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 0,
+  `remarks` text DEFAULT NULL,
+  `mast_item_category_id` int(11) DEFAULT NULL,
+  `complaint_id` int(11) DEFAULT NULL,
+  `tech_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `requisition_details`
+--
+
+CREATE TABLE `requisition_details` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `requ_id` int(11) NOT NULL,
+  `cat_id` bigint(20) DEFAULT NULL,
+  `mast_item_register_id` bigint(20) UNSIGNED NOT NULL,
+  `qty` int(11) DEFAULT NULL,
+  `rcv_qty` int(11) DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 1,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -1025,9 +1289,8 @@ CREATE TABLE `roles` (
 --
 
 INSERT INTO `roles` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VALUES
-(1, 'Supper-Admin', 'web', '2023-07-24 03:22:38', '2023-07-24 03:22:38'),
-(2, 'Admin', 'web', '2023-07-24 03:22:38', '2023-07-24 03:22:38'),
-(3, 'Member', 'web', '2023-07-24 03:22:39', '2023-07-24 03:22:39');
+(1, 'Super-Admin', 'web', '2023-10-10 04:26:56', '2023-10-10 04:26:56'),
+(2, 'Admin', 'web', '2023-10-10 04:26:56', '2023-10-10 04:26:56');
 
 -- --------------------------------------------------------
 
@@ -1048,7 +1311,6 @@ INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
 (1, 1),
 (2, 1),
 (3, 1),
-(3, 3),
 (4, 1),
 (5, 1),
 (6, 1),
@@ -1064,7 +1326,55 @@ INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
 (16, 1),
 (17, 1),
 (18, 1),
-(19, 1);
+(18, 2),
+(19, 1),
+(19, 2),
+(20, 1),
+(20, 2),
+(21, 1),
+(22, 1),
+(23, 1),
+(23, 2),
+(24, 1),
+(24, 2),
+(25, 1),
+(25, 2),
+(26, 1),
+(26, 2),
+(27, 1),
+(27, 2),
+(28, 1),
+(28, 2),
+(29, 1),
+(29, 2),
+(30, 1),
+(30, 2),
+(31, 1),
+(31, 2),
+(32, 1),
+(32, 2),
+(33, 1),
+(33, 2),
+(34, 1),
+(34, 2),
+(35, 1),
+(36, 1),
+(37, 1),
+(38, 1),
+(39, 1),
+(39, 2),
+(40, 1),
+(40, 2),
+(41, 1),
+(42, 1),
+(43, 1),
+(44, 1),
+(45, 1),
+(46, 1),
+(47, 1),
+(48, 1),
+(49, 1),
+(50, 1);
 
 -- --------------------------------------------------------
 
@@ -1076,16 +1386,19 @@ CREATE TABLE `sales` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `inv_date` date DEFAULT NULL,
   `inv_no` varchar(255) DEFAULT NULL,
+  `ref_date` date DEFAULT NULL,
+  `ref_no` varchar(255) DEFAULT NULL,
   `vat` double(8,2) DEFAULT 0.00,
   `tax` double(8,2) DEFAULT 0.00,
+  `total` decimal(8,2) DEFAULT NULL,
   `remarks` text DEFAULT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 0,
-  `is_parsial` tinyint(4) NOT NULL DEFAULT 0,
-  `is_return` tinyint(4) NOT NULL DEFAULT 0,
-  `quotation_id` int(11) DEFAULT NULL,
+  `quotation_id` bigint(20) UNSIGNED DEFAULT NULL,
   `mast_item_category_id` bigint(20) UNSIGNED NOT NULL,
   `mast_customer_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
+  `is_parsial` tinyint(4) NOT NULL DEFAULT 0,
+  `is_return` tinyint(4) NOT NULL DEFAULT 0,
+  `status` tinyint(4) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1101,11 +1414,11 @@ CREATE TABLE `sales_details` (
   `qty` int(11) DEFAULT NULL,
   `price` decimal(8,2) DEFAULT NULL,
   `deli_qty` int(11) DEFAULT NULL,
-  `cat_id` bigint(20) DEFAULT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 1,
+  `mast_item_category_id` bigint(20) UNSIGNED DEFAULT NULL,
   `sales_id` bigint(20) UNSIGNED NOT NULL,
   `mast_item_register_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1121,12 +1434,12 @@ CREATE TABLE `sales_returns` (
   `return_no` varchar(255) DEFAULT NULL,
   `return_date` date DEFAULT NULL,
   `remarks` text DEFAULT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 0,
-  `is_parsial` tinyint(4) NOT NULL DEFAULT 0,
   `from_store_id` int(11) DEFAULT NULL,
   `mast_work_station_id` bigint(20) UNSIGNED NOT NULL,
   `sales_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
+  `is_parsial` tinyint(4) NOT NULL DEFAULT 0,
+  `status` tinyint(4) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1142,10 +1455,10 @@ CREATE TABLE `sales_return_details` (
   `qty` int(11) DEFAULT NULL,
   `price` decimal(8,2) DEFAULT NULL,
   `rcv_qty` int(11) DEFAULT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 1,
   `sales_return_id` bigint(20) UNSIGNED NOT NULL,
   `mast_item_register_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1170,29 +1483,74 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('0tbStPnx6DkK4DiTtmVLefzvmn5uwDayU6yRMWUz', NULL, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', 'YToyOntzOjY6Il90b2tlbiI7czo0MDoiZjlSZWladUZYTTluRXkxQ0w5dXA0eUVWanp5a25KNU1rd1dLSVhDbCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1693286325),
-('2oNKvGdTPqVqIpEidhz9moGudDEEYbqNlapmoccp', NULL, '23.101.112.233', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiSzB2UlR1akkyWXdBMFNzU0h5VEJXeElOWGVCUWFVSXdseUR5MEtPOCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjI6Imh0dHA6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1693329024),
-('5yMGmj946eqpwVoAk9CMFZqBwoYUYOqyA83T4x2I', NULL, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', 'YToyOntzOjY6Il90b2tlbiI7czo0MDoid0JoS3oxNFRacWJsUUdEUUNOS20yaXlrMDNnT2E3UTlSRzNKOFU5TCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1693286284),
-('6tMNwXlxz5qswt8WWU90j7nHA62dFtuBKSgMgM1H', NULL, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', 'YToyOntzOjY6Il90b2tlbiI7czo0MDoid2lWNzYzSzVlcVYxWFFsc1JZVG9rQ2c3Z2J3VDFuckJldDVVQWg0biI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1693286194),
-('7cGnGbsCBLluYuyC2LKlRDqGi7fdfCvRchaIuEP2', NULL, '172.176.103.76', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiM29YTlFZS1ZRc25FaUlxSU1rMWlVc3V0dU9JZlpvaUZBeERaQ0J2UCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjI6Imh0dHA6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1693458065),
-('aSSZIJtApEqfTw1v5f2yJ2rb9HNP2qRaDt7s3yQG', NULL, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', 'YToyOntzOjY6Il90b2tlbiI7czo0MDoiQTdEajhoQ1lMWTdWYlc1VURDV2tDWXlXN0hqZXVzVmd1aGc3R0J6VSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1693286040),
-('eI3Hx6hr3rYAXAgIvYyqERGJb2ivs4tc29fB7VpL', NULL, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiaUt6OE1NVXlaYzhHak5JZVBZNHRIVEtKbXF1VlFKcURiSFhsbHJqeSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjg6Imh0dHA6Ly9lcnAuaWNvbmlzbC5jb20vbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1693286267),
-('f1eaIow6Khd59A6S2NxlSiXaXg5lm7ntmrz3mRnJ', NULL, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', 'YToyOntzOjY6Il90b2tlbiI7czo0MDoiWFg5RlZNN1RSOHFHUHgzc0pnZHU4dUw0SnVsdGpzTU9lMmlYbklhUSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1693286145),
-('HPQehri3tkpBEaFnU8YyUI2wIgj7WPRRxFWNAUCO', NULL, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiWjF2OVNNY3U2aVYxbGNySTBzRGk2eXpsTGhlRWNvazNINDhMa0dtYyI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czozMjoiaHR0cDovL2VycC5pY29uaXNsLmNvbS9kYXNoYm9hcmQiO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czozMjoiaHR0cDovL2VycC5pY29uaXNsLmNvbS9kYXNoYm9hcmQiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1693286188),
-('j1G5pAxkQAe5J7Q8IfSbwBPiZPUCS73L3YnSZiZB', NULL, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiOXFHRjdRR2RvVnJDTlFPaTV5bEt0Z0JpbWFUeEZmakNYcUZOdHQzRSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjg6Imh0dHA6Ly9lcnAuaWNvbmlzbC5jb20vbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1693286171),
-('O7BwiLuGGcD76asyMj6mDky6udcy3xb9jttEEbVh', NULL, '183.136.225.45', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoieXV1YVBpeDRDQUJscWhTN0tYY01qOENFQjlndkIxb2hQNGRZeXJMMSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjI6Imh0dHA6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1693418638),
-('qdqM3lFmKqS1srwrcbm8AEM9c2cOqAzZw84CgwnB', NULL, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiYmphNmxyY2ZPOTlCaWlOUkdCQ2pMVnE1RXF1TnNvcHdERVBKRDRvVCI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0NzoiaHR0cDovL2VycC5pY29uaXNsLmNvbS9lbXBsb3llZS9yZWdpc3Rlci9jcmVhdGUiO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czo0NzoiaHR0cDovL2VycC5pY29uaXNsLmNvbS9lbXBsb3llZS9yZWdpc3Rlci9jcmVhdGUiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1693286170),
-('re5xmGPqVBVfyznsr0n2KXneTtR4sgN3KUSqIh44', NULL, '173.249.27.178', 'Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:63.0) Gecko/20100101 Firefox/63.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiZUlaSmRxUGU1YjNBYVZacG93U0d3Y0ZzZmllcUtGdG9QVjVyMjF2biI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjI6Imh0dHA6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1693370212),
-('RkHNX0ZiuVEo67z61aie3oM89JH4zKnjwKLIHd8G', NULL, '43.250.82.231', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoidnlhcHhJMlNmcDF0S3N1SGJGN2lHRDA5WUo4UFRTVFVOVU5vMDQwViI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czozMjoiaHR0cDovL2VycC5pY29uaXNsLmNvbS9kYXNoYm9hcmQiO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czoyODoiaHR0cDovL2VycC5pY29uaXNsLmNvbS9sb2dpbiI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1693285841),
-('u9VMnSP4pZB06xEnQQI9NKIapJ202CnQhkQYE45a', NULL, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', 'YToyOntzOjY6Il90b2tlbiI7czo0MDoiZTRJdTVvSTdsVmJKbDdNS0huOGg3QjU3dmZERXNKWWY2bGxKSXRlYSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1693286179),
-('Ugki0BPdHKdzgDVDOA0mMKfvz7J2Ado5CejMxhBs', NULL, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiaURKaXNtcHI3WkdyYk4xQ1FXRVhRTkVXSmVQNmxzY3FqemExWTFqTSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjg6Imh0dHA6Ly9lcnAuaWNvbmlzbC5jb20vbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1693286189),
-('ULM2t7vzLuqIJ3NLlL6XHtImacjNroIixAxLtTsj', NULL, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiMWpoRXZsTnNLT3N5MXd1Z1dKQVFlaXZrdnA0aWJtZzlKNUgzS0V0ciI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjg6Imh0dHA6Ly9lcnAuaWNvbmlzbC5jb20vbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1693286203),
-('vvSUVkhSgsBYrUmAnpS6c35LvTeldnxoktlGPgZN', NULL, '103.15.42.197', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiV2IybXV5cWZKUkZwclFOaHhPYjhvWllXOTVKOGZIMmt5eWdkZU5XciI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjI6Imh0dHA6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1693286319),
-('W4hM9JxaE0PQgmKWNklmxCI4tJCN58z7rdyGvUoD', NULL, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', 'YToyOntzOjY6Il90b2tlbiI7czo0MDoiYmNMc2I1SWFLVnlJQ1VaV3ZYZGZKNmIxQm5pdlo5T2NtaWZ1aWpwSyI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1693286136),
-('wxtrq4McR04xMsMIn0P8qEd5xK3frwTPA2vNa1kZ', 1, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiR3RHVUJLOTdkZHhFTXh5M2FjRzA5cmxpVzhQMlJwMjV6VnRub0pnTyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NTQ6Imh0dHA6Ly9lcnAuaWNvbmlzbC5jb20vZW1wbG95ZWUvaW5mb19wcnNvbmFsL2NyZWF0ZS8xMyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7czoyMToicGFzc3dvcmRfaGFzaF9zYW5jdHVtIjtzOjYwOiIkMnkkMTAkOThjRTVIRkhSZ0ZQWEJjTmxIcDdWT1NSUGgzVlh5N0Q4SG1IWVFUT1A0M1VWdG5Sak1FOWkiO30=', 1693286410),
-('WzvlqvxKNNMRkYINdYU79PVAsKAk9CglnejAgQOm', NULL, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiRjAzMjd6SWZnQmlLYkI1cDN4TWFDdGV4ZkZNVGlsdHZLVkFIYkx6VCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjI6Imh0dHA6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1693286314),
-('x4yZm6xwWZbp5Buc5IfV3xSpNm3gqmwtzthsL1t0', NULL, '172.176.103.48', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiMmJrYUhOTnIwYXJSSHFSZGFNUFdNeGZRY2VRUlpPbkhzT2VIc3JScSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjI6Imh0dHA6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1693309761),
-('YHOufbt3m1SOkPNgF3cjHzG1xLxGgJGxcmLLltpd', 1, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoibjhsbzQ0S0ZWSUVWQTFpQVRRalZqTWJCU05remxkTUl6MjJ0a3R1bCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NTQ6Imh0dHBzOi8vZXJwLmljb25pc2wuY29tL2VtcGxveWVlL2luZm9fcHJzb25hbC9jcmVhdGUvMiI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7czoyMToicGFzc3dvcmRfaGFzaF9zYW5jdHVtIjtzOjYwOiIkMnkkMTAkOThjRTVIRkhSZ0ZQWEJjTmxIcDdWT1NSUGgzVlh5N0Q4SG1IWVFUT1A0M1VWdG5Sak1FOWkiO30=', 1693285940);
+('0USwCoElgieEBufGHbD885qJCFCwd6pKYr0RQ6Rx', NULL, '15.235.15.135', '', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiRWd5OEFZTXF0WFdiYkNiQ05aN3NaeUl4akJiZkhuSWI0UFRGSXVzMiI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyMzoiaHR0cHM6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czoyMzoiaHR0cHM6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1701755631),
+('1dLmGDC0ufhspNAofdw3swKBHvIazuKbmd9ZbBpO', NULL, '3.254.190.2', 'Mozilla/5.0 (compatible; NetcraftSurveyAgent/1.0; +info@netcraft.com)', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiMjJEQ2JmVmJsNGEyWUJzVlFXTkdBNmZLUFpyZjdVMHJaWmdkUGNYYiI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyMjoiaHR0cDovL2VycC5pY29uaXNsLmNvbSI7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjIyOiJodHRwOi8vZXJwLmljb25pc2wuY29tIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1701712517),
+('1Od55dZVtpGePQdMofliblJQjsYpXtzZbDvkpKer', NULL, '54.241.219.151', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiREZUNmZDQzZ4RTZPNkxxRE1lVnNzNWtIVVhSckp1N1ZibEtXUGwxNCI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyMzoiaHR0cHM6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czoyMzoiaHR0cHM6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1702118577),
+('3fnJldwLsiEoZ7mKT5WqthTxNZOmvxvfbZuQZeT0', NULL, '198.235.24.169', 'Expanse, a Palo Alto Networks company, searches across the global IPv4 space multiple times per day to identify customers&#39; presences on the Internet. If you would like to be excluded from our scans, please send IP addresses/domains to: scaninfo@paloaltonetworks.com', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiRVdCNk0xMjBJT01WODdEaXV1RHVQdzVqTzhlOTJZaFlIVUpNZm1qUyI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyMzoiaHR0cHM6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czoyMzoiaHR0cHM6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1701915402),
+('4ioWxHhDKWavZ3Rso7GzEj4bpEzP7VMPcwPUKU2I', NULL, '15.235.15.135', '', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoibHVNNXJDNUVlUTNYMndpSTBRT2hWOU5jYjNUUGhSOThBOHpNVWxGUCI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyMzoiaHR0cHM6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czoyMzoiaHR0cHM6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1702266440),
+('4T1l5sgrkgtQvcBqvMztZRoJLEiml35FKi8yjMqR', NULL, '143.110.156.50', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiZDM2OEVwa0pyTGtsSllPcEY0N2ZWNjF5aFhiUExaTjJKZm84YngweiI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyMjoiaHR0cDovL2VycC5pY29uaXNsLmNvbSI7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjIyOiJodHRwOi8vZXJwLmljb25pc2wuY29tIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1702271068),
+('5Mn8mGJlKSEtrV4kQhHk6BJIaHyEht4kluDLZlvz', NULL, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiaWM3aG1NajdVWGRTalFlVmJmMzg4WUhaQjNCb3BMdUlCeFg3UjFtZyI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0NToiaHR0cHM6Ly9lcnAuaWNvbmlzbC5jb20vZ2V0LXBhcnQtaWQ/cGFydF9pZD01Ijt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1701862741),
+('67eqmttwTqPgDTYpjzYWBhLYKeQ3Lzb1kSJcb5cx', 2, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiZDdTUURiQlRlRkFNcTZmU3FRb2pkMUN6aGM3akxxY3l1TEhGYnRIWSI7czozOiJ1cmwiO2E6MDp7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDE6Imh0dHBzOi8vZXJwLmljb25pc2wuY29tL3B1cmNoYXNlL2NhdF9pZD0xIjt9fQ==', 1701754043),
+('9GUtoFr1YpfU1hQ0zWhnsVRfQMoc75i8HW0oEOyb', NULL, '18.144.82.70', 'Mozilla/5.0 (X11; Linux) KHTML/4.9.1 (like Gecko) Konqueror/4.9', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiOVQ0TWtUQXNmc3VXbGdWWUUxUUl0OTZOcWtmYWRJdkNiNkxqSGFjdiI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyMzoiaHR0cHM6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czoyMzoiaHR0cHM6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1701819242),
+('a0UVxBLTjnlQWzEbKvILk05q3Q03rzWjzOboXKc6', NULL, '85.209.176.85', 'Go-http-client/1.1', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiajhLT2ZhTGxPV2tZU3U0OTF2bFVYbmdVWEs4RGFFNklSaWZxNEtHbSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyMjoiaHR0cDovL2VycC5pY29uaXNsLmNvbSI7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjIyOiJodHRwOi8vZXJwLmljb25pc2wuY29tIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1701864186),
+('bamle5TH8eLE8foScKgjRFj1wUyqBfvX06MVaceB', NULL, '34.254.175.36', 'Mozilla/5.0 (compatible; NetcraftSurveyAgent/1.0; +info@netcraft.com)', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiZHVWZVQza0hMVWdCcDhGRmcyRDJJNHRkdGFSTW9CMmhFNXRqbXg0TCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjg6Imh0dHA6Ly9lcnAuaWNvbmlzbC5jb20vbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1701698995),
+('Bpzbsgv6SbUwUjKqMr03b0ZPFc3rqs4TocIxwJgO', NULL, '34.254.175.36', 'Mozilla/5.0 (compatible; NetcraftSurveyAgent/1.0; +info@netcraft.com)', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiSnMxdmtoWEVSSExVQTNCbmlPZ09RUTBNR3V6YUlobGdhTUtwMExwayI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyMjoiaHR0cDovL2VycC5pY29uaXNsLmNvbSI7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjIyOiJodHRwOi8vZXJwLmljb25pc2wuY29tIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1701698993),
+('cRwrPFO3T4QeURH0YKS7p370pncRVYpMLsIKxi5y', NULL, '198.235.24.155', 'Expanse, a Palo Alto Networks company, searches across the global IPv4 space multiple times per day to identify customers&#39; presences on the Internet. If you would like to be excluded from our scans, please send IP addresses/domains to: scaninfo@paloaltonetworks.com', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiS1Q4OGN6eU10Qkx5bFk2YTN2cjNKQnhUOTA5azZ0MHczSFpwRVpjSiI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyMzoiaHR0cHM6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czoyMzoiaHR0cHM6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1702036448),
+('Dk7CSfXf5OptzNILNAdttl0CnRd6wDCt6TwXziWq', NULL, '103.20.141.5', 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiWnZ3VHBERlFsZTBqdUxmZjlTbXJiM1NSaEZWQzJiSFJXUm5RbHpwWCI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyMzoiaHR0cHM6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czoyOToiaHR0cHM6Ly9lcnAuaWNvbmlzbC5jb20vbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1701671047),
+('DKYi39cMHqHt9jizWrDmPVYdbI2FPNPs6K3hXdGg', NULL, '198.235.24.75', 'Expanse, a Palo Alto Networks company, searches across the global IPv4 space multiple times per day to identify customers&#39; presences on the Internet. If you would like to be excluded from our scans, please send IP addresses/domains to: scaninfo@paloaltonetworks.com', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiclFzRHhCOFpuYXRvQkRwdWl1eTJjaXZidkJRdXpNSU04dkdVR1NpQSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyMjoiaHR0cDovL2VycC5pY29uaXNsLmNvbSI7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjIyOiJodHRwOi8vZXJwLmljb25pc2wuY29tIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1702082675),
+('DmsaShMgi0ke9SivGVrxYnnk3yYULMQRvoUrTnGg', NULL, '199.45.155.16', 'Mozilla/5.0 (compatible; CensysInspect/1.1; +https://about.censys.io/)', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiYmdkTFNkbXNFN1pJbndDZG1wRFVDbGdGdDkyTm1XZzNlelhrWVI1ZCI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyMzoiaHR0cHM6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czoyMzoiaHR0cHM6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1701913789),
+('dOeBdjfQX0Lc9rTafksbOAjT6soCkgiLUVehI1rR', NULL, '3.254.190.2', 'Mozilla/5.0 (compatible; NetcraftSurveyAgent/1.0; +info@netcraft.com)', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiT1JyaThuMk5rTk9GbkhXNjg1SGFNTVh5MDB1YTE5d2phQkVxMUF2aCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjg6Imh0dHA6Ly9lcnAuaWNvbmlzbC5jb20vbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1701712520),
+('flFwNYZhXBV31tGLrQrqloPcuzXxfHBjeeLNo13e', NULL, '199.45.155.16', 'Mozilla/5.0 (compatible; CensysInspect/1.1; +https://about.censys.io/)', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiOTlreHI4dGNCY01UYXdiV2VnZE1xcU9LU0xETTlNSEh1cEJSOXZVNyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjk6Imh0dHBzOi8vZXJwLmljb25pc2wuY29tL2xvZ2luIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1701913814),
+('ft8a10RCCJexuymlEFMX7kOr0JBCpgI7Av5wh2QV', NULL, '183.136.225.44', 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.2623.112 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiRjNNZ0s4aVB3NEk3MEx2VGNCVzNDN2NMalJ4ckF1WnYzVHpsaUlBWSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyMjoiaHR0cDovL2VycC5pY29uaXNsLmNvbSI7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjIyOiJodHRwOi8vZXJwLmljb25pc2wuY29tIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1701680365),
+('gkdFuO4ewiQBihCD0mopKWGCIUWAqzAjSFUtUHdX', NULL, '199.45.155.16', 'Mozilla/5.0 (compatible; CensysInspect/1.1; +https://about.censys.io/)', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiZzZqSnNVMUxIdWFyaVFQVlJwQVJmbHYxYVhNaENGTkZRNEpOTkZ6OSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjg6Imh0dHA6Ly9lcnAuaWNvbmlzbC5jb20vbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1701911483),
+('JRdF09qDZP9lW9N7mQlgTH6QfydQUTBmsxG86dJX', NULL, '205.210.31.147', '', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiVnRreWRacjdjNXFtazV0N0ZVdWxLS2NrTFpvRWZWclN2VlZkZUdBTSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyMjoiaHR0cDovL2VycC5pY29uaXNsLmNvbSI7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjIyOiJodHRwOi8vZXJwLmljb25pc2wuY29tIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1701775984),
+('jRDkgyNUhnC5c1c3tSfpjDggUzWVxZMDhlfL7ccn', NULL, '15.235.15.135', '', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiME5nUWhLWjdLQ0dqajdxUldjUXFLRjVpMzFXMkFRZjQ2NW13eEt0eiI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyMjoiaHR0cDovL2VycC5pY29uaXNsLmNvbSI7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjIyOiJodHRwOi8vZXJwLmljb25pc2wuY29tIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1702266440),
+('K1WjbjxFKgBRRXWs8FWU1WRIIpAT2qA5YTBf5rek', NULL, '198.235.24.49', '', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiZWQzeDBqVzlSMzNoUlVYdVhUVjBVdGFqMjFpZjFKWHk5dHQyWHhVaSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyMzoiaHR0cHM6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czoyMzoiaHR0cHM6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1701796833),
+('KabzyW7vzMJwHx3M4MRZ66ITj82R1FteFukbODVL', NULL, '66.249.64.165', 'Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiMnJXNWxCYk0wcjRnWlRuMkg2U3poMmlIMFJOa1BpaGtjdmRrQW1DNiI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyMzoiaHR0cHM6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czoyOToiaHR0cHM6Ly9lcnAuaWNvbmlzbC5jb20vbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1702141703),
+('l16q1mVYI0rnU2VcI1UmMckTDFTAoJfBUWhiBDCd', NULL, '199.45.155.16', 'Mozilla/5.0 (compatible; CensysInspect/1.1; +https://about.censys.io/)', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiYU4yNkhRSFV2VzVlM1A5blhFY1FSTklsb1UxU0VqUjRNRE4zTWVPaiI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyMjoiaHR0cDovL2VycC5pY29uaXNsLmNvbSI7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjIyOiJodHRwOi8vZXJwLmljb25pc2wuY29tIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1701911459),
+('ldZISWU19ZoS7SRUYljAAmQp1EykcYHvSHzUZOvp', NULL, '183.136.225.45', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36 QIHU 360SE', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiVWJvNkQ0a1Jxam1OSkxpVEhOeE1lWFRwZUc2a3lKWjZmZ1kwWXliSiI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyMjoiaHR0cDovL2VycC5pY29uaXNsLmNvbSI7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjIyOiJodHRwOi8vZXJwLmljb25pc2wuY29tIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1701974808),
+('mcSG0zDQaP6F9C6YEWm9Mg61ArKJDHX8WxoWnb0F', NULL, '185.141.119.49', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoidVhJVVpVallqd1FMQ0JEeEhlVkFqVU1hMEl2Z3ZWN3VtTVN3clBxdCI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyMjoiaHR0cDovL2VycC5pY29uaXNsLmNvbSI7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjIyOiJodHRwOi8vZXJwLmljb25pc2wuY29tIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1702060598),
+('nHdQ1UMIGJJ59DaDgDG63DCANnlJtxcLM3kGea3u', NULL, '18.144.82.70', 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.119 YaBrowser/22.3.0.2539 Yowser/2.5 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiT3RnT1hzUDcwVmxwbkNWSm44YUdTM1hTcElVWlZqZjNneENtSmZYayI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyMjoiaHR0cDovL2VycC5pY29uaXNsLmNvbSI7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjIyOiJodHRwOi8vZXJwLmljb25pc2wuY29tIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1701819242),
+('nPucQzyjieiRK4Dy09rooFDMU2yABoZtIPG9cXPT', NULL, '183.136.225.45', 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.2623.112 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiTmlNYTZYbnN4dHRIYzdqd0E1VEp2U25pNlBpZWhhdUF6WHBjMkZDcSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyMjoiaHR0cDovL2VycC5pY29uaXNsLmNvbSI7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjIyOiJodHRwOi8vZXJwLmljb25pc2wuY29tIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1701974798),
+('pD4oWUZXUksZPHckMpYvGwvboVyvdfbCP4ubnzk9', NULL, '205.210.31.147', '', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiVWNqNlk4RzRPeGoxem1la1BNTWswN2V5R0VockdvR1hoNkFRWVB3aCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjg6Imh0dHA6Ly9lcnAuaWNvbmlzbC5jb20vbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1701775986),
+('qbrnCHiVv7P26pWcnTeL0TK8olv0bDTtspHMgY5C', NULL, '143.110.156.50', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiWmhQMTlMeFZKWVpLcE5ZVkpRY2tuSGZkalVqeXN0djI5OWtwNG91VyI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyMzoiaHR0cHM6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czoyMzoiaHR0cHM6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1702271068),
+('RdJYY1IAvWvYzh0CVMiOv6xoGDzu7vqsaMRLNBKI', NULL, '198.235.24.49', '', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiN09wa0dyeFhlZUtEQnVTR0tWUmZ5NUdJcm9rTDNScDVDUGJvcWk5NCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjk6Imh0dHBzOi8vZXJwLmljb25pc2wuY29tL2xvZ2luIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1701796835),
+('sWynbnJnvFWIR6IKLJV0eb4EAqVGEJjiBVQ2NPUy', 2, '103.120.162.169', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiZnBXSFAycU9HaEtDQVE5VFEwUkZxNW9KYXI5ckZsRnpUdzBNQ1B5SCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDE6Imh0dHBzOi8vZXJwLmljb25pc2wuY29tL3B1cmNoYXNlL2NhdF9pZD0xIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6Mjt9', 1701781368),
+('tGtwA4nE0oFanbUwJNBqzrBh7q3nxy41B24mBJf7', NULL, '183.136.225.44', 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.2623.112 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiT2JROUNFOE85OFhTMkVnUkp2RTVzMG51TFAyQnZFbnFlTkF6TFVUeiI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyMzoiaHR0cHM6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czoyMzoiaHR0cHM6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1701680059),
+('TxA9Ue3jib07s65Vz7jMONZkVRQ3kyItsR4YrF80', 2, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiWE5PZG1aUXYxMjdnZjVTajhWMnVEdE1KSVNqQXpOaVo4dkh0eEhkMSI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjQxOiJodHRwczovL2VycC5pY29uaXNsLmNvbS9wdXJjaGFzZS9jYXRfaWQ9MSI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7fQ==', 1701924250),
+('tYxd56soXzc77c5mn3Pjb2MGp2N9G02I99AwWI2G', NULL, '54.241.219.151', 'Mozilla/5.0 (Linux; Android 11; RMX1921) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.88 Mobile Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiU051SFJ6UURMOXI4TVhKQ0tNQ3NseFZkRHBITzFmNWJmbXdHZnRYaCI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyMjoiaHR0cDovL2VycC5pY29uaXNsLmNvbSI7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjIyOiJodHRwOi8vZXJwLmljb25pc2wuY29tIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1702118577),
+('uDBJ31DX5Jfq9LYvCuBnK3YPVs0on48rkFWMT5xf', 2, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiU0tLWVRFYzFzRXlDMGtPMEFtOWVGSDZ2bERpYW1pRWk1QUtXUVFZSiI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjQxOiJodHRwczovL2VycC5pY29uaXNsLmNvbS9wdXJjaGFzZS9jYXRfaWQ9MSI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7czoyMToicGFzc3dvcmRfaGFzaF9zYW5jdHVtIjtzOjYwOiIkMnkkMTAkMzZodFRCUlpHV1RrNy55SkprZEhkZVlzSmRJaEFjbkN3NHEzVG1LdHFDWnhkcGVYVnFjaW0iO30=', 1701688983),
+('UDKanYT7B2BbZtoYAgxb9aykzGn7GNgJrdr5ytRI', 2, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoidEREQkdWdzBYa1hzRVlEZmhmOERQMkp4QllZQ0tiVzdOTmhUbmp0SSI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjQxOiJodHRwczovL2VycC5pY29uaXNsLmNvbS9wdXJjaGFzZS9jYXRfaWQ9MiI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7fQ==', 1702192650),
+('uOerHAgrAw78Kk9XMYvhfStQhFyeJdKwJ3lE56xY', 2, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoia0pUMkQzSWxqVnpxVk12V2JJbDQyT2J6dkRVdzNiS1VsWnZJeHR4QyI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjQ0OiJodHRwczovL2VycC5pY29uaXNsLmNvbS9zdG9jay1wb3NpdGlvbi9pbmRleCI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7fQ==', 1701846729),
+('uQPpbSNUTYLgQ8oueoDBLviUHImapvcbTlPE0f5M', NULL, '66.249.64.166', 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiTDZYekdTUGJSWHhBdFZDQUQxZ3Z5OXNWSnVWTTdZTWNPMjFlWERLNSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyMzoiaHR0cHM6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czoyOToiaHR0cHM6Ly9lcnAuaWNvbmlzbC5jb20vbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1702141702),
+('vQGIavPKmSWechULXBzx0atjqQZ8SaO55BaPStwk', NULL, '85.209.176.85', 'Go-http-client/1.1', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiSnd6TXFVRXhEeGF4NHdXd3J2MDBTdXhUOU03UlFRdFRkQ1ZWSlkxYyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjg6Imh0dHA6Ly9lcnAuaWNvbmlzbC5jb20vbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1701864188),
+('wZoOmt9U28xLsh23gKUajtYgnQooUhbSjvguHtOM', 2, '103.120.162.169', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiUjdKTVNBaXhTMzNXMDZ5UFNQd1hYR0F0SEh2SnFTdkhnN1lTRm53byI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjQxOiJodHRwczovL2VycC5pY29uaXNsLmNvbS9wdXJjaGFzZS9jYXRfaWQ9MSI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7fQ==', 1701702080),
+('xUuvnwS8zQuKCXNanNAoTzOAx12CTtmCx96TkguV', NULL, '103.130.118.36', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiVmhvdUY2b3NoTzhQejRVTFgyb211RWt5Nkk0Rm52REtnSXFlRVBpaCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjk6Imh0dHBzOi8vZXJwLmljb25pc2wuY29tL2xvZ2luIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1701924229),
+('yHD7t9gSWyBklAnrgBS1UDQO7Hfr6mxrhG9QyVPD', 2, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiM3hLY3dCWGdQN0dMc1ZjZ2lLS01VNWJRMVZCOHAzeEE5dVZtTE40ZyI7czozOiJ1cmwiO2E6MDp7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDE6Imh0dHBzOi8vZXJwLmljb25pc2wuY29tL3B1cmNoYXNlL2NhdF9pZD0xIjt9fQ==', 1701771549),
+('ysdMx4YLjSNTtkrRAyGYjHXhR3SBnLYaZUFRwuLR', 2, '103.120.202.39', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiQXFjbnFLQkgzRkpNM1BhUmlId2QxekhMa05hcDRTaEFwaGZjbDluTiI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjQxOiJodHRwczovL2VycC5pY29uaXNsLmNvbS9wdXJjaGFzZS9jYXRfaWQ9MSI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7fQ==', 1701854021),
+('zGWTPMDoJyiazRivJDVLVrMOGaiUNDf0CP0bUTKI', NULL, '183.136.225.45', 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.2623.112 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoidDEwNGxFWEdrNmxraGtYNVR5MW1DSTZIUDQxQ25ad2FOd094NUZYNSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyMzoiaHR0cHM6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czoyMzoiaHR0cHM6Ly9lcnAuaWNvbmlzbC5jb20iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1701974782),
+('zz6k0EZ4Pgnl5ak4WNEwBOIgxSozAauxqi1JtwGo', 2, '103.120.162.169', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiYXV4TXo1R3g2NUJEN3FTejVBVUhnRmQwY1NQMU04TzczN2FYZHZFWSI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjQxOiJodHRwczovL2VycC5pY29uaXNsLmNvbS9wdXJjaGFzZS9jYXRfaWQ9MSI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7fQ==', 1701798100);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `setups`
+--
+
+CREATE TABLE `setups` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `install_technician` int(11) DEFAULT NULL,
+  `services_technician` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `setups`
+--
+
+INSERT INTO `setups` (`id`, `install_technician`, `services_technician`, `created_at`, `updated_at`) VALUES
+(1, 10, 9, '2023-11-05 05:19:53', '2023-11-05 05:19:53');
 
 -- --------------------------------------------------------
 
@@ -1208,8 +1566,8 @@ CREATE TABLE `sl_movements` (
   `mast_item_register_id` bigint(20) UNSIGNED NOT NULL,
   `mast_work_station_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 1,
   `out_date` date DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1245,24 +1603,11 @@ CREATE TABLE `store_transfer_details` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `qty` int(11) DEFAULT NULL,
   `deli_qty` int(11) DEFAULT NULL,
-  `cat_id` bigint(20) DEFAULT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 1,
+  `mast_item_category_id` bigint(20) UNSIGNED DEFAULT NULL,
   `store_transfer_id` bigint(20) UNSIGNED NOT NULL,
   `mast_item_register_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `todos`
---
-
-CREATE TABLE `todos` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -6411,56 +6756,33 @@ CREATE TABLE `users` (
   `remember_token` varchar(100) DEFAULT NULL,
   `current_team_id` bigint(20) UNSIGNED DEFAULT NULL,
   `profile_photo_path` varchar(255) DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 0,
-  `is_admin` tinyint(1) NOT NULL DEFAULT 0,
+  `mast_work_station_id` int(11) NOT NULL DEFAULT 1,
   `attendance_id` int(11) DEFAULT NULL,
+  `is_admin` tinyint(1) NOT NULL DEFAULT 0,
+  `status` tinyint(1) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `mast_work_station_id` int(11) NOT NULL DEFAULT 1
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `contact_number`, `employee_code`, `email_verified_at`, `password`, `two_factor_secret`, `two_factor_recovery_codes`, `two_factor_confirmed_at`, `remember_token`, `current_team_id`, `profile_photo_path`, `status`, `is_admin`, `attendance_id`, `created_at`, `updated_at`, `mast_work_station_id`) VALUES
-(1, 'Gulf-ERP', 'admin@gmail.com', '01909302126', 'GF-00000', '2023-12-31 18:00:00', '$2y$10$98cE5HFHRgFPXBcNlHp7VOSRPh3VXy7D8HmHYQTOP43UVtnRjME9i', NULL, NULL, NULL, NULL, NULL, 'fix/admin.jpg', 1, 0, NULL, '2023-07-24 03:22:38', '2023-07-24 03:22:38', 1),
-(5, 'Md. Rahim', 'mr.rahim247@gmail.com', '01880138998', 'GF-00001', '2023-01-01 05:00:00', '$2y$10$azvnuRUrS2q8ok6.ooLgPuKRI/sozTLu3t3U9BD0fJpGC3nbobS/O', NULL, NULL, NULL, NULL, NULL, 'rahim_1690956906.jpg', 1, 0, NULL, '2023-08-02 09:59:20', '2023-08-02 10:29:08', 1),
-(6, 'MD. ROBIN MIA', 'robin39th@gmail.com', '01611157592', 'GF-00002', '2023-01-01 05:00:00', '$2y$10$XvX9kpzR0Da9xAil5dmb3uO1C6Io6JoBbWgkL/W14TbJoFRuCcfTO', NULL, NULL, NULL, NULL, NULL, 'Untitled-2_1691230835.jpg', 1, 0, NULL, '2023-08-05 14:14:07', '2023-08-05 14:20:41', 1),
-(7, 'Md. Mohidur Rahman', 'gulf.mahidur@gmail.com', '01714307732', 'GF-00003', '2023-01-01 05:00:00', '$2y$10$CfiHLWXBAmvH7kp9v7W9Z.T8DPuvIBoh5R9csaQx6Dlb5zIZriNFi', NULL, NULL, NULL, NULL, NULL, '363867648_1418114079035642_302458779047196983_n_1691388949.jpg', 1, 0, NULL, '2023-08-07 09:48:56', '2023-08-07 10:15:50', 1),
-(9, 'Md. Mehedi Hasan', 'mdmehedi8232@gmail.com', '01771958336', 'GF-00004', '2023-01-01 05:00:00', '$2y$10$fuFb1RTl57jbogmoqCDHFOSB9aDZpQpuIylsyT3cxClv/O1ADxwA2', NULL, NULL, NULL, NULL, NULL, 'Untitled-1_1691393481.jpg', 1, 0, NULL, '2023-08-07 11:27:51', '2023-08-07 11:31:24', 1),
-(10, 'Md. Rayhan', 'md.rayhandewan05@gmail.com', '01996506006', 'GF-00005', '2023-01-01 05:00:00', '$2y$10$g/vHFX7GRI7A/ieWapZMweEeG7ufxm.8rwRwiJK4CuEMsIkf63Dy.', NULL, NULL, NULL, NULL, NULL, 'Alisha_1691480990.jpg', 1, 0, NULL, '2023-08-08 11:39:13', '2023-08-08 11:49:55', 1),
-(11, 'Masum Miah', 'masommia1@gmail.com', '01715057173', 'GF-00006', '2023-01-01 05:00:00', '$2y$10$yLgsK.cMOt9dtvVyk58iyOQ6Kb1B4vOjQaepysAwa4S8f53lJNOdi', NULL, NULL, NULL, NULL, NULL, 'Masum_1691481763.jpg', 1, 0, NULL, '2023-08-08 11:55:06', '2023-08-08 12:02:44', 1),
-(12, 'Rifat Hossain', 'demo@gmail.com', '01875767063', 'GF-00007', '2023-01-01 05:00:00', '$2y$10$q1Sp0c42BD17gSIWjBloGuGKt35LFquzHJdkLKb0yYLHqqS6arat2', NULL, NULL, NULL, NULL, NULL, 'Rifat_1691484688.jpg', 1, 0, NULL, '2023-08-08 12:41:30', '2023-08-08 12:51:33', 1);
+INSERT INTO `users` (`id`, `name`, `email`, `contact_number`, `employee_code`, `email_verified_at`, `password`, `two_factor_secret`, `two_factor_recovery_codes`, `two_factor_confirmed_at`, `remember_token`, `current_team_id`, `profile_photo_path`, `mast_work_station_id`, `attendance_id`, `is_admin`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'SUPER-ERP', 'super@gmail.com', '01909302126', 'GF-00000', '2023-12-31 23:00:00', '$2y$10$61y3lx10SwyTESWuInTE9.5WwB9IhI1Ex2qqbbTpbZRkxBcSACLoy', NULL, NULL, NULL, NULL, NULL, 'fix/admin.jpg', 1, NULL, 1, 1, '2023-08-31 03:15:39', '2023-08-31 03:15:39'),
+(2, 'Gulf-ERP', 'admin@gmail.com', '01909302126', 'GF-00000', '2023-12-31 23:00:00', '$2y$10$36htTBRZGWTk7.yJJkdHdeYsJdIhAcnCw4q3TmKtqCZxdpeXVqcim', NULL, NULL, NULL, NULL, NULL, 'fix/admin.jpg', 1, NULL, 0, 1, '2023-08-31 03:15:39', '2023-08-31 03:15:39'),
+(12, 'Md. Rahim', 'mr.rahim247@gmail.com', '01880138998', 'GF-00001', '2022-12-31 17:00:00', '$2y$10$azvnuRUrS2q8ok6.ooLgPuKRI/sozTLu3t3U9BD0fJpGC3nbobS/O', NULL, NULL, NULL, NULL, NULL, 'rahim_1690956906.jpg', 1, NULL, 0, 1, '2023-08-01 21:59:20', '2023-08-01 22:29:08'),
+(13, 'MD. ROBIN MIA', 'robin39th@gmail.com', '01611157592', 'GF-00002', '2022-12-31 17:00:00', '$2y$10$XvX9kpzR0Da9xAil5dmb3uO1C6Io6JoBbWgkL/W14TbJoFRuCcfTO', NULL, NULL, NULL, NULL, NULL, 'Untitled-2_1691230835.jpg', 1, NULL, 0, 1, '2023-08-05 02:14:07', '2023-08-05 02:20:41'),
+(14, 'Md. Mohidur Rahman', 'gulf.mahidur@gmail.com', '01714307732', 'GF-00003', '2022-12-31 17:00:00', '$2y$10$CfiHLWXBAmvH7kp9v7W9Z.T8DPuvIBoh5R9csaQx6Dlb5zIZriNFi', NULL, NULL, NULL, NULL, NULL, '363867648_1418114079035642_302458779047196983_n_1691388949.jpg', 1, NULL, 0, 1, '2023-08-06 21:48:56', '2023-08-06 22:15:50'),
+(15, 'Md. Mehedi Hasan', 'mdmehedi8232@gmail.com', '01771958336', 'GF-00004', '2022-12-31 17:00:00', '$2y$10$fuFb1RTl57jbogmoqCDHFOSB9aDZpQpuIylsyT3cxClv/O1ADxwA2', NULL, NULL, NULL, NULL, NULL, 'Untitled-1_1691393481.jpg', 1, NULL, 0, 1, '2023-08-06 23:27:51', '2023-08-06 23:31:24'),
+(16, 'Md. Rayhan', 'md.rayhandewan05@gmail.com', '01996506006', 'GF-00005', '2022-12-31 17:00:00', '$2y$10$g/vHFX7GRI7A/ieWapZMweEeG7ufxm.8rwRwiJK4CuEMsIkf63Dy.', NULL, NULL, NULL, NULL, NULL, 'Alisha_1691480990.jpg', 1, NULL, 0, 1, '2023-08-07 23:39:13', '2023-08-07 23:49:55'),
+(17, 'Masum Miah', 'masommia1@gmail.com', '01715057173', 'GF-00006', '2022-12-31 17:00:00', '$2y$10$yLgsK.cMOt9dtvVyk58iyOQ6Kb1B4vOjQaepysAwa4S8f53lJNOdi', NULL, NULL, NULL, NULL, NULL, 'Masum_1691481763.jpg', 1, NULL, 0, 1, '2023-08-07 23:55:06', '2023-08-08 00:02:44'),
+(18, 'Rifat Hossain', 'demo@gmail.com', '01875767063', 'GF-00007', '2022-12-31 17:00:00', '$2y$10$q1Sp0c42BD17gSIWjBloGuGKt35LFquzHJdkLKb0yYLHqqS6arat2', NULL, NULL, NULL, NULL, NULL, 'Rifat_1691484688.jpg', 1, NULL, 0, 1, '2023-08-08 00:41:30', '2023-08-08 00:51:33'),
+(20, 'MD. SHAHIDUL ISLAM', 'shahidulislam24gulf@gmail.com', '01914292558', 'GF-00008', '2023-01-01 10:00:00', '$2y$10$i/dcSqpBPIaGnLeod1gDE.OF8krbUHMywGHKWaWSZCxFXo0Y6VLAK', NULL, NULL, NULL, NULL, NULL, '610120_1696133375.png', 1, NULL, 0, 1, '2023-10-01 11:55:29', '2023-10-01 12:09:40');
 
 --
 -- Indexes for dumped tables
 --
-
---
--- Indexes for table `complaints`
---
-ALTER TABLE `complaints`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `complaints_mast_customer_id_foreign` (`mast_customer_id`),
-  ADD KEY `complaints_user_id_foreign` (`user_id`);
-
---
--- Indexes for table `complaint_details`
---
-ALTER TABLE `complaint_details`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `complaint_details_user_id_foreign` (`user_id`);
-
---
--- Indexes for table `deliveries`
---
-ALTER TABLE `deliveries`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `deliveries_sales_id_foreign` (`sales_id`),
-  ADD KEY `deliveries_mast_work_station_id_foreign` (`mast_work_station_id`),
-  ADD KEY `deliveries_mast_item_register_id_foreign` (`mast_item_register_id`),
-  ADD KEY `deliveries_user_id_foreign` (`user_id`);
 
 --
 -- Indexes for table `districts`
@@ -6494,32 +6816,32 @@ ALTER TABLE `hr_attendances`
 ALTER TABLE `hr_leave_applications`
   ADD PRIMARY KEY (`id`),
   ADD KEY `hr_leave_applications_mast_leave_id_foreign` (`mast_leave_id`),
-  ADD KEY `hr_leave_applications_user_id_foreign` (`user_id`),
-  ADD KEY `hr_leave_applications_emp_id_foreign` (`emp_id`);
+  ADD KEY `hr_leave_applications_emp_id_foreign` (`emp_id`),
+  ADD KEY `hr_leave_applications_user_id_foreign` (`user_id`);
 
 --
 -- Indexes for table `info_banks`
 --
 ALTER TABLE `info_banks`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `info_banks_user_id_foreign` (`user_id`),
-  ADD KEY `info_banks_emp_id_foreign` (`emp_id`);
+  ADD KEY `info_banks_emp_id_foreign` (`emp_id`),
+  ADD KEY `info_banks_user_id_foreign` (`user_id`);
 
 --
 -- Indexes for table `info_educationals`
 --
 ALTER TABLE `info_educationals`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `info_educationals_user_id_foreign` (`user_id`),
-  ADD KEY `info_educationals_emp_id_foreign` (`emp_id`);
+  ADD KEY `info_educationals_emp_id_foreign` (`emp_id`),
+  ADD KEY `info_educationals_user_id_foreign` (`user_id`);
 
 --
 -- Indexes for table `info_nominees`
 --
 ALTER TABLE `info_nominees`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `info_nominees_user_id_foreign` (`user_id`),
-  ADD KEY `info_nominees_emp_id_foreign` (`emp_id`);
+  ADD KEY `info_nominees_emp_id_foreign` (`emp_id`),
+  ADD KEY `info_nominees_user_id_foreign` (`user_id`);
 
 --
 -- Indexes for table `info_personals`
@@ -6530,16 +6852,16 @@ ALTER TABLE `info_personals`
   ADD KEY `info_personals_mast_designation_id_foreign` (`mast_designation_id`),
   ADD KEY `info_personals_mast_employee_type_id_foreign` (`mast_employee_type_id`),
   ADD KEY `info_personals_mast_work_station_id_foreign` (`mast_work_station_id`),
-  ADD KEY `info_personals_user_id_foreign` (`user_id`),
-  ADD KEY `info_personals_emp_id_foreign` (`emp_id`);
+  ADD KEY `info_personals_emp_id_foreign` (`emp_id`),
+  ADD KEY `info_personals_user_id_foreign` (`user_id`);
 
 --
 -- Indexes for table `info_work_experiences`
 --
 ALTER TABLE `info_work_experiences`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `info_work_experiences_user_id_foreign` (`user_id`),
-  ADD KEY `info_work_experiences_emp_id_foreign` (`emp_id`);
+  ADD KEY `info_work_experiences_emp_id_foreign` (`emp_id`),
+  ADD KEY `info_work_experiences_user_id_foreign` (`user_id`);
 
 --
 -- Indexes for table `mast_customers`
@@ -6588,17 +6910,25 @@ ALTER TABLE `mast_item_categories`
 --
 ALTER TABLE `mast_item_groups`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `mast_item_groups_user_id_foreign` (`user_id`),
-  ADD KEY `mast_item_groups_mast_item_category_id_foreign` (`mast_item_category_id`);
+  ADD KEY `mast_item_groups_mast_item_category_id_foreign` (`mast_item_category_id`),
+  ADD KEY `mast_item_groups_user_id_foreign` (`user_id`);
+
+--
+-- Indexes for table `mast_item_models`
+--
+ALTER TABLE `mast_item_models`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `mast_item_models_mast_item_group_id_foreign` (`mast_item_group_id`),
+  ADD KEY `mast_item_models_user_id_foreign` (`user_id`);
 
 --
 -- Indexes for table `mast_item_registers`
 --
 ALTER TABLE `mast_item_registers`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `mast_item_registers_user_id_foreign` (`user_id`),
+  ADD KEY `mast_item_registers_unit_id_foreign` (`unit_id`),
   ADD KEY `mast_item_registers_mast_item_group_id_foreign` (`mast_item_group_id`),
-  ADD KEY `mast_item_registers_unit_id_foreign` (`unit_id`);
+  ADD KEY `mast_item_registers_user_id_foreign` (`user_id`);
 
 --
 -- Indexes for table `mast_leaves`
@@ -6626,6 +6956,7 @@ ALTER TABLE `mast_suppliers`
 --
 ALTER TABLE `mast_units`
   ADD PRIMARY KEY (`id`),
+  ADD KEY `mast_units_mast_item_category_id_foreign` (`mast_item_category_id`),
   ADD KEY `mast_units_user_id_foreign` (`user_id`);
 
 --
@@ -6681,6 +7012,7 @@ ALTER TABLE `personal_access_tokens`
 --
 ALTER TABLE `purchases`
   ADD PRIMARY KEY (`id`),
+  ADD KEY `purchases_mast_item_category_id_foreign` (`mast_item_category_id`),
   ADD KEY `purchases_mast_work_station_id_foreign` (`mast_work_station_id`),
   ADD KEY `purchases_mast_supplier_id_foreign` (`mast_supplier_id`),
   ADD KEY `purchases_user_id_foreign` (`user_id`);
@@ -6717,6 +7049,21 @@ ALTER TABLE `quotation_details`
 --
 ALTER TABLE `reference_types`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `requisitions`
+--
+ALTER TABLE `requisitions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `requisitions_user_id_foreign` (`user_id`);
+
+--
+-- Indexes for table `requisition_details`
+--
+ALTER TABLE `requisition_details`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `requisition_details_mast_item_register_id_foreign` (`mast_item_register_id`),
+  ADD KEY `requisition_details_user_id_foreign` (`user_id`);
 
 --
 -- Indexes for table `roles`
@@ -6777,6 +7124,12 @@ ALTER TABLE `sessions`
   ADD KEY `sessions_last_activity_index` (`last_activity`);
 
 --
+-- Indexes for table `setups`
+--
+ALTER TABLE `setups`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `sl_movements`
 --
 ALTER TABLE `sl_movements`
@@ -6805,12 +7158,6 @@ ALTER TABLE `store_transfer_details`
   ADD KEY `store_transfer_details_user_id_foreign` (`user_id`);
 
 --
--- Indexes for table `todos`
---
-ALTER TABLE `todos`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `unions`
 --
 ALTER TABLE `unions`
@@ -6832,24 +7179,6 @@ ALTER TABLE `users`
 --
 -- AUTO_INCREMENT for dumped tables
 --
-
---
--- AUTO_INCREMENT for table `complaints`
---
-ALTER TABLE `complaints`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `complaint_details`
---
-ALTER TABLE `complaint_details`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `deliveries`
---
-ALTER TABLE `deliveries`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `districts`
@@ -6891,7 +7220,7 @@ ALTER TABLE `info_banks`
 -- AUTO_INCREMENT for table `info_educationals`
 --
 ALTER TABLE `info_educationals`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `info_nominees`
@@ -6903,7 +7232,7 @@ ALTER TABLE `info_nominees`
 -- AUTO_INCREMENT for table `info_personals`
 --
 ALTER TABLE `info_personals`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `info_work_experiences`
@@ -6915,13 +7244,13 @@ ALTER TABLE `info_work_experiences`
 -- AUTO_INCREMENT for table `mast_customers`
 --
 ALTER TABLE `mast_customers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `mast_customer_types`
 --
 ALTER TABLE `mast_customer_types`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `mast_departments`
@@ -6933,31 +7262,37 @@ ALTER TABLE `mast_departments`
 -- AUTO_INCREMENT for table `mast_designations`
 --
 ALTER TABLE `mast_designations`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `mast_employee_types`
 --
 ALTER TABLE `mast_employee_types`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `mast_item_categories`
 --
 ALTER TABLE `mast_item_categories`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `mast_item_groups`
 --
 ALTER TABLE `mast_item_groups`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
+
+--
+-- AUTO_INCREMENT for table `mast_item_models`
+--
+ALTER TABLE `mast_item_models`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `mast_item_registers`
 --
 ALTER TABLE `mast_item_registers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `mast_leaves`
@@ -6969,37 +7304,37 @@ ALTER TABLE `mast_leaves`
 -- AUTO_INCREMENT for table `mast_packages`
 --
 ALTER TABLE `mast_packages`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `mast_suppliers`
 --
 ALTER TABLE `mast_suppliers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `mast_units`
 --
 ALTER TABLE `mast_units`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `mast_work_stations`
 --
 ALTER TABLE `mast_work_stations`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT for table `permissions`
 --
 ALTER TABLE `permissions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
@@ -7038,10 +7373,22 @@ ALTER TABLE `reference_types`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT for table `requisitions`
+--
+ALTER TABLE `requisitions`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `requisition_details`
+--
+ALTER TABLE `requisition_details`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `sales`
@@ -7068,6 +7415,12 @@ ALTER TABLE `sales_return_details`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `setups`
+--
+ALTER TABLE `setups`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `sl_movements`
 --
 ALTER TABLE `sl_movements`
@@ -7086,12 +7439,6 @@ ALTER TABLE `store_transfer_details`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `todos`
---
-ALTER TABLE `todos`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `unions`
 --
 ALTER TABLE `unions`
@@ -7107,33 +7454,11 @@ ALTER TABLE `upazilas`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- Constraints for dumped tables
 --
-
---
--- Constraints for table `complaints`
---
-ALTER TABLE `complaints`
-  ADD CONSTRAINT `complaints_mast_customer_id_foreign` FOREIGN KEY (`mast_customer_id`) REFERENCES `mast_customers` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `complaints_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
-
---
--- Constraints for table `complaint_details`
---
-ALTER TABLE `complaint_details`
-  ADD CONSTRAINT `complaint_details_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
-
---
--- Constraints for table `deliveries`
---
-ALTER TABLE `deliveries`
-  ADD CONSTRAINT `deliveries_mast_item_register_id_foreign` FOREIGN KEY (`mast_item_register_id`) REFERENCES `mast_item_registers` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `deliveries_mast_work_station_id_foreign` FOREIGN KEY (`mast_work_station_id`) REFERENCES `mast_work_stations` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `deliveries_sales_id_foreign` FOREIGN KEY (`sales_id`) REFERENCES `sales` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `deliveries_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `hr_attendances`
@@ -7227,6 +7552,13 @@ ALTER TABLE `mast_item_groups`
   ADD CONSTRAINT `mast_item_groups_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
+-- Constraints for table `mast_item_models`
+--
+ALTER TABLE `mast_item_models`
+  ADD CONSTRAINT `mast_item_models_mast_item_group_id_foreign` FOREIGN KEY (`mast_item_group_id`) REFERENCES `mast_item_groups` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `mast_item_models_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `mast_item_registers`
 --
 ALTER TABLE `mast_item_registers`
@@ -7256,6 +7588,7 @@ ALTER TABLE `mast_suppliers`
 -- Constraints for table `mast_units`
 --
 ALTER TABLE `mast_units`
+  ADD CONSTRAINT `mast_units_mast_item_category_id_foreign` FOREIGN KEY (`mast_item_category_id`) REFERENCES `mast_item_categories` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `mast_units_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
@@ -7280,6 +7613,7 @@ ALTER TABLE `model_has_roles`
 -- Constraints for table `purchases`
 --
 ALTER TABLE `purchases`
+  ADD CONSTRAINT `purchases_mast_item_category_id_foreign` FOREIGN KEY (`mast_item_category_id`) REFERENCES `mast_item_categories` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `purchases_mast_supplier_id_foreign` FOREIGN KEY (`mast_supplier_id`) REFERENCES `mast_suppliers` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `purchases_mast_work_station_id_foreign` FOREIGN KEY (`mast_work_station_id`) REFERENCES `mast_work_stations` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `purchases_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
@@ -7307,6 +7641,19 @@ ALTER TABLE `quotation_details`
   ADD CONSTRAINT `quotation_details_mast_item_register_id_foreign` FOREIGN KEY (`mast_item_register_id`) REFERENCES `mast_item_registers` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `quotation_details_quotation_id_foreign` FOREIGN KEY (`quotation_id`) REFERENCES `quotations` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `quotation_details_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `requisitions`
+--
+ALTER TABLE `requisitions`
+  ADD CONSTRAINT `requisitions_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `requisition_details`
+--
+ALTER TABLE `requisition_details`
+  ADD CONSTRAINT `requisition_details_mast_item_register_id_foreign` FOREIGN KEY (`mast_item_register_id`) REFERENCES `mast_item_registers` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `requisition_details_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `role_has_permissions`
