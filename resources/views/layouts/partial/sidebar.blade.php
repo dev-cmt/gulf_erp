@@ -67,10 +67,12 @@
                         @canany(['Hr setting access'])
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Data Setting</a>
                             <ul aria-expanded="false">
+                                <li><a href="{{route('mast_working_station.index')}}">Work Station</a></li>
+                                <li><a href="{{route('must_employee_category.index')}}">Employee Type</a></li>
                                 <li><a href="{{route('mast_department.index')}}">Department</a></li>
                                 <li><a href="{{route('mast_designation.index')}}">Designation</a></li>
                                 <li><a href="{{route('mast_leave.index')}}">Leave Type</a></li>
-                                <li><a href="{{route('must_employee_category.index')}}">Employee Category</a></li>
+                                <li><a href="{{route('mast_holidays.index')}}">Holidays</a></li>
                             </ul>
                         </li>
                         @endcanany
