@@ -13,6 +13,7 @@ use App\Models\Admin\InfoEducational;
 use App\Models\Admin\InfoWorkExperience;
 use App\Models\Admin\InfoBank;
 use App\Models\Admin\InfoNominee;
+use App\Models\Admin\SalaryStructure;
 use App\Models\Master\MastDepartment;
 use App\Models\Master\MastDesignation;
 use App\Models\Master\MastEmployeeType;
@@ -353,88 +354,111 @@ class InfoEmployeeController extends Controller
     }
     public function personal_store(Request $request, $id)
     {
-        //----------User Update
-        $user = User::findorfail($id);
-        if($request->hasFile("profile_photo_path")){
-            if (File::exists("public/images/profile/".$user->profile_photo_path)) {
-                File::delete("public/images/profile/".$user->profile_photo_path);
+        DB::beginTransaction();
+        try {
+            //----------User Update
+            $user = User::findorfail($id);
+            if($request->hasFile("profile_photo_path")){
+                if (File::exists("public/images/profile/".$user->profile_photo_path)) {
+                    File::delete("public/images/profile/".$user->profile_photo_path);
+                }
+                //get filename with extension
+                $filenamewithextension = $request->file('profile_photo_path')->getClientOriginalName();
+                //get filename without extension
+                $filename = pathinfo($filenamewithextension, PATHINFO_FILENAME);
+                //get file extension
+                $extension = $request->file('profile_photo_path')->getClientOriginalExtension();
+                //filename to store
+                $filenametostore = $filename.'_'.time().'.'.$extension;
+                //Upload File
+                $request->file('profile_photo_path')->move('public/images/profile/', $filenametostore); //--Upload Location
+                // $request->file('profile_image')->storeAs('public/profile_images', $filenametostore); //--Orginal Img Save
+                //Resize image here
+                $thumbnailpath = public_path('images/profile/'.$filenametostore); //--Get File Location
+                // $thumbnailpath = public_path('storage/images/profile/'.$filenametostore);
+                $img = Image::make($thumbnailpath)->resize(1200, 850, function($constraint) {
+                    $constraint->aspectRatio();
+                }); 
+                $img->save($thumbnailpath);
             }
-            //get filename with extension
-            $filenamewithextension = $request->file('profile_photo_path')->getClientOriginalName();
-            //get filename without extension
-            $filename = pathinfo($filenamewithextension, PATHINFO_FILENAME);
-            //get file extension
-            $extension = $request->file('profile_photo_path')->getClientOriginalExtension();
-            //filename to store
-            $filenametostore = $filename.'_'.time().'.'.$extension;
-            //Upload File
-            $request->file('profile_photo_path')->move('public/images/profile/', $filenametostore); //--Upload Location
-            // $request->file('profile_image')->storeAs('public/profile_images', $filenametostore); //--Orginal Img Save
-            //Resize image here
-            $thumbnailpath = public_path('images/profile/'.$filenametostore); //--Get File Location
-            // $thumbnailpath = public_path('storage/images/profile/'.$filenametostore);
-            $img = Image::make($thumbnailpath)->resize(1200, 850, function($constraint) {
-                $constraint->aspectRatio();
-            }); 
-            $img->save($thumbnailpath);
+            $user->update([
+                'profile_photo_path' => $filenametostore,
+                'mast_work_station_id' => $request->mast_work_station_id,
+                'status' => 1,
+            ]);
+
+            //----------Personal Info
+            $data= new InfoPersonal();
+            $data->emp_id= $id;
+            $data->user_id = Auth::user()->id;
+            
+            $data->date_of_birth=$request->date_of_birth;
+            $data->employee_gender=$request->employee_gender;
+            $data->nid_no=$request->nid_no;
+            $data->blood_group=$request->blood_group;
+            $data->mast_department_id=$request->mast_department_id;
+            $data->mast_designation_id=$request->mast_designation_id;
+            $data->mast_employee_type_id=$request->mast_employee_type_id;
+            $data->mast_work_station_id=$request->mast_work_station_id;
+
+            $data->number_official=$request->number_official;
+            $data->email_official=$request->email_official;
+            $data->joining_date=$request->joining_date;
+            $data->is_reporting_boss=$request->is_reporting_boss;
+            $data->gross_salary=$request->gross_salary;
+            $data->reporting_boss=$request->reporting_boss;
+
+            $data->division_present=$request->division_present;
+            $data->district_present=$request->district_present;
+            $data->upazila_present=$request->upazila_present;
+            $data->union_present=$request->union_present;
+            $data->thana_present=$request->thana_present;
+            $data->post_code_present=$request->post_code_present;
+            $data->address_present=$request->address_present;
+            $data->division_permanent=$request->division_permanent;
+            $data->district_permanent=$request->district_permanent;
+            $data->upazila_permanent=$request->upazila_permanent;
+            $data->union_permanent=$request->union_permanent;
+            $data->thana_permanent=$request->thana_permanent;
+            $data->post_code_permanent=$request->post_code_permanent;
+            $data->address_permanent=$request->address_permanent;
+
+            $data->passport_no=$request->passport_no;
+            $data->driving_license=$request->driving_license;
+            $data->marital_status=$request->marital_status;
+            $data->house_phone=$request->house_phone;
+            $data->father_name=$request->father_name;
+            $data->mother_name=$request->mother_name;
+            $data->birth_certificate_no=$request->birth_certificate_no;
+            $data->emg_person_name=$request->emg_person_name;
+            $data->emg_phone_number=$request->emg_phone_number;
+            $data->emg_relationship=$request->emg_relationship;
+            $data->emg_address=$request->emg_address;
+            $data->save();
+
+            //------Salary Structure
+            $salary = new SalaryStructure();
+            $salary->gross_salary = $data->gross_salary;
+            $salary->basic = $data->gross_salary * 0.60; // 60% of the gross salary
+            $salary->house_rent = $salary->basic * 0.40; // 40% of the basic salary
+            $salary->medical = $salary->basic * 0.15; // 15% of the basic salary
+            $salary->conveyance = $salary->basic * 0.10; // 10% of the basic salary
+            $salary->additional = $data->gross_salary - ($salary->basic + $salary->house_rent + $salary->medical + $salary->conveyance);
+            $salary->emp_id = $id;
+            $salary->user_id = Auth::user()->id;
+            $salary->status = 1;
+            $salary->save();
+            
+            // Commit if everything is successful
+            DB::commit();
+
+            $notification=array('messege'=>'Personal info save successfully!','alert-type'=>'success');
+            return redirect()->route('info_employee_related.create', $id)->with($notification);
+        } catch (\Exception $e) {
+            DB::rollback();
+            \Log::error('Cash transaction error: ' . $e->getMessage());
+            return 'An error occurred during the cash transaction: ' . $e->getMessage();
         }
-        $user->update([
-            'profile_photo_path' => $filenametostore,
-            'mast_work_station_id' => $request->mast_work_station_id,
-            'status' => 1,
-        ]);
-
-        //----------Personal Info
-        $data= new InfoPersonal();
-        $data->emp_id= $id;
-        $data->user_id = Auth::user()->id;
-        
-        $data->date_of_birth=$request->date_of_birth;
-        $data->employee_gender=$request->employee_gender;
-        $data->nid_no=$request->nid_no;
-        $data->blood_group=$request->blood_group;
-        $data->mast_department_id=$request->mast_department_id;
-        $data->mast_designation_id=$request->mast_designation_id;
-        $data->mast_employee_type_id=$request->mast_employee_type_id;
-        $data->mast_work_station_id=$request->mast_work_station_id;
-
-        $data->number_official=$request->number_official;
-        $data->email_official=$request->email_official;
-        $data->joining_date=$request->joining_date;
-        $data->is_reporting_boss=$request->is_reporting_boss;
-        $data->gross_salary=$request->gross_salary;
-        $data->reporting_boss=$request->reporting_boss;
-
-        $data->division_present=$request->division_present;
-        $data->district_present=$request->district_present;
-        $data->upazila_present=$request->upazila_present;
-        $data->union_present=$request->union_present;
-        $data->thana_present=$request->thana_present;
-        $data->post_code_present=$request->post_code_present;
-        $data->address_present=$request->address_present;
-        $data->division_permanent=$request->division_permanent;
-        $data->district_permanent=$request->district_permanent;
-        $data->upazila_permanent=$request->upazila_permanent;
-        $data->union_permanent=$request->union_permanent;
-        $data->thana_permanent=$request->thana_permanent;
-        $data->post_code_permanent=$request->post_code_permanent;
-        $data->address_permanent=$request->address_permanent;
-
-        $data->passport_no=$request->passport_no;
-        $data->driving_license=$request->driving_license;
-        $data->marital_status=$request->marital_status;
-        $data->house_phone=$request->house_phone;
-        $data->father_name=$request->father_name;
-        $data->mother_name=$request->mother_name;
-        $data->birth_certificate_no=$request->birth_certificate_no;
-        $data->emg_person_name=$request->emg_person_name;
-        $data->emg_phone_number=$request->emg_phone_number;
-        $data->emg_relationship=$request->emg_relationship;
-        $data->emg_address=$request->emg_address;
-        $data->save();
-        
-        $notification=array('messege'=>'Personal info save successfully!','alert-type'=>'success');
-        return redirect()->route('info_employee_related.create', $id)->with($notification);
     }
     /**___________________________________________________________________
      * Related Information

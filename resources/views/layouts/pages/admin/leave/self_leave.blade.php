@@ -6,12 +6,11 @@
                 @if (session()->has('success'))
                     <strong class="text-success">{{session()->get('success')}}</strong>
                 @endif
-                <form class="form-valide" data-action="{{ route('leave_application.store') }}" method="POST" enctype="multipart/form-data" id="add-user-form">
+                <form data-action="{{ route('leave_application.store') }}" method="POST" enctype="multipart/form-data" id="add-user-form">
                     @csrf
                     <div class="modal-header">
-                        <h5 class="modal-title">Self Leave Application</h5>
-                        <button type="button" class="close" data-dismiss="modal"><span>&times;</span>
-                        </button>
+                        <h5 class="modal-title">Self Leave Application <strong class="text-danger totalLeaveShow"></strong></h5>
+                        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                     </div>
                     <div class="modal-body row">
                         <div class="col-lg-6">
@@ -24,11 +23,12 @@
                             </div>
                         </div>
                         <div class="col-lg-6">
+                            <input type="hidden" name="finger_id" id="finger_id" value="{{auth()->user()->attendance_id}}">
                             <div class="form-group row">
                                 <label class="col-lg-5 col-form-label">Employee Code</label>
                                 <div class="col-lg-7">
                                     <input type="text" class="form-control" value="{{auth()->user()->employee_code}}" disabled>
-                                    <input type="hidden" name="emp_id" class="form-control" value="{{auth()->user()->id}}">
+                                    <input type="hidden" id="emp_id" name="emp_id" class="form-control" value="{{auth()->user()->id}}">
                                 </div>
                             </div>
                         </div>
@@ -38,7 +38,7 @@
                                     <span class="text-danger">*</span>
                                 </label>
                                 <div class="col-lg-7">
-                                    <input type="date" class="form-control @error('start_date') is-invalid @enderror" name="start_date" placeholder="Enter Date.." value="{{old('start_date')}}" id="start_date">
+                                    <input type="date" class="form-control @error('start_date') is-invalid @enderror" name="start_date" id="start_date" value="{{ now()->format('Y-m-d') }}">
                                     @error('start_date')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -53,7 +53,7 @@
                                     <span class="text-danger">*</span>
                                 </label>
                                 <div class="col-lg-7">
-                                    <input type="date" class="form-control @error('end_date') is-invalid @enderror" name="end_date" value="{{old('end_date')}}" id="end_date">
+                                    <input type="date" class="form-control @error('end_date') is-invalid @enderror" name="end_date" id="end_date" value="{{ now()->format('Y-m-d') }}">
                                     @error('end_date')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -102,7 +102,7 @@
                                 <label class="col-lg-5 col-form-label">Leave Location</label>
                                 <div class="col-lg-7">
                                     <input type="text" class="form-control @error('leave_location') is-invalid @enderror" name="leave_location" placeholder="Enter location.." value="{{old('location')}}">
-                                    @error('start_dates')
+                                    @error('leave_location')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -115,7 +115,7 @@
                                 <label class="col-lg-5 col-form-label">Leave Purpose</label>
                                 <div class="col-lg-7">
                                     <input type="text" class="form-control @error('purpose') is-invalid @enderror" name="purpose" placeholder="Enter purpose.." value="{{old('purpose')}}">
-                                    @error('start_dates')
+                                    @error('purpose')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -126,7 +126,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger light" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" id="submit_btn" class="btn btn-primary">Submit</button>
                     </div>
                 </form>
             </div>
@@ -186,92 +186,139 @@
             </div>
         </div>
     </div>
-    <script>
-        $(document).ready(function(){
-            //---Save Data
-            var form = '#add-user-form';
-            $(form).on('submit', function(event){
-                event.preventDefault();
 
-                var url = $(this).attr('data-action');
-                var src = $('#redirect').attr('redirect-action');
-                $.ajax({
-                    url: url,
-                    method: 'POST',
-                    data: new FormData(this),
-                    dataType: 'JSON',
-                    contentType: false,
-                    cache: false,
-                    processData: false,
-                    success:function(response)
-                    {
-                        $(form).trigger("reset");
-                        // alert(response.success);
-                        // window.location.href = src;
-                        // setTimeout(function() {
-                        //     window.location.reload();
-                        // }, 1000);
-                        swal("Success Message Title", "Well done, you pressed a button", "success")
-                        $('.bd-example-modal-lg').modal('hide');
+    @push('script')
+        <script>
+            $(document).ready(function(){
+                //---Save Data
+                var form = '#add-user-form';
+                $(form).on('submit', function(event){
+                    event.preventDefault();
 
-                        //---Add Table Row
-                        var row = '<tr id="row_todo_'+ response.id + '">';
-                        row += '<td>' + response.name + '</td>';
-                        row += '<td>' + response.leave_name + '</td>';
-                        row += '<td>' + response.formattedDate1 + '</td>';
-                        row += '<td>' + response.formattedDate2 + '</td>';
-                        row += '<td>' + response.duration + '</td>';
-                        row += '<td class="d-flex justify-content-end"> @if('+response.status == 0 +') <span class="badge light badge-warning"><i class="fa fa-circle text-warning mr-1"></i>Pending</span> @elseif ('+ response.qualification == 1+') <span class="badge light badge-success"><i class="fa fa-circle text-success mr-1"></i>Successful</span> @elseif ('+ response.qualification == 2+') <span class="badge light badge-danger"><i class="fa fa-circle text-danger mr-1"></i>Canceled</span> @endif' + '</td>';
-                        
-                        if($("#id").val()){
-                            $("#row_todo_" + response.id).replaceWith(row);
-                        }else{
-                            $("#list_todo").prepend(row);
+                    var url = $(this).attr('data-action');
+                    var src = $('#redirect').attr('redirect-action');
+                    $("#loading").show();
+
+                    $.ajax({
+                        url: url,
+                        method: 'POST',
+                        data: new FormData(this),
+                        dataType: 'JSON',
+                        contentType: false,
+                        cache: false,
+                        processData: false,
+                        success:function(response)
+                        {
+                            $("#loading").hide();
+                            // alert(response.success);
+                            // window.location.href = src;
+                            // setTimeout(function() {
+                            //     window.location.reload();
+                            // }, 1000);
+                            swal("Success Message Title", "Well done, you pressed a button", "success")
+                            $('.bd-example-modal-lg').modal('hide');
+
+                            //---Add Table Row
+                            var row = '<tr id="row_todo_'+ response.id + '">';
+                            row += '<td>' + response.name + '</td>';
+                            row += '<td>' + response.leave_name + '</td>';
+                            row += '<td>' + response.formattedDate1 + '</td>';
+                            row += '<td>' + response.formattedDate2 + '</td>';
+                            row += '<td>' + response.duration + '</td>';
+                            row += '<td class="d-flex justify-content-end"> @if('+response.status == 0 +') <span class="badge light badge-warning"><i class="fa fa-circle text-warning mr-1"></i>Pending</span> @elseif ('+ response.qualification == 1+') <span class="badge light badge-success"><i class="fa fa-circle text-success mr-1"></i>Successful</span> @elseif ('+ response.qualification == 2+') <span class="badge light badge-danger"><i class="fa fa-circle text-danger mr-1"></i>Canceled</span> @endif' + '</td>';
+                            
+                            if($("#id").val()){
+                                $("#row_todo_" + response.id).replaceWith(row);
+                            }else{
+                                $("#list_todo").prepend(row);
+                            }
+                            $("#form_todo").trigger('reset');
+                            $("#leave_application_list").load(" #leave_application_list");
+                        },
+                        error: function (xhr) {
+                            $("#loading").hide();
+                            var errors = xhr.responseJSON.errors;
+                            var errorHtml = '';
+                            $.each(errors, function(key, value) {
+                                errorHtml += '<li style="color:red">' + value + '</li>';
+                            });
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Required data missing?',
+                                html: '<ul>' + errorHtml + '</ul>',
+                            });
                         }
-                        $("#form_todo").trigger('reset');
-                        $("#leave_application_list").load(" #leave_application_list");
-                    },
-                    error: function (xhr) {
-                        var errors = xhr.responseJSON.errors;
-                        var errorHtml = '';
-                        $.each(errors, function(key, value) {
-                            errorHtml += '<li style="color:red">' + value + '</li>';
-                        });
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Required data missing?',
-                            html: '<ul>' + errorHtml + '</ul>',
-                        });
+                    });
+                });
+            });
+
+            $(document).ready(function(){
+                $.ajaxSetup({
+                    headers:{
+                        'x-csrf-token' : $('meta[name="csrf-token"]').attr('content')
                     }
                 });
             });
-        });
 
-        $(document).ready(function(){
-            $.ajaxSetup({
-                headers:{
-                    'x-csrf-token' : $('meta[name="csrf-token"]').attr('content')
-                }
+            //--Get Employee List (Manual Attendance)
+            $(document).ready(function(){
+                var userId = $('#emp_id').val();
+                $("#loading").show();
+                $.ajax({
+                    url:'{{ route('get_employee_code') }}',
+                    method:'GET',
+                    dataType:"JSON",
+                    data:{userId},
+                    success:function(response){
+                        $("#loading").hide();
+                        $('#employeeCode').html(response.employee_code);
+                        $('#finger_id').val(response.attendance_id);
+
+                        //This Year Total Leave Count
+                        var countInRange = response.hr_leave_application.reduce(function (acc, leave) {
+                            var startDate = new Date(leave.start_date);
+                            var endDate = new Date(leave.end_date);
+                            var targetYear = new Date().getFullYear();
+
+                            if (startDate.getFullYear() === targetYear && endDate.getFullYear() === targetYear) {
+                                acc++;
+                            }return acc;
+                        }, 0);
+                        $('.totalLeaveShow').text('(Leave = ' + countInRange + 'day)');
+                        if (countInRange < 16) {
+                            $('#btn_submit').prop('disabled', false);
+                        } else {
+                            $('#btn_submit').prop('disabled', true);
+                            Swal.fire(
+                                'Sorry, No Leave!',
+                                'You have already reached the maximum limit for leaves.',
+                                'question'
+                            );
+                        }//--End
+
+                        if(response.attendance_id == null){
+                            Swal.fire(
+                                'Invalid Attendaance ID',
+                                'Please setup attendance ID!',
+                                'question'
+                            )
+                            $('#employeeCode').html('GF-XXXXX');
+                            $('#finger_id').val('');
+                            $('#submit_btn').prop('disabled', true);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(error);
+                        $("#loading").hide();
+                    }
+                });
             });
-        });
-    </script>
-    <script>
-        //----Current Date
-        var d = new Date()
-        var yr =d.getFullYear();
-        var month = d.getMonth()+1
-    
-        if(month<10){
-            month='0'+month
-        }
-    
-        var date =d.getDate();
-        if(date<10)
-        {
-            date='0'+date
-        }
-        var c_date = yr+"-"+month+"-"+date;
-        document.getElementById('start_date').value = c_date;
-        document.getElementById('end_date').value = c_date;
-    </script>
+            
+            //Employee Name click show Code
+            $('#start_date').change(function(){
+                var date = $(this).val();
+                $('#end_date').val(date);
+            });
+        </script>
+    @endpush
 </x-app-layout>

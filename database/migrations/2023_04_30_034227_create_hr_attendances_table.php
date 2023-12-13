@@ -20,13 +20,15 @@ return new class extends Migration
             $table->time('out_time')->nullable();
             $table->text('location')->nullable();
             $table->text('description')->nullable();
-            $table->tinyInteger('attendance_type')->default(false);
+            $table->string('attendance_type')->nullable();
             $table->string('user_name')->nullable();
             $table->integer('finger_id')->nullable();
+            $table->unsignedBigInteger('emp_id');
+            $table->foreign('emp_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->tinyInteger('late')->default(false);
-            $table->tinyInteger('status')->default(false);
+            $table->tinyInteger('is_late')->default(false); //0 => In Time || 1 => Late
+            $table->tinyInteger('status')->default(false);  //0 => Absent || 1 => Present || 2 => Leave || 3 => Holiday
             $table->timestamps();
         });
     }

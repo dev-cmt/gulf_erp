@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\BackViewController;
 use App\Http\Controllers\Admin\InfoEmployeeController;
 use App\Http\Controllers\Admin\LeaveApplicationController;
 use App\Http\Controllers\Admin\AttendanceController;
+use App\Http\Controllers\Admin\SalaryController;
 //--Inventory
 use App\Http\Controllers\Inventory\PurchaseController;
 use App\Http\Controllers\Inventory\StoreTransferController;
@@ -33,9 +34,10 @@ use App\Http\Controllers\Master\MastDepartmentController;
 use App\Http\Controllers\Master\MastDesignationController;
 use App\Http\Controllers\Master\MastLeaveController;
 use App\Http\Controllers\Master\MastEmployeeTypeController;
+use App\Http\Controllers\Master\HolidayController;
+use App\Http\Controllers\Master\MastWorkStationController;
 
 use App\Http\Controllers\Master\MastUnitController;
-use App\Http\Controllers\Master\MastWorkStationController;
 use App\Http\Controllers\Master\MastItemCategoryController;
 use App\Http\Controllers\Master\MastItemGroupController;
 use App\Http\Controllers\Master\MastItemRegisterController;
@@ -123,20 +125,38 @@ Route::group(['middleware' => ['auth']], function(){
      * HR & ADMIN => Attendances
      * ______________________________________________________________________________________________
      */
-    // Route::resource('manual_attendances', AttendanceController::class);
     Route::get('manual_attendances/index', [AttendanceController::class, 'index'])->name('manual_attendances.index');
     Route::post('manual_attendances/store', [AttendanceController::class, 'store'])->name('manual_attendances.store');
+    Route::delete('manual_attendances/delete/{id}', [AttendanceController::class, 'destroy'])->name('manual_attendances.destroy');
     Route::post('attendances/attendanceId_store', [AttendanceController::class, 'setUpAttendanceID'])->name('setup-attendance-store');
+
     Route::get('attendance/approve_list', [AttendanceController::class, 'attendance_approve_list'])->name('attendance_approve.create');
     Route::PATCH('attendance/approve/{id}', [AttendanceController::class, 'attendance_approve'])->name('attendance.approve');
     Route::PATCH('attendance/canceled/{id}', [AttendanceController::class, 'decline'])->name('attendance.canceled');
-    Route::get('get/get_attendance_repot/{id}', [AttendanceController::class,'getAttendanceRepot'])->name('get_attendance_repot');
+    
     Route::get('get/attendance/filter', [AttendanceController::class, 'filterDate'])->name('get-attendance-filter');
-
     //--Attendances Imports or Exports Excel
-    Route::get('attendance/import', [AttendanceController::class, 'importAttendance'])->name('attendance.import');
     Route::post('attendance/upload', [AttendanceController::class, 'uploadAttendance'])->name('attendance.upload');    
     Route::get('attendance/export', [AttendanceController::class, 'exportAttendance'])->name('attendance.export'); 
+    
+    /**______________________________________________________________________________________________
+     * HR & ADMIN => Salary
+     * ______________________________________________________________________________________________
+     */
+    Route::get('salary-structure/index', [SalaryController::class, 'salaryStructureIndex'])->name('salary-structure.index');
+    Route::post('salary-structure/store', [SalaryController::class, 'salaryStructureStore'])->name('salary-structure.store');
+    Route::get('get/salary-stucture', [SalaryController::class, 'getSalaryStucture'])->name('get-salary-stucture');
+    
+    Route::get('salary-process/index', [SalaryController::class, 'salaryProcessIndex'])->name('salary-process.index');
+    Route::get('get/salary-process/filter', [SalaryController::class, 'salaryProcessFilter'])->name('salary-process-filter');
+    Route::post('salary-process/store', [SalaryController::class, 'salaryProcessStore'])->name('salary-process.store');
+    
+    Route::get('salary-sheet/index', [SalaryController::class, 'salarySheetIndex'])->name('salary-sheet.index');
+    Route::post('salary-sheet/distribution', [SalaryController::class, 'salarySheetDistribution'])->name('salary-sheet.distribution');
+    Route::get('get/salary-sheet/filter', [SalaryController::class, 'salarySheetFilter'])->name('salary-sheet.filter');
+    Route::get('salary-pay-slip/{id}/download', [SalaryController::class, 'salaryPaySlipDownload'])->name('salary-pay-slip.download');
+
+    Route::get('salary-pay-slip/index', [SalaryController::class, 'salaryPaySlipIndex'])->name('salary-pay-slip.index');
     
     /**______________________________________________________________________________________________
      * Inventory => GRN
@@ -369,6 +389,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::resource('mast_item_register', MastItemRegisterController::class);
     Route::resource('mast_unit', MastUnitController::class);
     Route::resource('mast_working_station', MastWorkStationController::class);
+    Route::resource('mast_holidays', HolidayController::class);
     Route::resource('mast_supplier', MastSupplierController::class);
     Route::resource('mast_item_models', MastItemModelsController::class);
 

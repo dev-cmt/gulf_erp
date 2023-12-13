@@ -35,7 +35,7 @@ class HrLeaveApplication extends Model
     }
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'emp_id');
     }
     public function mastLeave()
     {

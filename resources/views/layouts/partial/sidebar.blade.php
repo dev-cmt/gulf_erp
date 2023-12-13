@@ -49,7 +49,6 @@
                             <ul aria-expanded="false">
                                 <li><a href="{{ route('manual_attendances.index') }}">Attendance List</a></li>
                                 <li><a href="{{ route('attendance_approve.create') }}">Attendance Approve</a></li>
-                                <li><a href="{{route('attendance.import')}}">Upload Attendance</a></li>
                             </ul>
                         </li>
                         @endcanany
@@ -57,9 +56,10 @@
                         @canany(['Super-Admin', 'Admin', 'HR', 'Salary access'])
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Salary</a>
                             <ul aria-expanded="false">
-                                <li><a href="#">Process Salary</a></li>
-                                <li><a href="#">Pay Slip</a></li>
-                                <li><a href="#">Salary Sheet</a></li>
+                                <li><a href="{{Route('salary-structure.index')}}">Salary Structure</a></li>
+                                <li><a href="{{route('salary-process.index')}}">Process Salary</a></li>
+                                <li><a href="{{route('salary-sheet.index')}}">Salary Sheet</a></li>
+                                <li><a href="{{route('salary-pay-slip.index')}}">Pay Slip</a></li>
                             </ul>
                         </li>
                         @endcanany

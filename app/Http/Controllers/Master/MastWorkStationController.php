@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Master;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Master\MastWorkStation;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Master\MastWorkStation;
+use Illuminate\Support\Facades\Validator;
 
 class MastWorkStationController extends Controller
 {
@@ -20,7 +20,7 @@ class MastWorkStationController extends Controller
     {
         $data = MastWorkStation::latest()->get();
       
-        return view('layouts.pages.master.working_station.index', compact('data'));
+        return view('layouts.master.working_station.index', compact('data'));
     }
 
     /**
@@ -30,7 +30,7 @@ class MastWorkStationController extends Controller
      */
     public function create()
     {
-        return view('layouts.pages.master.working_station.create');
+        return view('layouts.master.working_station.create');
     }
 
     /**
@@ -66,7 +66,7 @@ class MastWorkStationController extends Controller
     public function show($id)
     {
         $data = MastWorkStation::find($id);
-        return view('layouts.pages.master.working_station.show', compact('data'));
+        return view('layouts.master.working_station.show', compact('data'));
     }
 
     /**
@@ -78,7 +78,7 @@ class MastWorkStationController extends Controller
     public function edit($id)
     {
         $data = MastWorkStation::find($id);
-        return view('layouts.pages.master.working_station.edit', compact('data'));
+        return view('layouts.master.working_station.edit', compact('data'));
     }
 
     /**

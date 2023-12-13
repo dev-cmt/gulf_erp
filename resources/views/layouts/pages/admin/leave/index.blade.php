@@ -30,7 +30,7 @@
                                     <td>{{ $row->email}}</td>
                                     <td>{{ $row->contact_number}}</td>
                                     <td class="d-flex justify-content-end">
-                                        <button class="btn btn-sm btn-success p-1 px-2 view_report" data-toggle="modal" data-id="{{ $row->id }}" data-target=".bd-example-modal-lg"><i class="fa fa-folder-open"></i><span class="btn-icon-add"></span>View</button>
+                                        <button class="btn btn-sm btn-success p-1 px-2 view_report" data-id="{{ $row->id }}"><i class="fa fa-folder-open"></i><span class="btn-icon-add"></span>View</button>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -51,11 +51,11 @@
                 <form class="form-valide" data-action="{{ route('leave_application.store') }}" method="POST" enctype="multipart/form-data" id="add-user-form">
                     @csrf
                     <div class="modal-header">
-                        <h5 class="modal-title">Emergency Leave Application</h5>
-                        <button type="button" class="close" data-dismiss="modal"><span>&times;</span>
-                        </button>
+                        <h5 class="modal-title">Emergency Leave Application <strong class="text-danger totalLeaveShow"></strong></h5>
+                        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                     </div>
                     <div class="modal-body row">
+                        <input type="hidden" name="emg_leave" value="1">
                         <div class="col-lg-6">
                             <div class="form-group row">
                                 <label class="col-lg-5 col-form-label">Employee Name
@@ -63,7 +63,7 @@
                                 </label>
                                 <div class="col-lg-7">
                                     <select class="form-control dropdwon_select" id="employeeName" name="emp_id">
-                                        <option selected>Select</option>
+                                        <option value="" selected>Select</option>
                                         @foreach ($employee as $row)
                                             <option value="{{$row->id}}">{{$row->name}}</option>
                                         @endforeach
@@ -72,6 +72,7 @@
                             </div>
                         </div>
                         <div class="col-lg-6">
+                            <input type="hidden" name="finger_id" id="finger_id">
                             <div class="form-group row">
                                 <label class="col-lg-5 col-form-label">Employee Code</label>
                                 <div class="col-lg-7">
@@ -85,7 +86,7 @@
                                     <span class="text-danger">*</span>
                                 </label>
                                 <div class="col-lg-7">
-                                    <input type="date" class="form-control @error('start_date') is-invalid @enderror" name="start_date" placeholder="Enter Date.." value="{{old('start_date')}}" id="start_date">
+                                    <input type="date" class="form-control @error('start_date') is-invalid @enderror" name="start_date" id="start_date" placeholder="Enter Date.." value="{{ now()->format('Y-m-d') }}">
                                     @error('start_date')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -100,7 +101,7 @@
                                     <span class="text-danger">*</span>
                                 </label>
                                 <div class="col-lg-7">
-                                    <input type="date" class="form-control @error('end_date') is-invalid @enderror" name="end_date" value="{{old('end_date')}}" id="end_date">
+                                    <input type="date" class="form-control @error('end_date') is-invalid @enderror" name="end_date" id="end_date" value="{{ now()->format('Y-m-d') }}">
                                     @error('end_date')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -149,7 +150,7 @@
                                 <label class="col-lg-5 col-form-label">Leave Location</label>
                                 <div class="col-lg-7">
                                     <input type="text" class="form-control @error('leave_location') is-invalid @enderror" name="leave_location" placeholder="Enter location.." value="{{old('location')}}">
-                                    @error('start_dates')
+                                    @error('leave_location')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -162,7 +163,7 @@
                                 <label class="col-lg-5 col-form-label">Leave Purpose</label>
                                 <div class="col-lg-7">
                                     <input type="text" class="form-control @error('purpose') is-invalid @enderror" name="purpose" placeholder="Enter purpose.." value="{{old('purpose')}}">
-                                    @error('start_dates')
+                                    @error('purpose')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -173,7 +174,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger light" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" id="btn_submit" class="btn btn-primary">Submit</button>
                     </div>
                 </form>
             </div>
@@ -207,6 +208,7 @@
 
                     var url = $(this).attr('data-action');
                     var src = $('#redirect').attr('redirect-action');
+                    $("#loading").show();
                     $.ajax({
                         url: url,
                         method: 'POST',
@@ -217,7 +219,7 @@
                         processData: false,
                         success:function(response)
                         {
-                            $(form).trigger("reset");
+                            $("#loading").hide();
                             // alert(response.success);
                             // window.location.href = src;
                             // setTimeout(function() {
@@ -244,6 +246,7 @@
                             $("#leave_application_list").load(" #leave_application_list");
                         },
                         error: function (xhr) {
+                            $("#loading").hide();
                             var errors = xhr.responseJSON.errors;
                             var errorHtml = '';
                             $.each(errors, function(key, value) {
@@ -268,47 +271,93 @@
             });
         </script>
         <script>
-            //----Current Date
-            var d = new Date()
-            var yr =d.getFullYear();
-            var month = d.getMonth()+1
-            if(month<10){month='0'+month}
-            var date =d.getDate();
-            if(date<10){date='0'+date}
-            var c_date = yr+"-"+month+"-"+date;
-            document.getElementById('start_date').value = c_date;
-            document.getElementById('end_date').value = c_date;
+            //--Get Employee List (Manual Attendance)
+            var clearEmpId = $('#employeeName').html();
+            $('#employeeName').change(function(){
+                var userId = $(this).val();
+                $("#loading").show();
+                $.ajax({
+                    url:'{{ route('get_employee_code') }}',
+                    method:'GET',
+                    dataType:"JSON",
+                    data:{userId},
+                    success:function(response){
+                        $("#loading").hide();
+                        $('#employeeCode').html(response.employee_code);
+                        $('#finger_id').val(response.attendance_id);
+                        
+                        //This Year Total Leave Count
+                        var countInRange = response.hr_leave_application.reduce(function (acc, leave) {
+                            var startDate = new Date(leave.start_date);
+                            var endDate = new Date(leave.end_date);
+                            var targetYear = new Date().getFullYear();
+
+                            if (startDate.getFullYear() === targetYear && endDate.getFullYear() === targetYear) {
+                                acc++;
+                            }return acc;
+                        }, 0);
+                        $('.totalLeaveShow').text('(Leave = ' + countInRange + 'day)');
+                        if (countInRange < 16) {
+                            $('#btn_submit').prop('disabled', false);
+                        } else {
+                            $('#btn_submit').prop('disabled', true);
+                            Swal.fire(
+                                'Sorry, No Leave!',
+                                'You have already reached the maximum limit for leaves.',
+                                'question'
+                            );
+                        }
+
+                        if(response.attendance_id == null){
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Invalid Attendance ID',
+                                html: 'Please set up attendance ID. <a target="_blank" class="btn btn-success py-0" href="{{ route("manual_attendances.index") }}">Click here</a>',
+                            });
+
+                            $('#employeeName').html(clearEmpId);
+                            $('#employeeCode').html('GF-XXXXX');
+                            $('#finger_id').val('');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(error);
+                        $("#loading").hide();
+                    }
+                });
+            });
+            
+            //Employee Name click show Code
+            $('#start_date').change(function(){
+                var date = $(this).val();
+                $('#end_date').val(date);
+            });
+
+            //get Leave Details
+            $(document).ready(function() {
+                $('.table-responsive').on('click','.view_report',function(){
+                    let userId = $(this).data('id');
+                    $("#loading").show();
+                    $.ajax({
+                        url:'{{ route('get_emargency_leave_repot') }}',
+                        method:'GET',
+                        data:{userId:userId},
+                        success:function(response){
+                            $("#loading").hide();
+                            $('.bd-example-modal-lg').modal('show');
+                            $('#target-element').html(response);
+                            $("#loading").hide();
+                        },
+                        error: function(xhr, status, error) {
+                            console.log(error);
+                            $("#loading").hide();
+                        }
+                    });
+                });
+            });
         </script>
     @endpush
     
 </x-app-layout>
-<script>
-    //Employee Name click show Code
-    $('#employeeName').change(function(){
-        var userId = $(this).val();
-        $.ajax({
-            url:'{{ route('get_employee_code') }}',
-            method:'GET',
-            dataType:"JSON",
-            data:{userId},
-            success:function(response){
-                $('#employeeCode').html(response.employee_code);
-            }
-        });
-    });
-    //get Leave Details
-    $(document).ready(function() {
-        $('.table-responsive').on('click','.view_report',function(){
-            let userId = $(this).data('id');
-            $.ajax({
-                url:'{{ route('get_emargency_leave_repot') }}',
-                method:'GET',
-                data:{userId:userId},
-                success:function(response){
-                    $('#target-element').html(response);
-                }
-            });
-        });
-    });
-</script>
+
 

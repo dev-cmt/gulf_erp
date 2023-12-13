@@ -18,6 +18,7 @@ use App\Models\Admin\InfoWorkExperience;
 use App\Models\Admin\InfoBank;
 use App\Models\Admin\InfoNominee;
 use App\Models\Admin\HrAttendance;
+use App\Models\Admin\SalaryStructure;
 use App\Models\Master\MastDepartment;
 use App\Models\Master\MastWorkStation;
 
@@ -76,10 +77,18 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsTo(MastWorkStation::class);
     }
     
-    //____________ MINHAZ DATA
-    public function hr_leave_application()
+    //____________ DATA
+    public function hrLeaveApplication()
     {
-        return $this->hasOne(HrLeaveApplication::class);
+        return $this->hasMany(HrLeaveApplication::class, 'emp_id');
+    }
+    public function hrAttendance()
+    {
+        return $this->hasMany(HrAttendance::class, 'emp_id');
+    }
+    public function salaryStructure()
+    {
+        return $this->hasMany(SalaryStructure::class, 'emp_id');
     }
     //____________ SABBIR DATA
     public function employeeCode()
