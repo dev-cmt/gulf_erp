@@ -802,14 +802,20 @@ class ImportSeeder extends Seeder
         ]);
         //____________________________________//
         MastComplaintType::create([
-            'name'=>'Service Problem',
+            'name'=>'New Installation',
             'description'=>'TEST-01',
             'status'=>'1',
             'user_id'=>'1',
         ]);
         MastComplaintType::create([
+            'name'=>'Service Problem',
+            'description'=>'TEST-02',
+            'status'=>'1',
+            'user_id'=>'1',
+        ]);
+        MastComplaintType::create([
             'name'=>'Gass Problem',
-            'description'=>'TEST-01',
+            'description'=>'TEST-03',
             'status'=>'1',
             'user_id'=>'1',
         ]);

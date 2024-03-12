@@ -159,7 +159,7 @@
                         row += '</td>';
 
                         row += '<td>' + item.visit + '</td>';
-                        var isDisabled = (item.tech_id !== null || response.jobNo >= 3) ? 'disabled' : '';
+                        var isDisabled = (item.tech_id !== 0 || response.jobNo >= 3) ? 'disabled' : '';
                         row += '<td class="view-hide"><button type="submit" ' + isDisabled + ' style="width:85px" class="btn btn-sm btn-secondary p-1 px-2 assign-button" data-row-id="' + item.id + '"><i class="fa fa-briefcase"></i><span class="btn-icon-add"></span>Assign</button></td>';
                         row += '</tr>';
                         tableBody.append(row);

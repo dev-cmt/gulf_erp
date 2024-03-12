@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Models\Master\MastItemCategory;
 use App\Models\Master\MastItemGroup;
 use App\Models\Master\MastItemRegister;
@@ -35,6 +36,8 @@ class SalesQuotationController extends Controller
     }
     public function store(Request $request, $type)
     {
+        DB::beginTransaction();
+
         try {
             $invoice_codes = Helper::IDGenerator(new Quotation, 'quot_no', 5, 'GIAL'); /* Generate id */
 
@@ -125,6 +128,9 @@ class SalesQuotationController extends Controller
                 'body' => 'This Is body',
             ];
             Mail::to($new_sales->mastCustomer->email)->send(new MemberApproved($mailData));
+            
+            // Commit the transaction if everything is successful
+            DB::commit();
 
             return response()->json([
                 'sales' => $sales,

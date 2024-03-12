@@ -15,15 +15,19 @@ return new class extends Migration
     {
         Schema::create('requisition_details', function (Blueprint $table) {
             $table->id();
-            $table->integer('requ_id');
-            $table->bigInteger('cat_id')->nullable();
+            $table->unsignedBigInteger('requisition_id');
+            $table->unsignedBigInteger('mast_item_category_id');
+            $table->unsignedBigInteger('mast_item_group_id');
             $table->unsignedBigInteger('mast_item_register_id');
             $table->integer('qty')->nullable();
             $table->integer('rcv_qty')->nullable();
-            $table->tinyInteger('status')->default(true);
-            
-            $table->foreign('mast_item_register_id')->references('id')->on('mast_item_registers')->onDelete('cascade');
+            $table->tinyInteger('status')->default(false);
             $table->unsignedBigInteger('user_id');
+
+            $table->foreign('requisition_id')->references('id')->on('requisitions')->onDelete('cascade');
+            $table->foreign('mast_item_category_id')->references('id')->on('mast_item_categories')->onDelete('cascade');
+            $table->foreign('mast_item_group_id')->references('id')->on('mast_item_groups')->onDelete('cascade');
+            $table->foreign('mast_item_register_id')->references('id')->on('mast_item_registers')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });

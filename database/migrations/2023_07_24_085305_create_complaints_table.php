@@ -20,13 +20,14 @@ return new class extends Migration
             $table->text('note')->nullable();
             $table->text('remarks')->nullable();
             $table->integer('visit')->default(false);
+            $table->tinyInteger('with_warranty')->default(false);
+            $table->unsignedBigInteger('tech_id')->default(false);
             $table->unsignedBigInteger('mast_complaint_type_id');
             $table->foreign('mast_complaint_type_id')->references('id')->on('mast_complaint_types')->onDelete('cascade');
             $table->unsignedBigInteger('mast_customer_id');
             $table->foreign('mast_customer_id')->references('id')->on('mast_customers')->onDelete('cascade');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->unsignedBigInteger('tech_id')->default(false);
             $table->tinyInteger('status')->default(false);
             $table->timestamps();
         });

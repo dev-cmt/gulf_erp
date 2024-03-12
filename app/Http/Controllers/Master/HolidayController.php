@@ -15,11 +15,11 @@ class HolidayController extends Controller
 {
     public function index() {
         $data = MastHoliday::latest()->get();
-        return view('layouts.master.holidays.index', compact('data'));
+        return view('layouts.pages.master.holidays.index', compact('data'));
     }
 
     public function create() {
-        return view('layouts.master.holidays.create');
+        return view('layouts.pages.master.holidays.create');
     }
 
     public function store(Request $request)

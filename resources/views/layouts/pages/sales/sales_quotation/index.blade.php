@@ -77,7 +77,7 @@
                     <h5 class="modal-title">
                         @if($type == 1) AC Sales Quotation
                         @elseif($type == 2) AC spare parts Sales
-                        @else Car spare parts Sales
+                        @elseif($type == 3) Car spare parts Sales
                         @endif
                     </h5>
                     <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
@@ -231,6 +231,7 @@
         });
     });
 </script>
+
 <script type="text/javascript">
     /*=======//Show Modal//=========*/
     var getCustomerType = $('#mast_customer_type').html();
@@ -620,7 +621,6 @@
         });
     }
 </script>
-
 <script type="text/javascript">
     //======Add ROW
     var count = 0;

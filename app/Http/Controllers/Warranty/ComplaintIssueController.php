@@ -39,14 +39,13 @@ class ComplaintIssueController extends Controller
 
         $IDGenarator = Helper::IDGenerator(new Complaint,'issue_no', 5, "ISSUE");
         $data = new Complaint();
-        $data->note = $request->note;
+        $data->issue_date = date('y-m-d');
+        $data->issue_no = $IDGenarator;
+        $data->with_warranty = $request->warenty == 'Yes' ? 1 : 0 ;
         $data->note = $request->note;
         $data->remarks = $request->remarks;
         $data->mast_complaint_type_id = $request->mast_complaint_type_id;
         $data->mast_customer_id = $request->mast_customer_id;
-        $data->issue_date = date('y-m-d');
-        $data->with_warranty = $request->warenty == 'Yes' ? 1 : 0 ;
-        $data->issue_no = $IDGenarator;
         $data->user_id = Auth::user()->id;
         $data->save();
 
@@ -67,7 +66,6 @@ class ComplaintIssueController extends Controller
     public function getCustomerDetails(Request $request)
     {
         $customer = MastCustomer::orderBy('name', 'asc')->where('id', $request->customer_id)->first();
-        $getDelivary = Delivery::where('mast_customer_id', $request->customer_id)->get();
 
         $getDelivary = Delivery::where('deliveries.mast_customer_id', $request->customer_id)
         ->join('mast_item_registers', 'mast_item_registers.id', 'deliveries.mast_item_register_id')

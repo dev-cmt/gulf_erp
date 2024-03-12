@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Master;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Master\MastUnit;
+use App\Models\Master\MastItemCategory;
 use Auth;
 
 class MastUnitController extends Controller
@@ -28,7 +29,8 @@ class MastUnitController extends Controller
      */
     public function create()
     {
-        return view('layouts.pages.master.unit.create');
+        $category = MastItemCategory::where('status', 1)->get();
+        return view('layouts.pages.master.unit.create', compact('category'));
     }
 
     /**
@@ -62,7 +64,8 @@ class MastUnitController extends Controller
     public function show($id)
     {
         $data = MastUnit::find($id);
-        return view('layouts.pages.master.unit.show', compact('data'));
+        $category = MastItemCategory::where('status', 1)->get();
+        return view('layouts.pages.master.unit.show', compact('data', 'category'));
     }
 
     /**
@@ -74,7 +77,8 @@ class MastUnitController extends Controller
     public function edit($id)
     {
         $data = MastUnit::find($id);
-        return view('layouts.pages.master.unit.edit', compact('data'));
+        $category = MastItemCategory::where('status', 1)->get();
+        return view('layouts.pages.master.unit.edit', compact('data', 'category'));
     }
 
     /**

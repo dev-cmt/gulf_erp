@@ -42,7 +42,8 @@ class MastItemRegisterController extends Controller
      */
     public function create()
     {
-        return view('layouts.pages.master.item_register.create');
+        $category = MastItemCategory::where('status', 1)->get();
+        return view('layouts.pages.master.item_register.create', compact('category'));
     }
 
     /**
@@ -154,12 +155,13 @@ class MastItemRegisterController extends Controller
      */
     public function edit($id)
     {
+        $category = MastItemCategory::where('status', 1)->get();
         $data = MastItemRegister::with('unit', 'mastItemGroup')->find($id);
         $unit = MastUnit::where('mast_item_category_id', $data->mast_item_category_id)->orderBy('unit_name', 'asc')->where('status', 1)->get();
         $item_group = MastItemGroup::where('mast_item_category_id', $data->mast_item_category_id)->orderBy('part_name', 'asc')->where('status', 1)->get();
         $mastItemModels = MastItemModels::where('mast_item_group_id', $data->mastItemGroup->id)->get();
 
-        return view('layouts.pages.master.item_register.edit', compact('data','unit','item_group', 'mastItemModels'));
+        return view('layouts.pages.master.item_register.edit', compact('data','unit','item_group', 'category', 'mastItemModels'));
     }
 
     /**

@@ -21,7 +21,8 @@ class AttendanceController extends Controller
 {
     public function index()
     {
-        $employee = User::where('status', 1)->whereNotNull('attendance_id')->get();
+        //$employee = User::where('status', 1)->whereNotNull('attendance_id')->get();
+        $employee = User::where('status', 1)->get();
         return view('layouts.pages.admin.attendance.index',compact('employee'));
     }
     public function store(Request $request)

@@ -388,7 +388,7 @@ class SalaryController extends Controller
     public function salaryPaySlipDownload($id){
         $data = SalarySheet::where('id', $id)->orderBy('id', 'asc')->first();
 
-        $pdf = PDF::loadView('layouts.export.salary-pay-slip', compact('data'))->setPaper('a4', 'portrait');
+        $pdf = PDF::loadView('layouts.pages.export.salary-pay-slip', compact('data'))->setPaper('a4', 'portrait');
         return $pdf->download('pay-slip.pdf');
 
         // return view('layouts.export.salary-pay-slip', compact('data'));

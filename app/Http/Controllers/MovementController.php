@@ -156,6 +156,7 @@ class MovementController extends Controller
     }
     function salesDeliveryStore(Request $request) {
         
+        DB::beginTransaction();
         try {
             $warranty = MastItemRegister::where('id',$request->item_register_id)->first()->warranty;
 
@@ -221,8 +222,13 @@ class MovementController extends Controller
                 $salesUpdate->is_parsial = 1;
                 $salesUpdate->save();
             }
+            // Commit the transaction if everything is successful
+            DB::commit();
+            
             return response()->json(['message' => 'Data saved successfully'], 200);
         } catch (\Exception $e) {
+            DB::rollback();
+            \Log::error('Cash transaction error: ' . $e->getMessage());
             return response()->json(['error' => 'An error occurred while saving data: ' . $e->getMessage()], 500);
         }
     }

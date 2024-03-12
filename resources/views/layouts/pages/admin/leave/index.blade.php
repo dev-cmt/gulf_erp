@@ -4,7 +4,7 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title">Leave Application List<span class="bg-blue-500 text-white rounded px-1 text-xs py-0.5"></span></h4>
-                    @can('Role create')
+                    @can('Leave access')
                     <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg_form"><i class="fa fa-plus"></i><span class="btn-icon-add" data-bs-toggle="modal"></span>Emergency Leave</a>
                     @endcan
                 </div>

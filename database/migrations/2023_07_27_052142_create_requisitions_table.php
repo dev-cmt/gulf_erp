@@ -17,13 +17,13 @@ return new class extends Migration
             $table->id();
             $table->string('requ_no')->nullable();
             $table->date('requ_date')->nullable();
-            $table->tinyInteger('status')->default(false);
             $table->text('remarks')->nullable();
-            $table->integer('mast_item_category_id')->nullable();
-            $table->integer('complaint_id')->nullable();
+            $table->unsignedBigInteger('complaint_id')->nullable();
             $table->unsignedBigInteger('tech_id');
-
+            $table->tinyInteger('status')->default(false);
             $table->unsignedBigInteger('user_id');
+
+            $table->foreign('tech_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });

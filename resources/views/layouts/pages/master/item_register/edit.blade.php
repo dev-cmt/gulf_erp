@@ -27,9 +27,9 @@
                                         <div class="col-md-8">
                                             <select class="form-control dropdwon_select" name="mast_item_category_id" id="itemCategory" required>
                                                 <option value="" selected disabled>-- Select Category --</option>
-                                                <option value="1" {{$data->mast_item_category_id == 1 ? 'selected' : '' }}>AC</option>
-                                                <option value="2" {{$data->mast_item_category_id == 2 ? 'selected' : '' }}>AC Spare parts</option>
-                                                <option value="3" {{$data->mast_item_category_id == 3 ? 'selected' : '' }}>Car spare parts</option>
+                                                @foreach ($category as $row)
+                                                    <option value="{{$row->id}}" {{$data->mast_item_category_id == $row->id ? 'selected' : '' }}>{{$row->cat_name}}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                     </div>

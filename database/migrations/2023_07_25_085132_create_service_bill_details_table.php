@@ -20,9 +20,12 @@ return new class extends Migration
             $table->decimal('price')->nullable();
             $table->decimal('total')->nullable();
 
+            $table->unsignedBigInteger('service_bill_id')->nullable();
+            $table->foreign('service_bill_id')->references('id')->on('service_bills')->onDelete('cascade');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             
+            $table->tinyInteger('status')->default(false);
             $table->timestamps();
         });
     }

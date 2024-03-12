@@ -5,7 +5,7 @@
                 <div class="card-header">
                     <h4 class="card-title">Attendance List</h4>
                     <div>
-                        @can('Role create') 
+                        @can('Attendance access') 
                             <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#exampleModalCenter"><i class="fa fa-plus"></i><span class="btn-icon-add" data-bs-toggle="modal"></span>Set Fingerprint</a>                   
                             <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#uploadFile"><i class="fa fa-plus"></i><span class="btn-icon-add" data-bs-toggle="modal"></span>Upload File</a>                   
                             <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg_form"><i class="fa fa-plus"></i><span class="btn-icon-add" data-bs-toggle="modal"></span>Manual Attendance</a>                   
