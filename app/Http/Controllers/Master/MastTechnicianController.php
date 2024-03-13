@@ -62,13 +62,13 @@ class MastTechnicianController extends Controller
      */
      public function getEmployeeInfo(Request $request)
      {
-         $personalDetails =  InfoPersonal::with('mastDesignation')->with('mastDepartment')->where('emp_id',$request->id)->first()->toArray();
-         $employee = User::whereNotIn('id', [1,2])->where('status', 1)->get();
-         $designation = MastDesignation::where('status', 1)->get();
-         return response()->json([
-             'personalDetails' => $personalDetails,
-             'employee' => $employee,
-             'designation' => $designation,
-         ]);
+        $personalDetails = InfoPersonal::with('mastDesignation', 'mastDepartment')->where('emp_id', $request->id)->firstOrFail()->toArray();
+        $employee = User::whereNotIn('id', [1,2])->where('status', 1)->get();
+        $designation = MastDesignation::where('status', 1)->get();
+        return response()->json([
+            'personalDetails' => $personalDetails,
+            'employee' => $employee,
+            'designation' => $designation,
+        ]);
      }
 }

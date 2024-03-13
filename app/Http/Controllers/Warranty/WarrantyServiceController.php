@@ -161,10 +161,8 @@ class WarrantyServiceController extends Controller
      */
     public function serviceBillIndex()
     {
-        $data = Requisition::get();
-        $history = JobCard::where('status', 1)->where('tech_id', 12)->get();
-
-        return view('layouts.pages.warranty.item-requisition', compact('history', 'data'));
+        $data = ServiceBill::get();
+        return view('layouts.pages.warranty.service-bill', compact('data'));
     }
     public function serviceBillStore(Request $request)
     {
@@ -202,6 +200,14 @@ class WarrantyServiceController extends Controller
         return response()->json(['message' => 'success']);
     }
 
+    function serviceBillReceive(Request $request) { // USE => service-bill Page
+        
+        $data = ServiceBillDetails::find($request->id);
+        $data->status = 1;
+        $data->save();
+        
+        return response()->json($data);
+    }
      
     /**_________________________________________________________________
      * GET AJAX DATA
@@ -246,7 +252,7 @@ class WarrantyServiceController extends Controller
         return response()->json($data);
     }  
     public function getServiceBillDetails(Request $request) { // USE => movement Page
-        $serviceBill = ServiceBill::where('complaint_id', $request->complaint_id)->get();
+        $serviceBill = ServiceBill::where('mast_customer_id', $request->mast_customer_id)->get();
         $getId = $serviceBill->pluck('id')->toArray();
         $data = ServiceBillDetails::with('serviceBill')->whereIn('service_bill_id', $getId)->get();
         
@@ -270,6 +276,11 @@ class WarrantyServiceController extends Controller
         $data->save();
     
         return response()->json($data);
-    }
+    } 
+    public function getServiceBill(Request $request) { // USE => service-bill Page
+        $data = ServiceBill::with('complaint', 'technician', 'mastCustomer', 'serviceBillDetails')->find($request->id);
+        
+        return response()->json($data);
+    } 
     
 }

@@ -32,12 +32,12 @@ class ServiceBill extends Model
     {
         return $this->belongsTo(User::class, 'tech_id');
     }
-    public function serviceBillDetails()
-    {
-        return $this->belongsTo(ServiceBillDetails::class, 'service_bill_id');
-    }
     public function mastCustomer()
     {
-        return $this->hasOne(MastCustomer::class, 'mast_customer_id');
+        return $this->belongsTo(MastCustomer::class, 'mast_customer_id');
+    }
+    public function serviceBillDetails()
+    {
+        return $this->hasMany(ServiceBillDetails::class, 'service_bill_id');
     }
 }

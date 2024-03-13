@@ -344,6 +344,8 @@ Route::group(['middleware' => ['auth']], function(){
      */
     Route::get('warranty/service-bill/index',[WarrantyServiceController::class,'serviceBillIndex'])->name('service-bill.index');
     Route::post('warranty/service-bill/store',[WarrantyServiceController::class,'serviceBillStore'])->name('service-bill.store');
+    Route::get('get/warranty/service-bill/receive',[WarrantyServiceController::class,'serviceBillReceive'])->name('service-bill.receive');
+    Route::get('get/warranty/service-bill',[WarrantyServiceController::class,'getServiceBill'])->name('get-service-bill');
     Route::get('get/warranty/service-bill/details',[WarrantyServiceController::class,'getServiceBillDetails'])->name('get-service-bill-details');
 });
 

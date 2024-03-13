@@ -4,6 +4,7 @@ namespace App\Models\Warranty;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Warranty\ServiceBill;
 
 class ServiceBillDetails extends Model
 {

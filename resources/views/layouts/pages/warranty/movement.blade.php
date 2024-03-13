@@ -462,17 +462,17 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-12" id="service-bill-previous" style="display: none">
                                 <!--=====//Table//=====-->
                                 <div class="table-responsive">
                                     <table id="service-previous" class="table table-bordered mb-0">
                                         <thead class="thead-primary">
                                             <tr>
+                                                <th width="20%">Bill No</th>
                                                 <th width="25%">Description</th>
                                                 <th width="15%">Qty</th>
                                                 <th width="20%">Price</th>
                                                 <th width="20%">Total</th>
-                                                <th width="20%" class="text-center table_action">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody></tbody>
@@ -634,7 +634,6 @@
             var jobCardId = $(this).data('card');
             var techId = $(this).data('tech');
 
-            alert(jobCardId);
             $('#historyDetailsModal').modal('show');
             $.ajax({
                 url: '{{ route('get-jobcard-details') }}',
@@ -905,7 +904,6 @@
                     });
                 },
                 error:function(){
-                    alert('Fail');
                     $('#loading').hide();
                 }
             });
@@ -1103,17 +1101,18 @@
         
         //======//Remove a row => Service Bill
         $('#checkPreviousBill').on('click', function() {
-            // var complaintId = $('#billCustomerId').val();
-            alert('mastCustomerId');
+            var customerId = $('#billCustomerId').val();
+            $('#loading').show();
             $.ajax({
                 url: '{{ route('get-service-bill-details') }}',
                 method: 'GET',
                 dataType: 'json',
-                data: {'complaint_id': complaintId},
+                data: {'mast_customer_id': customerId},
                 success: function(response) {
                     var rows = "";
                     $.each(response, function(index, item) {
                         rows += "<tr>";
+                        rows += "<td>" + item.service_bill.bill_no + "</td>";
                         rows += "<td>" + item.description + "</td>";
                         rows += "<td>" + item.qty + "</td>";
                         rows += "<td>" + item.price + "</td>";
@@ -1121,9 +1120,12 @@
                         rows += "</tr>";
                     });
                     $('#service-previous tbody').html(rows);
+                    $('#service-bill-previous').toggle();
+                    $('#loading').hide();
                 },
                 error: function(xhr, status, error) {
                     console.error(error);
+                    $('#loading').hide();
                 }
             })
         });
