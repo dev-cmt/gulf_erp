@@ -20,7 +20,7 @@ class MastWorkStationController extends Controller
     {
         $data = MastWorkStation::latest()->get();
       
-        return view('layouts.master.working_station.index', compact('data'));
+        return view('layouts.pages.master.working_station.index', compact('data'));
     }
 
     /**
@@ -30,7 +30,7 @@ class MastWorkStationController extends Controller
      */
     public function create()
     {
-        return view('layouts.master.working_station.create');
+        return view('layouts.pages.master.working_station.create');
     }
 
     /**
@@ -66,7 +66,7 @@ class MastWorkStationController extends Controller
     public function show($id)
     {
         $data = MastWorkStation::find($id);
-        return view('layouts.master.working_station.show', compact('data'));
+        return view('layouts.pages.master.working_station.show', compact('data'));
     }
 
     /**
@@ -78,7 +78,7 @@ class MastWorkStationController extends Controller
     public function edit($id)
     {
         $data = MastWorkStation::find($id);
-        return view('layouts.master.working_station.edit', compact('data'));
+        return view('layouts.pages.master.working_station.edit', compact('data'));
     }
 
     /**
