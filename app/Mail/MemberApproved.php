@@ -32,7 +32,7 @@ class MemberApproved extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Member Approved',
+            subject: 'Sales Quotation for ICON ISL',
         );
     }
 

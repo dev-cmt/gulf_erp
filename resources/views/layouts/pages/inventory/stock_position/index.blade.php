@@ -5,14 +5,14 @@
                 <div class="card-header">
                     <h4 class="card-title">Stock Position</h4>
                     <div>
-                        @can('Role create') 
-                            <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#exampleModalCenter"><i class="fa fa-search"></i><span class="btn-icon-add" data-bs-toggle="modal"></span>Tracking </a>                   
+                        @can('Role create')
+                            <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#exampleModalCenter"><i class="fa fa-search"></i><span class="btn-icon-add" data-bs-toggle="modal"></span>Tracking </a>
                         @endcan
                     </div>
                 </div>
-                
+
                 <div class="card-body">
-                    <div class="row" id="filter-data">
+                    {{-- <div class="row" id="filter-data">
                         <div class="col-md-5">
                             <div class="form-group row">
                                 <label class="col-md-5 col-form-label">Item Category
@@ -45,10 +45,10 @@
                         </div>
                         <div class="col-md-2">
                             <div class="d-flex justify-content-end">
-                                <button id="reset" class="btn btn-sm btn-warning"><i class="ti-reload"></i><span class="btn-icon-add"></span>Reset</button>                   
+                                <button id="reset" class="btn btn-sm btn-warning"><i class="ti-reload"></i><span class="btn-icon-add"></span>Reset</button>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     {{-- <div id="attendance-list"></div> --}}
 
 
@@ -59,7 +59,8 @@
                                 <th>SL#</th>
                                 <th>Group Name</th>
                                 <th>Part No.</th>
-                                <th>Qty</th>
+                                <th>Stock Qty</th>
+                                <th>Sales Price</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -76,7 +77,8 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $row->part_name }}</td>
                                     <td>{{ $row->part_no }}</td>
-                                    <td>{{ $row->id }}/{{ $countItem }}</td>
+                                    <td>{{ $countItem }}</td>
+                                    <td>{{ $row->price }}</td>
                                 </tr>
                             @endforeach
 
@@ -107,20 +109,20 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        
+
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    
+
     @push('script')
-    
+
     <script>
         $(document).ready(function(){
             fetch();
         });
-        
+
         // Fetch records
         function fetch(user_id, start_date, end_date) {
             $.ajax({
@@ -145,7 +147,7 @@
             var user_id = $("#user_id").val();
             var start_date = $("#start_date").val();
             var end_date = $("#end_date").val();
-            
+
             fetch(user_id, start_date, end_date);
         });
         // Reset

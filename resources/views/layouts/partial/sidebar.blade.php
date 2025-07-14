@@ -17,7 +17,7 @@
                         <span class="nav-text">Dashboard</span>
                     </a>
                 </li>
-                @canany(['Super-Admin', 'Admin', 'HR', 'Hr access', 'Employee access', 'Leave access', 'Attendance access', 'Salary access', 'Hr setting access'])
+                {{-- @canany(['Super-Admin', 'Admin', 'HR', 'Hr access', 'Employee access', 'Leave access', 'Attendance access', 'Salary access', 'Hr setting access'])
                 <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
                         <i class="flaticon-152-followers"></i>
                         <span class="nav-text">HR & Admin</span>
@@ -77,7 +77,7 @@
                         @endcanany
                     </ul>
                 </li>
-                @endcanany
+                @endcanany --}}
 
                 @canany(['Super-Admin', 'Admin', 'Inventory access'])
                 <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
@@ -88,16 +88,16 @@
                         <li><a href="{{route('grn-purchase.index')}}">GRN (Warehouse)</a></li>
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Purchase</a>
                             <ul aria-expanded="false">
-                                <li><a href="{{ route('inv_purchase.index',['cat_id' => 1])}}">AC</a></li>
-                                <li><a href="{{ route('inv_purchase.index',['cat_id' => 2])}}">AC Spare Parts</a></li>
+                                {{-- <li><a href="{{ route('inv_purchase.index',['cat_id' => 1])}}">AC</a></li>
+                                <li><a href="{{ route('inv_purchase.index',['cat_id' => 2])}}">AC Spare Parts</a></li> --}}
                                 <li><a href="{{ route('inv_purchase.index',['cat_id' => 3])}}">Car Spare Parts</a></li>
                                 <li><a href="{{ route('inv_purchase_approve.create')}}">Approve Purchase </a></li>
                             </ul>
                         </li>
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Store Transfer</a>
                             <ul aria-expanded="false">
-                                <li><a href="{{ route('store_transfer.index',['cat_id' => 1]) }}">AC Requisition</a></li>
-                                <li><a href="{{ route('store_transfer.index',['cat_id' => 2]) }}">AC Spare Parts</a></li>
+                                {{-- <li><a href="{{ route('store_transfer.index',['cat_id' => 1]) }}">AC Requisition</a></li>
+                                <li><a href="{{ route('store_transfer.index',['cat_id' => 2]) }}">AC Spare Parts</a></li> --}}
                                 <li><a href="{{ route('store_transfer.index',['cat_id' => 3]) }}">Car Spare Parts</a></li>
                                 <li><a href="{{ route('store_transfer_approve.create')}}">Requisition Approve </a></li>
                             </ul>
@@ -123,7 +123,7 @@
                                 <li><a href="{{route('mast_item_category.index')}}">Item Category</a></li>
                                 <li><a href="{{route('mast_item_group.index')}}">Item Group</a></li>
                                 <li><a href="{{route('mast_unit.index')}}">Units Setting</a></li>
-                                <li><a href="{{route('mast_item_models.index')}}">AC Models</a></li>
+                                {{-- <li><a href="{{route('mast_item_models.index')}}">AC Models</a></li> --}}
                                 <li><a href="{{route('mast_item_register.index')}}">Item Register</a></li>
                             </ul>
                         </li>
@@ -139,16 +139,16 @@
                     <ul aria-expanded="false">
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Sales Quotation</a>
                             <ul aria-expanded="false">
-                                <li><a href="{{ route('sales_quotation.index',['cat_id' => 1]) }}">AC Sales</a></li>
-                                <li><a href="{{ route('sales_quotation.index',['cat_id' => 2]) }}">AC Spare Parts</a></li>
+                                {{-- <li><a href="{{ route('sales_quotation.index',['cat_id' => 1]) }}">AC Sales</a></li>
+                                <li><a href="{{ route('sales_quotation.index',['cat_id' => 2]) }}">AC Spare Parts</a></li> --}}
                                 <li><a href="{{ route('sales_quotation.index',['cat_id' => 3]) }}">Car Spare Parts</a></li>
                                 <li><a href="{{ route('sales_quotation_approve.index')}}">Approve Quotation </a></li>
                             </ul>
                         </li>
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Sales</a>
                             <ul aria-expanded="false">
-                                <li><a href="{{ route('sales.index',['cat_id' => 1]) }}">AC Sales</a></li>
-                                <li><a href="{{ route('sales.index',['cat_id' => 2]) }}">AC Spare Parts</a></li>
+                                {{-- <li><a href="{{ route('sales.index',['cat_id' => 1]) }}">AC Sales</a></li>
+                                <li><a href="{{ route('sales.index',['cat_id' => 2]) }}">AC Spare Parts</a></li> --}}
                                 <li><a href="{{ route('sales.index',['cat_id' => 3]) }}">Car Spare Parts</a></li>
                                 <li><a href="{{ route('sales_approve.create')}}">Approve Sales </a></li>
                             </ul>

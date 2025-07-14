@@ -25,7 +25,7 @@ class StockPositionController extends Controller
         $data = DB::table('mast_item_categories')
         ->join('mast_item_groups', 'mast_item_categories.id', '=', 'mast_item_groups.mast_item_category_id')
         ->join('mast_item_registers', 'mast_item_groups.id', '=', 'mast_item_registers.mast_item_group_id')
-        ->where('mast_item_categories.id', 1)
+        ->where('mast_item_categories.id', 3)
         ->select('mast_item_registers.*', 'mast_item_groups.part_name')
         ->get();
 
